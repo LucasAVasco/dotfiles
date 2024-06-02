@@ -1,0 +1,127 @@
+#!/bin/bash
+
+
+# Show help message
+help_msg()
+{
+	echo -e '\nusage: set-theme [command] <parameters>\n'
+	echo -e 'Commands:\n'
+
+	echo '  -g | --gtk <name> - Set the current GTK theme to <name>'
+	echo '  -i | --icon <name> - Set the current icon theme to <name>'
+	echo '  -c | --cursor <name> - Set the current cursor theme to <name>'
+	echo '  --fix-cursor - Fix the cursor theme (some login manager can change it)'
+	echo '  help | -h | --help - show this message'
+
+	echo -e '\n\nError codes:'
+	echo '  1: unrecognized option'
+	echo '  2: wrong number of parameters'
+}
+
+
+# Check the parameters number
+#
+# $1: Current number of parameters
+# $2: Correct number of parameters
+number_error  () {
+	if [[ "$1" != "$2" ]]; then
+		echo -e "\nERROR! Wrong number of parameters.\n"
+		exit 2
+	fi
+}
+
+
+# Change a file attribute
+#
+# $1: file path
+# $2: Attribute pathern
+# $3: Attribute value
+change_file_attribute()
+{
+	# Change the file attribute
+	sed -i s/"${2}.*"/"${2}=${3}"/ "$1"
+}
+
+
+# Get a file attribute
+#
+# $1: File path
+# $2: Attribute name
+get_file_attribute()
+{
+	cat "$1" | awk "/$2/" | sed -n 1p | sed 's/.*=//g'
+}
+
+
+# Main code
+case "$1" in
+	# Set GTK theme
+	'-g' | '--gtk' ) number_error  $# 2
+		# GTK 2
+		change_file_attribute ~/.gtkrc-2.0 'gtk-theme-name' "\"$2\""
+
+		# GTK 3
+		change_file_attribute ~/.config/gtk-3.0/settings.ini 'gtk-theme-name' "$2"
+
+		# Gnome
+		gsettings set org.gnome.desktop.interface gtk-theme "$2"
+		;;
+
+	# Set icon theme
+	'-i' | '--icon') number_error  $# 2
+		# GTK 2
+		change_file_attribute ~/.gtkrc-2.0 'gtk-icon-theme-name' "\"$2\""
+
+		# GTK 3
+		change_file_attribute ~/.config/gtk-3.0/settings.ini 'gtk-icon-theme-name' "$2"
+
+		# Default Icon Theme
+		change_file_attribute ~/.icons/default/index.theme 'Inherits' "$2"
+
+		# Gnome
+		gsettings set org.gnome.desktop.interface icon-theme "$2"
+		;;
+
+	# Set cursor theme
+	'-c' | '--cursor' ) number_error  $# 2
+		# GTK 2
+		change_file_attribute ~/.gtkrc-2.0 'gtk-cursor-theme-name' "\"$2\""
+
+		# GTK 3
+		change_file_attribute ~/.config/gtk-3.0/settings.ini 'gtk-cursor-theme-name' "$2"
+
+		# Gnome
+		gsettings set org.gnome.desktop.interface cursor-theme "$2"
+
+		# Mate
+		gsettings set org.mate.peripherals-mouse cursor-theme "$2"
+
+		# Xfce
+		xfconf-query --channel xsettings --property /Gtk/CursorThemeName --set "$2"
+
+		# X server
+		echo "Xcursor.theme: $2" | xrdb
+		xsetroot -cursor_name left_ptr
+		;;
+
+	# Fix cursor theme. Some login managers can change the cursor theme.
+	# This option is needed to restore the cursor to the correct one.
+	'--fix-cursor' ) number_error  $# 1
+		# X server
+		echo "Xcursor.theme: $(get_file_attribute ~/.config/gtk-3.0/settings.ini gtk-cursor-theme-name)" | xrdb
+		xsetroot -cursor_name left_ptr
+		;;
+
+	# Show help message
+	help | -h | --help ) number_error  $# 1
+		help_msg;;
+
+	# Error because there are no parameters
+	"" ) number_error  $# 1;;
+
+	# If there is no compatible option
+	* )
+		echo "Command: 'bspc-layout'; unrecognized option: '$1'"
+		exit 1
+		;;
+esac
