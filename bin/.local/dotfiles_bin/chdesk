@@ -1,0 +1,220 @@
+#!/bin/bash
+
+
+set -e
+
+
+# Check if the user provided the correct number of parameters.
+#
+# To this function work, you need to set the variable CURRENT_NUMBER_OF_PARAMETERS at
+# the beginning of the script as:
+#
+# CURRENT_NUMBER_OF_PARAMETERS=$#
+#
+# You need to do this before calling this function.
+#
+# $1: Correct number of parameters
+CURRENT_NUMBER_OF_CMD_PARAMETERS="$#"
+check_cmd_parameters_number() {
+	if [[ "$1" != "$CURRENT_NUMBER_OF_CMD_PARAMETERS" ]]; then
+		echo -e "\nERROR! Wrong number of parameters."
+		exit 1
+	fi
+}
+
+
+# Folders with the desktops that can be managed by he Chdesk tool.
+# Provided as an array. Each element is a path to a folder with its own desktops.
+chdesk_dirs=("$HOME/.Desktops" "$HOME/.DesktopsSync")
+
+
+# Show help message
+help_msg() {
+	echo "
+	usage: chdesk [command]
+	Commands:
+
+	  init - Start chdesk (move current desktop to folder with desktops)
+	  list | ls - list the available desktops
+	  list-base | ls-base - list the folders with the desktops
+	  list-names | ls-names - list the labels of the desktops (1 label per line)
+	  show | show-active - show the 'name' or 'path' of the current desktop
+	  add | make <index> <name> - create a new desktop with the label <name> in the <index> folder
+	  cp | copy <src_name> <dest_path> - copy the <src_name> desktop to a the path <dest_name>
+	  rm | remove | dell <name> - delete a desktop witk the label <name>
+	  change <name> - change to the desktop with the label <name>
+	  help | -h | --help - show this message
+
+	Error codes:
+	  1: wrong number of parameters
+	  2: unrecognized option
+	  3: trying to create an existing desktop
+	  4: non-existing desktop
+	" | sed 's/^\t*//g'
+}
+
+
+# Check if a Desktop exists
+#
+# $1: Desktop name (not the path)
+get_desktop_path() {
+	local has_desktop="false"
+
+	for base_folder in "${chdesk_dirs[@]}"; do
+		local desktop_path="$base_folder/$1"
+
+		if [[ -d "$desktop_path" ]]; then
+			echo "$desktop_path"
+			has_desktop="true"
+			break
+		fi
+	done
+
+	if [[ "$has_desktop" == "false" ]]; then
+		echo "None"
+	fi
+}
+
+
+
+# Get the active desktop
+#
+# $1: "Name" to get the desktop name or "Path" to get the desktop path
+get_active_desktop() {
+	local desktop_path=$(readlink ~/Desktop)
+	local name=$(basename "$desktop_path")
+
+	if [[ $(get_desktop_path "$name") == None ]]; then
+		echo "None"
+
+	else
+		case "$1" in
+			name)
+				echo "$name"
+				;;
+
+			path)
+				echo "$desktop_path"
+				;;
+
+			*)
+				echo "Need to specify 'name' or 'path'"
+				;;
+		esac
+	fi
+}
+
+
+case "$1" in
+	# Init chdesk
+	init) check_cmd_parameters_number  1
+		# Directories with desktops
+		for base_folder in "${chdesk_dirs[@]}"; do
+			mkdir -p "$base_folder"
+		done
+
+		# If the current '~/Desktop' is not link, makes it a new possible Desktop, and switches to it.
+		if [[ ! -L ~/Desktop ]]; then
+			new_desktop=$(date +%F-%T)
+			mv ~/Desktop "${chdesk_dirs[0]}/$new_desktop"
+			"$0" change "$new_desktop"
+		fi
+		;;
+
+	# List all "Desktops"
+	list | ls ) check_cmd_parameters_number  1
+		for base_folder in "${chdesk_dirs[@]}"; do
+			ls "$base_folder"
+		done
+
+		echo -e "\nActive: $(get_active_desktop name)"
+		;;
+
+	list-base | ls-base ) check_cmd_parameters_number  1
+		for base_folder in "${chdesk_dirs[@]}"; do
+			echo "$base_folder"
+		done
+		;;
+
+	list-names | ls-names ) check_cmd_parameters_number  1
+		for base_folder in "${chdesk_dirs[@]}"; do
+			ls -1 "$base_folder"
+		done
+		;;
+
+	show | show-active ) check_cmd_parameters_number  2
+		get_active_desktop "$2"
+		;;
+
+	# Create a new "Desktop"
+	add | make ) check_cmd_parameters_number  3
+		# Does not create if it already exists
+		if [[ $(get_desktop_path "$3") != "None" ]]; then
+			echo -e '\nThis Desktop already exists! Choose other name.\n'
+			exit 3
+
+		# Creates the new Desktop
+		else
+			mkdir -p "${chdesk_dirs[$2]}/$3"
+		fi
+		;;
+
+	# Copy a existing "Desktop"
+	cp | copy ) check_cmd_parameters_number  3
+		# Does not copy if the Desktop does not exist
+		src_path=$(get_desktop_path "$2")
+
+		if [[ "$src_path" == "None" ]]; then
+			echo -e '\nThis Desktop does not exists!\n'
+			exit 4
+		fi
+
+		# Does not copy if the destination already exists
+		if [[ -e "$3" || -L "$3" ]]; then
+			echo -e '\nThe destination already exists! Choose other name.\n'
+			exit 3
+		fi
+
+		# Copies the Desktop
+		cp -r "$src_path" "$3"
+		;;
+
+	# Remove a existing "Desktop"
+	rm | remove | dell ) check_cmd_parameters_number  2
+		desktop_path=$(get_desktop_path "$2")
+
+		# Does not delete if the Desktop does not exist
+		if [[ "$desktop_path" == "None" ]]; then
+			echo -e '\nThis Desktop does not exists!\n'
+			exit 4
+		fi
+
+		# Deletes
+		gio trash "$desktop_path"
+		;;
+
+	# Change to the "Desktop"
+	change ) check_cmd_parameters_number  2
+		desktop_path=$(get_desktop_path "$2")
+
+		# Does not change if it does not exists
+		if [[ "$desktop_path" == "None" ]]; then
+			echo -e '\nThis Desktop does not exists!\n'
+			exit 4
+		fi
+
+		# Changes the Desktop
+		ln -sfn "$desktop_path" ~/Desktop
+		;;
+
+	# Show help message
+	help | -h | --help ) check_cmd_parameters_number  1
+		help_msg;;
+
+	# If there is no compatible option
+	* )
+		echo "Command: 'chdesk'; unrecognized option: '$1'"
+		help_msg
+		exit 2
+		;;
+esac
