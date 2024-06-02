@@ -1,0 +1,6 @@
+mycfg-lua-lazy_plugins-linter.txt                                *mycfg-lua-lazy_plugins-linter.txt*
+====================================================================================================
+Linter mappings (Plugin)                                                        *plugin-linter-maps*
+
+`<leader>Tl` Try to execute the linter on the current buffer.
+

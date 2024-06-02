@@ -1,0 +1,44 @@
+mycfg-lua-lazy_plugins-git.txt                                      *mycfg-lua-lazy_plugins-git.txt*
+====================================================================================================
+Git commands (Plugin)                                                          *plugin-git-commands*
+
+Fugitive~
+
+`Git`                   Show git status
+`Git difftool {, -y}`   Shows each file diff in the quickfix. With -y, insted opens Gdiffsplit.
+`Git mergetool`         Like difftool, but for merge conflicts.
+`Ggrep -q`              Shows the results of the 'git grep' in the quickfix.
+`Gclog`                 Shows the git log in the quickfix.
+`G{v,h}diffsplit`       Shows the diff in a vertical or horizontal split.
+
+Gitsigns~
+
+`Gitsigns toggle_current_line_blame`   Toggle the visibility of the current line blame
+`Gitsigns setloclist`                  Open the location list with the current git hunks
+
+
+====================================================================================================
+Git mappings (Plugin)                                                              *plugin-git-maps*
+
+Fugitive~
+
+Inside the git status command: ':Git', you can use the following mappings:
+
+`-`        Git Add or Git Restore a file.
+`s/u/U`    Stage, unstage, unstage all.
+`=`        Shows the diff inline.
+`P`        Git add and Git Reset, but with --patch the file.
+`1p`       Open the file in the preview window and edit it.
+`d{h,v}`   Shows the diff in a vertical or horizontal split.
+`{o,O}`    Open the file in a split or new tab.
+`d?`       Open help
+
+Inside the Git log command: ':Git log', you can use the following mappings:
+`ri`   Rebase interactively.
+`ra`   Abort rebase.
+
+gitsigns~
+
+`{[,]}c`       Jump to next/previous hunk
+`<Leader>hp`   Preview current hunk
+

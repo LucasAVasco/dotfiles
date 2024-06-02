@@ -1,0 +1,34 @@
+mycfg-LSP.txt                                                                        *mycfg-LSP.txt*
+====================================================================================================
+LSP mappings                                                                        *mycfg-lsp-maps*
+
+`<leader>gd`    Go to definition
+`<leader>gD`    Go to declaration
+`<leader>gi`    Go to implementation
+`<leader>gt`    Go to type definition
+
+`<A-h>`         Show hover information
+`<leader>Lr`    Show references
+`<leader>Lh`    Show hover
+`<leader>Ls`    Show symbols
+`<leader>Lic`   Show incoming calls
+`<leader>Loc`   Show outgoing calls
+
+`<leader>Lr`    Rename
+`<leader>La`    Code action
+`<leader>Lf`    Format
+
+`<leader>Lws`   Workspace symbol
+`<leader>Lwa`   Add workspace folder
+`<leader>Lwr`   Remove workspace folder
+`<leader>Lwl`   List workspace folders
+
+`<leader>Lcr`   Codelens run
+
+
+====================================================================================================
+LSP commands                                                                        *mycfg-lsp-cmds*
+
+`LspInfo`   Show the language server info
+`LspLog`    Show the language server log
+

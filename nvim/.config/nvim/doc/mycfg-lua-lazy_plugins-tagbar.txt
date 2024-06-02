@@ -1,0 +1,16 @@
+mycfg-lua-lazy_plugins-tagbar.txt                                *mycfg-lua-lazy_plugins-tagbar.txt*
+====================================================================================================
+Tagbar mappings (Plugin)                                                        *plugin-tagbar-maps*
+
+`<gt>` Open Tagbar.
+
+Some keymaps inside Tagbar~
+
+`?`        Show the keymaps.
+`*/zR/_`   Open all folds.
+`=/zM`     Close all folds.
+`x`        togle the zoom of the tagbar.
+`s`        Toogle the sort mode (tag name, file name).
+`v`        Hide non public tags.
+`q`        quit.
+

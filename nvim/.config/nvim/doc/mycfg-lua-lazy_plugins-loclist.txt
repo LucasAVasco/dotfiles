@@ -1,0 +1,13 @@
+mycfg-lua-lazy_plugins-loclist.txt                              *mycfg-lua-lazy_plugins-loclist.txt*
+====================================================================================================
+Loclist and quickfix mappings (Plugin)                                         *plugin-loclist-maps*
+
+`<leader>Td` Open diagnostics with Trouble
+
+Movement~
+
+`<leader>Tgg`   Go to first trouble diagnostics
+`<leader>TG`    Go to last trouble diagnostics
+`<F3>`          Go to previous trouble diagnostics
+`<S-F2>`          Go to next trouble diagnostics
+
