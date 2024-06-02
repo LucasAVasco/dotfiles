@@ -46,25 +46,24 @@ return {
 		end
 	},
 	{
-		'vim-airline/vim-airline',
+		'nvim-lualine/lualine.nvim',
 
 		dependencies = {
-			'vim-airline/vim-airline-themes'
+			'nvim-tree/nvim-web-devicons'
 		},
 
-		init = function()
-			vim.g.airline_left_sep = ''
-			vim.g.airline_right_sep = ''
-			vim.g.airline_left_alt_sep = ''
-			vim.g.airline_right_alt_sep = ''
+		opts = {
+			options = {
+				theme = 'OceanicNext',
+				section_separators = { left = '', right = '' },
+				component_separators = { left = '', right = '' },
 
-			vim.g['airline#extensions#tabline#left_sep'] = ' '
-			vim.g['airline#extensions#tabline#right_sep'] = ' '
-			vim.g['airline#extensions#tabline#left_alt_sep'] = '┃'
-			vim.g['airline#extensions#tabline#right_alt_sep'] = ' '
+				ignore_focus = {'Telescope', 'NvimTree'},
+			},
+		},
 
-			-- Themes
-			vim.g.airline_theme = 'base16_gruvbox_dark_pale'
+		config = function(plugin, opts)
+			require('lualine').setup(opts)
 		end
 	}
 }
