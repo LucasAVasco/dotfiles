@@ -29,3 +29,6 @@ alias :q='exit'
 # Clear history. There are a copy of the current history in the memory. So the user need to close all terminals and run it
 # again to complete the remove
 alias clear_history='> ~/.bash_history && history -c'
+
+# Alias manage the dot files
+alias dotfiles='make -C ~/.local/dotfiles SD=$(pwd)'
