@@ -1,5 +1,10 @@
 --[[ autodoc
 	====================================================================================================
+	Auto-completion keymaps (Plugin)[map]                                         *plugin-completion-keymaps*
+
+	Use `<M-e>` to use Fast Wrap. It will show virtual texts indicating the position to place the closing
+	pair. Press this key to insert. If you select the Shift key, it will insert the closing pair and go to it
+
 	Auto-completion commands (Plugin)[cmd]                                  *plugin-completion-commands*
 
 	`LuaSnipEditFiles` Edit the LuaSnip snippets files
@@ -50,6 +55,36 @@ return {
 			require('luasnip.loaders.from_vscode').lazy_load({ paths = {'~/.config/nvim/vscode_snippets'} })
 			require('luasnip.loaders.from_lua').load({ paths = {'~/.config/nvim/lua_snippets'} })
 		end
+	},
+	{
+		'windwp/nvim-autopairs',
+		event = 'InsertEnter',
+
+		dependencies = {
+			'hrsh7th/nvim-cmp',
+		},
+
+		opts = {
+			disable_filetype = { 'TelescopePrompt', 'NvimTree' },
+			fast_wrap = {},  -- Required to enable `fast_wrap`
+		},
+
+		config = function(plugin, opts)
+			local npairs = require('nvim-autopairs')
+			local Rule = require('nvim-autopairs.rule')
+
+			npairs.setup(opts)
+
+			npairs.add_rules({
+				Rule('"""', '"""')  -- Triple quotes string (like the Python docstrings)
+			})
+
+			-- Auto-pairs integration with cmp-nvim
+			require('cmp').event:on(
+				'confirm_done',
+				require('nvim-autopairs.completion.cmp').on_confirm_done()
+			)
+		end,
 	},
 	{
 		'hrsh7th/nvim-cmp',
