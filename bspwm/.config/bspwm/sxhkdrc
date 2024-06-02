@@ -1,0 +1,166 @@
+# Configuration to work with Bspwm window manager
+#
+# To query the X events used to define the keybindings, use: 'xev'
+# To reload Sxhkd and apply the changes, use: 'pkill -USR1 -x sxhkd'
+
+# Reserved mappings (conventions)        | Usage
+# ---------------------------------------|----------------------------------------------------------------------
+# h,j,k,l                                | Node movement, resize, flip, etc
+# 1-5 F1-F5                              | Desktops and movement through desktops
+# F6-F12                                 | System management
+# z,x,c...m                              | System management
+# 6-9,0                                  | Node state (full screen, tiling, floating, etc)
+# Other alphabetic letters (not numbers) | Launch applications
+
+# Other keys (exceptions)
+# ------------------------------------------------
+# ctrl + alt + l    | Lock the screen
+# super + Return    | Open the terminal
+# super + delete    | Kill a window with xkill
+# super + minus     | Toggle sticky mode
+
+
+# #region Applications
+
+# Open the terminal
+super + Return
+	cd ~; exo-open --launch TerminalEmulator &
+
+# File manager
+super + f
+	cd ~; exo-open --launch FileManager &
+
+# Screenshot
+super + s
+	gnome-screenshot -i &
+
+# #endregion
+
+
+# #region Rofi interfaces
+
+# Bspwm node options
+super + t
+	~/.config/bspwm/rofi/node_flag.sh &
+
+# Select a window
+super + w
+	~/.config/rofi/tools/windows.sh &
+
+# Launch application
+super + a
+	~/.config/rofi/tools/applications.sh &
+
+# Select current desktop with 'chdesk'
+super + d
+	~/.config/rofi/tools/chdesk.sh &
+
+# #endregion
+
+
+# #region Window and nodes management
+
+# Close the node
+super + c
+	bspc node -c
+
+# Set the node's state
+super + {6-9}
+	bspc node -t {tiled,pseudo_tiled,floating,fullscreen}
+
+# Toggle sticky mode
+super + minus
+	bspc node -g sticky
+
+# Change the focused node
+super + {h,j,k,l}
+	bspc node -f {west,south,north,east}
+
+# Move node (switch with other node)
+super + alt + {h,j,k,l}
+	bspc node -s {west,south,north,east} --follow
+
+# Resize the window
+super + shift + {h,j}
+	bspc node -z {left,bottom} -20 20
+
+super + shift + {k,l}
+	bspc node -z {top,right} 20 -20
+
+# Manual layout
+super + ctrl + {h,j,k,l,g}
+	bspc node -p {west,south,north,east,cancel}
+
+# Flip desktop
+super + shift + alt + {h,j}
+	bspc node $(bspc query -N -d | sed -n '1p') -F {horizontal,vertical}
+
+# #endregion
+
+
+# #region Movement through Desktops
+
+# Change to another desktop
+super + {1-5}
+	bspc desktop -f {I,II,III,IV,V}
+
+super + F{1-5}
+	bspc desktop -f {VI,VII,VIII,IX,X}
+
+# Move the window to another desktop
+super + shift + {1-5}
+	bspc node -d {I,II,III,IV,V}
+
+super + shift + F{1-5}
+	bspc node -d {VI,VII,VIII,IX,X}
+
+# Move the window to another desktop (and follow it)
+super + alt + {1-5}
+	bspc node -d {I,II,III,IV,V} --follow
+
+super + alt + F{1-5}
+	bspc node -d {VI,VII,VIII,IX,X} --follow
+
+# #endregion
+
+
+# #region Sound and volume
+
+# Mute
+super + F9
+	pactl set-sink-mute @DEFAULT_SINK@ toggle
+
+# Add and subtract volume
+super + {F10,F11}
+	pactl set-sink-volume @DEFAULT_SINK@ {-5%,+5%}
+
+# Bucklespring (keyboard sound emulator)
+super + b
+	~/.config/bspwm/buckle.sh toogle
+
+# #endregion
+
+
+# #region System management
+
+# Toggle padding
+super + F7
+	~/.config/bspwm/toggle_padding.sh
+
+# Reload the configurations
+super + shift + x
+	~/.config/bspwm/init.sh &
+
+# Clear the clipboard
+super + z
+	echo '' | xclip -i -sel primary ; echo '' | xclip -i -sel secondary ; echo '' | xclip -i -sel clipboard
+
+# Kill a window
+super + Delete
+	xkill &
+
+# Lock the screen
+ctrl + alt + l
+	~/.config/bspwm/screenlocker.sh &
+
+# #endregion

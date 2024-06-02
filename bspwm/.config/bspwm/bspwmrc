@@ -1,0 +1,16 @@
+#! /bin/bash
+#
+# This script is run only once when the bspwm window manager is started
+#
+# Commands that can be executed more that once need to be placed in the 'init.sh'
+
+
+/usr/lib/policykit-1-gnome/polkit-gnome-authentication-agent-1 &
+
+
+# Desktops
+bspc monitor -d I II III IV V VI VII VIII IX X
+
+
+# Scripts that can be executed more that once
+~/.config/bspwm/init.sh
