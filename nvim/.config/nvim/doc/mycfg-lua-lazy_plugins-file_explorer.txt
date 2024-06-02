@@ -1,0 +1,29 @@
+mycfg-lua-lazy_plugins-file_explorer.txt                  *mycfg-lua-lazy_plugins-file_explorer.txt*
+====================================================================================================
+File explorer mappings (Plugin)                                          *plugin-file-explorer-maps*
+
+`gf` Open NvimTree.
+
+`g?` Show the keymaps.
+
+Custom keymaps~
+
+`T` Open in new tab (if not already in a tab).
+`t` Open in new tab (if not already in a tab) and focus.
+
+Useful keys~
+
+`I` Show/hide untracked files (git). They are hidden by default.
+`H` Show/hide hidden files (dotfiles). They are hidden by default.
+`C` Show/hide files without git status.
+
+Bookmarks~
+
+`m` Bookmark current file.
+`M` Show/hide the bookmaked files.
+
+Filter files~
+
+`f` Enable regex (vimscript) filter. Only show files that match the regex.
+`F` Disable regex filter.
+

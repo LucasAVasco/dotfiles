@@ -1,0 +1,6 @@
+mycfg-lua-lazy_plugins-completion.txt                        *mycfg-lua-lazy_plugins-completion.txt*
+====================================================================================================
+Auto-completion commands (Plugin)                                       *plugin-completion-commands*
+
+`LuaSnipEditFiles` Edit the LuaSnip snippets files
+

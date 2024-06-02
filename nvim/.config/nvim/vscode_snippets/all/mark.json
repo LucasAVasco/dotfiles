@@ -1,0 +1,17 @@
+{
+	"Vim marks folding:": {
+		"prefix": "{{{}}}",
+		"body": [
+			"${1:Name} {{{${2:folding level}",
+			"}}}"
+		]
+	},
+
+	"VS Code region folding": {
+		"prefix": "#region",
+		"body": [
+			"#region ${1:Name}",
+			"#endregion"
+		]
+	}
+}

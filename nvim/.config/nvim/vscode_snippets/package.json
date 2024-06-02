@@ -1,0 +1,13 @@
+{
+	"name": "My-Snippets",
+	"contributes": {
+		"snippets": [
+			{
+				"language": [
+					"all"
+				],
+				"path": "./all/mark.json"
+			}
+		]
+	}
+}

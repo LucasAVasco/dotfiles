@@ -1,0 +1,14 @@
+mycfg-lua-lazy_plugins-AI.txt                                        *mycfg-lua-lazy_plugins-AI.txt*
+====================================================================================================
+AI mappings (Plugin)                                                                *plugin-ai-maps*
+
+`<A-1>`     Previous AI completion
+`<A-2>`     Next AI completion
+`<A-Tab>`   Accept AI completion
+
+
+====================================================================================================
+AI commands (Plugin)                                                            *plugin-ai-commands*
+
+`CodeiumChat` Open chat with the AI.
+

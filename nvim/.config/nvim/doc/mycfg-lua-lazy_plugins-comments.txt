@@ -1,0 +1,11 @@
+mycfg-lua-lazy_plugins-comments.txt                            *mycfg-lua-lazy_plugins-comments.txt*
+====================================================================================================
+Comment mappings (Plugin)                                                     *plugin-comments-maps*
+
+`<leader>cc` Comment a line or block of code.
+`<leader>cu` remove the comment of a line or block of code.
+
+To change the comment style (if available), use the `<leader>ca` command.
+
+To comment at the end of the line, use the `<leader>cA` command.
+

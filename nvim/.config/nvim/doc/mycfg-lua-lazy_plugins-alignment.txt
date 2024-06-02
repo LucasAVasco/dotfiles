@@ -1,0 +1,15 @@
+mycfg-lua-lazy_plugins-alignment.txt                          *mycfg-lua-lazy_plugins-alignment.txt*
+====================================================================================================
+Alignment mappings (Plugin)                                                  *plugin-alignment-maps*
+
+`<leader>ga`  Align text by delimiter.
+
+Shortcuts~
+
+`<CTrl-P>`  Enter and exit interactive mode.
+
+Shortcuts (interactive mode)~
+
+`<Ctrl-G>`     Switch the ignore group option.
+`<Backspace>`  remove the last delimiter and try another one. Repeat the delimiter to apply the changes.
+
