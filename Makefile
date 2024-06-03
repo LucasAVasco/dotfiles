@@ -320,14 +320,14 @@ create-package: FORCE
 	mkdir -p '${PACKAGE}'
 
 	@# Creates the scripts folders in the package directory
-	$(call create_script_folder, once_before_enable)
-	$(call create_script_folder, once_after_enable)
-	$(call create_script_folder, once_before_disable)
-	$(call create_script_folder, once_after_disable)
-	$(call create_script_folder, before_enable)
-	$(call create_script_folder, after_enable)
-	$(call create_script_folder, before_disable)
-	$(call create_script_folder, after_disable)
+	$(call create_script_folder, ${PACKAGE}, once_before_enable)
+	$(call create_script_folder, ${PACKAGE}, once_after_enable)
+	$(call create_script_folder, ${PACKAGE}, once_before_disable)
+	$(call create_script_folder, ${PACKAGE}, once_after_disable)
+	$(call create_script_folder, ${PACKAGE}, before_enable)
+	$(call create_script_folder, ${PACKAGE}, after_enable)
+	$(call create_script_folder, ${PACKAGE}, before_disable)
+	$(call create_script_folder, ${PACKAGE}, after_disable)
 
 
 # Run a new instance of the specified shell in the dot files directory
