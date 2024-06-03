@@ -20,7 +20,6 @@ return {
 	{
 		'folke/trouble.nvim',
 		dependencies = { 'nvim-tree/nvim-web-devicons' },
-		branch = 'dev',
 
 		keys = {
 			{ '<leader>Td', '<CMD>Trouble diagnostics toggle<CR>', desc = 'Open the diagnostics' },
