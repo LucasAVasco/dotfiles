@@ -4,6 +4,7 @@ The greater the number, the higher the priority of the plugin and it will be loa
 
 |  Plugin type   | priority range  |
 | -------------- | --------------- |
+|  Notifications |    9999-9000    |
 |  Colorschemes  |    8999-8000    |
 
 Any plugin that does not matches these category will have the default priority of 50.
