@@ -25,6 +25,8 @@ return {
 			-- Mappings to move through buffers
 			vim.keymap.set('n', '<A-0>', '<Cmd>BufferLast<CR>', get_map_opts('Go to last buffer'))
 			vim.keymap.set('n', '<A-q>', '<Cmd>BufferClose<CR>', get_map_opts('Close current buffer'))
+			vim.keymap.set('n', '<A-{>', '<Cmd>BufferPrevious<CR>', get_map_opts('Go to previous buffer'))
+			vim.keymap.set('n', '<A-}>', '<Cmd>BufferNext<CR>', get_map_opts('Go to next buffer'))
 
 			for i = 1, 9 do
 				-- Go to a specific buffer
