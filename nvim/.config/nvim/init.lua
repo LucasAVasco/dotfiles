@@ -65,4 +65,4 @@ require('lazy').setup({
 
 
 -- Colorscheme
-vim.cmd.colorscheme('gruvbox')
+vim.cmd.colorscheme('kanagawa')
