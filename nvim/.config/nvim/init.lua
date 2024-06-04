@@ -17,6 +17,7 @@ dofile(config_dir .. 'maps.lua')  -- The mapleader keys are defined in this file
 
 -- Tools
 dofile(config_dir .. 'whitespace.lua')
+dofile(config_dir .. 'indent.lua')
 dofile(config_dir .. 'prose.lua')
 dofile(config_dir .. 'virtual_edit.lua')
 dofile(config_dir .. 'italics.lua')
