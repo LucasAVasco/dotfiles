@@ -6,6 +6,7 @@ vim.loop = vim.loop or uv
 
 -- Global functions go here
 _G.myfunc = {}
+_G.myvar = {}
 _G.myplugfunc = {}  -- For plugins
 
 
@@ -143,6 +144,50 @@ function myfunc.get_hl_definition(hl_group_name)
 	end
 
 	return hl_group_def
+end
+
+
+--- Variable to store the filetype that the user should not apply highlight groups to
+-- Some windows have special use cases and configuration that applies special highlight groups. Example: a dashboard and a 'help'
+-- window (like the ones that ':h' open). The user should not change the highlight groups in these windows. This variable stores the
+-- filetype that the user should not apply highlight groups to. It will be used by the 'user_can_change_appearance' function
+myvar.ft_to_disable_user_appearance = {'help'}
+
+
+--- Returns if the user can change the appearance of window
+-- Some windows have special use cases and configuration that require special appearance. Example: a dashboard and a 'help'
+-- window (like the ones that ':h' open). The user should not change the appearance of these windows. This function checks
+-- if the provided window or buffer has a special use case and returns if the user can customize its appearance.
+-- The user need to provide the window ID or the buffer number. At least one must be provided
+-- @param window_id ID of the window
+-- @param buffer_nr ID of the buffer
+-- @return If the user can apply highlight groups to the window, return true. If not, return false.
+function myfunc.user_can_change_appearance(window_id, buffer_nr)
+	-- Automatically queries the not provided parameters
+	local window_id = window_id or vim.fn.bufwinid(buffer_nr)
+	local buffer_nr = buffer_nr or vim.api.nvim_win_get_buf(window_id)
+	local filetype = vim.api.nvim_buf_get_option(buffer_nr, 'filetype')
+
+	-- The user only can add highlight groups to normal windows (buftype == '')
+	if vim.api.nvim_buf_get_option(buffer_nr, 'buftype') ~= '' then
+		return false
+	end
+
+	-- The filetype will be text, c, cpp, editable files. If Neovim is started without a file, this option will be empty
+	-- and the function will return false. This prevents the user from change the appearance to special windows that has not set
+	-- a filetype already, but requires that the user manually provides a file to edit. Otherwise, the function will return false
+	-- even if the file allows the user to change the appearance
+	if filetype == '' then
+		return false
+	end
+
+	-- Manually disable the highlight groups for some file types
+	if vim.tbl_contains(myvar.ft_to_disable_user_appearance, filetype) then
+		return false
+	end
+
+	-- Fallback to true if no special use case
+	return true
 end
 
 -- #endregion
