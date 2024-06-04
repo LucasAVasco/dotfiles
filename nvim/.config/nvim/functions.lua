@@ -99,6 +99,14 @@ function myfunc.color_int2hex(integer_value)
 	return string.format('#%x', integer_value)
 end
 
+--- Converts a hexadecimal form to be used as an color to a decimal number.
+-- E.g. '#12d687' is converted to '1234567'. If you need a function to convert a hexadecimal to integer without the leading `#`, use
+-- the `tonumber()` function
+-- @param hex_value String of the hexadecimal color, with a leading `#`.
+-- @return Number in decimal.
+function myfunc.color_hex2int(hex_value)
+	return tonumber(string.sub(hex_value, 2), 16)
+end
 
 --- Normalizes an RGB color.
 -- You need to provide its value as an integer and the maximum value to the sum of each color.
