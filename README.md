@@ -4,7 +4,7 @@ This repository contains my personal dot files. I manage then with [GNU Stow](ht
 [Makefile](Makefile) with simple commands.
 
 
-# Installation
+## Installation
 
 To install these dot files, you can use git:
 
@@ -12,7 +12,7 @@ To install these dot files, you can use git:
 git clone https://github.com/LucasAVasco/dotfiles ~/.local/dotfiles
 ```
 
-# Usage
+## Usage
 
 Each folder in the current directory is a package, and the files in it are the dot files of that package. To enable some package, just use
 the `make enable-<package>`. To disable some package, just use `make disable-<package>`. Running `make enable` will enable all packages.
