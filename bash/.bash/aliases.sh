@@ -30,5 +30,7 @@ alias :q='exit'
 # again to complete the remove
 alias clear_history='> ~/.bash_history && history -c'
 
-# Alias manage the dot files
+
+# Alias to manage the dot files and custom scripts
 alias dotfiles='make -C ~/.local/dotfiles SD=$(pwd)'
+alias custom_script='make -C ~/.local/custom_scripts WORKING_DIR=$(pwd)'
