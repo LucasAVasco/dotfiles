@@ -34,3 +34,7 @@ alias clear_history='> ~/.bash_history && history -c'
 # Alias to manage the dot files and custom scripts
 alias dotfiles='make -C ~/.local/dotfiles SD=$(pwd)'
 alias custom_script='make -C ~/.local/custom_scripts WORKING_DIR=$(pwd)'
+
+
+# Run a command in each submodules
+alias git_sub_do='git submodule foreach'
