@@ -1,0 +1,12 @@
+# VS Code settings
+.vscode
+
+
+# Cache files and folders used by some applications that I use, but the project that I'm working on does not need them
+.ccls-cache
+.cache
+
+
+# Sometimes I user a backup script that saves the files as a '.zip' file. Ignore this files
+*.my_bkp_script.gitignore.py
+*.my_bkp_script.gitignore.zip
