@@ -1,0 +1,23 @@
+#!/bin/bash
+#
+# Script to manage the rclone web gui
+#
+# Usage:
+#   `rclone-web-gui init`: Start the rclone web gui
+#   `rclone-web-gui close`: Stop the rclone web gui
+
+
+case "$1" in
+	"init" | "" )
+		rclone rcd --rc-web-gui
+		;;
+
+	"close" )
+		pkill -f "^rclone rcd --rc-web-gui$"
+		;;
+
+	* )
+		echo "Command: 'rclone-web-gui'; unrecognized option: '$1'"
+		exit 1
+		;;
+esac
