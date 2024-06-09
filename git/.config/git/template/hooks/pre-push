@@ -1,0 +1,115 @@
+#!/bin/bash
+#
+# See the documentation of this scripts at: https://git-scm.com/docs/githooks#_pre_push
+#
+# Te documentation about temporary commits is in the 'lib/tmp_branch.sh' module
+#
+# Script parameters:
+#
+# $1: Remote name
+# $2: Remote URL
+
+
+set -e
+
+
+# Includes modules
+current_dir=$(realpath -m -- "$0/../")
+source "${current_dir}/lib/tmp_branch.sh"
+
+
+# #region Temporary commit validation before pushing
+
+# Temporary commits must only be pushed to temporary branches in the temporary remote. Normal commits must not be pushed to temporary
+# branches or the temporary remote
+
+
+# Show commit error log.
+#
+# Show the object information in red color and the result of `git cat-file -p <local object name>` in yellow color.
+#
+# $1: local reference
+# $2: local object name
+# $3: remote reference
+# $4: remote object name
+show_commit_error_log() {
+	echo -e '\x1b[1;31m'  # set red color
+	echo 'Error processing commit:'
+	echo "local reference:    '$1'"
+	echo "local object name:  '$2'"
+	echo "remote reference:   '$3'"
+	echo "remote object name: '$4'"
+
+	echo -e '\nResult of `git cat-file -p <local object name>`:'
+	echo -e '\x1b[1;33m'  # set yellow color
+	git cat-file -p "$2"
+	echo -e '\x1b[0;39m'  # Reset color
+}
+
+
+# Check each commit. Does not allow pushing a temporary commit to a remote other than "$tmp_remote_name". Does not allow pushing normal
+# (non-temporary) commits to the "$tmp_remote_name" remote.
+while read -r line; do
+	obj_info=($line)
+	# ${obj_info[0]}: local reference
+	# ${obj_info[1]}: local object name
+	# ${obj_info[2]}: remote reference
+	# ${obj_info[3]}: remote object name
+
+	# Only check commits messages
+	if [[ $(git cat-file -t ${obj_info[1]}) == 'commit' ]]; then
+		remote_branch=${obj_info[2]##*/}  # Remove the 'refs/heads/' from the branch name with '##*/'
+
+		commit_body=$(git cat-file -p ${obj_info[1]})
+
+		# Parse the commit message
+		IFS=$'\n'
+		commit_msg=($commit_body)
+		# commit_msg[0]: tree
+		# commit_msg[1]: parent
+		# commit_msg[2]: author
+		# commit_msg[3]: committer
+		# commit_msg[4]: commit title
+		# commit_msg[5-...]: commit body
+		unset IFS
+
+		# Temporary commits must be pushed to "$tmp_remote_name" and a temporary branch. Otherwise, abort the push.
+		if [[ "${commit_msg[4]}" =~ $tmp_commit_title_regex ]]; then
+			if [[ "$1" != $tmp_remote_name ]]; then
+				echo -e '\x1b[1;31m'  # set red color
+				echo "A temporary commit cannot be pushed to a remote other than '$tmp_remote_name' remote!"
+				show_commit_error_log ${obj_info[@]}
+
+				exit 1
+			fi
+
+			if ! [[ "$remote_branch" =~ $tmp_branch_regex ]]; then
+				echo -e '\x1b[1;31m'  # set red color
+				echo 'A temporary commit can only be pushed to a temporary branch!'
+				show_commit_error_log ${obj_info[@]}
+
+				exit 1
+			fi
+
+		# Not a temporary commit. Must not be pushed to "$tmp_remote_name" or to a temporary branch. Otherwise, abort the push.
+		else
+			if [[ "$1" == $tmp_remote_name ]]; then
+				echo -e '\x1b[1;31m'  # set red color
+				echo "Non temporary commit cannot be pushed to the '$tmp_remote_name' remote."
+				show_commit_error_log ${obj_info[@]}
+
+				exit 1
+			fi
+
+			if [[ "$remote_branch" =~ $tmp_branch_regex ]]; then
+				echo -e '\x1b[1;31m'  # set red color
+				echo 'Efective non temporary commit cannot be pushed to a temporary branch.'
+				show_commit_error_log ${obj_info[@]}
+
+				exit 1
+			fi
+		fi
+	fi
+done
+
+# #endregion
