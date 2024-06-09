@@ -1,0 +1,43 @@
+#!/bin/bash
+#
+# See the documentation of this scripts at: https://git-scm.com/docs/githooks#_prepare_commit_msg
+#
+# Te documentation about temporary commits is in the 'lib/tmp_branch.sh' module
+#
+# Script parameters:
+#
+# $1: Path to commit message file
+# $1: Source of the commit message (message, template, merge, squash, commit)
+# $3: commit object name (pro by '-c', '-C', --amend)
+
+
+set -e
+
+
+# Includes modules
+current_dir=$(realpath -m -- "$0/../")
+source "${current_dir}/lib/tmp_branch.sh"
+
+
+# #region Add The title 'tmp(): ' to the commit if it already has no title. Only for temporary branches
+
+# Branch and commit information
+current_branch=$(git branch --show-current)
+read -r commit_title < "$1"
+first_line_has_title=$([[ "$commit_title" =~ $tmp_commit_title_regex ]] && echo true || echo false)
+
+
+# Add the 'tmp(): ' title to the commit if it already has no title
+if [[ $current_branch =~ $tmp_branch_regex ]] && [[ $first_line_has_title == false ]]; then
+	# Temporary file
+	tmp_file=$(mktemp)
+	trap "rm '$tmp_file' 2> /dev/null" EXIT
+
+	# The new commit message will have a 'tmp(): ' title
+	echo "tmp(): " > "$tmp_file"
+	cat "$1" >> "$tmp_file"
+
+	cat "$tmp_file" > "$1"
+fi
+
+# #endregion
