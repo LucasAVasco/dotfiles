@@ -1,0 +1,65 @@
+#!/bin/bash
+#
+# See the documentation of this scripts at: https://git-scm.com/docs/githooks#_commit_msg
+#
+# Te documentation about temporary commits is in the 'lib/tmp_branch.sh' module
+#
+# Script parameters:
+#
+# $1: Path to commit message file
+
+
+set -e
+
+
+# Includes modules
+current_dir=$(realpath -m -- "$0/../")
+source "${current_dir}/lib/tmp_branch.sh"
+
+
+# #region Only allow 'tmp(<scope>): <title>' title in commits made in temporary branches
+
+# Temporary commits must only be created in a temporary branch. Normal commits must not be created in temporary branches
+
+current_branch=$(git branch --show-current)
+read -r commit_title < "$1"
+is_a_temporary_commit=$([[ "$commit_title" =~ $tmp_commit_title_regex ]] && echo true || echo false)
+
+
+# If `current_branch` is empty, it is detached. This occurs when the user is rebasing a commit. Because its not possible to know if the commit
+# is owned by a temporary branch or not, disable the checking for this case
+if [[ "$current_branch" != '' ]]; then
+	# If is in a temporary branch, the commit title need to be a 'tmp(<scope>): <title>'
+	if [[ $current_branch =~ $tmp_branch_regex ]]; then
+		if [[ $is_a_temporary_commit == false ]]; then
+			echo -e '\x1b[1;31mYou are in a temporary branch. All commits in temporary branches need to have the title as "tmp(<scope>)(!)?: <title>".'
+			echo -e 'Your commit message does not matches the correct format. Canceling the commit.\x1b[0;39m'
+
+			# Shows the commit message to the user and saves in a temporary file, so it will not be lost after canceling the commit
+			echo -e '\nCommit message:'
+			cat "$1"
+
+			echo -e '\nBackup commit message:'
+			cat "$1" > "commit-message-bkp.$(date +%s).txt"
+
+			exit 1
+		fi
+	# If is not in a temporary branch, does not allow temporary commits
+	else
+		if [[ $is_a_temporary_commit == true ]]; then
+			echo -e '\x1b[1;31mYou are not in a temporary branch. Temporary commits (of type "tmp(<scope>)(!)?: <title>") are not allowed.'
+			echo -e 'Your commit message does not matches the correct format. Canceling the commit.\x1b[0;39m'
+
+			# Shows the commit message to the user and saves in a temporary file, so it will not be lost after canceling the commit
+			echo -e '\nCommit message:'
+			cat "$1"
+
+			echo -e '\nBackup commit message:'
+			cat "$1" > "commit-message-bkp.$(date +%s).txt"
+
+			exit 1
+		fi
+	fi
+fi
+
+# #endregion
