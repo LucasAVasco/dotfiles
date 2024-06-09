@@ -75,7 +75,7 @@ while read -r line; do
 
 		# Temporary commits must be pushed to "$tmp_remote_name" and a temporary branch. Otherwise, abort the push.
 		if [[ "${commit_msg[4]}" =~ $tmp_commit_title_regex ]]; then
-			if [[ "$1" != $tmp_remote_name ]]; then
+			if [[ "$1" != $tmp_remote_name ]]; then  # Pushing to a remote other than "$tmp_remote_name"
 				echo -e '\x1b[1;31m'  # set red color
 				echo "A temporary commit cannot be pushed to a remote other than '$tmp_remote_name' remote!"
 				show_commit_error_log ${obj_info[@]}
@@ -83,7 +83,7 @@ while read -r line; do
 				exit 1
 			fi
 
-			if ! [[ "$remote_branch" =~ $tmp_branch_regex ]]; then
+			if ! [[ "$remote_branch" =~ $tmp_branch_regex ]]; then  # Pushing to a branch other than a temporary branch
 				echo -e '\x1b[1;31m'  # set red color
 				echo 'A temporary commit can only be pushed to a temporary branch!'
 				show_commit_error_log ${obj_info[@]}
@@ -93,7 +93,7 @@ while read -r line; do
 
 		# Not a temporary commit. Must not be pushed to "$tmp_remote_name" or to a temporary branch. Otherwise, abort the push.
 		else
-			if [[ "$1" == $tmp_remote_name ]]; then
+			if [[ "$1" == $tmp_remote_name ]]; then  # Pushing to "$tmp_remote_name"
 				echo -e '\x1b[1;31m'  # set red color
 				echo "Non temporary commit cannot be pushed to the '$tmp_remote_name' remote."
 				show_commit_error_log ${obj_info[@]}
@@ -101,7 +101,7 @@ while read -r line; do
 				exit 1
 			fi
 
-			if [[ "$remote_branch" =~ $tmp_branch_regex ]]; then
+			if [[ "$remote_branch" =~ $tmp_branch_regex ]]; then  # Pushing to a temporary branch
 				echo -e '\x1b[1;31m'  # set red color
 				echo 'Efective non temporary commit cannot be pushed to a temporary branch.'
 				show_commit_error_log ${obj_info[@]}
