@@ -35,7 +35,8 @@ return {
 
 			-- Group of key maps to manage buffers
 			myplugfunc.set_keymap_name('<leader>B', 'Buffer keymaps')
-			vim.keymap.set('n', '<leader>Bc', '<Cmd>BufferCloseAllButVisible<CR>', get_map_opts('Close all buffers except the visible ones'))
+			vim.keymap.set('n', '<leader>Bc', '<Cmd>BufferClose<CR>', get_map_opts('Close all buffers except the visible ones'))
+			vim.keymap.set('n', '<leader>BC', '<Cmd>BufferCloseAllButVisible<CR>', get_map_opts('Close all buffers except the visible ones'))
 			vim.keymap.set('n', '<leader>Bg', '<Cmd>BufferPick<CR>', get_map_opts('Interactively select a buffer to go'))
 			vim.keymap.set('n', '<leader>Bp', '<Cmd>BufferPin<CR>', get_map_opts('Toggle the Pin state of the current buffer'))
 
