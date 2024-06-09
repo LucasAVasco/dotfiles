@@ -71,7 +71,10 @@ return {
 			'kevinhwang91/promise-async'
 		},
 
-		dev=true,
+		-- Chances the default installation to use my fork of 'nvim-ufo'
+		-- TODO: remove this when the fork is merged
+		url = 'https://github.com/LucasAVasco/nvim-ufo',
+		branch = 'markerAndMergeProviders',
 
 		config = function()
 			vim.o.foldenable = true
