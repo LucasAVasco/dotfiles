@@ -76,7 +76,14 @@ return {
 			npairs.setup(opts)
 
 			npairs.add_rules({
-				Rule('"""', '"""')  -- Triple quotes string (like the Python docstrings)
+				Rule("`", "`"),  -- Crasis pair (like the used in Markdown)
+
+				Rule('"""', '"""'),  -- Triple double quotes string (like the Python docstrings)
+				Rule("'''", "'''"),  -- Triple quotes string (like the Python docstrings)
+
+				-- Triple crasis pair (like the used in Markdown), the right pair just completest the right pair created by
+				-- the 'crasis pair' rule. Because of this, there are only one crasis in the right pair
+				Rule("```", "`"),
 			})
 
 			-- Auto-pairs integration with cmp-nvim
