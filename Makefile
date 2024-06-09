@@ -332,7 +332,7 @@ create-package: FORCE
 
 # Run a new instance of the specified shell in the dot files directory
 #
-# The user can change the shell over the 'CD_SHELL' variable
+# The user can change the shell by setting the 'CD_SHELL' variable
 cd:
 	@cd $(shell pwd) && ${CD_SHELL}
 
