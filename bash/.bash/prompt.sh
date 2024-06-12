@@ -123,7 +123,7 @@ refresh_prompt_ps1() {
 
 	# After the 
 	PS1+="$(set_term_foreground_color $color_text_fg) in "
-	PS1+="$(set_term_foreground_color $color_directory_fg) 🖿  \w"  # Directory
+	PS1+="$(set_term_foreground_color $color_directory_fg)  \w"  # Directory
 
 	# Line with a vertical bar
 	PS1+="$(reset_term_color)\n"
