@@ -7,6 +7,9 @@
 # to your '~/.config/mpv/mpv.conf' file.
 
 
+# Does nothing if the screen locker is already running
+pgrep 'xsecurelock' && return
+
 
 # Saves the current state of the bucklespring and stops it. It is strongly recommended to stop the bucklespring before locking the screen
 # because it is possible to recognize the pressed key by the bucklespring sounds
