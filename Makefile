@@ -234,6 +234,11 @@ endef
 #endregion
 
 
+# List all the packages in the dot files directory. List one file per line
+ls:
+	@find . -maxdepth 1 -type d -regex './\w*' -printf '%f\n'
+
+
 # Enable all packages
 enable: FORCE
 	$(call enable_packages, ${PACKAGES})
@@ -335,11 +340,6 @@ create-package: FORCE
 # The user can change the shell by setting the 'CD_SHELL' variable
 cd:
 	@cd $(shell pwd) && ${CD_SHELL}
-
-
-# List all the packages in the dot files directory. List one file per line
-ls:
-	@find . -maxdepth 1 -type d -regex './\w*' -printf '%f\n'
 
 
 FORCE:
