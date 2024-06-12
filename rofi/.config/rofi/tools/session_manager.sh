@@ -10,7 +10,7 @@ current_dir=$(realpath -m -- "$0/../")
 # Content to be displayed in Rofi
 buttons=(
 	'Shutdown;system-shutdown' 'Reboot;system-reboot' 'Suspend;system-suspend' 'Hibernate;system-hibernate'
-	'Lock screen;lock-screen' 'Switch user;system-switch-user'
+	'Lock screen;lock-screen' 'Logout;system-switch-user'
 	)
 
 content=''
@@ -50,7 +50,8 @@ case $selected_command in
 	;;
 
 	# Switch-user
-	'Switch user' )
-		bspc quit
+	'Logout' )
+		pgrep bspwm && bspc quit
+		pgrep qtile && qtile cmd-obj -o root -f shutdown
 	;;
 esac
