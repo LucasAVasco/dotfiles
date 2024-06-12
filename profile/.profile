@@ -29,3 +29,18 @@ if [ "$DESKTOP_SESSION" == "bspwm" ]; then
 	# To disable the reparenting of the toolkit fix this problem
 	export _JAVA_AWT_WM_NONREPARENTING=1
 fi
+
+
+# This variable defines if the user can install external software, like extensions or plugins
+ALLOW_EXTERNAL_SOFTWARE=y
+
+ID_RES=($(id))
+[ ${ID_RES[0]} == 'uid=0(root)' ] && ALLOW_EXTERNAL_SOFTWARE=n  # Disable extensions to root
+
+for group in $(groups); do  # Disable extensions to users with sudo access
+	[ "$group" == 'sudo' ] && ALLOW_EXTERNAL_SOFTWARE=n
+done
+
+[ "${USER:0:5}" == 'admin' ] && ALLOW_EXTERNAL_SOFTWARE=n  # Disable extensions to '^admin.*' users
+
+export ALLOW_EXTERNAL_SOFTWARE=$ALLOW_EXTERNAL_SOFTWARE

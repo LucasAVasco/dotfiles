@@ -4,18 +4,8 @@
 # Configuration specific to non-root, non-sudo, non-admin users. If this file is executed by an invalid user, it will be ignored
 
 
-#region Restrict access to non-root, non-sudo, non-admin users
-
-# Prevent running as root (or sudo)
-id | grep '^uid=0(root)' > /dev/null 2> /dev/null && return
-
-# Prevent running as a user with sudo access
-[[ "$(groups)" == *sudo* ]] && return
-
-# Prevent running as the 'admin' user
-[[ "$USER" == 'admin' ]] && return
-
-#endregion
+# Prevent root, admin and users with sudo to run this script
+[[ "$ALLOW_EXTERNAL_SOFTWARE" != "y" ]] && return
 
 
 # Enables Lesspipe and Lessfile
