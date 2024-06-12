@@ -2,7 +2,7 @@
 #
 # Simple helper script to start and stop the Bucklespring
 #
-# Se the options with 'buckle.sh help'
+# Se the options with 'bucklespring.sh help'
 
 
 buckle_command='buckle -f'
@@ -10,7 +10,7 @@ buckle_command='buckle -f'
 
 help_message() {
 	echo "
-	Usage: buckle.sh [OPTION]
+	Usage: bucklespring.sh [OPTION]
 
 	Options:
 	  help                Show this help help message
@@ -24,7 +24,7 @@ help_message() {
 
 # Starts bucklespring in parallel
 start_buckle() {
-	nohup $buckle_command > /dev/null &
+	pgrep -f "$buckle_command" > /dev/null || nohup $buckle_command > /dev/null &
 }
 
 
@@ -67,7 +67,7 @@ case "$1" in
 		;;
 
 	*)
-		echo "Script: 'buckle.sh'; unrecognized option: '$1'"
+		echo "Script: 'bucklespring.sh'; unrecognized option: '$1'"
 		help_message
 		;;
 esac
