@@ -161,6 +161,6 @@ super + Delete
 
 # Lock the screen
 ctrl + alt + l
-	~/.config/bspwm/screenlocker.sh &
+	~/.config/screenlocker/run.sh &
 
 # #endregion

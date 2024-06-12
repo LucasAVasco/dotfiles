@@ -46,7 +46,7 @@ case $selected_command in
 
 	# Lock-screen
 	'Lock screen' )
-		~/.config/bspwm/screenlocker.sh
+		~/.config/screenlocker/run.sh
 	;;
 
 	# Switch-user

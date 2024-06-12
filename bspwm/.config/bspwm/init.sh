@@ -11,7 +11,7 @@ set_theme --fix-cursor
 
 # Screen locker
 pkill xss-lock 2> /dev/null
-xss-lock -- ~/.config/bspwm/screenlocker.sh &
+xss-lock -- ~/.config/screenlocker/idle.sh &
 
 # Compositor
 pkill picom 2> /dev/null
