@@ -29,8 +29,7 @@ refresh_prompt_ps1() {
 	local color_cmd_error_bg='196'
 	local color_cmd_error_fg='16'
 
-	local color_command_number_bg='184'
-	local color_command_number_fg='16'
+	local color_command_number_fg='184'
 
 	local color_user_fg='220'
 	local color_user_sudo_fg='202'
@@ -69,12 +68,9 @@ refresh_prompt_ps1() {
 
 	# Command number
 	local command_number=""
-	command_number+="$(set_term_foreground_color $color_command_number_bg)"
-	command_number+="$(set_term_background_color $color_command_number_bg)"
 	command_number+="$(set_term_foreground_color $color_command_number_fg)"
-	command_number+="\#"
+	command_number+="\# "
 	command_number+="$(reset_term_color)"
-	command_number+="$(set_term_foreground_color $color_command_number_bg) "
 
 	# Git branch
 	local git_branch=$(git branch --show-current 2>/dev/null || echo 'no git')
