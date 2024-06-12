@@ -15,7 +15,7 @@ done
 
 
 # Custom 'share' folder to hold dot files shared data (e.g. Desktop applications)
-export XDG_DATA_DIRS="$XDG_DATA_DIRS:$HOME/.local/dotfiles_share"
+export XDG_DATA_DIRS="$XDG_DATA_DIRS:/usr/share/:$HOME/.local/share/:$HOME/.local/dotfiles_share"
 
 
 # Homebrew on Linux
