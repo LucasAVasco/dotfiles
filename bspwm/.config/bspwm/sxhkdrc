@@ -153,7 +153,7 @@ super + shift + x
 
 # Clear the clipboard
 super + z
-	echo '' | xclip -i -sel primary ; echo '' | xclip -i -sel secondary ; echo '' | xclip -i -sel clipboard
+	~/.config/clipboard/clear.sh &
 
 # Kill a window
 super + Delete
