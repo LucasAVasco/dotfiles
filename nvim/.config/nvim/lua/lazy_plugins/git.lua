@@ -63,7 +63,7 @@ return {
 				change       = { text = '⸾' , show_count = true },
 				topdelete    = { text = '󰘣' , show_count = true },
 				delete       = { text = '󰘡' , show_count = true },
-				changedelete = { text = '⭍' , show_count = true },
+				changedelete = { text = '' , show_count = true },
 			},
 
 			count_chars = {
