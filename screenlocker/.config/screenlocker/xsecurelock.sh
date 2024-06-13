@@ -13,8 +13,8 @@ pgrep 'xsecurelock' && return
 
 # Saves the current state of the bucklespring and stops it. It is strongly recommended to stop the bucklespring before locking the screen
 # because it is possible to recognize the pressed key by the bucklespring sounds
-is_buckle_on=$(~/.config/bspwm/buckle.sh status)
-~/.config/bspwm/buckle.sh stop
+is_buckle_on=$(~/.config/keyboard/sound_emulator.sh status)
+~/.config/keyboard/sound_emulator.sh stop
 
 
 # Paths
@@ -34,5 +34,5 @@ xsecurelock
 
 # Restores the previous state of the bucklespring
 if [ "$is_buckle_on" = "on" ]; then
-	~/.config/bspwm/buckle.sh start
+	~/.config/keyboard/sound_emulator.sh start
 fi
