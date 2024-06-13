@@ -8,11 +8,6 @@
 [[ "$ALLOW_EXTERNAL_SOFTWARE" != "y" ]] && return
 
 
-# Enables Lesspipe and Lessfile
-eval "$(lessfile)"
-eval "$(lesspipe)"
-
-
 # Bash aliases
 source ~/.bash/aliases.sh
 
