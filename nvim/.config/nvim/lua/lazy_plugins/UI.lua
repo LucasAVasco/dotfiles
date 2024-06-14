@@ -1,11 +1,29 @@
+-- Override the default `vim.ui.input` function to a function that loads 'dressing.nvim' before showing the pop up.
+-- This allows the 'dressing.nvim' plugin to be lazy loaded. It will be loaded only when the first input be required
+vim.ui.input = function(opts, callback_input)
+	require('dressing')
+
+	vim.ui.input(opts, callback_input)
+end
+
+
+-- Like the `vim.ui.input` override, but to `vim.ui.select` function
+vim.ui.select = function(iten_list, opts, callback_select)
+	require('dressing')
+
+	vim.ui.select(iten_list, opts, callback_select)
+end
+
+
 return {
 	{
 		'stevearc/dressing.nvim',
+
+		lazy = true,
+
 		dependencies = {
 			'nvim-telescope/telescope.nvim',
 		},
-
-		event = 'VeryLazy',
 
 		opts = {
 			input = {
