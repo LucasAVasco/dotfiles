@@ -10,6 +10,8 @@ return {
 		cmd = 'Telescope',
 
 		config = function()
+			local telescope = require('telescope')
+
 			--- Open Telescope selection in Trouble
 			--- @param ... Arguments provided by Telescope to `open()`
 			local function open_with_trouble(...)
@@ -24,7 +26,7 @@ return {
 
 			local tl_actions = require('telescope.actions')
 
-			require('telescope').setup ({
+			telescope.setup({
 				defaults = {
 					mappings = {
 						n = {
@@ -45,6 +47,9 @@ return {
 					}
 				}
 			})
+
+			-- Load the 'nvim-notify' extension to show the notification history in Telescope
+			telescope.load_extension('notify')
 		end
 	}
 }
