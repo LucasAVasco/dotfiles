@@ -34,6 +34,10 @@ fi
 # This variable defines if the user can install external software, like extensions or plugins
 ALLOW_EXTERNAL_SOFTWARE=y
 
+if ! [[ "$USER" =~ .*_dev$ ]]; then  # Only allow extensions to users that name ends with '_dev'
+	ALLOW_EXTERNAL_SOFTWARE=n
+fi
+
 ID_RES=($(id))
 [ ${ID_RES[0]} == 'uid=0(root)' ] && ALLOW_EXTERNAL_SOFTWARE=n  # Disable extensions to root
 
