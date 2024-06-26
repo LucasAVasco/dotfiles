@@ -8,10 +8,6 @@
 [[ "$ALLOW_EXTERNAL_SOFTWARE" != "y" ]] && return
 
 
-# Bash aliases
-source ~/.bash/aliases.sh
-
-
 # Extra software (e.g. ASDF, Conda, etc.)
 source ~/.bash/extra_software.sh
 

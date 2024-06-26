@@ -32,6 +32,10 @@ export EDITOR='nvim'
 export VISUAL=nvim
 
 
+# Bash aliases
+source ~/.bash/aliases.sh
+
+
 # User configurations
 source ~/.bash/non_root_config.sh
 
