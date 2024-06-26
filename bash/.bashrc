@@ -28,7 +28,7 @@ shopt -s checkwinsize
 
 
 # Set default editor
-export EDITOR='nvim -e'
+export EDITOR='nvim'
 export VISUAL=nvim
 
 
