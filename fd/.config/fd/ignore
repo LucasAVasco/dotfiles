@@ -1,0 +1,7 @@
+# Ignore VCS
+.git
+
+
+# Python cache
+.mypy_cache
+__pycache__
