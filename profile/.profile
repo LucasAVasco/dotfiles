@@ -52,3 +52,8 @@ export ALLOW_EXTERNAL_SOFTWARE=$ALLOW_EXTERNAL_SOFTWARE
 
 # Apps configuration
 export FZF_DEFAULT_OPTS_FILE=~/.fzfrc
+
+if [ "$ALLOW_EXTERNAL_SOFTWARE" == y ]; then
+	# Default shell. Some terminal emulators use this environment variable to select its shell
+	export SHELL=/bin/zsh
+fi
