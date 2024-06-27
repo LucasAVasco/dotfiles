@@ -4,7 +4,7 @@
 # Configuration specific to non-root, non-sudo, non-admin users. If this file is executed by an invalid user, it will be ignored
 
 
-# Prevent root, admin and users with sudo to run this script
+# Only runs this script if the user is allowed to install external software
 [[ "$ALLOW_EXTERNAL_SOFTWARE" != "y" ]] && return
 
 
