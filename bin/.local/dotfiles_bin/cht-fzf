@@ -1,0 +1,96 @@
+#!/bin/bash
+#
+# Tool to interactively select a `cheat.sh` cheat sheet with `fzf` and show it to the user
+#
+# This script creates a cache of the lists of the selected cheat sheets. Allows fast search if the user connection is not fast enough. Does
+# not create a cache of the cheat sheet, only of the lists
+#
+# Also create a history file. The history entries are shown when running this script
+#
+#
+# Dependencies:
+# * bash
+# * fzf
+# * curl
+# * grep
+# * less
+# * uniq
+# * tr
+# * tail
+# * tac
+# * dirname
+
+
+set -e
+
+
+hist_file=~/.cache/cheat.sh-fzf/history
+number_of_hist_entries=10
+
+
+# Command to query the cheat sheet content. The '--globoff' option is required to search by characters like '[' and '[['. The `cht_cmd_str`
+# variable is used by the `fzf` auto preview functionality
+cht_cmd=(curl --silent --globoff cht.sh/)
+cht_cmd_str="${cht_cmd[@]}"
+
+
+# Folder to hold the cached lists
+lists_folder=~/.cache/cheat.sh-fzf/lists
+mkdir -p "$lists_folder"
+
+
+# Get the list of entries of a cheat sheet
+#
+# $1: cheat sheet path. Example: 'python/lambda'
+#
+# Returns the list of entries in the cheat sheet, or a empty string if there are not entries
+get_list() {
+	search_path="${1%/}"  # Search path without the trailing '/'
+	list_file="$lists_folder/$search_path/.list"
+
+	# Creates the directory to hold the cache files if it does not exist
+	base_dir=$(dirname "$list_file")
+	mkdir -p "$base_dir"
+
+	# Create the list if it does not exist
+	if ! [[ -f "$list_file" ]]; then
+		curl -s "cheat.sh/$search_path/:list" > "$list_file"
+	fi
+
+	# Shows the list history. Only if no cheat sheet is provided
+	if [[ -z "$1" ]] && [[ -f "$hist_file" ]]; then
+		tac "$hist_file" | uniq  # `tac` shows the newer entries first. `uniq` command duplicated entries
+	fi
+
+	cat "$list_file"
+}
+
+
+next_list=$(get_list | fzf --preview="$cht_cmd_str/{}")
+selection="$next_list"  # What cheat sheet to show
+
+
+while [[ -n "$(get_list "$selection")" ]]; do  # Until select a entry without sub-lists
+	next_list=$(get_list "$selection" | fzf --preview="$cht_cmd_str/$selection/{}")
+
+	# Need to remove the last '/', otherwise may be duplicated entries in the history
+	selection=$(echo "$selection/$next_list" | tr -s '/')
+done
+
+
+# Does nothing if no cheat sheet has been provided
+if [[ -z "$selection" ]]; then
+	exit 1
+fi
+
+
+# Save the selection in the history file (save only the last "$number_of_hist_entries" entries)
+echo "$selection" >> "$hist_file"
+tmp_file=$(mktemp)  # Need to use a temporary file because the `tail` command can not output to its input file
+tail --lines $number_of_hist_entries "$hist_file" > "$tmp_file"
+mv "$tmp_file" "$hist_file"
+
+
+# Shows the selected cheat sheet. `--raw-control-chars` is required to colored output. `--clear-screen` place the less content on the top of the screen
+echo "Selected Cheat Sheet: $selection"
+${cht_cmd[@]}"$selection" | less --raw-control-chars --clear-screen
