@@ -56,4 +56,10 @@ export FZF_DEFAULT_OPTS_FILE=~/.fzfrc
 if [ "$ALLOW_EXTERNAL_SOFTWARE" == y ]; then
 	# Default shell. Some terminal emulators use this environment variable to select its shell
 	export SHELL=/bin/zsh
+
+	# If the user's default shell is Bash, enable ASDF. This allows applications that are not launched directly by an interactive bash
+	# session to use some software installed by ASDF. Requires the user's default shell to be `bash`
+	if [ "$0" == 'bash' -o "$0" == '-bash' ]; then
+		test -f ~/.asdf/asdf.sh && source ~/.asdf/asdf.sh
+	fi
 fi

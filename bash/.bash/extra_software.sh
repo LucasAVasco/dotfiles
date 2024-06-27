@@ -5,9 +5,11 @@
 [[ "$ALLOW_EXTERNAL_SOFTWARE" != "y" ]] && return
 
 
-# ASDF and its completions
-test -f ~/.asdf/asdf.sh && source ~/.asdf/asdf.sh
-test -f ~/.asdf/completions/asdf.bash && source ~/.asdf/completions/asdf.bash
+# ASDF and its completions (only if not already sourced from the '~/.profile' file)
+if [[ -z "$ASDF_DIR" ]]; then
+	test -f ~/.asdf/asdf.sh && source ~/.asdf/asdf.sh
+	test -f ~/.asdf/completions/asdf.bash && source ~/.asdf/completions/asdf.bash
+fi
 
 
 # Conda startup command
