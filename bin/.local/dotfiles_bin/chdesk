@@ -204,7 +204,7 @@ case "$1" in
 		fi
 
 		# Changes the Desktop
-		ln -sfn "$desktop_path" ~/Desktop
+		ln -sfn "$desktop_path" -T ~/Desktop
 		;;
 
 	# Show help message
