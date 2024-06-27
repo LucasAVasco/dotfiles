@@ -1,0 +1,25 @@
+#!/bin/bash
+#
+# Open a list of the `tldr` cheat sheets in fzf and show the selected one
+#
+# Has an auto preview feature
+#
+# Dependencies:
+# * bash
+# * fzf
+# * tldr or tealdeer
+# * less
+
+
+set -e
+
+
+# Interactively selects the cheat sheet
+selected_cheat=$(tldr --list | fzf --preview='tldr --color=always {}')
+
+
+# Shows the selected cheat sheet if the user does not canceled the operation
+if [[ -n "$selected_cheat" ]]; then
+	# `--raw-control-chars` is required to colored output. `--clear-screen` place the less content on the top of the screen
+	tldr --color=always "$selected_cheat" | less --raw-control-chars --clear-screen
+fi
