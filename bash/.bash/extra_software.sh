@@ -1,6 +1,10 @@
 #!/bin/bash
 
 
+# Only runs this script if the user is allowed to install external software
+[[ "$ALLOW_EXTERNAL_SOFTWARE" != "y" ]] && return
+
+
 # ASDF and its completions
 test -f ~/.asdf/asdf.sh && source ~/.asdf/asdf.sh
 test -f ~/.asdf/completions/asdf.bash && source ~/.asdf/completions/asdf.bash
