@@ -48,3 +48,7 @@ done
 [ "${USER:0:5}" == 'admin' ] && ALLOW_EXTERNAL_SOFTWARE=n  # Disable extensions to '^admin.*' users
 
 export ALLOW_EXTERNAL_SOFTWARE=$ALLOW_EXTERNAL_SOFTWARE
+
+
+# Apps configuration
+export FZF_DEFAULT_OPTS_FILE=~/.fzfrc
