@@ -1,0 +1,223 @@
+#!/bin/env python3
+
+
+"""Restore the provided files from the Trash files directory.
+
+The user need to provided the file or folder name in the trash files folder. This script
+will restore then in its respective original location, defined in its respective
+'trashinfo' file. See the `trash folder specification
+<https://specifications.freedesktop.org/trash-spec/trashspec-1.0.html>` for further
+information
+
+It is allowed To restore more that one file at the same time. Example:
+
+.. code-block:: shell
+
+    # If the user Trash folder is '~/.local/share/Trash', this will restore
+    # '~/.local/share/Trash/files/file1.txt' and
+    # '~/.local/share/Trash/files/file2.txt'
+    trash-restore-ft file1.txt file2.txt
+
+You can also specify a absolute path of the file in the Trash files folder:
+
+.. code-block:: shell
+
+    # Equivalent to the last example
+    trash-restore-ft ~/.local/share/Trash/files/file1.txt
+    trash-restore-ft ~/.local/share/Trash/files/file2.txt
+
+This script can not restore sub-folders inside the trash files directory. Example:
+
+.. code-block:: shell
+
+    # This will raise an exception
+    trash-restore-ft folder/sub-folder/file1.txt
+
+If the original location (where the restored file should be placed) already exists, does
+not restore anything.
+
+If no file is provided, this script asks the user by them. Use `fzf` to show the files
+and folders that can be restored. The user can select more that one file with 'TAB' or
+'SHIFT' + 'TAB'.
+
+Dependencies
+------------
+* python3
+
+Optional dependencies
+---------------------
+
+* 'fd' (if using the interactive restore)
+* 'fzf' (if using the interactive restore)
+* 'bat' (if using the interactive restore)
+* 'eza' (if using the interactive restore)
+"""
+
+
+from __future__ import annotations
+
+import configparser
+import os
+import shutil
+import subprocess
+import sys
+from pathlib import Path
+from urllib.parse import unquote
+
+HOME = os.environ["HOME"]
+trash_files_folder = HOME + "/.local/share/Trash/files"
+trash_info_folder = HOME + "/.local/share/Trash/info"
+
+
+class File2Restore:
+    """Class with the information required to restore the file from the Trash folder."""
+
+    path: Path
+    trash_info_path: Path
+    original_location: Path
+
+files_to_restore: list[File2Restore] = []
+
+
+selected_files: list[str] = sys.argv
+selected_files.pop(0)  # Removes this script path
+
+
+# Interactively select the files and folders to restore with `fzf`
+if len(selected_files) == 0:
+    # Configure the `fzf` environment to query the files to restore with `fd`
+    fzf_env = os.environ.copy()
+    fzf_env["FZF_DEFAULT_COMMAND"] = (
+        f"fd . --base-directory {trash_files_folder}"
+        " --max-depth 1 --color=always"
+    )
+
+    # Asks the user to select the files. The '--multi' option allows the user to select
+    # multiple files. '--ansi' is required to colored output
+    result = subprocess.run([
+        "/bin/fzf", "--multi", "--ansi",
+
+        # '--preview' option. Add an auto-preview window that lists the content of
+        # directories with `eza` (if the selection is a directory), or shows the file
+        # content with `bat` (if the selection is a file)
+        (
+            f"--preview=bat --color=always {trash_files_folder}/{{1}} 2> /dev/null"
+            "|| eza -A --icons=always --color=always --git "
+            f"{trash_files_folder}/{{1}}"
+        ),
+     ],
+    env=fzf_env, capture_output=True,
+    text=True, check=False, shell=False)  # noqa: S603
+    selected_files = result.stdout.split("\n")
+
+    # Fzf adds a new line to the last selected entry. This creates a empty string in the
+    # last element of the list
+    selected_files.remove("")
+
+    # If no file is provided, abort the operation
+    if len(selected_files) == 0:
+        print("No file or folder selected to restore. Aborting...")  # noqa: T201
+        sys.exit(0)
+
+
+# Fills the list `files_to_restore` list with the data required to restore the files.
+# Checks by inconsistencies. Raises an error if founded
+for file in selected_files:
+    # The file need to be inside the trash files folder
+    if file[0] == "/" and not file.startswith(trash_files_folder):
+        err_msg = (
+            "The file need to be inside the trash folder:"
+                f"'{trash_files_folder}'.\n"
+                "But the provided file is not in this folder:"
+                f"{file}\n"
+        )
+        raise KeyError(err_msg)
+
+    file_name = file.removeprefix(
+        trash_files_folder + "/").removesuffix("/")
+
+    # The user can not provide a sub-folder. This script only works for folder and files
+    # inside the trash files folder
+    if "/" in file_name:
+        err_msg = f"Can not remove a sub-file: '{file_name}'"
+        raise KeyError(err_msg)
+
+    # Data necessary to restore the file
+    file_data = File2Restore()
+    file_data.path = Path(trash_files_folder) / file_name
+    file_data.trash_info_path = Path(trash_info_folder) / (file_name + ".trashinfo")
+
+    # The file must exist
+    if not file_data.path.exists():
+        err_msg = f"The provided file must exist to be restored: '{file_data.path}'"
+        raise KeyError(err_msg)
+
+    # The file to restore must have a respective 'trashinfo' file to hold the deletion
+    # and restoration information
+    if not file_data.trash_info_path.exists():
+        err_msg = (
+            "The provided file must have a respective 'trashinfo' file: "
+                "f'{file_data.trash_info_path}'"
+        )
+        raise KeyError(err_msg)
+
+    config = configparser.RawConfigParser()
+    config.read(file_data.trash_info_path)
+    file_data.original_location = Path(unquote(config["Trash Info"]["Path"]))
+
+    # It is not possible to restore the provided file if already exist a file in its
+    # original location
+    if file_data.original_location.exists():
+        err_msg = (
+            "Already exists a file in the original location: "
+            f"'{file_data.original_location}'"
+        )
+        raise KeyError(err_msg)
+
+    # It is not possible to restore the files if more than one file need to be restored
+    # in the same original location
+    for other_file_to_restore in files_to_restore:
+        if other_file_to_restore.original_location == file_data.original_location:
+            err_msg = (
+                "Collision between original locations.\n"
+                    "There are more that one file to restore in the same location.\n"
+                    f"trash_file1: '{other_file_to_restore.path}'\n"
+                    f"trash_file2: '{file_data.path}'\n"
+                    f"original_location: '{file_data.original_location}'"
+            )
+            raise FileExistsError(err_msg)
+
+    # No error found in the validation process
+    files_to_restore.append(file_data)
+
+
+def get_user_path(abs_path: Path) -> str:
+    """Return the path with the user home replaced by a tilde '~'."""
+    abs_str = str(abs_path)
+
+    if abs_str[0:len(HOME)] == HOME:
+        abs_str = "~" + abs_str[len(HOME):]
+
+    return abs_str
+
+
+# Shows the list of files and folders to restore and asks if the user wants to restore
+# them
+print("\033[0;32mFiles to restore: \n\033[0m")  # noqa: T201
+for file_data in files_to_restore:
+    print(  # noqa: T201
+        get_user_path(file_data.path),
+        "\033[0;32m-->\033[0m",
+        get_user_path(file_data.original_location),
+    )
+
+if input("Want to restore the following files and folders: [y/N]: ") != "y":
+    sys.exit(1)
+
+
+# Files and folders restoration
+for file_data in files_to_restore:
+    # Move the file to the original position (restore) and deletes the 'trashinfo' entry
+    file_data.original_location.parent.mkdir(parents=True, exist_ok=True)
+    shutil.move(file_data.path, file_data.original_location)
+    file_data.trash_info_path.unlink()

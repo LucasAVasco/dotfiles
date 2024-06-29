@@ -1,0 +1,6 @@
+[tool.pylsp-mypy]
+strict = true
+
+[tool.ruff.lint]
+select = ["ALL"]
+ignore = ["ANN101"]  # Disable require explicit type annotations to 'Self'
