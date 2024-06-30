@@ -79,6 +79,20 @@ myplugfunc.set_keymap_name('<leader>Lc', 'LSP Codelens mappings', {'n'})
 vim.keymap.set('n', '<leader>Lcr', vim.lsp.codelens.run, default_options('Run LSP codelens of the current line'))
 
 
+--- Return a function that refreshes the code lens in a specific buffer
+-- The `vim.lsp.codelens.refresh()` function refreshes the code lens in all buffers. To refresh the code lens of a specif buffer, we need to
+-- provide the buffer number to this function. The current function automatize this task by returning a function that calls
+-- `vim.lsp.codelens.refresh()` only to the provided client and buffer
+--- @param client_id number Number of the LSP client
+--- @param buffer_nr number Number of the buffer to refresh the code lens
+--- @return function Function that refreshes the code lens in the specified buffer
+local function get_refresh_codelens_function(client_id, buffer_nr)
+	return function()
+		vim.lsp.codelens.refresh({client_id=client_id, bufnr=buffer_nr})
+	end
+end
+
+
 -- Auto commands. Need to check if the language server supports it. See the capabilities at:
 -- https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#serverCapabilities
 local LSP_group = vim.api.nvim_create_augroup('LSPGroup', { clear = true })
@@ -87,7 +101,13 @@ vim.api.nvim_create_autocmd('LspAttach', {
 	group = LSP_group,
 	callback = function(args)
 		local buffer_nr = args.buf
-		local client = vim.lsp.get_client_by_id(args.data.client_id)
+		local client_id = args.data.client_id
+		local client = vim.lsp.get_client_by_id(client_id)
+
+		-- The client need to exist to be able to query the capabilities
+		if client == nil then
+			return
+		end
 
 		-- Enables highlighting references. The current color scheme need to support it (provide 'LspReferenceText'
 		-- 'LspReferenceRead' and 'LspReferenceWrite' highlight groups)
@@ -104,7 +124,7 @@ vim.api.nvim_create_autocmd('LspAttach', {
 		-- Shows the codelens
 		if client.server_capabilities.codeLensProvider then
 			vim.api.nvim_create_autocmd({'BufEnter', 'InsertLeave', 'CursorHold'}, {
-				group = LSP_group, buffer = buffer_nr, callback = vim.lsp.codelens.refresh
+				group = LSP_group, buffer = buffer_nr, callback = get_refresh_codelens_function(client_id, buffer_nr)
 			})
 		end
 	end,
