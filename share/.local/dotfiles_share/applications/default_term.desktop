@@ -1,0 +1,10 @@
+[Desktop Entry]
+Type=Application
+Name=Default terminal emulator
+GenericName=Terminal emulator
+Comment=Open the default terminal emulator
+Keywords=Terminal;Emulator;Console;
+Categories=Development;System;Utility;TerminalEmulator;
+Icon=utilities-terminal
+Exec=default_term
+Terminal=false

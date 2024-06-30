@@ -1,0 +1,13 @@
+#!/bin/bash
+#
+# # Open the default file manager in a new window, even if it is a terminal-based file manager and the user opens it in a terminal emulator
+#
+# This is not a Linux standard functionality. I just use it in my scripts
+#
+# Dependencies:
+# * bash
+# * yazi
+# * A script called `default_term` that opens the default terminal emulator
+
+
+exec default_term yazi "$@" &

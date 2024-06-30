@@ -1,0 +1,10 @@
+[Desktop Entry]
+Type=Application
+Name=Default File manager
+Comment=Open the default file manager
+Keywords=Folder;Directory;File;Explorer;Manager;Launcher;
+Categories=System;Utility;FileTools;FileManager;Filesystem;
+MimeType=inode/directory;
+Icon=system-file-manager
+Exec=default_file_manager %f
+Terminal=false

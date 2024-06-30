@@ -1,0 +1,13 @@
+#!/bin/bash
+#
+# Open Neovim in a new window of the default terminal emulator
+#
+# This is not a Linux standard functionality. I just use it in my scripts
+#
+# Dependencies:
+# * bash
+# * nvim
+# * A script called `default_term` that opens the default terminal emulator
+
+
+exec default_term nvim "$@" &

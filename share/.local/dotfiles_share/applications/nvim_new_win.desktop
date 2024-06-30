@@ -1,0 +1,11 @@
+[Desktop Entry]
+Type=Application
+Name=Neovim (new window)
+GenericName=Text Editor (new window)
+Comment=Open Neovim text editor in a new terminal instance
+Keywords=Vi;Vim;Text;Editor;Terminal;Console;File;
+Categories=Development;Utility;TextTools;TextEditor;ConsoleOnly;
+MimeType=text/plain;
+Icon=nvim
+Exec=nvim_new_win %F
+Terminal=false
