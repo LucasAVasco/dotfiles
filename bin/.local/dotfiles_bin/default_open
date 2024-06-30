@@ -1,0 +1,106 @@
+#!/bin/bash
+#
+# Open a file or URI according to the following rules:
+# * Open all text files with Neovim in a new window
+# * Open directories with the default file manager in a new window
+# * Open other files and URI with `xdg-open`
+#
+# Additional Features:
+# * Support to open text files in a specific line with the '#line number' and ':line number' suffixes
+# * Support to open text files in a specific line with the '+line number' argument
+#
+# This script only support to open one file at the same command. To open several files, the user need to call this script multiple times.
+# One per file
+#
+# Usage:
+# $1 file path or URI to open
+# $2..n: arguments to be passed to the application that will open the file or URI
+#
+# Dependencies:
+# * bash
+# * xdg-open
+# * notify-send
+# * uname (to query the local host name)
+# * `file` command (to query the file mime type)
+# * The `nvim_new_win` and `default_file_manager` scripts
+
+
+# Open a generic path (file or folder)
+#
+# Open files in Neovim. Open folders with the default file manager. Always open in a new window
+#
+# $1: Path of the file or folder to open
+# $2..n: Arguments passed to the application that will open the file or folder
+open_path() {
+	# File
+	if [[ -f "$1" ]]; then
+		file_cmd_response=($(file --mime-type "$1"))
+		mime_type="${file_cmd_response[1]}"
+
+		# Only open text files with Neovim
+		if [[ "$mime_type" =~ ^text/ ]]; then
+			exec nvim_new_win "$1" "${@:2}"
+		fi
+
+		# Fallback
+		exec xdg-open "$1" "${@:2}"
+	
+	# Directory
+	elif [[ -d "$1" ]]; then
+		exec default_file_manager "$1" "${@:2}"
+
+	else
+		notify-send "The provided file or folder does not exist: '$2'"
+	fi
+}
+
+
+# Removes the 'file://' URI prefix in the provided file path
+file_path="${1#file://}"
+
+
+# Removes the name of the current host, if added to the path
+current_hostname=$(uname -n)
+file_hostname="${file_path%%/*}"
+[[ "$file_hostname" == '' ]] && file_hostname="$current_hostname"  # The file is in the local host If no host name is provided
+file_path="${file_path#${current_hostname}}"
+
+
+# Expand the provided file or folder path (replaces the '~' by the user home if it is the first character of the path)
+if [[ "${file_path:0:1}" == '~' ]]; then
+	file_path="$HOME${1:1}"
+fi
+
+
+# Line number indicator. Some applications can output the file URI as file://<path>#<line number> or file://<path>:<line number> to mark a
+# specific line position. Need to get the line number and remove it form the file path. The line number need to be prefixed by a '+'
+# character to be used with Neovim
+line_number=''
+
+if [[ "$1" =~ \#[0-9]+ ]]; then   # Line number is after a '#'
+	line_number="+${1##*#}"
+	file_path="${file_path%#*}"
+
+elif [[ "$1" =~ \:[0-9]+ ]]; then # Line number is after a ':'
+	line_number="+${1##*:}"
+	file_path="${file_path%:*}"
+fi
+
+
+# Define how to process the provided file or folder
+if [[ "$1" =~ ^file:// ]]; then
+	if [[ "$file_hostname" == "$current_hostname" ]]; then
+		open_path "$file_path" $line_number "${@:2}"
+
+	else
+		# TODO(LucasAVasco): Implement the access to remote files
+		notify-send 'The access to remote files is not implemented yet'
+	fi
+
+elif [[ -f "$file_path" ]] || [[ -d "$file_path" ]]; then
+	open_path "$file_path" $line_number "${@:2}"
+fi
+
+
+# Fallback option
+exec xdg-open "$@"
