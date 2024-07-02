@@ -1,0 +1,6 @@
+#!/bin/bash
+#
+# Run `ripgrep` and shows the output with `delta`
+
+
+rg --json "$@" | delta
