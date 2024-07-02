@@ -30,7 +30,7 @@ start_buckle() {
 
 # Stops bucklespring. Returns an error if the Bucklespring is not running
 stop_buckle() {
-	pkill -f "^${buckle_command}$"
+	pkill -u "$UID" -f "^${buckle_command}$"
 }
 
 

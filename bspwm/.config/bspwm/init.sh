@@ -10,11 +10,11 @@ set_theme --fix-cursor
 # #region Programs that need to be reinitialized every time this script is run
 
 # Screen locker
-pkill xss-lock 2> /dev/null
+pkill -u "$UID" xss-lock 2> /dev/null
 xss-lock -- ~/.config/screenlocker/idle.sh &
 
 # Compositor
-pkill picom 2> /dev/null
+pkill -u "$UID" picom 2> /dev/null
 sleep 0.1  # Need to add a delay because the compositor can not be started immediately after kill the previous one (sometimes will not be reloaded)
 picom --experimental-backends --dbus &
 
@@ -23,18 +23,18 @@ picom --experimental-backends --dbus &
 ~/.config/bspwm/buckle.sh start
 
 # File manager as a daemon
-pkill thunar 2> /dev/null
+pkill -u "$UID" thunar 2> /dev/null
 thunar --daemon &
 
 # Polybar
-pkill polybar 2> /dev/null
+pkill -u "$UID" polybar 2> /dev/null
 ~/.config/polybar/bars/bspwm-topbar/start.sh &
 
 # Starts sxhkd or sends a signal to apply the changes of the Sxhkd configurations
 if [[ "$(pgrep -f sxhkd)" == "" ]]; then
 	sxhkd -c ~/.config/bspwm/sxhkdrc &
 else
-	pkill -USR1 -x sxhkd
+	pkill -u "$UID" -USR1 -x sxhkd
 fi
 
 # #endregion

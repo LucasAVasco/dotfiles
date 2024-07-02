@@ -13,7 +13,7 @@ case "$1" in
 		;;
 
 	"close" )
-		pkill -f "^rclone rcd --rc-web-gui$"
+		pkill -u "$UID" -f "^rclone rcd --rc-web-gui$"
 		;;
 
 	* )
