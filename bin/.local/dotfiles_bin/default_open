@@ -30,6 +30,9 @@
 # * The `nvim_new_win` and `default_file_manager` scripts
 
 
+set -e
+
+
 # Open a generic path (file or folder)
 #
 # Open files in Neovim. Open folders with the default file manager. Always open in a new window
