@@ -1,4 +1,4 @@
 #!/bin/bash
 
 
-ag ${@:1} -c | sed 's/:[^:]*$//' | xargs nvim
+ag "${@:1}" -c | sed 's/:[^:]*$//' | xargs nvim
