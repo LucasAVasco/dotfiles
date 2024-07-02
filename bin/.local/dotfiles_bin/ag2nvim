@@ -1,4 +1,6 @@
 #!/bin/bash
+#
+# Run `ag` and open the files that have some match in Neovim
 
 
 ag "${@:1}" -c | sed 's/:[^:]*$//' | xargs nvim
