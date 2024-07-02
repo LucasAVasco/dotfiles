@@ -3,6 +3,7 @@
 # Open a file or URI according to the following rules:
 # * Open all text files with Neovim in a new window
 # * Open directories with the default file manager in a new window
+# * Open git commits
 # * Open other files and URI with `xdg-open`
 #
 # Additional Features:
@@ -12,6 +13,9 @@
 # This script only support to open one file at the same command. To open several files, the user need to call this script multiple times.
 # One per file
 #
+# This script can open a custom URI related to git: 'git://'. This is not a standard URI. I created it to use with my scripts. See the
+# supported sub-protocols in the `open_git()` function
+#
 # Usage:
 # $1 file path or URI to open
 # $2..n: arguments to be passed to the application that will open the file or URI
@@ -19,6 +23,7 @@
 # Dependencies:
 # * bash
 # * xdg-open
+# * git
 # * notify-send
 # * uname (to query the local host name)
 # * `file` command (to query the file mime type)
@@ -54,6 +59,64 @@ open_path() {
 	fi
 }
 
+
+
+# Open a URI related to git
+#
+# This is not a standard URI. I created it to use with my scripts. This function can open a 'git://' URI in a predefined application
+# (usually the web-browser) with `xdg-open`
+#
+# This 'git' URI support some sub-protocols (can be extended):
+#
+# * commit: open a commit in the web-browser. The URI need to match the following pattern:
+# 'git://commit/<remote>/<commit>/#<path to local repository>', or 'git://commit/<remote>/<commit>/' to use the current repository.
+# Examples: 'git://commit/origin/a1esdq123/#/home/user/my_git_repo/' or 'git://commit/origin/a1esdq123'. Note: the <commit> can be the short
+# version of the commit. This function will query the full version to use
+#
+# Parameters:
+# $1: URI following the previous formats
+# $2..n: Arguments passed to the application that will open the URI
+open_git() {
+
+	# Get the information related to git
+	IFS=$'/'
+	uri=(${1#git://})
+	unset IFS
+
+	case "${uri[0]}" in
+		commit)
+			remote_name="${uri[1]}"
+			commit="${uri[2]}"
+
+			# Path to the repository
+			IFS=$'#'
+			repo_dir=($1)
+			unset IFS
+			repo_dir="${repo_dir[1]}"
+
+			# Complete the missing information
+			if [[ -n "$repo_dir" ]]; then  # Repository path (local machine) is provided
+				git_dir_arg="--git-dir=$repo_dir/.git"
+				repo_url=$(git "$git_dir_arg" remote get-url "$remote_name")
+				commit=$(git "$git_dir_arg" rev-parse "$commit")  # Full version of the commit
+			
+			else  # Local repository path is not provided (use the current repository)
+				repo_url=$(git remote get-url "$remote_name")
+				commit=$(git rev-parse "$commit")  # Full version of the commit
+			fi
+
+			# If it is a GitHub repository
+			if [[ "$repo_url" =~ github ]]; then
+				exec xdg-open "$repo_url/commit/$commit" "${@:2}"
+			fi
+			;;
+
+		*)
+			notify-send "Unknown git sub-protocol! Recived: '$1' Aborting..."
+			exit 1
+			;;
+	esac
+}
 
 # Removes the 'file://' URI prefix in the provided file path
 file_path="${1#file://}"
@@ -96,6 +159,9 @@ if [[ "$1" =~ ^file:// ]]; then
 		# TODO(LucasAVasco): Implement the access to remote files
 		notify-send 'The access to remote files is not implemented yet'
 	fi
+
+elif [[ "$1" =~ ^git:// ]]; then
+	open_git "$@" "${@:2}"
 
 elif [[ -f "$file_path" ]] || [[ -d "$file_path" ]]; then
 	open_path "$file_path" $line_number "${@:2}"
