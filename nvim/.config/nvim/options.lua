@@ -31,6 +31,10 @@ vim.opt.tabstop = 4        -- Number of spaces that a Tab represents
 vim.opt.softtabstop = -1   -- Number of spaces added for Tab when editing ( <0 = use 'shiftwidth')
 vim.opt.shiftwidth = 0     -- Number of spaces added for each indentation (0 = use 'tabstop')
 
+-- Limits related to the line size
+vim.opt.textwidth = 140
+vim.opt.colorcolumn = '+1'
+
 --- Update the `vim.opt.listchars` settings
 -- This option depends of the `tabstop` option. Every time the `tabstop` option is changed, the listchars option need to be updated
 -- This function does the job. The user only need to run this function if changing the `tabstop` option. This can be done with a
