@@ -236,7 +236,7 @@ return {
 							fallback()
 						end
 					end,
-					['<S-Tab>'] = function()
+					['<S-Tab>'] = function(fallback)
 						if cmp.visible() then
 							cmp.select_prev_item({ behavior = cmp.SelectBehavior.Insert })
 						elseif luasnip.jumpable(-1) then
