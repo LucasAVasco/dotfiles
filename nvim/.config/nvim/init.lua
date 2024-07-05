@@ -64,6 +64,5 @@ if vim.env.ALLOW_EXTERNAL_SOFTWARE == 'y' then
 		}
 	})
 
-	-- Colorscheme
-	vim.cmd.colorscheme('kanagawa')
+	dofile(config_dir .. 'colorscheme.lua')
 end
