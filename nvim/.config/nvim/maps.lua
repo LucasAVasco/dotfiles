@@ -55,10 +55,8 @@ vim.keymap.set('v', '<A-s>', ':s/<C-r>///g<left><left>', get_default_opt_no_sile
 vim.keymap.set('v', '<A-r>', '""y:%s/<C-r>"//g<left><left>', get_default_opt_no_silence('Replace visual selected text in all file'))
 
 -- Indentation
-vim.keymap.set('v', '<S-TAB>', '<', get_default_opt('Indent current selection to left'))
-vim.keymap.set('v', '<TAB>', '>', get_default_opt('Indent current selection to right'))
-vim.keymap.set('n', '<S-TAB>', 'gv<', get_default_opt('Indent last selection to left'))
-vim.keymap.set('n', '<TAB>', 'gv>', get_default_opt('Indent last selection to right'))
+vim.keymap.set('v', '<S-TAB>', '<gv', get_default_opt('Indent current selection to left'))
+vim.keymap.set('v', '<TAB>', '>gv', get_default_opt('Indent current selection to right'))
 
 -- Select the last visual selection
 vim.keymap.set('n', '<A-x>', 'gv', get_default_opt('Select last visual selection'))
