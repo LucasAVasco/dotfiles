@@ -60,7 +60,7 @@ return {
 			signs = {
 				untracked    = { text = '¦' , show_count = true },
 				add          = { text = '┃' , show_count = true },
-				change       = { text = '⸾' , show_count = true },
+				change       = { text = '󰇙' , show_count = true },
 				topdelete    = { text = '󰘣' , show_count = true },
 				delete       = { text = '󰘡' , show_count = true },
 				changedelete = { text = '' , show_count = true },
