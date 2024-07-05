@@ -22,6 +22,7 @@ return {
 				shortcut = {
 					{ icon = ' ', icon_hl = icon_hl, desc = 'Update', group = desc_hl, action = 'Lazy update', key = 'u' },
 					{ icon = ' ', icon_hl = icon_hl, desc = 'New file', group = desc_hl, action = 'new | only', key = 'n' },
+					{ icon = ' ', icon_hl = icon_hl, desc = 'File tree', group = desc_hl, action = 'NvimTreeFocus', key = 't' },
 					{ icon = ' ', icon_hl = icon_hl, desc = 'Find file', group = desc_hl, action = 'Telescope find_files', key = 'f' },
 					{ icon = ' ', icon_hl = icon_hl, desc = 'Git status', group = desc_hl, action = 'Git | only', key = 'g' },
 					{ icon = '󰸟 ', icon_hl = icon_hl, desc = 'Healthchecks', group = desc_hl, action = 'checkhealth', key = 'h' },
