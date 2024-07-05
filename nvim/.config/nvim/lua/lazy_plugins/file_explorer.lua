@@ -94,6 +94,8 @@ return {
 			'disable-netrw',
 		},
 
+		cmd = { 'NvimTreeOpen', 'NvimTreeClose', 'NvimTreeToggle', 'NvimTreeFocus', 'NvimTreeFindFile', 'NvimTreeFindFileToggle' },
+
 		keys = {
 			{ 'gf', '<cmd>NvimTreeFocus<CR>', mode = 'n' },
 		},
