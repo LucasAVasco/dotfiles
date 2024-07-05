@@ -122,29 +122,19 @@ vim.keymap.set('i', '<C-BS>', function()
 end, get_default_opt('Delete the previous word'))
 
 
---- Only executes a deletion command if the cursor is not in the last column.
--- Also moves the cursor after the deletion if required to be more intuitive
--- @param delete_command The deletion command to be executed in command mode
--- @return The function that executes the deletion
-local function decorator_delete_next_word(delete_command)
-	return function()
-		-- Does nothing if in the last column
-		if vim.fn.col('.') == vim.fn.col('$') then
-			return
-		end
+-- Del the next word with <C-DEL>
+vim.keymap.set('i', '<C-DEL>', function()
+	local cursor_pos = vim.api.nvim_win_get_cursor(0)  -- Line (starts with 1) | column (starts with 0)
+	local last_col = vim.fn.col('$')-1                 -- Max column that the cursor can go in insert mode
 
-		-- Does the delete
-		vim.cmd(delete_command)
-
-		-- If the cursor goes to the last column after the delete, it will return to insert mode in a column before the current. To fix that
-		-- I add 1 to the column number when it stops in the column before the last
-		if vim.fn.col('.') == vim.fn.col('$')-1 then
-			local cursor_pos = vim.api.nvim_win_get_cursor(0)  -- Line starts with 1, column starts with 0
-			vim.api.nvim_win_set_cursor(0, { cursor_pos[1], cursor_pos[2] + 1 })
-		end
+	-- Does nothing if in the last column, so the user will not accidentally delete the next line. Release CTRL and press backspace if you
+	-- want to continue the deletion
+	if cursor_pos[2] == last_col then
+		return
 	end
-end
 
--- Del key mappings
-vim.keymap.set('n', '<C-DEL>', decorator_delete_next_word('normal! dW'), get_default_opt('Delete a WORD next'))
-vim.keymap.set('i', '<C-DEL>', decorator_delete_next_word('normal! dw'), get_default_opt('Delete a word next'))
+	-- Delete operation. This operation can move the cursor to a another position. This is not the desired behavior. So need to restore the
+	-- cursor position to the one before the delete operation
+	vim.cmd.normal({'dw', bang=true})
+	vim.api.nvim_win_set_cursor(0, cursor_pos)
+end, get_default_opt('Delete the next word'))
