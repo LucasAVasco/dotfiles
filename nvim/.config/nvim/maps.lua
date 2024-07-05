@@ -30,8 +30,8 @@ end
 
 
 -- Functions to generate the option tables
-local get_default_opt = myfunc.decorator_create_options_table({ noremap = true, silent = true })
-local get_default_opt_no_silence = myfunc.decorator_create_options_table({ noremap = true, silent = false })
+local get_default_opt = myfunc.decorator_create_options_table({ remap = false, silent = true })
+local get_default_opt_no_silence = myfunc.decorator_create_options_table({ remap = false, silent = false })
 
 
 -- My documentation help
