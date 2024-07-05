@@ -95,9 +95,32 @@ vim.keymap.set('i', '<C-down>', '<CMD>normal! }<CR>', get_default_opt('Move curs
 vim.keymap.set({'n', 'v'}, ',', '@q', get_default_opt('Repeat macro "q"'))
 vim.keymap.set('n', '<leader>,', ':let @q=@', get_default_opt('Copy a register content to "q" register'))
 
--- Backspace deletion maps (need to use <C-H> instead of <C-BS>)
-vim.keymap.set('n', '<C-H>', 'dBx', get_default_opt('Delete a WORD back'))
-vim.keymap.set('i', '<C-H>', '<CMD>normal! db<CR><right>', get_default_opt('Delete a word back'))
+
+-- Backspace deletion. Some terminal emulators does not have a <C-BS> key. They use <C-w> or <C-h> instead
+vim.keymap.set('i', '<C-w>', '<C-BS>', {remap=true, silent = true, desc="Same as the <C-BS> key"})
+vim.keymap.set('i', '<C-h>', '<C-BS>', {remap=true, silent = true, desc="Same as the <C-BS> key"})
+vim.keymap.set('i', '<C-BS>', function()
+	local cursor_pos = vim.api.nvim_win_get_cursor(0)  -- Line (starts with 1) | column (starts with 0)
+	local last_col = vim.fn.col('$')-1                 -- Max column that the cursor can go in insert mode
+
+	-- Does nothing if in the first column, so the user will not accidentally delete the previous line. Release CTRL and press BACKSPACE if
+	-- you want to continue the deletion
+	if cursor_pos[2] == 0 then
+		return
+	end
+
+	-- Deletion
+	vim.cmd.normal({'db', bang=true })
+
+	-- The delete operation is performed with a normal command. If the cursor is in the last column, the delete operation places the cursor
+	-- one column before the last (moves one column to the left). To fix this, we need to manually move the cursor to the right. I tried
+	-- using a normal command to do this, but it didn't work
+	if cursor_pos[2] == last_col then
+		cursor_pos = vim.api.nvim_win_get_cursor(0)
+		vim.api.nvim_win_set_cursor(0, { cursor_pos[1], cursor_pos[2] + 1 })
+	end
+end, get_default_opt('Delete the previous word'))
+
 
 --- Only executes a deletion command if the cursor is not in the last column.
 -- Also moves the cursor after the deletion if required to be more intuitive
