@@ -26,7 +26,7 @@ download_font () {
 
 	# Download, extract and install
 	curl --location "https://github.com/ryanoasis/nerd-fonts/releases/download/${2}/${1}.zip" --output "${tmp_dir}/font.zip"
-	unzip "${tmp_dir}/font.zip" -d "$fonts_folder"
+	unzip "${tmp_dir}/font.zip" -d "$install_folder"
 
 	# Log message
 	echo -e "\n\e[1;32m'$1' version '$2' Installed\e[1;0m"
