@@ -71,27 +71,59 @@ end
 
 return {
 	{
-		name = 'disable-netrw',
-		lazy = false,
+		'stevearc/oil.nvim',
+		dependencies = {
+			'nvim-tree/nvim-web-devicons'
+		},
 
-		-- If *dir* is provided, the plugin will be load from a local directory instead from the internet (with git).
-		-- To this plugin, the *dir* is pointing to a folder without a plugin installed. This makes creates a plugin that
-		-- does not load any files, but act as an real plugin and executes the *init* function.
-		dir = '~/.config/nvim/empty_plugin/',
+		cmd='Oil',
+
+		opts = {
+			default_file_explorer = true,  -- Replace `Netrw`
+			delete_to_trash = true,
+		},
 
 		init = function()
-			-- Disable Netrw (recommended by nvim.tree)
+			-- Disable 'Netrw'. `oil.nvim` will be the default file manager
 			vim.g.loaded_netrw       = 1
 			vim.g.loaded_netrwPlugin = 1
+
+			-- Creates an auto-command to load `oil.nvim` if the user open a directory. `oil.nvim` can not be lazy loaded without this.
+			-- `oil.nvim` can open only one directory at the same time
+			local nvim_startup_done = false
+			local file_explorer_augroup = vim.api.nvim_create_augroup("FileExplorer", {clear=true})
+
+			vim.api.nvim_create_autocmd({ 'VimEnter', 'BufEnter' }, {
+				group = file_explorer_augroup,
+				callback=function(arguments)
+					-- `oil.nvim` can not open a directory before Neovim ends its start process. Neovim emits a 'VimEnter' event after this
+					if arguments.event == 'VimEnter' then
+						nvim_startup_done = true
+					end
+
+					if not nvim_startup_done then
+						return
+					end
+
+					-- Only starts `oil.nvim` if opening a directory that exists
+					local file = arguments.file
+					if vim.fn.isdirectory(file) == 1 then
+						-- Removes any auto-command related to the default file explorer. This includes the current auto-command
+						vim.api.nvim_del_augroup_by_id(file_explorer_augroup)
+
+						-- Loads `oil.nvim` and opens the file. It only needs to be done once. Once `oil.nvim` is loaded, it will
+						-- automatically track the folders the user opens
+						require('oil').open(file)
+					end
+				end
+			})
 		end
 	},
-
 	{
 		'nvim-tree/nvim-tree.lua',
 
 		dependencies = {
 			'nvim-tree/nvim-web-devicons',
-			'disable-netrw',
 		},
 
 		cmd = { 'NvimTreeOpen', 'NvimTreeClose', 'NvimTreeToggle', 'NvimTreeFocus', 'NvimTreeFindFile', 'NvimTreeFindFileToggle' },
@@ -147,7 +179,11 @@ return {
 					-- Do not expand this folders automatically
 					exclude = { '.git' }
 				}
-			}
+			},
+
+			-- Does not disable `Netrw` in `nvim-tree` configuration. The `oil.nvim` configuration will do it
+			hijack_netrw = true,
+			disable_netrw = false,
 		}
 	}
 }
