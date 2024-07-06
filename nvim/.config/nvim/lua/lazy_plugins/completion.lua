@@ -94,6 +94,25 @@ return {
 		end,
 	},
 	{
+		'folke/lazydev.nvim',
+
+		dependencies = {
+			'Bilal2453/luvit-meta',  -- Support to 'vim.loop'
+		},
+
+		-- Only enabled if editing a Lua file and the user is inside the '~/.config/nvim/' directory
+		ft = 'lua',
+		enabled=function()
+			return string.find(vim.fn.getcwd(), '/.config/nvim', 1, true) ~= nil
+		end,
+
+		opts = {
+			library = {
+				{ path = 'luvit-meta/library', words = { 'vim.loop', 'vim.uv', 'uv' }},
+			}
+		}
+	},
+	{
 		'hrsh7th/nvim-cmp',
 
 		dependencies = {
@@ -104,6 +123,7 @@ return {
 			-- LSP
 			'hrsh7th/cmp-nvim-lsp',
 			'onsails/lspkind.nvim',
+			'folke/lazydev.nvim',  -- LuaLS configuration to edit Neovim configuration files
 
 			-- Snippets
 			'saadparwaiz1/cmp_luasnip',
@@ -123,6 +143,7 @@ return {
 				nvim_lsp = ' LSP',
 				luasnip = '󰽥 LuaSnip',
 				cmdline = '󱞪 CmdLine',
+				lazydev = ' LazyDev',
 			}
 
 			--- Configures the highlighting groups that will be used in the suggestions menu
@@ -200,6 +221,7 @@ return {
 					},
 					{ name = 'nvim_lsp' },
 					{ name = 'luasnip' },
+					{ name = 'lazydev' },  -- Suggestions to `require()`
 				},
 
 				sorting = {
