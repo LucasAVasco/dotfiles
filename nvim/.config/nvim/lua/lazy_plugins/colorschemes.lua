@@ -29,5 +29,12 @@ return {
 			transparent_background = true,
 		},
 		lazy = true,
+	},
+	{
+		'folke/tokyonight.nvim',
+		lazy = true,
+		opts = {
+			transparent = true,
+		}
 	}
 }
