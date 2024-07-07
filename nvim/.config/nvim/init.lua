@@ -52,7 +52,6 @@ if vim.env.ALLOW_EXTERNAL_SOFTWARE == 'y' then
 	require('lazy').setup({
 		{import = 'lazy_plugins'},
 		{import = 'lazy_plugins/filetype'},
-		{import = 'lazy_plugins/LSP'},
 	}, {
 		dev = {
 			-- Path where to find plugins if in Dev mode

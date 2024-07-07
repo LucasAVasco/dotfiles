@@ -1,0 +1,7 @@
+{
+	"selected-lsp": {
+		// "disable": ["server names as provided to `lspconfig`", "example1", "example2"]
+		// "enable": ["server names as provided to `lspconfig`", "example1", "example2"]
+		// NOTE: You should not use "disable" and "enable" at the same time. This will result in undefined behavior
+	}
+}
