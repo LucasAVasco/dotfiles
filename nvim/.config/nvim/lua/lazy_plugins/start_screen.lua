@@ -20,7 +20,7 @@ return {
 				},
 
 				shortcut = {
-					{ icon = ' ', icon_hl = icon_hl, desc = 'Update', group = desc_hl, action = 'Lazy update', key = 'u' },
+					{ icon = ' ', icon_hl = icon_hl, desc = 'Plugins', group = desc_hl, action = 'Lazy', key = 'p' },
 					{ icon = ' ', icon_hl = icon_hl, desc = 'New file', group = desc_hl, action = 'new | only', key = 'n' },
 					{ icon = ' ', icon_hl = icon_hl, desc = 'File tree', group = desc_hl, action = 'NvimTreeFocus', key = 't' },
 					{ icon = '󰖌 ', icon_hl = icon_hl, desc = 'Oil nvim', group = desc_hl, action = 'Oil', key = 'o' },
