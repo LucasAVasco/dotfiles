@@ -1,5 +1,5 @@
 -- Manages the 'uv' and 'loop' interfaces. 'uv', 'vim.uv', 'vim.loop', are all equivalent
-uv = vim.uv or vim.loop
+_G.uv = vim.uv or vim.loop
 vim.uv = vim.uv or uv
 vim.loop = vim.loop or uv
 
