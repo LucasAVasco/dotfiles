@@ -63,6 +63,13 @@ return {
 
 				ignore_focus = {'Telescope', 'NvimTree'},
 			},
+
+			sections = {
+				lualine_x = {
+					{ '%B', icon = '󰛘' },  -- Hex value of the character over the cursor
+					'encoding', 'fileformat', 'filetype'
+				},
+			}
 		},
 
 		config = function(plugin, opts)
