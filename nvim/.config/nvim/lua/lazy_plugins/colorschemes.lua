@@ -24,6 +24,7 @@ return {
 	},
 	{
 		'catppuccin/nvim',
+		name = 'catppuccin',
 		main = 'catppuccin',
 		opts = {
 			transparent_background = true,
