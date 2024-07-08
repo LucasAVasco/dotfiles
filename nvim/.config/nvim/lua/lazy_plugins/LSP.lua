@@ -106,5 +106,24 @@ return {
 				}
 			)
 		end
+	},
+	{
+		'nvimdev/lspsaga.nvim',
+
+		dependencies = {
+			'neovim/nvim-lspconfig',
+			'nvim-tree/nvim-web-devicons',
+		},
+
+		opts = {
+			lightbulb = {
+				virtual_text = false,  -- Only shows the light bulb in the sign column
+			},
+
+			ui = {
+				border = 'rounded',
+				code_action = '󰌵',  -- The default light bulb icon did not work with my font
+			},
+		}
 	}
 }
