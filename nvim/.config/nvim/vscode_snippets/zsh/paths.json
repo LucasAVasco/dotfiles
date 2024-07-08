@@ -1,0 +1,17 @@
+{
+	"Directory of the current script": {
+		"prefix": "current_directory",
+		"description": "Create a variable with the current directory path",
+		"body": [
+			"current_dir=$(realpath -m -- \"\\${(%):-%x}/../\")"
+		]
+	},
+
+	"Top directory of the current script": {
+		"prefix": "top_directory",
+		"description": "Create a variable with the top directory path",
+		"body": [
+			"top_dir=$(realpath -m -- \"\\${(%):-%x}/../../\")"
+		]
+	}
+}

@@ -7,6 +7,18 @@
 					"all"
 				],
 				"path": "./all/mark.json"
+			},
+			{
+				"language": [
+					"sh"
+				],
+				"path": "./shell/paths.json"
+			},
+			{
+				"language": [
+					"zsh"
+				],
+				"path": "./zsh/paths.json"
 			}
 		]
 	}
