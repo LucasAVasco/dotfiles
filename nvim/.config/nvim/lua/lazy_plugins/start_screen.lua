@@ -26,8 +26,10 @@ return {
 					{ icon = '󰖌 ', icon_hl = icon_hl, desc = 'Oil nvim', group = desc_hl, action = 'Oil', key = 'o' },
 					{ icon = ' ', icon_hl = icon_hl, desc = 'Find file', group = desc_hl, action = 'Telescope find_files', key = 'f' },
 					{ icon = ' ', icon_hl = icon_hl, desc = 'Git status', group = desc_hl, action = 'Git | only', key = 'g' },
-					{ icon = '󰸟 ', icon_hl = icon_hl, desc = 'Healthchecks', group = desc_hl, action = 'checkhealth', key = 'h' },
-					{ icon = ' ', icon_hl = icon_hl, desc = 'Check key maps', group = desc_hl, action = 'checkhealth which-key', key = 'k' },
+					{ icon = '󰸟 ', icon_hl = icon_hl, desc = 'Healthchecks', group = desc_hl,
+						action = 'Lazy load all | checkhealth', key = 'h' },
+					{ icon = ' ', icon_hl = icon_hl, desc = 'Check key maps', group = desc_hl,
+						action = 'Lazy load all | checkhealth which-key', key = 'k' },
 					{ icon = '󱎘 ', icon_hl = icon_hl, desc = 'Quit', group = desc_hl, action = 'quit', key = 'q' },
 				},
 
