@@ -26,6 +26,8 @@ return {
 					{ icon = '󰖌 ', key = 'o', icon_hl = icon_hl, desc = 'Oil nvim', group = desc_hl, action = 'Oil'},
 					{ icon = ' ', key = 'f', icon_hl = icon_hl, desc = 'Find file', group = desc_hl, action = 'Telescope find_files'},
 					{ icon = ' ', key = 'g', icon_hl = icon_hl, desc = 'Git status', group = desc_hl, action = 'Git | only'},
+					{ icon = '󱃆 ', key = 's', icon_hl = icon_hl, desc = 'List NOPUSH comments', group = desc_hl,
+						action = 'TodoTelescope keywords=NOPUSH'},
 					{ icon = '󰸟 ', key = 'h', icon_hl = icon_hl, desc = 'Healthchecks', group = desc_hl,
 						action = 'Lazy load all | checkhealth'},
 					{ icon = ' ', key = 'k', icon_hl = icon_hl, desc = 'Check key maps', group = desc_hl,

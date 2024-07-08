@@ -34,6 +34,14 @@ return {
 		},
 
 		opts = {
+			keywords = {
+				-- Add a keyword to mark content that should not be pushed to a remote repository
+				NOPUSH = {
+					icon = '󱃆',
+					color = 'error',
+				}
+			},
+
 			highlight = {
 				-- Pattern used to highlight the TODO keyword. It is a Vim regex. The official documentation does not explains how to
 				-- customize this regex, so I checked the source code (at commit 74abcc81254feee74aa129c0a219750686ebcefd). The method that
