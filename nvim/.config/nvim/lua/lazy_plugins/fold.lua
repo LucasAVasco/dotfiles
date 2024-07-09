@@ -1,7 +1,7 @@
 --- Sets the current folding level
--- Values preceded with a '+' or '-' will be added or subtracted from the current fold level. Otherwise, the
--- value will be set as the new fold level.
--- @param new_level String of the new fold level, or the increase or decrease of the current fold level
+--- Values preceded with a '+' or '-' will be added or subtracted from the current fold level. Otherwise, the
+--- value will be set as the new fold level.
+---@param new_level string New fold level, or the increase or decrease of the current fold level
 local function set_fold_level(new_level)
 	local level = tonumber(vim.w.ufo_fold_level or 0)
 	local first_char = new_level:sub(1, 1)
@@ -28,15 +28,16 @@ end
 
 
 --- Custom virtual text in the fold
--- Returns the list of elements of the custom text to be shown in the closed fold
--- @param virtual_text {text, highlightGroup}[] List of elements of the first line of the fold
--- @param start_line number Start line of the fold
--- @param end_line number End line of the fold
--- @param width number Width that the text should fit
--- @param truncate func(string, number): string Crops the text to fit the width
--- @param fold_context table Context of the fold
--- @return {text, highlightGroup}[] List of elements of the custom text to be shown in the closed fold
-local function fold_text_handler(virtual_text, start_line, end_line, width, truncate, fold_context)
+--- Returns the list of elements of the custom text to be shown in the closed fold
+---@param virtual_text UfoExtmarkVirtTextChunk[] List of elements of the first line of the fold
+---@param start_line number Start line of the fold
+---@param end_line number End line of the fold
+---@param width number Width that the text should fit
+---@param truncate_fun fun(text_to_truncate: string, width_to_trunca: number): string Crops the text to fit the width
+---@param fold_context UfoFoldVirtTextHandlerContext|nil Context of the fold
+---@return UfoExtmarkVirtTextChunk[] new_virtual_text List of elements of the custom text to be shown in the closed fold
+---@diagnostic disable-next-line: unused-local
+local function fold_text_handler(virtual_text, start_line, end_line, width, truncate_fun, fold_context)
 	local suffix = ('   󰦸 %d '):format(end_line - start_line)
 	local suffix_width = vim.fn.strdisplaywidth(suffix)
 	local new_virt_text = virtual_text
@@ -53,7 +54,7 @@ local function fold_text_handler(virtual_text, start_line, end_line, width, trun
 		-- Available width is not enough to add the next chunk
 		if available_width <= 0 then
 			new_virt_text = {unpack(virtual_text, 1, index)}  -- Copies the virtual text up to the current index (last)
-			new_virt_text[#new_virt_text][1] = truncate(chunk[1], chunk_width + available_width)  -- Crops the last item to fit the width
+			new_virt_text[#new_virt_text][1] = truncate_fun(chunk[1], chunk_width + available_width)  -- Crops the last item to fit the width
 			break
 		end
 	end
@@ -89,8 +90,8 @@ return {
 			-- #region Some useful functions
 
 			--- Returns a function that runs 'func' and after this, it will run peek the preview
-			-- @param func function that will be run before peek
-			-- @return Decorated function
+			---@param func fun() function that will be run before peek
+			---@return fun() decorated_function
 			local function decorator_apply_peek(func)
 				return function()
 					func()
@@ -123,9 +124,9 @@ return {
 
 			-- #region Mappings
 
-			local default_options = myfunc.decorator_create_options_table({ noremap = true, silent = true })
+			local default_options = MYFUNC.decorator_create_options_table({ noremap = true, silent = true })
 
-			myplugfunc.set_keymap_name('<leader>z', 'Folding mappings', {'n'})
+			MYPLUGFUNC.set_keymap_name('<leader>z', 'Folding mappings', {'n'})
 			vim.keymap.set('n', 'zR', ufo.openAllFolds, default_options('Open all folds'))  -- UFO requires to remap the `zR` and `zM` keys
 			vim.keymap.set('n', 'zM', ufo.closeAllFolds, default_options('Close all folds'))
 			vim.keymap.set('n', '<leader>zm', close_only_markers, default_options('Close only markers folds'))
@@ -142,8 +143,8 @@ return {
 			vim.keymap.set(default_modes, '<A-k>', decorator_apply_peek(ufo.goPreviousClosedFold), default_options('Previous fold'))
 			vim.keymap.set(default_modes, '<A-j>', decorator_apply_peek(ufo.goNextClosedFold), default_options('Next fold'))
 
-			vim.keymap.set(default_modes, '<A-H>', myfunc.decorator_call_function(set_fold_level, { '-1' }), default_options('Fold level -1'))
-			vim.keymap.set(default_modes, '<A-L>', myfunc.decorator_call_function(set_fold_level, { '+1' }), default_options('Fold level +1'))
+			vim.keymap.set(default_modes, '<A-H>', MYFUNC.decorator_call_function(set_fold_level, { '-1' }), default_options('Fold level -1'))
+			vim.keymap.set(default_modes, '<A-L>', MYFUNC.decorator_call_function(set_fold_level, { '+1' }), default_options('Fold level +1'))
 
 			vim.keymap.set(default_modes, '<A-h>', function()  -- Go to previous start fold and closes it
 				ufo.goPreviousStartFold()
@@ -164,7 +165,7 @@ return {
 				set_fold_level(arguments.fargs[1])
 			end, {
 				nargs = 1,
-				complete = myfunc.create_complete_function({
+				complete = MYFUNC.create_complete_function({
 					'+0', '+1', '+2', '+3', '+4', '+5', '+6', '+7', '+8', '+9', '-0', '-1', '-2', '-3', '-4', '-5', '-6', '-7', '-8', '-9',
 					'0', '1', '2', '3', '4', '5', '6', '7', '8', '9'
 				})
@@ -186,7 +187,7 @@ return {
 				end
 			end, {
 				nargs = 1,
-				complete = myfunc.create_complete_function({ 'y', 'n', 'toggle' })
+				complete = MYFUNC.create_complete_function({ 'y', 'n', 'toggle' })
 			})
 
 			-- #endregion
@@ -194,6 +195,7 @@ return {
 
 			-- UFO setup
 			ufo.setup({
+				---@diagnostic disable-next-line: unused-local
 				provider_selector = function(bufnr, filetype, buftype)
 					return ufo.mergeProviders({ 'marker', 'treesitter' })
 				end,
@@ -203,6 +205,8 @@ return {
 				},
 
 				fold_virt_text_handler = fold_text_handler,  -- Custom virtual text in the fold
+
+				open_fold_hl_timeout = 300,  -- milliseconds
 
 				-- If you need the `get_fold_virt_text` function in `fold_context` of the 'fold_virt_text_handler',
 				-- you need to set it to `true`

@@ -60,7 +60,7 @@
 	*<leader>`*  Some menus. E.g, show lines in quickfix.
 	`<leader>"`  Show VM registers
 
-	Other informations~
+	Other information~
 
 	General mappings: |vm-mappings-qr|
 	quick reference with some maps: |vm-quick-reference|
@@ -81,7 +81,7 @@ return {
 		'mg979/vim-visual-multi',
 
 		init = function()
-			myplugfunc.set_keymap_name('\\\\', 'Multi cursor mappings')
+			MYPLUGFUNC.set_keymap_name('\\\\', 'Multi cursor mappings')
 			vim.g.VM_leader = '\\\\'  -- Double '\'
 			vim.g.VM_mouse_mappings = 1
 		end

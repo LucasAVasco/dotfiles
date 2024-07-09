@@ -46,7 +46,7 @@ vim.api.nvim_create_user_command('SetProse', function(arguments)
 	end
 end, {
 	nargs = '+',
-	complete = myfunc.create_complete_function({
+	complete = MYFUNC.create_complete_function({
 		y = {
 			'0', '100', '140'  -- Text width
 		},

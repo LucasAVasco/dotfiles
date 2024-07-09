@@ -33,7 +33,7 @@
 ]]
 
 
-local default_options = myfunc.decorator_create_options_table({ noremap = true, silent = true })
+local default_options = MYFUNC.decorator_create_options_table({ noremap = true, silent = true })
 
 
 -- Go to
@@ -43,7 +43,7 @@ vim.keymap.set('n', '<leader>gi', vim.lsp.buf.implementation, default_options('G
 vim.keymap.set('n', '<leader>gt', vim.lsp.buf.type_definition, default_options('Go to LSP type definition'))
 
 -- Show information
-myplugfunc.set_keymap_name('<leader>L', 'LSP mappings', {'n'})
+MYPLUGFUNC.set_keymap_name('<leader>L', 'LSP mappings', {'n'})
 vim.keymap.set('n', '<leader>Lr', vim.lsp.buf.references, default_options('Show LSP references'))
 vim.keymap.set('n', '<leader>Lh', vim.lsp.buf.hover, default_options('Show LSP hover'))
 vim.keymap.set('n', '<leader>Ls', vim.lsp.buf.document_symbol, default_options('Show LSP symbols'))
@@ -56,7 +56,7 @@ vim.keymap.set('n', '<leader>La', vim.lsp.buf.code_action, default_options('LSP 
 vim.keymap.set('n', '<leader>Lf', vim.lsp.buf.format, default_options('Code format with LSP'))
 
 -- Workspaces
-myplugfunc.set_keymap_name('<leader>Lw', 'LSP Workspaces mappings', {'n'})
+MYPLUGFUNC.set_keymap_name('<leader>Lw', 'LSP Workspaces mappings', {'n'})
 vim.keymap.set('n', '<leader>Lws', vim.lsp.buf.workspace_symbol, default_options('List LSP workspace symbols'))
 vim.keymap.set('n', '<leader>Lwa', vim.lsp.buf.add_workspace_folder, default_options('Add LSP workspace folder'))
 vim.keymap.set('n', '<leader>Lwr', vim.lsp.buf.remove_workspace_folder, default_options('Remove LSP workspace folder'))
@@ -75,17 +75,17 @@ vim.keymap.set('n', '<leader>Lwl', function()
 end, default_options('List LSP workspace folders'))
 
 -- Codelens
-myplugfunc.set_keymap_name('<leader>Lc', 'LSP Codelens mappings', {'n'})
+MYPLUGFUNC.set_keymap_name('<leader>Lc', 'LSP Codelens mappings', {'n'})
 vim.keymap.set('n', '<leader>Lcr', vim.lsp.codelens.run, default_options('Run LSP codelens of the current line'))
 
 
 --- Return a function that refreshes the code lens in a specific buffer
--- The `vim.lsp.codelens.refresh()` function refreshes the code lens in all buffers. To refresh the code lens of a specif buffer, we need to
--- provide the buffer number to this function. The current function automatize this task by returning a function that calls
--- `vim.lsp.codelens.refresh()` only to the provided client and buffer
---- @param client_id number Number of the LSP client
---- @param buffer_nr number Number of the buffer to refresh the code lens
---- @return function Function that refreshes the code lens in the specified buffer
+--- The `vim.lsp.codelens.refresh()` function refreshes the code lens in all buffers. To refresh the code lens of a specif buffer, we need to
+--- provide the buffer number to this function. The current function automatize this task by returning a function that calls
+--- `vim.lsp.codelens.refresh()` only to the provided client and buffer
+---@param client_id number Number of the LSP client
+---@param buffer_nr number Number of the buffer to refresh the code lens
+---@return function refresh_function Function that refreshes the code lens in the specified buffer
 local function get_refresh_codelens_function(client_id, buffer_nr)
 	return function()
 		vim.lsp.codelens.refresh({client_id=client_id, bufnr=buffer_nr})

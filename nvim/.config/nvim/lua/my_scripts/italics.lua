@@ -1,6 +1,6 @@
 -- Applies italics to all comments
 local function apply_italics()
-	vim.cmd('highlight Comment cterm=italic gui=italic')
+	vim.cmd.highlight('Comment cterm=italic gui=italic')
 end
 
 apply_italics()

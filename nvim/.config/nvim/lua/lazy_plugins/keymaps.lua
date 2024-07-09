@@ -25,17 +25,17 @@ return {
 			-- #endregion
 		},
 
-		config = function(plugin, opts)
-			wk = require('which-key')
+		config = function(_, opts)
+			local wk = require('which-key')
 
 			wk.setup(opts)
 
 			-- Now can set keymap names
-			is_wichkey_loaded = true
-			myplugfunc.start_keymap_register()
+			MYVAR.is_wichkey_loaded = true
+			MYPLUGFUNC.start_keymap_register()
 
 			-- Some descriptions for keymaps
-			myplugfunc.set_keymap_name('<leader>', 'My keymaps')
+			MYPLUGFUNC.set_keymap_name('<leader>', 'My keymaps')
 		end
 	}
 }

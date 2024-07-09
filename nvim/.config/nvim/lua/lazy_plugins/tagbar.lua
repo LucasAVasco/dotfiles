@@ -9,8 +9,8 @@
 	`?`        Show the keymaps.
 	`*/zR/_`   Open all folds.
 	`=/zM`     Close all folds.
-	`x`        togle the zoom of the tagbar.
-	`s`        Toogle the sort mode (tag name, file name).
+	`x`        toggle the zoom of the tagbar.
+	`s`        Toggle the sort mode (tag name, file name).
 	`v`        Hide non public tags.
 	`q`        quit.
 ]]
@@ -18,7 +18,7 @@
 
 -- Adds a keymap to open all folds in the Tagbar with the '_' key
 vim.api.nvim_create_autocmd({'BufEnter'}, {
-	pattern = "__Tagbar__*", callback = function(info)
+	pattern = '__Tagbar__*', callback = function(info)
 		vim.keymap.set('n', '_', '<CMD>TagbarSetFoldlevel 99<CR>', {
 			buffer = info.buf,
 			noremap = true,

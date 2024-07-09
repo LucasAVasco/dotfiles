@@ -69,7 +69,7 @@ return {
 			fast_wrap = {},  -- Required to enable `fast_wrap`
 		},
 
-		config = function(plugin, opts)
+		config = function(_, opts)
 			local npairs = require('nvim-autopairs')
 			local Rule = require('nvim-autopairs.rule')
 
@@ -152,12 +152,16 @@ return {
 				-- They start with `CmpItemKind`
 				local all_hl_groups = vim.api.nvim_get_hl(0, {})
 
-				for hl_group_name, hl_group_contents in pairs(all_hl_groups) do
-					if string.find(hl_group_name, '^CmpItemKind') then
-						local new_hl = myfunc.get_hl_definition(hl_group_name)
-						new_hl.standout = true  -- Makes the text stand out (swap background and foreground colors)
+				for hl_group_name, _ in pairs(all_hl_groups) do
+					if string.find(hl_group_name, 'CmpItemKind', 1, true) then
+						local new_hl = MYFUNC.get_hl_definition(hl_group_name)
+						new_hl.standout = true  -- Swap background and foreground colors
 						new_hl.bold = true
-						vim.api.nvim_set_hl(0, hl_group_name, new_hl)
+
+						-- The format returned by `get_hl_definition` is the same as the received by `nvim_set_hl`, but LuasLS does not
+						-- recognize it. So I am disabling the diagnostic to the next line
+						---@diagnostic disable-next-line: param-type-mismatch
+						vim.api.nvim_set_hl(0, hl_group_name, new_hl )
 					end
 				end
 			end
@@ -170,9 +174,9 @@ return {
 			update_cmp_hl()
 
 			--- Closes the completion and runs the fallback
-			-- It is diferent from `cmp.close` that runs the fallback only if the completion is closed. This
-			-- function do the both at the same time.
-			-- @param fallback Fallback function
+			--- It is different from `cmp.close` that runs the fallback only if the completion is closed. This function do the both at the
+			--- same time.
+			---@param fallback fun() Fallback function
 			local function close_completion(fallback)
 				cmp.close()
 				fallback()
@@ -187,10 +191,9 @@ return {
 					local enabled = vim.fn.reg_executing() == ''
 
 					-- The default CMP configuration also disables it when in a prompt
-					enabled = enabled and vim.api.nvim_buf_get_option(0, 'buftype') ~= 'prompt'
+					enabled = enabled and vim.bo.buftype ~= 'prompt'
 
 					return enabled
-
 				end,
 
 				sources = {
@@ -199,11 +202,11 @@ return {
 						name = 'buffer',
 						get_bufnrs = function()
 							--- Filter to get the buffers that will be used in this suggestions
-							-- @param buf_nr Buffer number
-							-- @return if the buffer should be used in the suggestions (true or false)
+							---@param buf_nr number Buffer number
+							---@return boolean can_suggestions if the buffer should be used in the suggestions (true or false)
 							local function filter_buffers(buf_nr)
 								-- Only uses normal buffers
-								if vim.api.nvim_buf_get_option(buf_nr, 'buftype') ~= '' then
+								if vim.bo[buf_nr].buftype ~= '' then
 									return false
 								end
 
@@ -225,6 +228,8 @@ return {
 				},
 
 				sorting = {
+					priority_weight = 1,
+
 					comparators = {
 						-- Words next to the cursor line have higher priority
 						function(...)
@@ -281,7 +286,10 @@ return {
 
 				-- Custom formatting to the suggestions
 				formatting = {
-					fields = { "kind", "abbr", "menu" },
+					expandable_indicator = true,
+
+					fields = { 'kind', 'abbr', 'menu' },
+
 					format = function(entry, vim_completed_item)
 						local kind = lspkind.presets.default[vim_completed_item.kind]        -- Convert the kind with lspkind
 						vim_completed_item.kind = ' ' .. kind .. ' '

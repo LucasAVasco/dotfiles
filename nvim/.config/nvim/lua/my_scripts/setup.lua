@@ -20,20 +20,20 @@ end, {
 			table.insert(arguments_table, setup_name)
 		end
 
-		return myfunc.get_complete_suggestions(current_arg_lead, entire_command, cursor_pos, custom_setup_functions_completion_table)
+		return MYFUNC.get_complete_suggestions(current_arg_lead, entire_command, cursor_pos, custom_setup_functions_completion_table)
 	end
 })
 
 
---- Add a setup command
--- @param setup_name Name of the setup command
--- @param setup_function The setup function
-function myfunc.add_setup_command(setup_name, setup_function)
+--- Add a user setup command
+---@param setup_name string Name of the setup command
+---@param setup_function fun() The setup function
+function MYFUNC.add_setup_command(setup_name, setup_function)
 	-- Each argument of the command will be an element of the `command_args` list
-	local command_args = myfunc.str_split(setup_name, '[^%s]+')
+	local command_args = MYFUNC.str_split(setup_name, '[^%s]+')
 
-	myfunc.tbl_set(custom_setup_functions, command_args, setup_function)
-	myfunc.tbl_set(custom_setup_functions_completion_table, command_args, {})
+	MYFUNC.tbl_set(custom_setup_functions, command_args, setup_function)
+	MYFUNC.tbl_set(custom_setup_functions_completion_table, command_args, {})
 end
 
 
@@ -47,4 +47,4 @@ local function run_all_setup_functions()
 end
 
 
-myfunc.add_setup_command('all', run_all_setup_functions)
+MYFUNC.add_setup_command('all', run_all_setup_functions)

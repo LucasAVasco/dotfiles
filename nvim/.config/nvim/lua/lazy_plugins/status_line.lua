@@ -14,10 +14,10 @@ return {
 			},
 		},
 
-		config = function(plugin, opts)
+		config = function(_, opts)
 			require('barbar').setup(opts)
 
-			local get_map_opts = myfunc.decorator_create_options_table({
+			local get_map_opts = MYFUNC.decorator_create_options_table({
 				silent = true,
 				noremap = true,
 			})
@@ -34,14 +34,14 @@ return {
 			end
 
 			-- Group of key maps to manage buffers
-			myplugfunc.set_keymap_name('<leader>B', 'Buffer keymaps')
+			MYPLUGFUNC.set_keymap_name('<leader>B', 'Buffer keymaps')
 			vim.keymap.set('n', '<A-w>', '<Cmd>BufferClose<CR>', get_map_opts('Close the current buffer'))
-			vim.keymap.set('n', '<leader>BC', '<Cmd>BufferCloseAllButVisible<CR>', get_map_opts('Close all buffers except the visible ones'))
+			vim.keymap.set('n', '<leader>BC', '<Cmd>BufferCloseAllButVisible<CR>', get_map_opts('Close all non-visible buffers'))
 			vim.keymap.set('n', '<leader>Bg', '<Cmd>BufferPick<CR>', get_map_opts('Interactively select a buffer to go'))
 			vim.keymap.set('n', '<leader>Bp', '<Cmd>BufferPin<CR>', get_map_opts('Toggle the Pin state of the current buffer'))
 
 			-- Group of key maps to sort (order) buffers
-			myplugfunc.set_keymap_name('<leader>BO', 'Buffer order keymaps')
+			MYPLUGFUNC.set_keymap_name('<leader>BO', 'Buffer order keymaps')
 			vim.keymap.set('n', '<leader>BOd', '<Cmd>BufferOrderByDirectory<CR>', get_map_opts('Sort buffers by directory'))
 			vim.keymap.set('n', '<leader>BOa', '<Cmd>BufferOrderByName<CR>', get_map_opts('Sort buffers by buffer name'))
 			vim.keymap.set('n', '<leader>BOl', '<Cmd>BufferOrderByLanguage<CR>', get_map_opts('Sort buffers by language'))
@@ -72,7 +72,7 @@ return {
 			}
 		},
 
-		config = function(plugin, opts)
+		config = function(_, opts)
 			require('lualine').setup(opts)
 		end
 	}

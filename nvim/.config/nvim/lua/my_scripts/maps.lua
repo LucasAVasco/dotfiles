@@ -17,21 +17,21 @@ vim.g.secondleader = '_'    -- This is not a standard vim feature, but I will us
 -- My <C-A-F1>, <C-A-F2>, <S-A-F3> are used to switch between tty, so I can not map them.
 -- The function bellow can be used to get the correct key code to these function keys
 
---- Get the correct key code from a Function key with a prefix (shift, alt, etc.)
--- @param prefix The prefix of the function key (e.g. 'S', 'C', 'S-C', 'A', 'S-A')
--- @param key_number The number of the function key
--- @return The function key equivalent to the prefix and the number
-function myfunc.get_F_key(prefix, key_number)
+--- Get the correct key code from a Function key with a prefix (shift, alt, etc.).
+--- Depends on the user terminal emulator and keyboard. You should avoid complex key codes that may not be correctly interpret by Neovim
+---@param prefix string The prefix of the function key (e.g. 'S', 'C', 'S-C', 'A', 'S-A')
+---@param key_number number The number of the function key
+---@return string function_key The function key equivalent to the prefix and the number
+function MYFUNC.get_F_key(prefix, key_number)
 	local prefix2number = {S = 12, C = 24, S_C = 36, A = 48, S_A = 60}
 
 	return string.format('<F%d>', prefix2number[prefix] + key_number)
 end
 
 
-
 -- Functions to generate the option tables
-local get_default_opt = myfunc.decorator_create_options_table({ remap = false, silent = true })
-local get_default_opt_no_silence = myfunc.decorator_create_options_table({ remap = false, silent = false })
+local get_default_opt = MYFUNC.decorator_create_options_table({ remap = false, silent = true })
+local get_default_opt_no_silence = MYFUNC.decorator_create_options_table({ remap = false, silent = false })
 
 
 -- My documentation help
@@ -39,7 +39,7 @@ vim.keymap.set('n', '<F12>', '<CMD>:h mycfg.txt<CR>', get_default_opt('Open my d
 
 -- Navigation
 vim.keymap.set('n', '<F1>', '<CMD>tabn<CR>', get_default_opt('Next tab'))
-vim.keymap.set('n', myfunc.get_F_key('S', 1), '<CMD>tabp<CR>', get_default_opt('Previous tab'))
+vim.keymap.set('n', MYFUNC.get_F_key('S', 1), '<CMD>tabp<CR>', get_default_opt('Previous tab'))
 vim.keymap.set('n', '<BS>', '<CMD>execute "normal! <C-W><C-P>"<CR>', get_default_opt('Go to previous window'))
 vim.keymap.set('n', '<C-u>', '<C-u>zz', get_default_opt('Scroll down the window and centralize'))
 vim.keymap.set('n', '<C-d>', '<C-d>zz', get_default_opt('Scroll up the window and centralize'))
@@ -79,9 +79,9 @@ vim.keymap.set({'n', 's'}, '<A-;>', ':<C-f>', get_default_opt('Open command-line
 
 -- Quickfix and Loclist
 vim.keymap.set('n', '<F3>', '<CMD>lnext <CR>', get_default_opt('Go to next location list item'))
-vim.keymap.set('n', myfunc.get_F_key('S', 3), '<CMD>lprev <CR>', get_default_opt('Go to previous location list item'))
+vim.keymap.set('n', MYFUNC.get_F_key('S', 3), '<CMD>lprev <CR>', get_default_opt('Go to previous location list item'))
 vim.keymap.set('n', '<F4>', '<CMD>cnext <CR>', get_default_opt('Go to next quickfix list item'))
-vim.keymap.set('n', myfunc.get_F_key('S', 4), '<CMD>cprev <CR>', get_default_opt('Go to previous quickfix list item'))
+vim.keymap.set('n', MYFUNC.get_F_key('S', 4), '<CMD>cprev <CR>', get_default_opt('Go to previous quickfix list item'))
 
 -- Movement with arrow keys in insert mode
 vim.keymap.set('i', '<C-left>', '<CMD>normal! b<CR>', get_default_opt('Move cursor a word left'))

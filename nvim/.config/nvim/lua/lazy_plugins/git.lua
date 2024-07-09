@@ -5,7 +5,7 @@
 	Fugitive~
 
 	`Git`                   Show git status
-	`Git difftool {, -y}`   Shows each file diff in the quickfix. With -y, insted opens Gdiffsplit.
+	`Git difftool {, -y}`   Shows each file diff in the quickfix. With -y, instead opens Gdiffsplit.
 	`Git mergetool`         Like difftool, but for merge conflicts.
 	`Ggrep -q`              Shows the results of the 'git grep' in the quickfix.
 	`Gclog`                 Shows the git log in the quickfix.
@@ -90,30 +90,30 @@ return {
 			-- #endregion
 		},
 
-		config = function(plugin, opts)
+		config = function(_, opts)
 			local gitsigns = require('gitsigns')
 
 			gitsigns.setup(opts)
 
 			-- Keymaps
-			local options = myfunc.decorator_create_options_table({
+			local options = MYFUNC.decorator_create_options_table({
 				noremap = true,
 				silent = true
 			})
 
-			myplugfunc.set_keymap_name('<leader>h', 'Gitsigns hunk mappings', {'n'})
+			MYPLUGFUNC.set_keymap_name('<leader>h', 'Gitsigns hunk mappings', {'n'})
 			vim.keymap.set('n', '<leader>hp', gitsigns.preview_hunk, options('Preview current hunk'))
 
-			myplugfunc.set_keymap_name('<leader>G', 'Git mappings', {'n'})
-			myplugfunc.set_keymap_name('<leader>Gb', 'Git line blame mappings', {'n'})
+			MYPLUGFUNC.set_keymap_name('<leader>G', 'Git mappings', {'n'})
+			MYPLUGFUNC.set_keymap_name('<leader>Gb', 'Git line blame mappings', {'n'})
 			vim.keymap.set('n', '<leader>Gbt', gitsigns.toggle_current_line_blame, options('Toggle current line blame'))
 
 			-- Override default ]c and [c mappings
 
 			--- Decorator that applies a fallback that runs a normal command if not in diff mode
-			-- @param func Function that will be called if not in diff mode
-			-- @param fallback_command Normal command that will be called if in diff mode
-			-- @return Decorated function
+			---@param func fun() Function that will be called if not in diff mode
+			---@param fallback_command string Normal command that will be called if in diff mode
+			---@return fun() decorated_function
 			local function decorator_fallback_diff_mode(func, fallback_command)
 				return function()
 					if not vim.wo.diff then

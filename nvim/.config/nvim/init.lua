@@ -1,27 +1,32 @@
--- Options
-local config_dir = vim.env.HOME .. '/.config/nvim/'
+vim.loader.enable()  -- Use compiled and cached files
+
+--- Load one of my scripts
+--- @param script_name string Name of the script inside the './lua/my_scripts/' folder (without the '.lua' extension)
+local function load_script(script_name)
+	require('my_scripts/' .. script_name)
+end
 
 
 -- Dependencies (must be loaded first because other files depend on them)
-dofile(config_dir .. 'paths.lua')  -- Should be loaded first
-dofile(config_dir .. 'functions.lua')
+load_script('paths')  -- Should be loaded first
+load_script('functions')
 
 
 -- Configuration
-dofile(config_dir .. 'setup.lua')      -- Add a function and command to run custom setup (need to be load to use them)
-dofile(config_dir .. 'options.lua')
-dofile(config_dir .. 'themes.lua')
-dofile(config_dir .. 'spell.lua')
-dofile(config_dir .. 'maps.lua')  -- The mapleader keys are defined in this file and need to be loaded before Lazy.nvim
+load_script('setup') -- Add a function and command to run custom setup (need to be load to use them)
+load_script('options')
+load_script('themes')
+load_script('spell')
+load_script('maps')  -- The mapleader keys are defined in this file and need to be loaded before Lazy.nvim
 
 
 -- Tools
-dofile(config_dir .. 'whitespace.lua')
-dofile(config_dir .. 'indent.lua')
-dofile(config_dir .. 'prose.lua')
-dofile(config_dir .. 'virtual_edit.lua')
-dofile(config_dir .. 'italics.lua')
-dofile(config_dir .. 'LSP.lua')
+load_script('whitespace')
+load_script('indent')
+load_script('prose')
+load_script('virtual_edit')
+load_script('italics')
+load_script('LSP')
 
 
 -- Development options
@@ -41,13 +46,13 @@ if vim.env.ALLOW_EXTERNAL_SOFTWARE == 'y' then
 			'https://github.com/folke/lazy.nvim.git',
 			'--branch=stable',
 			lazy_path,
-			})
+		})
 	end
 
 	vim.opt.rtp:prepend(lazy_path)
 
 	-- Load all plugins files. Each *.lua file inside the folder specified in the *import* statement will be loaded.
-	-- These *import* satements are relative to the './lua/' folder in each path in the 'runtimepath'.
+	-- These *import* statements are relative to the './lua/' folder in each path in the 'runtimepath'.
 	-- You can see this path with ':echo &runtimepath'
 	require('lazy').setup({
 		{import = 'lazy_plugins'},
@@ -63,5 +68,5 @@ if vim.env.ALLOW_EXTERNAL_SOFTWARE == 'y' then
 		}
 	})
 
-	dofile(config_dir .. 'colorscheme.lua')
+	load_script('colorscheme')
 end

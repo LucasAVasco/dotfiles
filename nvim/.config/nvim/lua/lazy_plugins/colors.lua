@@ -6,7 +6,7 @@ return {
 			enable_tailwind = true,
 		},
 
-		config = function(plugin, opts)
+		config = function(_, opts)
 			require('nvim-highlight-colors').setup(opts)
 		end
 	}

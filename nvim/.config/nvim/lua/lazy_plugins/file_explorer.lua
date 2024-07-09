@@ -30,8 +30,8 @@
 
 
 --- Decorator that return to the original window after executing *func*
--- @param func Lua function that will be called.
--- @return A Lua function that will return to the original window after executing *func*
+---@param func fun() Lua function that will be called.
+---@return fun() decorated_function A Lua function that will return to the original window after executing *func*
 local function decorator_return_to_tree(func)
 	return function()
 		local current_win_id = vim.fn.win_getid()
@@ -41,12 +41,12 @@ local function decorator_return_to_tree(func)
 end
 
 
---- Apply custom keymaps to the nvim-tree buffer
--- @param bufnr Buffer number of the nvim-tree buffer
+--- Apply custom keymaps to the `nvim-tree` buffer
+---@param bufnr number Buffer number of the `nvim-tree` buffer
 local function apply_custom_keymaps(bufnr)
 	local api = require('nvim-tree.api')
 
-	local key_options = myfunc.decorator_create_options_table({
+	local key_options = MYFUNC.decorator_create_options_table({
 		buffer = bufnr,
 		nowait = true,
 		noremap = true,

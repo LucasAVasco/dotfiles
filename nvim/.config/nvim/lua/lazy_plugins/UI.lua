@@ -1,5 +1,10 @@
--- Override the default `vim.ui.input` function to a function that loads 'dressing.nvim' before showing the pop up.
--- This allows the 'dressing.nvim' plugin to be lazy loaded. It will be loaded only when the first input be required
+--- Shows the input pop up with `dressing.nvim` plugin
+--- Override the default `vim.ui.input` function to a function that loads `dressing.nvim` before showing the pop up. This allows the
+--- `dressing.nvim` plugin to be lazy loaded. The first call to this function will load the `dressing.nvim` plugin, and it will replace the
+--- function by the one provided by this plugin
+---@param opts table Options to be sent to `dressing.nvim`
+---@param callback_input fun(text: string|nil) Function called after the user provide the input. Receives the user input as parameter
+---@diagnostic disable-next-line: duplicate-set-field
 vim.ui.input = function(opts, callback_input)
 	require('dressing')
 
@@ -7,11 +12,18 @@ vim.ui.input = function(opts, callback_input)
 end
 
 
--- Like the `vim.ui.input` override, but to `vim.ui.select` function
-vim.ui.select = function(iten_list, opts, callback_select)
+--- Shows the select pop up with `dressing.nvim` plugin
+--- Override the default `vim.ui.select` function to a function that loads `dressing.nvim` before showing the pop up. This allows the
+--- `dressing.nvim` plugin to be lazy loaded. The first call to this function will load the `dressing.nvim` plugin, and it will replace the
+--- function by the one provided by this plugin
+---@param item_list table Tens that the user can select
+---@param opts table Options to send to `dressing.nvim`
+---@param callback_select fun(selected_item: string|nil, item_index: number|nil)  Function called after the user select a item
+---@diagnostic disable-next-line: duplicate-set-field
+vim.ui.select = function(item_list, opts, callback_select)
 	require('dressing')
 
-	vim.ui.select(iten_list, opts, callback_select)
+	vim.ui.select(item_list, opts, callback_select)
 end
 
 
