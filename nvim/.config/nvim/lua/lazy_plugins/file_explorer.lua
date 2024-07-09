@@ -145,6 +145,24 @@ return {
 		},
 
 		config = function(_, opts)
+			local api = require('nvim-tree.api')
+
+			--- Decorator that does not call the function if the folder is open
+			--- Also call the function it the cursor is under a file
+			---@param func fun() Lua function that will be called
+			---@return fun() decorated_function A Lua function that only calls *func* if the folder is not open
+			local function decorator_ignore_open_folder(func)
+				return function()
+					-- `api.tree.get_node_under_cursor().open` is `true` if the folder is open, `false` if it is closed, and `nil` if it is
+					-- not a folder (E.g. It is a file)
+					if api.tree.get_node_under_cursor().open then
+						return
+					end
+
+					func()
+				end
+			end
+
 			--- Decorator that return to the original window after executing *func*
 			---@param func fun() Lua function that will be called.
 			---@return fun() decorated_function A Lua function that will return to the original window after executing *func*
@@ -159,8 +177,6 @@ return {
 			--- Apply custom keymaps to the `nvim-tree` buffer
 			---@param bufnr number Buffer number of the `nvim-tree` buffer
 			local function apply_custom_keymaps(bufnr)
-				local api = require('nvim-tree.api')
-
 				local key_options = MYFUNC.decorator_create_options_table({
 					buffer = bufnr,
 					nowait = true,
@@ -177,6 +193,10 @@ return {
 				for _, key in ipairs({ '<CR>', 'o', '<2-LeftMouse>' }) do
 					vim.keymap.set('n', key, open_and_return_to_tree, key_options('Open to edit'))
 				end
+
+				-- Override 'h' and 'l' to improve movement in the tree
+				vim.keymap.set('n', 'h', api.node.navigate.parent_close, key_options('Close the current folder'))
+				vim.keymap.set('n', 'l', decorator_ignore_open_folder(open_and_return_to_tree), key_options('Open folder or file'))
 
 				-- Custom keymaps
 				vim.keymap.set('n', 'T', decorator_return_to_tree(api.node.open.tab_drop), key_options('Open file in new tab (if not already opened)'))
