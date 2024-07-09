@@ -20,6 +20,7 @@ return {
 		'junegunn/vim-easy-align',
 
 		keys = {
+			{ '<CR>', '<Plug>(LiveEasyAlign)', mode = 'x', desc = 'LiveEasyAlign' },
 			{ '<leader>ga', '<Plug>(EasyAlign)', mode = {'n', 'x'}, desc = 'EasyAlign' },
 		},
 
