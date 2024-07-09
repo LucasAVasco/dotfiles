@@ -17,7 +17,7 @@ return {
 	{
 		'rcarriga/nvim-notify',
 		lazy = true,
-		priority = 9500,
+		priority = 9500,  -- Notification system
 
 		config = function()
 			-- Override the default function
