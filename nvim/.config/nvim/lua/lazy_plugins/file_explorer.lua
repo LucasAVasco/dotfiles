@@ -199,8 +199,10 @@ return {
 				vim.keymap.set('n', 'l', decorator_ignore_open_folder(open_and_return_to_tree), key_options('Open folder or file'))
 
 				-- Custom keymaps
-				vim.keymap.set('n', 'T', decorator_return_to_tree(api.node.open.tab_drop), key_options('Open file in new tab (if not already opened)'))
-				vim.keymap.set('n', 't', api.node.open.tab_drop, key_options('Go to file (if not already opened, open in new tab) and close the tree'))
+				vim.keymap.set('n', 'T', decorator_return_to_tree(api.node.open.tab_drop),
+					key_options('Open file in new tab (if not already opened)'))
+				vim.keymap.set('n', 't', api.node.open.tab_drop,
+					key_options('Go to file (if not already opened, open in new tab) and close the tree'))
 			end
 
 			-- Setup
