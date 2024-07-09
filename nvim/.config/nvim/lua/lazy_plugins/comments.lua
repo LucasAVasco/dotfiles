@@ -21,7 +21,6 @@ return {
 
 		init = function()
 			vim.cmd('filetype plugin on')
-			vim.g.NERDCommentEmptyLines = 1
 			vim.g.NERDSpaceDelims = 1
 			vim.g.NERDTrimTrailingWhitespace = 1 -- Remove trailing spaces after remove a comment
 			vim.g.NERDDefaultAlign = 'left'
