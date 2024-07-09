@@ -29,46 +29,6 @@
 ]]
 
 
---- Decorator that return to the original window after executing *func*
----@param func fun() Lua function that will be called.
----@return fun() decorated_function A Lua function that will return to the original window after executing *func*
-local function decorator_return_to_tree(func)
-	return function()
-		local current_win_id = vim.fn.win_getid()
-		func()
-		vim.fn.win_gotoid(current_win_id)
-	end
-end
-
-
---- Apply custom keymaps to the `nvim-tree` buffer
----@param bufnr number Buffer number of the `nvim-tree` buffer
-local function apply_custom_keymaps(bufnr)
-	local api = require('nvim-tree.api')
-
-	local key_options = MYFUNC.decorator_create_options_table({
-		buffer = bufnr,
-		nowait = true,
-		noremap = true,
-		silent = true,
-	})
-
-	-- Default keymaps
-	api.config.mappings.default_on_attach(bufnr)
-
-	-- Override default open keymap to return to the tree after open the file
-	local open_and_return_to_tree = decorator_return_to_tree(api.node.open.edit)
-
-	for _, key in ipairs({ '<CR>', 'o', '<2-LeftMouse>' }) do
-		vim.keymap.set('n', key, open_and_return_to_tree, key_options('Open to edit'))
-	end
-
-	-- Custom keymaps
-	vim.keymap.set('n', 'T', decorator_return_to_tree(api.node.open.tab_drop), key_options('Open file in new tab (if not already opened)'))
-	vim.keymap.set('n', 't', api.node.open.tab_drop, key_options('Go to file (if not already opened, open in new tab) and close the tree'))
-end
-
-
 return {
 	{
 		'stevearc/oil.nvim',
@@ -133,8 +93,6 @@ return {
 		},
 
 		opts = {
-			on_attach = apply_custom_keymaps,
-
 			sort = {
 				sorter = 'case_sensitive',
 			},
@@ -184,6 +142,50 @@ return {
 			-- Does not disable `Netrw` in `nvim-tree` configuration. The `oil.nvim` configuration will do it
 			hijack_netrw = true,
 			disable_netrw = false,
-		}
+		},
+
+		config = function(_, opts)
+			--- Decorator that return to the original window after executing *func*
+			---@param func fun() Lua function that will be called.
+			---@return fun() decorated_function A Lua function that will return to the original window after executing *func*
+			local function decorator_return_to_tree(func)
+				return function()
+					local current_win_id = vim.fn.win_getid()
+					func()
+					vim.fn.win_gotoid(current_win_id)
+				end
+			end
+
+			--- Apply custom keymaps to the `nvim-tree` buffer
+			---@param bufnr number Buffer number of the `nvim-tree` buffer
+			local function apply_custom_keymaps(bufnr)
+				local api = require('nvim-tree.api')
+
+				local key_options = MYFUNC.decorator_create_options_table({
+					buffer = bufnr,
+					nowait = true,
+					noremap = true,
+					silent = true,
+				})
+
+				-- Default keymaps
+				api.config.mappings.default_on_attach(bufnr)
+
+				-- Override default open keymap to return to the tree after open the file
+				local open_and_return_to_tree = decorator_return_to_tree(api.node.open.edit)
+
+				for _, key in ipairs({ '<CR>', 'o', '<2-LeftMouse>' }) do
+					vim.keymap.set('n', key, open_and_return_to_tree, key_options('Open to edit'))
+				end
+
+				-- Custom keymaps
+				vim.keymap.set('n', 'T', decorator_return_to_tree(api.node.open.tab_drop), key_options('Open file in new tab (if not already opened)'))
+				vim.keymap.set('n', 't', api.node.open.tab_drop, key_options('Go to file (if not already opened, open in new tab) and close the tree'))
+			end
+
+			-- Setup
+			opts.on_attach = apply_custom_keymaps
+			require('nvim-tree').setup(opts)
+		end
 	}
 }
