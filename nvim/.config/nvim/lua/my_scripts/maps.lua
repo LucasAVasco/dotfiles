@@ -90,9 +90,8 @@ vim.keymap.set('i', '<C-up>', '<CMD>normal! {<CR>', get_default_opt('Move cursor
 vim.keymap.set('i', '<C-down>', '<CMD>normal! }<CR>', get_default_opt('Move cursor a paragraph forward'))
 
 -- Fast repeat the macro saved in the 'q' register
-vim.keymap.set({'n', 'v'}, ',', '@q', get_default_opt('Repeat macro "q"'))
-vim.keymap.set('n', '<leader>,', ':let @q=@', get_default_opt('Copy a register content to "q" register'))
-
+vim.keymap.set({'n', 'v'}, '<A-.>', '@q', get_default_opt('Repeat macro "q"'))
+vim.keymap.set('n', '<leader>.', ':let @q=@', get_default_opt('Copy a register content to "q" register'))
 
 -- Backspace deletion. Some terminal emulators does not have a <C-BS> key. They use <C-w> or <C-h> instead
 vim.keymap.set('i', '<C-w>', '<C-BS>', {remap=true, silent = true, desc="Same as the <C-BS> key"})
