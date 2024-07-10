@@ -4,7 +4,7 @@ return {
 		lazy = true,
 
 		opts = {
-			default = true,  -- Default icons
+			default = true,
 			strict = true    -- Prevents the plugin from loading wrong icons
 		}
 	}
