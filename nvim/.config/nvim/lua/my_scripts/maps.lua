@@ -48,11 +48,11 @@ vim.keymap.set('n', '<C-d>', '<C-d>zz', get_default_opt('Scroll up the window an
 vim.keymap.set('n', 'ch', '<CMD>nohlsearch<CR>', get_default_opt('Clear current search highlight'))
 
 -- Find and replace
-vim.keymap.set('n', '<A-f>', ':%s///g<left><left><left>', get_default_opt_no_silence('Replace in all file'))
-vim.keymap.set('v', '<A-f>', ':s///g<left><left><left>', get_default_opt_no_silence('Replace only in selected text'))
-vim.keymap.set('n', '<A-s>', ':%s/<C-r>///g<left><left>', get_default_opt_no_silence('Replace searched text in all file'))
-vim.keymap.set('v', '<A-s>', ':s/<C-r>///g<left><left>', get_default_opt_no_silence('Replace searched text only in selected text'))
-vim.keymap.set('v', '<A-r>', '""y:%s/<C-r>"//g<left><left>', get_default_opt_no_silence('Replace visual selected text in all file'))
+vim.keymap.set('n', '<leader>ri', ':%s///g<left><left><left>', get_default_opt_no_silence('Replace input in all file'))
+vim.keymap.set('v', '<leader>ri', ':s///g<left><left><left>', get_default_opt_no_silence('Replace input only in selected text'))
+vim.keymap.set('n', '<leader>rs', ':%s/<C-r>///g<left><left>', get_default_opt_no_silence('Replace searched text in all file'))
+vim.keymap.set('v', '<leader>rs', ':s/<C-r>///g<left><left>', get_default_opt_no_silence('Replace searched text only in selected text'))
+vim.keymap.set('v', '<leader>rv', '""y:%s/<C-r>"//g<left><left>', get_default_opt_no_silence('Replace visual selected text in all file'))
 
 -- Indentation
 vim.keymap.set('v', '<S-TAB>', '<gv', get_default_opt('Indent current selection to left'))
