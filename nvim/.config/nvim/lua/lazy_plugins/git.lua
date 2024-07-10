@@ -44,7 +44,22 @@
 
 
 return {
-	'tpope/vim-fugitive',
+	{
+		'tpope/vim-fugitive',
+
+		cmd = {
+			'G', 'Git',
+			'Ggrep', 'Glgrep',
+			'Gclog', 'Gllog',
+			'Gcd', 'Glcd',
+			'Gedit', 'Gtabedit', 'Gpedit',
+			'Gsplit', 'Gvsplit',
+			'Gdrop', 'Gread', 'Gwrite', 'Gwq',
+			'Gdiffsplit', 'Gvdiffsplit', 'Ghdiffsplit',
+			'GMove', 'GRename', 'GDelete', 'GRemove', 'GUnlink',
+			'GBrowse'
+		}
+	},
 
 	{
 		'lewis6991/gitsigns.nvim',
