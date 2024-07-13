@@ -16,13 +16,13 @@ return {
 			local telescope = require('telescope')
 
 			--- Open Telescope selection in Trouble
-			--- @param ... Arguments provided by Telescope to `open()`
+			---@param ... any Arguments provided by Telescope to `open()`
 			local function open_with_trouble(...)
 				require('trouble.sources.telescope').open(...)
 			end
 
 			--- Add Telescope selection to Trouble
-			--- @param ... Arguments provided by Telescope to `add()`
+			---@param ... any Arguments provided by Telescope to `add()`
 			local function add_to_trouble(...)
 				require('trouble.sources.telescope').add(...)
 			end
