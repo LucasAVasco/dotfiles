@@ -3,7 +3,10 @@ return {
 		'nvim-telescope/telescope.nvim',
 
 		dependencies = {
-			'nvim-lua/plenary.nvim'
+			'nvim-lua/plenary.nvim',
+
+			-- Extensions
+			'debugloop/telescope-undo.nvim',
 		},
 
 		lazy = true,
@@ -48,8 +51,9 @@ return {
 				}
 			})
 
-			-- Load the 'nvim-notify' extension to show the notification history in Telescope
+			-- Extensions (need to be loaded after the basic setup)
 			telescope.load_extension('notify')
+			telescope.load_extension('undo')
 		end
 	}
 }
