@@ -1,4 +1,5 @@
-_G.mypaths = {
+_G.MYPATHS = {
+	home = vim.env.HOME,
 	config = vim.env.HOME .. '/.config/nvim/',
 	dev = vim.env.HOME .. '/Repositories/',                        -- Development folder (used to load plugins in 'dev' mode)
 	data = vim.fn.stdpath('data'),

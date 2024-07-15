@@ -34,9 +34,9 @@ local lazy_dev = false                             -- Use the 'lazy.nvim' reposi
 
 if vim.env.ALLOW_EXTERNAL_SOFTWARE == 'y' then
 	-- Lazy.nvim (plugin manager) configuration
-	local lazy_path = mypaths.lazy_nvim
+	local lazy_path = MYPATHS.lazy_nvim
 	if lazy_dev then  -- If the 'dev' option to lazy.nvim is enabled, change the path to the development folder
-		lazy_path = mypaths.dev .. 'lazy.nvim'
+		lazy_path = MYPATHS.dev .. 'lazy.nvim'
 	end
 	if not vim.uv.fs_stat(lazy_path) then
 		vim.fn.system({
@@ -60,7 +60,7 @@ if vim.env.ALLOW_EXTERNAL_SOFTWARE == 'y' then
 	}, {
 		dev = {
 			-- Path where to find plugins if in Dev mode
-			path = mypaths.dev
+			path = MYPATHS.dev
 		},
 		change_detection = {
 			-- Does not check changes in the configuration files (it is annoying when editing a plugin file). Restart Nvim to see the changes

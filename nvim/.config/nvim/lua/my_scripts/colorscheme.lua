@@ -7,7 +7,7 @@
 ]]
 
 
-local file_path = mypaths.data .. '/last_colorsheme'  -- File to save the current color scheme name
+local file_path = MYPATHS.data .. '/last_colorsheme'  -- File to save the current color scheme name
 
 
 -- Load the last selected color-scheme
