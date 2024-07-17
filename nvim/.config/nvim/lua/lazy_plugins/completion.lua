@@ -253,8 +253,8 @@ return {
 
 				mapping = {
 					-- Auto complete
-					['<Down>'] = cmp.mapping.select_next_item({ behavior = cmp.SelectBehavior.Insert, count = 6 }),
-					['<Up>'] = cmp.mapping.select_prev_item({ behavior = cmp.SelectBehavior.Insert, count = 6 }),
+					['<Down>'] = cmp.mapping.select_next_item({ behavior = cmp.SelectBehavior.Select, count = 6 }),
+					['<Up>'] = cmp.mapping.select_prev_item({ behavior = cmp.SelectBehavior.Select , count = 6 }),
 					['<Left>'] = close_completion,
 					['<Right>'] = close_completion,
 					['<CR>'] = cmp.mapping.confirm({ behavior = cmp.ConfirmBehavior.Replace }),
@@ -269,7 +269,7 @@ return {
 
 					['<Tab>'] = function(fallback)
 						if cmp.visible() then
-							cmp.select_next_item({ behavior = cmp.SelectBehavior.Insert })
+							cmp.select_next_item({ behavior = cmp.SelectBehavior.Select })
 						elseif luasnip.jumpable(1) then
 							luasnip.jump(1)
 						else
@@ -278,7 +278,7 @@ return {
 					end,
 					['<S-Tab>'] = function(fallback)
 						if cmp.visible() then
-							cmp.select_prev_item({ behavior = cmp.SelectBehavior.Insert })
+							cmp.select_prev_item({ behavior = cmp.SelectBehavior.Select})
 						elseif luasnip.jumpable(-1) then
 							luasnip.jump(-1)
 						else
