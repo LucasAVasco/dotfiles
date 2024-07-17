@@ -70,6 +70,16 @@ return {
 			},
 
 			search = {
+				args = {
+					'--no-config',    -- Does not applies the user configurations to the `rg` command. Avoids breaking search behavior
+					'--hidden',       -- Search within hidden files and folders. Does not apply to ignored files (E.g. Ignored by Git)
+					'--iglob=!.git',  -- Ignore '.git' folders. Otherwise, the '--hidden' argument allows to search within it
+
+					-- `todo-comments.nvim` requires these arguments to work properly
+					'--no-heading',
+					'--column',
+				},
+
 				-- Pattern used by Ripgrep (https://github.com/BurntSushi/ripgrep) to search by TODO comments occurrences in the files. Used
 				-- by the following commands: `TodoQuickFix`, `TodoLocList`, `TodoTelescope` and `Trouble todo`. This regex is not used to
 				-- highlight the occurrences on the viewer (E.g. Telescope). The `highlight.pattern` option is used to this
