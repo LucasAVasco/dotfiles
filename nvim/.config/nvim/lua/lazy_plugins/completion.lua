@@ -100,10 +100,23 @@ return {
 			'Bilal2453/luvit-meta',  -- Support to 'vim.loop'
 		},
 
-		-- Only enabled if editing a Lua file and the user is inside the '~/.config/nvim/' directory
+		-- Only enabled if editing a Lua file and the user is inside a directory owned by Neovim
 		ft = 'lua',
 		enabled=function()
-			return string.find(vim.fn.getcwd(), '/.config/nvim', 1, true) ~= nil
+			-- Current directory. The comparison that defines whether the current directory belongs to Neovim checks whether the given
+			-- directory path is a sub-string of the current directory path. Adding a trailing slash allows the user to optionally provide a
+			-- path with a trailing slash. Do not use the `getcwd()` function because this function follows symbolic links. This may break
+			-- my configuration that manages my dot files with `stow`
+			local current_dir = vim.env.PWD .. '/'
+
+			---Check is the current directory is inside a provided folder
+			---The tilde (~) is NOT expanded to the user home directory. You need to manually do it if necessary
+			---@param top_dir string Path to the folder that may hold the current directory
+			local function current_dir_is_inside_folder(top_dir)
+				return current_dir:find(top_dir, 1, true) ~= nil
+			end
+
+			return current_dir_is_inside_folder(MYPATHS.config) or current_dir_is_inside_folder(MYPATHS.data)
 		end,
 
 		opts = {
