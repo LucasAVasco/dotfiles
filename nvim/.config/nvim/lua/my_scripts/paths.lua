@@ -1,3 +1,4 @@
+---@type table<string>
 _G.MYPATHS = {
 	home = vim.env.HOME,
 	config = vim.env.HOME .. '/.config/nvim/',
