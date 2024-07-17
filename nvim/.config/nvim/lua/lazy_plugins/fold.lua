@@ -72,11 +72,6 @@ return {
 			'kevinhwang91/promise-async'
 		},
 
-		-- Chances the default installation to use my fork of 'nvim-ufo'
-		-- TODO: remove this when the fork is merged
-		url = 'https://github.com/LucasAVasco/nvim-ufo',
-		branch = 'markerAndMergeProviders',
-
 		config = function()
 			vim.o.foldenable = true
 			vim.o.foldmethod = 'manual'
@@ -115,8 +110,8 @@ return {
 			end
 
 			--- Function that only closes the markers, but opens the rest
-			local function close_only_markers()
-				ufo.openFoldsExceptKinds({'ufo_marker'})
+			local function close_only_markers_and_regions()
+				ufo.openFoldsExceptKinds({'marker', 'region'})
 			end
 
 			-- #endregion
@@ -129,7 +124,7 @@ return {
 			MYPLUGFUNC.set_keymap_name('<leader>z', 'Folding mappings', {'n'})
 			vim.keymap.set('n', 'zR', ufo.openAllFolds, default_options('Open all folds'))  -- UFO requires to remap the `zR` and `zM` keys
 			vim.keymap.set('n', 'zM', ufo.closeAllFolds, default_options('Close all folds'))
-			vim.keymap.set('n', '<leader>zm', close_only_markers, default_options('Close only markers folds'))
+			vim.keymap.set('n', '<leader>zm', close_only_markers_and_regions, default_options('Close only markers folds'))
 			vim.keymap.set('n', '<leader>zp', ufo.peekFoldedLinesUnderCursor, default_options('Peek current fold'))
 
 			vim.keymap.set('n', '<leader>ztp', function()  -- Toggle auto preview
@@ -139,7 +134,7 @@ return {
 			-- Movement mappings
 			local default_modes = { 'n', 'v', 'i' }
 
-			vim.keymap.set(default_modes, '<A-m>', close_only_markers, default_options('Close only markers folds'))
+			vim.keymap.set(default_modes, '<A-m>', close_only_markers_and_regions, default_options('Close only markers folds'))
 			vim.keymap.set(default_modes, '<A-k>', decorator_apply_peek(ufo.goPreviousClosedFold), default_options('Previous fold'))
 			vim.keymap.set(default_modes, '<A-j>', decorator_apply_peek(ufo.goNextClosedFold), default_options('Next fold'))
 
@@ -197,11 +192,11 @@ return {
 			ufo.setup({
 				---@diagnostic disable-next-line: unused-local
 				provider_selector = function(bufnr, filetype, buftype)
-					return ufo.mergeProviders({ 'marker', 'treesitter' })
+					return 'marker'
 				end,
 
 				close_fold_kinds_for_ft = {
-					default = { 'ufo_marker' }  -- Closes the markers after open a buffer
+					default = { 'marker', 'region' }  -- Closes the markers and regions after open a buffer
 				},
 
 				fold_virt_text_handler = fold_text_handler,  -- Custom virtual text in the fold
