@@ -305,7 +305,7 @@ return {
 
 					format = function(entry, vim_completed_item)
 						local kind = lspkind.presets.default[vim_completed_item.kind]        -- Convert the kind with lspkind
-						vim_completed_item.kind = ' ' .. kind .. ' '
+						vim_completed_item.kind = ' ' .. (kind or '?') .. ' '
 						vim_completed_item.menu =  source_name2item_menu[entry.source.name]  -- Add the source name to the menu
 
 						return vim_completed_item
