@@ -311,8 +311,8 @@ end
 --- provide the default options with to create the `keymap_table_generator`. After this, you can generate the new option tables with a new
 --- description by passing the description to this generator. Can be used with function like: `nvim_create_user_command` and
 --- `nvim_set_keymap`. Because the `desc` attribute will be overridden, you should not set it in the `default_options` parameter.
----@param default_options table Options table.
----@return fun(keymap_description: string): table keymap_table_generator A function that returns a key map options table
+---@param default_options vim.keymap.set.Opts Options table.
+---@return fun(keymap_description: string): vim.keymap.set.Opts keymap_table_generator A function that returns a key map options table
 function MYFUNC.decorator_create_options_table(default_options)
 	return function(keymap_description)
 		return vim.tbl_extend('force', default_options, { desc = keymap_description })
