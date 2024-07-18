@@ -41,8 +41,8 @@ vim.keymap.set('n', '<F12>', '<CMD>:h mycfg.txt<CR>', get_default_opt('Open my d
 vim.keymap.set('n', '<F1>', '<CMD>tabn<CR>', get_default_opt('Next tab'))
 vim.keymap.set('n', MYFUNC.get_F_key('S', 1), '<CMD>tabp<CR>', get_default_opt('Previous tab'))
 vim.keymap.set('n', '<BS>', '<CMD>execute "normal! <C-W><C-P>"<CR>', get_default_opt('Go to previous window'))
-vim.keymap.set('n', '<C-u>', '<C-u>zz', get_default_opt('Scroll down the window and centralize'))
-vim.keymap.set('n', '<C-d>', '<C-d>zz', get_default_opt('Scroll up the window and centralize'))
+vim.keymap.set('n', '<A-u>', '<C-u>zz', get_default_opt('Scroll down the window and centralize'))
+vim.keymap.set('n', '<A-d>', '<C-d>zz', get_default_opt('Scroll up the window and centralize'))
 
 -- Search
 vim.keymap.set('n', 'ch', '<CMD>nohlsearch<CR>', get_default_opt('Clear current search highlight'))
