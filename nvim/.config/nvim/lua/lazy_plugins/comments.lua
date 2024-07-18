@@ -96,6 +96,10 @@ return {
 				-- (position between a word and a non-word match)
 				pattern = [[\b(KEYWORDS)(\(.*\))?\s*:]],
 			}
-		}
+		},
+
+		init = function()
+			MYPLUGFUNC.load_telescope_extension('todo-comments', { 'todo-comments', 'todo' })
+		end
 	}
 }

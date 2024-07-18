@@ -19,6 +19,10 @@ return {
 		lazy = true,
 		priority = 9500,  -- Notification system
 
+		init = function()
+			MYPLUGFUNC.load_telescope_extension('notify', { 'notify' })
+		end,
+
 		config = function()
 			-- Override the default function
 			vim.notify = require('notify')
