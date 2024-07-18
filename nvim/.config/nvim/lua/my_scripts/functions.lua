@@ -304,7 +304,7 @@ end
 -- #endregion
 
 
--- #region Functions related to keymaps.
+-- #region Functions related to key maps.
 
 --- Decorator to create a function that returns a options table equal the `default_options` with the `desc` option overridden.
 --- This function is useful if the you need to create a lot of key maps with the same options, but with different description. You can
@@ -327,35 +327,35 @@ local which_key_maps_to_load = {}  -- Until the `which-key` plugin is loaded, th
 
 
 --- Sets the key map name
---- Does not check if the `which-key` plugin is loaded. This functions is designed to be used in the by other functions to implement
---- the key map names API, not the final user.
----@param keymap string Key map code string (same as `nvim_set_keymap`)
+--- Does not check if the `which-key` plugin is loaded. This functions is designed to be used by other functions to implement the key map
+--- names API. The user should not use this function
+---@param keymap string Key map code string (same as `vim.keymap.set`)
 ---@param name string Key map name (description) to be show by which-key
----@param modes? table<string> Keymap modes (table). E.g { 'n', 'v', 'i' }
+---@param modes? string|table<string> Key map modes. E.g { 'n', 'v', 'i' } or 'n'. Same as `vim.keymap.set`
 local function set_keymap_name(keymap, name, modes)
-	require('which-key').register({ [keymap] = name }, { mode = modes })
+	require('which-key').add({ keymap, desc = name, mode = modes })
 end
 
 
---- Starts the registration of key map names.
---- All pending key map names (in the `which_key_maps_to_load` variable) will be registered. This table will be cleared after the
---- update and will be no longer necessary
---- This function need to be called after the `which-key` plugin is loaded.
-function MYPLUGFUNC.start_keymap_register()
+--- Load all pending key maps with `which-key`
+--- All pending key map names (in the `which_key_maps_to_load` variable) will be added. This table will be cleared after the update and will
+--- be no longer necessary. Any next call to `MYPLUGFUNC.set_keymap_name()` will load the key maps with `which-key` instead of adding it to
+--- 'which_key_maps_to_load'. This function only needs to be called once after the `what-key` plugin setup
+function MYPLUGFUNC.load_pending_keymaps()
 	for _, map in ipairs(which_key_maps_to_load) do
 		set_keymap_name(unpack(map))
 	end
 
 	MYVAR.is_wichkey_loaded = true
-	which_key_maps_to_load = {}
+	which_key_maps_to_load = nil
 end
 
 
---- Global function to set key map names (for which-key)
---- Register the key map names in the `which-key` plugin, or stores it to be registered after the `which-key` plugin is loaded.
----@param keymap string Key map code string (same as `nvim_set_keymap`)
+--- Global function to set key map names (with `which-key`)
+--- Add the key map names with the `which-key` plugin, or stores it to be added after the `which-key` plugin setup
+---@param keymap string Key map code string (same as `vim.keymap.set`)
 ---@param name string Key map name (description) to be show by which-key
----@param modes? table<string> Keymap modes (table). E.g { 'n', 'v', 'i' }
+---@param modes? string|table<string> Key map modes. E.g { 'n', 'v', 'i' } or 'n'. Same as `vim.keymap.set`
 function MYPLUGFUNC.set_keymap_name(keymap, name, modes)
 	if MYVAR.is_wichkey_loaded then
 		set_keymap_name(keymap, name, modes)
