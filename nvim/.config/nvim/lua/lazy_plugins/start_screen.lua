@@ -25,7 +25,7 @@ return {
 					{ icon = ' ', key = 't', icon_hl = icon_hl, desc = 'File tree', group = desc_hl, action = 'NvimTreeFocus'},
 					{ icon = '󰖌 ', key = 'o', icon_hl = icon_hl, desc = 'Oil nvim', group = desc_hl, action = 'Oil'},
 					{ icon = ' ', key = 'f', icon_hl = icon_hl, desc = 'Find file', group = desc_hl, action = 'Telescope find_files'},
-					{ icon = ' ', key = 'g', icon_hl = icon_hl, desc = 'Git status', group = desc_hl, action = 'Git | only'},
+					{ icon = ' ', key = 'G', icon_hl = icon_hl, desc = 'Git status', group = desc_hl, action = 'Git | only'},
 					{ icon = '󱃆 ', key = 's', icon_hl = icon_hl, desc = 'List NOPUSH comments', group = desc_hl,
 						action = 'TodoTelescope keywords=NOPUSH'},
 					{ icon = '󰸟 ', key = 'h', icon_hl = icon_hl, desc = 'Healthchecks', group = desc_hl,
