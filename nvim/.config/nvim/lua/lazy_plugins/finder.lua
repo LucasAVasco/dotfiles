@@ -96,7 +96,12 @@ return {
 		},
 
 		lazy = true,
+
 		cmd = 'Telescope',
+
+		keys = {
+			{'<leader>gb', '<CMD>Telescope buffers<CR>', desc = 'Select a buffer with Tlescope and go to it' },
+		},
 
 		config = function()
 			local telescope = require('telescope')
