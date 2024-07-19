@@ -177,15 +177,25 @@ return {
 		opts = {
 			options = {
 				section_separators = { left = '', right = '' },
-				component_separators = { left = '', right = '' },
+				component_separators = { left = '', right = '' },
 
 				ignore_focus = {'Telescope', 'NvimTree'},
 			},
 
 			sections = {
+				-- At left
+				lualine_a = {
+					{ 'mode', separator = { left = ' '} },
+				},
+
+				-- At right
 				lualine_x = {
 					{ '%B', icon = '󰛘' },  -- Hex value of the character over the cursor
 					'encoding', 'fileformat', 'filetype'
+				},
+
+				lualine_z = {
+					{ 'location', separator = { right = ' '} },
 				},
 			}
 		},
