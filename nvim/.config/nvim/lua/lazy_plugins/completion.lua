@@ -211,7 +211,25 @@ return {
 				end,
 
 				sources = {
-					{ name = 'path' },
+					{
+						name = 'path',
+						option = {
+							---Return the directory that `cmp-path` will use when inserting relative paths
+							---@param cmp_data table<string, any> Data provided by `cmp-path`
+							---@return string current_working_directory
+							get_cwd = function(cmp_data)
+								local buffer_nr = cmp_data.context.bufnr
+								local path_expand_expr = ':p:h'
+
+								-- Use the git repository root directory when editing the '.git/COMMIT_EDITMSG' file
+								if vim.bo[buffer_nr].filetype == 'gitcommit' then
+									path_expand_expr = ':p:h:h'
+								end
+
+								return vim.fn.expand('#' .. buffer_nr .. path_expand_expr)
+							end
+						}
+					},
 					{
 						name = 'buffer',
 						get_bufnrs = function()
