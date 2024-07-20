@@ -15,6 +15,9 @@ return {
 		},
 
 		config = function(_, opts)
+			require('mason')  -- Configured in another file
+			MYPLUGFUNC.ensure_mason_package_installed('tree-sitter-cli')  -- Required to use `:TSInstallFromGrammar`
+
 			require('nvim-treesitter.configs').setup(opts)
 		end
 	}

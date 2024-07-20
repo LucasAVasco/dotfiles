@@ -59,7 +59,7 @@ return {
 
 			-- Mason configuration to automatically download LSP servers. The setup order is required: 1. mason, 2. mason-lspconfig,
 			-- 3. nvim-lspconfig
-			require('mason').setup()
+			require('mason')  -- Configured in another file
 			local mason_lspconfig = require('mason-lspconfig')
 
 			mason_lspconfig.setup({
