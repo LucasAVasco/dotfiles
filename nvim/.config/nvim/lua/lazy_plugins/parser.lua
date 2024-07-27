@@ -1,3 +1,38 @@
+--[[ autodoc
+	====================================================================================================
+	Tree-sitter commands [cmd]                                                    *tree-sitter-commands*
+
+	`InspectTree` Shows the Tree-sitter tree. Useful if you want to know the syntax tree to create an
+	injection query or something like this.
+
+	`TSEditQuery <query name>` Edit a Tree-sitter query file in the Tree-sitter plugin directory.
+
+	`TSEditQueryUserAfter <query name>` Edit a Tree-sitter query file in the Neovim configuration
+	directory.
+
+	`TSEditQueryRtd <query name>` Edit a Tree-sitter query file in a project runtime directory.
+
+	====================================================================================================
+	Tree-sitter information [cmd]                                                     *tree-sitter-info*
+
+	Uselful sites: ~
+
+	* https://tree-sitter.github.io/tree-sitter/using-parsers
+
+	* https://tree-sitter.github.io/tree-sitter/syntax-highlighting
+
+	If you are editing a query, these sites may be relevant: ~
+
+	* https://tree-sitter.github.io/tree-sitter/using-parsers#pattern-matching-with-queries
+
+	* https://tree-sitter.github.io/tree-sitter/syntax-highlighting#queries
+
+	If you are editing a injection query, this site may be relevant: ~
+
+	* https://tree-sitter.github.io/tree-sitter/syntax-highlighting#language-injection
+]]
+
+
 return {
 	{
 		'nvim-treesitter/nvim-treesitter',
