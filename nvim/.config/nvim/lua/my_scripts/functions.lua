@@ -62,13 +62,17 @@ end
 --- The user need to provide the buffer number. This function will return the ID of the window associated to this buffer. More that one
 --- window can be associated to the same buffer. In this case, this function will select one of them and return. The criteria to select the
 --- window ID may change in the future, but the first option will ever be the current window
----@param buffer_nr? number Number of the buffer used to search by windows
+---@param buffer_nr? number Number of the buffer used to search by windows. If not provided or `0`, use the current buffer
 ---@return number window_ID ID of the window to associated to the provided buffer
 function MYFUNC.get_window_by_buffer(buffer_nr)
-	local window_id = vim.fn.win_getid()  -- Current window (the desired window to highlight)
+	if buffer_nr == nil or buffer_nr == 0 then
+		buffer_nr = vim.api.nvim_get_current_buf()
+	end
+
+	local window_id = vim.api.nvim_get_current_win()
 
 	if vim.fn.winbufnr(window_id) ~= buffer_nr then  -- Overrides if the current window does not have the correct buffer attached to it
-		window_id = vim.fn.bufwinid(buffer_nr or 0)
+		window_id = vim.fn.bufwinid(buffer_nr)
 	end
 
 	return window_id
