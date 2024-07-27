@@ -20,5 +20,11 @@ return {
 			global_settings = 'neoconf.jsonc',
 			local_settings = '.neoconf.jsonc',
 		},
+	},
+	{
+		'LucasAVasco/project_runtime_dirs.nvim',
+		priority = 10500,
+
+		config = true,
 	}
 }
