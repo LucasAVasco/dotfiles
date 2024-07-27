@@ -50,8 +50,11 @@ return {
 
 			highlight = { enable = true },
 			incremental_selection = { enable = true },
-			indent = { enable = true },
 			matchup = { enable = true },
+			indent = {
+				enable = true,
+				disable = { 'markdown' },
+			},
 		},
 
 		config = function(_, opts)
