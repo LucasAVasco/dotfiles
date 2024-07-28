@@ -40,16 +40,25 @@ return {
 				require("luasnip.loaders").edit_snippet_files()
 			end, {})
 
+			-- Disables the snippet files reloading after any modification. This feature throws errors messages every time the user saves an
+			-- incomplete snippet file
+			local fs_event_providers = {
+				autocmd = false,
+				libuv = false,
+			}
+
 			-- Load default snippets (also load friendly-snippets)
 			-- Not all friendly-snippets are loaded because they are specific to some frameworks
 			-- They can be found here: https://github.com/rafamadriz/friendly-snippets/tree/main/snippets/frameworks
 			-- E.g: To load Rails snippets, use:
 			-- require('luasnip').filetype_extend('ruby', {'rails'})
-			require('luasnip.loaders.from_vscode').lazy_load()
+			require('luasnip.loaders.from_vscode').lazy_load({ fs_event_providers = fs_event_providers })
 
 			-- My snippets
-			require('luasnip.loaders.from_vscode').lazy_load({ paths = {'~/.config/nvim/vscode_snippets'} })
-			require('luasnip.loaders.from_lua').lazy_load({ paths = {'~/.config/nvim/lua_snippets'} })
+			require('luasnip.loaders.from_vscode').lazy_load({ paths = {'~/.config/nvim/vscode_snippets'},
+				fs_event_providers = fs_event_providers })
+			require('luasnip.loaders.from_lua').lazy_load({ paths = {'~/.config/nvim/lua_snippets'},
+				fs_event_providers = fs_event_providers })
 		end
 	},
 	{
