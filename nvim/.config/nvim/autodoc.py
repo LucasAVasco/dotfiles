@@ -14,8 +14,6 @@ import os
 import shutil
 from functools import cached_property
 
-from prompt_toolkit import print_formatted_text, HTML
-
 
 identation = r'\t'
 text_width = 100
@@ -97,7 +95,8 @@ def SectionQuery(lines: list):
             # Warning if the section divider is not the expected size
             size = len(line) - 1
             if size != text_width:
-                print_formatted_text(HTML(f'<ansiyellow>WARNING: Section divider is not the expected size ({size} != {text_width})</ansiyellow>'))
+                print(f'\033[1;33mWARNING: Section divider is not the expected size'
+                    '({size} != {text_width}) \033[0m')
 
             # Changes the section divider
             if current_section is not None: sections.append(current_section)
