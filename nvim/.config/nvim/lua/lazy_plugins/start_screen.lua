@@ -35,8 +35,11 @@ return {
 					{ icon = '󱎘 ', key = 'q', icon_hl = icon_hl, desc = 'Quit', group = desc_hl, action = 'quit'},
 				},
 
-				packages = { enable = true }  -- Show installed packages
+				packages = { enable = true },  -- Show installed packages
+
+				footer = {},
 			},
+
 		}
 	}
 }
