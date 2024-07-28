@@ -1,10 +1,5 @@
 --[[ autodoc
 	====================================================================================================
-	Auto-completion keymaps (Plugin)[map]                                         *plugin-completion-keymaps*
-
-	Use `<M-e>` to use Fast Wrap. It will show virtual texts indicating the position to place the closing
-	pair. Press this key to insert. If you select the Shift key, it will insert the closing pair and go to it
-
 	Auto-completion commands (Plugin)[cmd]                                  *plugin-completion-commands*
 
 	`LuaSnipEditFiles` Edit the LuaSnip snippets files
