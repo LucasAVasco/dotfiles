@@ -117,7 +117,8 @@ return {
 				return current_dir:find(top_dir, 1, true) ~= nil
 			end
 
-			return current_dir_is_inside_folder(MYPATHS.config) or current_dir_is_inside_folder(MYPATHS.data)
+			return current_dir_is_inside_folder(MYPATHS.config) or current_dir_is_inside_folder(MYPATHS.data) or
+				current_dir_is_inside_folder(MYPATHS.dev)
 		end,
 
 		opts = {
