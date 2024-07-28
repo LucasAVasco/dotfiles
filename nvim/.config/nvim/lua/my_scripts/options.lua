@@ -35,49 +35,74 @@ vim.opt.shiftwidth = 0     -- Number of spaces added for each indentation (0 = u
 vim.opt.textwidth = 140
 vim.opt.colorcolumn = '+1'
 
---- Update the `vim.opt.listchars` settings
---- This option depends of the `tabstop` option. Every time the `tabstop` option is changed, the listchars option need to be updated
---- This function does the job. The user only need to run this function if changing the `tabstop` option. This can be done with a
---- auto-command that triggers when the 'OptionSet' event is triggered
-local function update_listchars()
+---Update the `vim.opt.listchars` settings.
+---This option depends of the `tabstop` option. Every time the `tabstop` option is changed, the listchars option need to be updated. This
+---function does the job. The user only need to run this function if changing the `tabstop` option. This can be done with a auto-command
+---that triggers when the 'OptionSet' event is triggered.
+---@param buffer_nr number Number of the buffer to update the `listchars` variable
+---@param all_windows? boolean Apply to the global configuration if `true`. Apply to a local window if `false`
+local function update_listchars(buffer_nr, all_windows)
+	local indent_size = vim.bo[buffer_nr].tabstop         -- Number of spaces of a indentation level
+
+	local window_opts = vim.wo
+
+	if all_windows ~= nil then
+		local window_id = MYFUNC.get_window_by_buffer(buffer_nr)
+		window_id = window_id >= 0 and window_id or 0
+
+		window_opts = window_opts[window_id]
+
+		-- Only update the list chars if the `tabstop` option changed
+		if vim.w[window_id].__last_window_indent_size == indent_size then
+			return
+		end
+
+		vim.w[window_id].__last_window_indent_size = indent_size
+	end
+
+	-- Data required to define the list chars
+
 	local superscript_numbers = {'¹', '²', '³', '⁴', '⁵', '⁶', '⁷', '⁸', '⁹'}  -- Indexes to be placed in the 'listchars' option
 
-	local indent_size = vim.bo.tabstop                    -- Number of spaces of a indentation level
 	local indent_even = math.fmod(indent_size, 2) == 0    -- If the indentation size is an even number
 	local indent_size_half = math.floor(indent_size / 2)  -- Half of the indentation size (integer, truncated)
 
-	-- Number of times to repeat the space character at the left of the index number (used by *lead_multispace_char*)
-	local n_repeat_left = indent_even and indent_size_half - 1 or indent_size_half
+	-- Repeat the space character at the left of the index number (used by *lead_multispace_char*).
+	local spaces_before_index_num = string.rep('𝅙', indent_even and indent_size_half - 1 or indent_size_half)
 
-	-- Spaces before any text (first indentation level)
-	local lead_multispace_char = string.rep('𝅙', n_repeat_left) .. '⁰' .. string.rep('𝅙', indent_size_half - 1) .. '┋'
+	-- Repeat the space character at the right of the index number (used by *lead_multispace_char*).
+	local spaces_after_index_num = string.rep('𝅙', indent_size_half - 1)
 
-	-- Spaces after any text (first 4 characters)
-	local multispace_char = '𝅙⋅𝅙₀'
+	-- First indentation level of the multi spaces characters
+
+	local lead_multispace_char = spaces_before_index_num .. '⁰' .. spaces_after_index_num .. '┋' -- Spaces before any text
+	local multispace_char = '𝅙⋅𝅙₀' -- Spaces after any text
 
 	-- Creates the components of the 'listchars' option that have index numbers
 	for _, index_char in ipairs(superscript_numbers) do
-		lead_multispace_char = lead_multispace_char .. string.rep('𝅙', n_repeat_left) .. index_char .. string.rep('𝅙', indent_size_half - 1) .. '┋'
-
+		lead_multispace_char = lead_multispace_char .. spaces_before_index_num .. index_char .. spaces_after_index_num .. '┋'
 		multispace_char = multispace_char .. '𝅙⋅𝅙' .. index_char
 	end
 
-	vim.opt.listchars = 'tab:𝅙𝅙┋,leadmultispace:' .. lead_multispace_char .. ',multispace:' .. multispace_char
-	-- Alternative characters -> 󰇝┆┃󱋱╎⎜┇¦╏┇┋⸽┆┆┊󰇙⦚⸽⍿⟊⫯⫰¦‖⸾⸾⎸⋅⋯﴾﴿
+	window_opts.listchars = 'tab:𝅙𝅙┋,leadmultispace:' .. lead_multispace_char .. ',multispace:' .. multispace_char
+	-- Alternative characters that you may want to use -> 󰇝┆┃󱋱╎⎜┇¦╏┇┋┆┆┊󰇙⍿⟊¦‖⎸⋅⋯﴾﴿
 end
 
 -- Initial 'listchars' setup
 vim.opt.list = true
-update_listchars()
+update_listchars(0, true)
 
--- Update the 'listchars' option when the 'tabstop' option is changed. As described in the `update_listchars()` function, this is
--- done because the listchars option depends of the 'tabstop' option
-vim.api.nvim_create_autocmd({'OptionSet'}, {
+
+-- Updates the `listchars` option when the `tabstop` option changes. As described in the `update_listchars()` function. Use this approach
+-- because my custom `listchars` option depends on the `tabstop` option. Need to update after a `BufWinEnter` to update the `listchars`
+-- option if the user opens more that one buffer in the command line. This ensures that the buffer is attached to a window when updating the
+-- `listchars` option (this is a window option, so needs a window to be applied).
+vim.api.nvim_create_autocmd({'OptionSet', 'BufWinEnter'}, {
 	callback = function(arguments)
-		if arguments.match == 'tabstop' then
-			-- Does not apply the settings if the user ca
+		if arguments.match == 'tabstop' or arguments.event == 'BufWinEnter' then
+			-- Does not changes the `listchars` option if the user can not change the window appearance
 			if MYFUNC.user_can_change_appearance(nil, arguments.buf) then
-				update_listchars()
+				update_listchars(arguments.buf)
 			end
 		end
 	end
