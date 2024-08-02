@@ -121,6 +121,73 @@ return {
 
 			local tl_actions = require('telescope.actions')
 
+			---Close the current picker and edit all selected files.
+			---You can select a file with `TAB` and `S-TAB`. If this function can not query the selected files (E.g. The user does not
+			---selected any file), use the default `<CR>` behavior (select the default option of the buffer).
+			---@param tl_prompt_buffer number Buffer of the current Telescope prompt
+			local function edit_selected_files(tl_prompt_buffer)
+				local tl_action_state = require('telescope.actions.state')
+				local picker = tl_action_state.get_current_picker(tl_prompt_buffer)
+
+				---Selected files to open
+				local selections = {}
+				if picker.get_multi_selection then
+					selections = picker:get_multi_selection()
+				end
+
+				---@class DataToOpenFile
+				---@field path string Path of the file to open
+				---@field col? number Open in this column (first column has index 1)
+				---@field line? number Open in this line (first line has index 1)
+				---@package
+
+				---Files to edit
+				---@type DataToOpenFile[]
+				local files = {}
+				for _, selected_entry in pairs(selections) do
+					---@type DataToOpenFile
+					local file_data = {
+						path = selected_entry.filename or selected_entry[1], -- Some pickers use the first element as the file path
+						col = selected_entry.col,
+						line = selected_entry.lnum,
+					}
+
+					if file_data.path then
+						table.insert(files, file_data)
+					end
+				end
+
+				-- Can not query the file paths. Use the default key map of `<CR>`: `select_default` function
+				if #files == 0 then
+					tl_actions.select_default(tl_prompt_buffer)
+					return
+				end
+
+				-- Need to close telescope before editing the files. Otherwise, Neovim throws an error because the content of the prompt
+				-- buffer is not saved
+				tl_actions.close(tl_prompt_buffer)
+
+				for _, file2open in pairs(files) do
+					-- Open the file
+					vim.cmd.edit({args={file2open.path}, magic={file=false, bar=false}})
+
+					-- Set the cursor position (line and column)
+					local normal_cmd = ''
+
+					if file2open.line then
+						normal_cmd = normal_cmd .. file2open.line .. 'gg'
+					end
+
+					if file2open.col and file2open.col > 0 then
+						normal_cmd = normal_cmd .. '0' .. (file2open.col) .. 'l'
+					end
+
+					if normal_cmd ~= '' then
+						vim.cmd.normal({args = {normal_cmd}, bang=true})
+					end
+				end
+			end
+
 			telescope.setup({
 				defaults = {
 					mappings = {
@@ -132,12 +199,14 @@ return {
 							['t'] = add_to_trouble,
 							['<A-T>'] = open_with_trouble,
 							['<A-t>'] = add_to_trouble,
+							['<CR>'] = edit_selected_files,
 						},
 						i = {
 							['<A-a>'] = tl_actions.close,
 							['<A-q>'] = tl_actions.close,
 							['<A-T>'] = open_with_trouble,
 							['<A-t>'] = add_to_trouble,
+							['<CR>'] = edit_selected_files,
 						}
 					}
 				}
