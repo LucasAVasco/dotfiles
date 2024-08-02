@@ -114,7 +114,7 @@ vim.opt.fillchars = 'foldopen:,foldclose:'
 
 -- Other configurations
 vim.opt.updatetime = 400
-vim.opt.signcolumn = "yes"     -- Colunm with symbols used by other tools like LSP, Git, etc.
+vim.opt.signcolumn = 'yes'     -- Colunm with symbols used by other tools like LSP, Git, etc.
 vim.opt.number = true          -- Line number (if *relativenumber* is true, it is applied only to the current line)
 vim.opt.relativenumber = true  -- Relative line number (applied only to lines other than the current)
 vim.opt.cursorline = true
