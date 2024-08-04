@@ -190,6 +190,17 @@ return {
 
 			telescope.setup({
 				defaults = {
+					sorting_strategy = 'ascending',
+
+					layout_config = {
+						horizontal = {
+							prompt_position = 'top',
+						},
+						vertical = {
+							prompt_position = 'top',
+						}
+					},
+
 					mappings = {
 						n = {
 							['<Esc>'] = false,  -- Disable <esc> because this can conflict with the normal mode
