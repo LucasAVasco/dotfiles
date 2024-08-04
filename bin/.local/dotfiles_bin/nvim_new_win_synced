@@ -1,13 +1,13 @@
 #!/bin/bash
 #
-# Open the default terminal emulator. Create a new process in the background
+# Open Neovim in a new window of the default terminal emulator. Do not create a new process in the background
 #
 # This is not a Linux standard functionality. I just use it in my scripts
 #
 # Dependencies:
 # * bash
-# * kitty
+# * nvim
 # * A script called `default_term_synced` that opens the default terminal emulator in the current terminal instance
 
 
-nohup default_term_synced "$@" > /dev/null &
+exec default_term_synced nvim "$@"

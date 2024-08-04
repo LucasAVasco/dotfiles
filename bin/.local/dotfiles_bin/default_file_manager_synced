@@ -1,13 +1,14 @@
 #!/bin/bash
 #
-# Open the default terminal emulator. Create a new process in the background
+# Open the default file manager in the current terminal instance
 #
 # This is not a Linux standard functionality. I just use it in my scripts
 #
 # Dependencies:
 # * bash
-# * kitty
+# * yazi
 # * A script called `default_term_synced` that opens the default terminal emulator in the current terminal instance
 
 
-nohup default_term_synced "$@" > /dev/null &
+~/.config/yazi/init.sh
+exec default_term_synced yazi "$@"

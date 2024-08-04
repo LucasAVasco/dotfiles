@@ -1,0 +1,13 @@
+#!/bin/bash
+#
+# Open the default terminal emulator. Do not create a new process in the background
+#
+# This is not a Linux standard functionality. I just use it in my scripts
+#
+# Dependencies:
+# * bash
+# * kitty
+
+
+~/.config/kitty/init-config-file.sh
+exec kitty "$@"
