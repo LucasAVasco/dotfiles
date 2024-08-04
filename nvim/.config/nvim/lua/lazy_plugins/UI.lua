@@ -63,14 +63,7 @@ return {
 						['<A-a>'] = 'Close',
 						['<A-q>'] = 'Close',
 					}
-				},
-
-				override = function(conf)
-					-- Show at the bottom left
-					conf.col = 3
-					conf.row = vim.opt.lines:get() - 3
-					return conf
-				end
+				}
 			},
 
 			select = {
