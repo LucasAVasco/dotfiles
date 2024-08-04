@@ -44,7 +44,8 @@ return {
 		build = ':TSUpdate',
 
 		opts = {
-			ensure_installed = { 'lua', 'vim', 'vimdoc', 'markdown_inline' },  -- 'markdown_inline' is required to the new `Trouble` version
+			-- 'markdown_inline' is required by `trouble.nvim`. `regex` is required by `noicenvim`
+			ensure_installed = { 'lua', 'vim', 'vimdoc', 'markdown_inline', 'regex' },
 			sync_install = false,
 			auto_install = true,  -- Install missing parser when entering a buffer that requires it
 

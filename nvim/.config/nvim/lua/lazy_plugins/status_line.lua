@@ -186,6 +186,17 @@ return {
 				-- At left
 				lualine_a = {
 					{ 'mode', separator = { left = ' '} },
+					-- Show the register used to save the current typing macro
+					{
+						function()
+							local macro_register = vim.fn.reg_recording()
+							if macro_register == '' then
+								return ''
+							end
+
+							return '󰫧: ' .. macro_register
+						end
+					},
 				},
 
 				-- At right

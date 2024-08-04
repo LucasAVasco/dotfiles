@@ -1,25 +1,5 @@
 return {
 	{
-		'ray-x/lsp_signature.nvim',
-
-		opts = {
-			hint_prefix = "󰙎: ",
-			handler_opts = { border = 'rounded' },
-			max_width = 80,
-		},
-
-		config = function(_, opts)
-			local lsp_signature = require('lsp_signature')
-
-			-- Attach 'lsp_signature' to all buffers with a LSP server
-			vim.api.nvim_create_autocmd('LspAttach', {
-				callback = function(arguments)
-					lsp_signature.on_attach(opts, arguments.buf)
-				end,
-			})
-		end
-	},
-	{
 		'neovim/nvim-lspconfig',
 
 		dependencies = {
