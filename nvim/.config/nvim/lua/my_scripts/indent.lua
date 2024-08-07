@@ -141,7 +141,7 @@ vim.api.nvim_create_autocmd({'ColorScheme', 'OptionSet'}, {
 			update_window_matches(indent_groups, repeat_times, window_id)
 
 		-- highlight groups are removed when the color scheme changes. Need to recreate the groups and matches
-		elseif arguments.event == 'ColorScheme'  then
+		elseif arguments.event == 'ColorScheme' then
 			-- The highlight groups are removed after change the color scheme. Need to recreate them. The matches are not removed after
 			-- change the color scheme. No need to recreate it
 			indent_groups = create_highlight_groups(indent_colors)
