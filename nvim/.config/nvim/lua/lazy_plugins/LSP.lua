@@ -57,7 +57,9 @@ return {
 			mason_lspconfig.setup_handlers({
 				-- Fallback handler used when not provided a specif server configuration. Need to be first element in this table
 				function (lsp_server_name)
-					if vim.tbl_contains(selected_lsp.disable, lsp_server_name) then
+					-- Lists of LSP servers to disable
+					if vim.tbl_contains(selected_lsp.disable, lsp_server_name) or
+						vim.tbl_contains(MYVAR.lsp_servers_to_disable, lsp_server_name) then
 						return
 					end
 
