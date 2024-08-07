@@ -34,6 +34,14 @@ return {
 
 		build = 'make install_jsregexp',  -- Required to use variable/placeholder transformations in the snippets
 
+		cmd = {
+			'LuaSnipEditFiles',
+			'LuaSnipListAvailable',
+			'LuaSnipUnlinkCurrent',
+		},
+
+		lazy = true,  -- Will be loaded by `nvim-cmp`
+
 		config = function()
 			-- Command to easy edit the snippets files
 			vim.api.nvim_create_user_command('LuaSnipEditFiles', function()
@@ -133,6 +141,8 @@ return {
 	},
 	{
 		'hrsh7th/nvim-cmp',
+
+		event = { 'InsertEnter', 'CmdlineEnter' },
 
 		dependencies = {
 			'hrsh7th/cmp-path',

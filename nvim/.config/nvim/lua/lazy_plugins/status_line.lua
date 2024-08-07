@@ -174,6 +174,8 @@ return {
 			'nvim-tree/nvim-web-devicons'
 		},
 
+		event = 'User MyEventOpenEditableFile',
+
 		opts = {
 			options = {
 				section_separators = { left = '', right = '' },

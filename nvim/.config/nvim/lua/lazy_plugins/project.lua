@@ -3,6 +3,8 @@ return {
 		'folke/neoconf.nvim',
 		main = 'neoconf',
 
+		cmd = 'Neoconf',
+
 		priority = 8500,  -- Configuration system
 
 		opts = {

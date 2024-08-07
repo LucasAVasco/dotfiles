@@ -14,6 +14,7 @@ load_script('functions')
 
 -- Configuration
 load_script('setup') -- Add a function and command to run custom setup (need to be load to use them)
+load_script('custom_events')
 load_script('options')
 load_script('themes')
 load_script('spell')

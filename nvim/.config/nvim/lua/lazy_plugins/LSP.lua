@@ -9,6 +9,16 @@ return {
 			'folke/neoconf.nvim',
 		},
 
+		event = 'User MyEventOpenEditableFile',
+
+		cmd = {
+			'LspInfo',
+			'LspLog',
+			'LspRestart',
+			'LspStart',
+			'LspStop',
+		},
+
 		config = function()
 			-- Uses `neoconf` to get a list of LSP servers to enable or disable
 			local selected_lsp = {
@@ -87,6 +97,11 @@ return {
 					}
 				}
 			)
+
+			-- Manually starts the LSP servers. `nvim-lspconfig` needs to be configured before Neovim attempts to start an LSP server in a
+			-- buffer. Otherwise, `nvim-lspconfig` may not configure it. The following line ensures that the LSP servers will be started
+			-- even if `nvim-lspconfig` is configured after Neovim's attempt
+			vim.cmd('LspStart')
 		end
 	},
 	{
@@ -96,6 +111,10 @@ return {
 			'neovim/nvim-lspconfig',
 			'nvim-tree/nvim-web-devicons',
 		},
+
+		event = 'LspAttach',
+
+		cmd = 'Lspsaga',
 
 		opts = {
 			lightbulb = {

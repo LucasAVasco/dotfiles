@@ -38,16 +38,26 @@ end
 
 
 return {
-	'williamboman/mason.nvim',
+	{
+		'williamboman/mason.nvim',
 
-	config = function()
-		require('mason').setup()
+		config = function()
+			require('mason').setup()
 
-		-- Installs the pending packages
-		mason_configured = true
-		for _, package in pairs(mason_packages_to_install) do
-			MYPLUGFUNC.ensure_mason_package_installed(package)
+			-- Installs the pending packages
+			mason_configured = true
+			for _, package in pairs(mason_packages_to_install) do
+				MYPLUGFUNC.ensure_mason_package_installed(package)
+			end
+			mason_packages_to_install = {}
 		end
-		mason_packages_to_install = {}
-	end
+	},
+	{
+		'williamboman/mason-lspconfig.nvim',
+
+		cmd = {
+			'LspInstall',
+			'LspUninstall',
+		},
+	}
 }

@@ -64,6 +64,8 @@ return {
 	{
 		'lewis6991/gitsigns.nvim',
 
+		event = 'User MyEventOpenEditableFile',
+
 		opts = {
 			sign_priority = 6,
 			update_debounce = 100,
