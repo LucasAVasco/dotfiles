@@ -86,5 +86,36 @@ return {
 				}),
 			})
 		end
+	},
+	{
+		'jmbuhr/otter.nvim',
+		dependencies = {
+			'nvim-treesitter/nvim-treesitter',
+			'LucasAVasco/project_runtime_dirs.nvim'  -- Used to query the project directory and some configurations
+		},
+
+		cmd = {'LspInjectionsEnable'},
+
+		opts = {
+			lsp = {
+				root_dir = function(_, _)
+					return require('project_runtime_dirs.api.project').get_project_directory() or vim.fn.getcwd()
+				end,
+			},
+
+			buffers = {
+				set_filetype = true,
+				write_to_disk = vim.g.otter_write_to_disk or false,
+			},
+		},
+
+		config = function(_, opts)
+			local otter = require('otter')
+			otter.setup(opts)
+
+			vim.api.nvim_create_user_command('LspInjectionsEnable', function()
+				otter.activate()
+			end, {})
+		end
 	}
 }
