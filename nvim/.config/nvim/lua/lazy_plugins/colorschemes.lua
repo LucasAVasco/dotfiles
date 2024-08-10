@@ -2,14 +2,14 @@ return {
 	{
 		'ellisonleao/gruvbox.nvim',
 		opts = {
-			transparent_mode = true,
+			transparent_mode = false,
 		},
 		lazy = true,
 	},
 	{
 		'rebelot/kanagawa.nvim',
 		opts = {
-			transparent = true,
+			transparent = false,
 		},
 		lazy = true,
 	},
@@ -17,7 +17,7 @@ return {
 		'EdenEast/nightfox.nvim',
 		opts = {
 			options = {
-				transparent = true,
+				transparent = false,
 			}
 		},
 		lazy = true,
@@ -27,7 +27,7 @@ return {
 		name = 'catppuccin',
 		main = 'catppuccin',
 		opts = {
-			transparent_background = true,
+			transparent_background = false,
 		},
 		lazy = true,
 	},
@@ -35,7 +35,7 @@ return {
 		'folke/tokyonight.nvim',
 		lazy = true,
 		opts = {
-			transparent = true,
+			transparent = false,
 		}
 	}
 }
