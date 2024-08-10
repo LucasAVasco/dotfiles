@@ -87,6 +87,9 @@ end
 -- #endregion
 
 
+local normal_and_visual_modes = { 'n', 'x' }
+
+
 return {
 	{
 		'nvim-telescope/telescope.nvim',
@@ -240,6 +243,55 @@ return {
 
 		init = function()
 			MYPLUGFUNC.load_telescope_extension('undo', { 'undo' })
+		end
+	},
+	{
+		'nvim-pack/nvim-spectre',
+
+		keys = {
+			{
+				'<leader>Sff', function()
+					require('spectre').open_file_search()
+				end, mode = normal_and_visual_modes,
+				desc = 'Replace on current file'
+			},
+			{
+				'<leader>Sfw', function()
+					require('spectre').open_file_search({select_word=true})
+				end, mode = 'n',
+				desc = 'Replace the current word in the current file'
+			},
+			{
+				'<leader>Sdd', function()
+					require('spectre').open_visual()
+				end, mode = normal_and_visual_modes,
+				desc = 'Replace in the current directory'
+			},
+			{
+				'<leader>Sdw', function()
+					require('spectre').open_visual({select_word=true})
+				end, mode = 'n',
+				desc = 'Replace the current word in the current directory'
+			},
+			{
+				'<leader>St', function()
+					require('spectre').toggle()
+				end, mode = normal_and_visual_modes,
+				desc = 'Toggle `spectre.nvim`'
+			},
+		},
+
+		opts = {
+			line_sep_start = '┌───────────────────────────────',
+			result_padding = '│   ',
+			line_sep       = '└───────────────────────────────',
+		},
+
+		init = function()
+			local set_keymap_name = MYPLUGFUNC.set_keymap_name
+			set_keymap_name('<Leader>S', '`spectre.nvim` maps', normal_and_visual_modes)
+			set_keymap_name('<Leader>Sf', 'Replace on the current file', normal_and_visual_modes)
+			set_keymap_name('<Leader>Sd', 'Replace on the current directory', normal_and_visual_modes)
 		end
 	}
 }
