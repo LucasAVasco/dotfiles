@@ -7,6 +7,7 @@ return {
 			'williamboman/mason-lspconfig.nvim',
 			'hrsh7th/cmp-nvim-lsp',
 			'folke/neoconf.nvim',
+			'b0o/schemastore.nvim', -- Used by 'jsonls' and 'yamlls'
 		},
 
 		event = 'User MyEventOpenEditableFile',
@@ -62,25 +63,76 @@ return {
 				},
 			})
 
+			---Return if the LSP server configuration should be aborted (E.g. The user disabled the server)
+			---@param server_name string Name of the LSP server to check
+			---@return boolean should_abort_configuration
+			---@nodiscard
+			local function should_abort_lsp_config(server_name)
+				-- Lists of LSP servers to disable
+				if vim.tbl_contains(selected_lsp.disable, server_name) or
+					vim.tbl_contains(MYVAR.lsp_servers_to_disable, server_name) then
+					return true
+				end
+
+				-- If the user enabled some LSP server, need to disable all the other servers
+				if #selected_lsp.enable > 0 and not vim.tbl_contains(selected_lsp.enable, server_name) then
+					return true
+				end
+
+				-- Fallback value
+				return false
+			end
+
 			local client_capabilities = require('cmp_nvim_lsp').default_capabilities()
 			local lspconfig = require('lspconfig')
+			local schemastore = require('schemastore')
 			mason_lspconfig.setup_handlers({
-				-- Fallback handler used when not provided a specif server configuration. Need to be first element in this table
+				---Fallback handler used when not provided a specific server configuration. Need to be the first element in this table
+				---@param lsp_server_name string
 				function (lsp_server_name)
-					-- Lists of LSP servers to disable
-					if vim.tbl_contains(selected_lsp.disable, lsp_server_name) or
-						vim.tbl_contains(MYVAR.lsp_servers_to_disable, lsp_server_name) then
+					if should_abort_lsp_config(lsp_server_name) then
 						return
 					end
 
-					-- If the user enabled some LSP server, need to disable all the other servers
-					if #selected_lsp.enable > 0 and not vim.tbl_contains(selected_lsp.enable, lsp_server_name) then
-						return
-					end
-
-					-- Fallback option
 					lspconfig[lsp_server_name].setup({
 						capabilities=client_capabilities
+					})
+				end,
+
+				['jsonls'] = function(lsp_server_name)
+					if should_abort_lsp_config(lsp_server_name) then
+						return
+					end
+
+					lspconfig[lsp_server_name].setup({
+						capabilities=client_capabilities,
+						settings = {
+							---@diagnostic disable-next-line: missing-fields
+							json = {
+								validate = { enable = true },
+								schemas = schemastore.json.schemas(),
+							}
+						},
+					})
+				end,
+
+				['yamlls'] = function(lsp_server_name)
+					if should_abort_lsp_config(lsp_server_name) then
+						return
+					end
+
+					lspconfig[lsp_server_name].setup({
+						capabilities=client_capabilities,
+						settings = {
+							yaml = {
+								schemas = schemastore.yaml.schemas(),
+								schemaStore = {
+									-- Disables the default schema store (use `schemastore.nvim` instead)
+									enable = false,
+									url = "",
+								},
+							},
+						},
 					})
 				end,
 			})
