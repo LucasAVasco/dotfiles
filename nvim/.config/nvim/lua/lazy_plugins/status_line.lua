@@ -162,9 +162,28 @@ return {
 				vim.keymap.set('n', '<A-' .. i .. '>', MYFUNC.decorator_call_function(bufferline.go_to, {i, true}),
 					get_map_opts('Go to buffer ' .. i ))
 			end
+
+			local function cycle_prev_buf()
+				bufferline.cycle(-1)
+			end
+			local function cycle_next_buf()
+				bufferline.cycle(1)
+			end
+
 			vim.keymap.set('n', '<A-0>', MYFUNC.decorator_call_function(bufferline.go_to, {-1, true}), get_map_opts('Go to last buffer'))
-			vim.keymap.set('n', '<A-[>', MYFUNC.decorator_call_function(bufferline.cycle, {-1}), get_map_opts('Go to previous buffer'))
-			vim.keymap.set('n', '<A-]>', MYFUNC.decorator_call_function(bufferline.cycle, {1}), get_map_opts('Go to next buffer'))
+			vim.keymap.set('n', '<A-[>', cycle_prev_buf, get_map_opts('Go to previous buffer'))
+			vim.keymap.set('n', '<A-]>', cycle_next_buf, get_map_opts('Go to next buffer'))
+
+			---Function key mappings to jump between buffers and tabs
+			---@type MyFunctionKeysMappings
+			local buffer_move_fkeys = {
+				shift = { cycle_prev_buf, '<CMD>tabp<CR>' },
+				normal = { cycle_next_buf, '<CMD>tabn<CR>' },
+			}
+			vim.keymap.set('n', '[b', MYFUNC.decorator_set_fkey_mappings(buffer_move_fkeys, 1, true), get_map_opts('Previous buffer'))
+			vim.keymap.set('n', ']b', MYFUNC.decorator_set_fkey_mappings(buffer_move_fkeys, 1), get_map_opts('Next buffer'))
+			vim.keymap.set('n', '[t', MYFUNC.decorator_set_fkey_mappings(buffer_move_fkeys, 2, true), get_map_opts('Previous tab'))
+			vim.keymap.set('n', ']t', MYFUNC.decorator_set_fkey_mappings(buffer_move_fkeys, 2), get_map_opts('Next tab'))
 		end
 	},
 	{

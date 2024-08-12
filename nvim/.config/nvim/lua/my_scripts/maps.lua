@@ -29,6 +29,21 @@ function MYFUNC.get_F_key(prefix, key_number)
 end
 
 
+local opts = {
+	remap = true,  -- Required
+	silent = true,
+}
+
+-- Fix shift function key codes
+for fkey_index = 1, 12 do
+	local effective_keycode = fkey_index + 12
+	local effective_map = '<F' .. effective_keycode .. '>'
+	local desired_map = '<S-F' .. fkey_index .. '>'
+
+	vim.keymap.set({ 'n', 'v', 'i' }, effective_map, desired_map, opts)
+end
+
+
 -- Functions to generate the option tables
 local get_default_opt = MYFUNC.decorator_create_options_table({ remap = false, silent = true })
 local get_default_opt_no_silence = MYFUNC.decorator_create_options_table({ remap = false, silent = false })
@@ -38,8 +53,6 @@ local get_default_opt_no_silence = MYFUNC.decorator_create_options_table({ remap
 vim.keymap.set('n', '<F12>', '<CMD>:h mycfg.txt<CR>', get_default_opt('Open my documentation help'))
 
 -- Navigation
-vim.keymap.set('n', '<F1>', '<CMD>tabn<CR>', get_default_opt('Next tab'))
-vim.keymap.set('n', MYFUNC.get_F_key('S', 1), '<CMD>tabp<CR>', get_default_opt('Previous tab'))
 vim.keymap.set('n', '<BS>', '<CMD>execute "normal! <C-W><C-P>"<CR>', get_default_opt('Go to previous window'))
 vim.keymap.set('n', '<A-u>', '<C-u>zz', get_default_opt('Scroll down the window and centralize'))
 vim.keymap.set('n', '<A-d>', '<C-d>zz', get_default_opt('Scroll up the window and centralize'))
@@ -76,12 +89,6 @@ vim.keymap.set({'n', 'v'}, vim.g.secondleader .. 'C', '"_C', get_default_opt('Ch
 -- Normal in other modes
 vim.keymap.set('t', '<Esc>', '<C-\\><C-n>', get_default_opt('Normal mode into terminal'))  -- In terminal
 vim.keymap.set({'n', 's'}, '<A-;>', ':<C-f>', get_default_opt('Open command-line window'))  -- The <C-f> need to be override if your 'cedit' is not 'CTRL-F'
-
--- Quickfix and Loclist
-vim.keymap.set('n', '<F3>', '<CMD>lnext <CR>', get_default_opt('Go to next location list item'))
-vim.keymap.set('n', MYFUNC.get_F_key('S', 3), '<CMD>lprev <CR>', get_default_opt('Go to previous location list item'))
-vim.keymap.set('n', '<F4>', '<CMD>cnext <CR>', get_default_opt('Go to next quickfix list item'))
-vim.keymap.set('n', MYFUNC.get_F_key('S', 4), '<CMD>cprev <CR>', get_default_opt('Go to previous quickfix list item'))
 
 -- Movement with arrow keys in insert mode
 vim.keymap.set('i', '<C-left>', '<CMD>normal! b<CR>', get_default_opt('Move cursor a word left'))

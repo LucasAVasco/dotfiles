@@ -10,6 +10,7 @@ end
 -- Dependencies (must be loaded first because other files depend on them)
 load_script('paths')  -- Should be loaded first
 load_script('functions')
+load_script('function_keys')
 
 
 -- Configuration
