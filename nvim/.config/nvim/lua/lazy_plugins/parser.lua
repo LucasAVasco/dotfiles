@@ -88,6 +88,35 @@ return {
 		end
 	},
 	{
+		'Wansmer/treesj',
+		dependencies = {
+			'nvim-treesitter/nvim-treesitter'
+		},
+
+		cmd = { 'TSJToggle', 'TSJSplit', 'TSJJoin' },
+
+		keys = {
+			{
+				'<leader>s',
+				function()
+					require('treesj').split()
+				end,
+				desc='Split a block (tree-sj)',
+			},
+			{
+				'<leader>j',
+				function()
+					require('treesj').join()
+				end,
+				desc='Join a block (tree-sj)',
+			},
+		},
+
+		opts = {
+			use_default_keymaps = false,
+		},
+	},
+	{
 		'jmbuhr/otter.nvim',
 		dependencies = {
 			'nvim-treesitter/nvim-treesitter',
