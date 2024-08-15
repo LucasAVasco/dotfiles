@@ -1,8 +1,45 @@
 [core]
 	hooksPath = ~/.config/git/template/hooks
+	pager = delta
 	autocrlf = input ; Convert CRLF to LF when adding a file
 
 [init]
 	templateDir = ~/.config/git/template
 	defaultBranch = main
 
+[pager]
+	blame = delta
+
+[diff]
+	colorMoved = default
+
+[interactive]
+	diffFilter = delta --color-only --features=interactive
+
+[merge]
+	conflictstyle = diff3
+
+[blame]
+	markUnblamableLines = true
+	markIgnoredLines = true
+
+[delta]
+	features = styles
+
+	navigate = true
+	line-numbers = true
+
+	; Hyperlink format used by kitty
+	hyperlinks = true
+	hyperlinks-file-link-format = "file://{path}#{line}"
+	hyperlinks-commit-link-format = "git://commit/origin/{commit}/" ; This only works with my `default_open` script
+
+[delta "styles"]
+	commit-decoration-style = cyan ol ; Line separator between commits
+
+	; File identifier in `git diff`
+	file-decoration-style = yellow ol ul ; Over-line and under-line in the file separator
+	file-style = yellow
+
+	; place the file path in the hunk header (`git diff`)
+	hunk-header-style = file syntax
