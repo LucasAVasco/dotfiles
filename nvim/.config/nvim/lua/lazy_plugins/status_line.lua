@@ -200,7 +200,18 @@ return {
 				section_separators = { left = '', right = '' },
 				component_separators = { left = '', right = '' },
 
-				ignore_focus = {'Telescope', 'NvimTree'},
+				ignore_focus = {
+					'Telescope',
+					'NvimTree',
+
+					-- `nvim-dap-ui` plugin
+					'dapui_watches',
+					'dapui_stacks',
+					'dapui_breakpoints',
+					'dapui_scopes',
+					'dapui_console',
+					'dap-repl',
+				},
 			},
 
 			sections = {
