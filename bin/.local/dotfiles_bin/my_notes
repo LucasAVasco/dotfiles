@@ -1,0 +1,8 @@
+#!/bin/bash
+#
+# Open my notes with Neovim
+#
+# I use the Neovim Orgmode plugin (https://github.com/nvim-orgmode/orgmode) to manage my notes
+
+
+cd ~/Notes && nvim main.org
