@@ -214,6 +214,10 @@ return {
 
 			-- CMP configuration
 			cmp.setup({
+				window = {
+					documentation = cmp.config.window.bordered(),
+				},
+
 				enabled = function()
 					-- Disables CMP when running a macro. The default CMP configuration also disables it when tipping a macro, but I
 					-- want the suggestions in this case. Only remember to not trigger the suggestions when tipping a macro or the behavior
