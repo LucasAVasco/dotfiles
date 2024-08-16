@@ -292,20 +292,9 @@ return {
 				},
 
 				mapping = {
-					-- Auto complete
+					-- Navigate thought the suggestions
 					['<Down>'] = cmp.mapping.select_next_item({ behavior = cmp.SelectBehavior.Select, count = 6 }),
 					['<Up>'] = cmp.mapping.select_prev_item({ behavior = cmp.SelectBehavior.Select , count = 6 }),
-					['<Left>'] = close_completion,
-					['<Right>'] = close_completion,
-					['<CR>'] = cmp.mapping.confirm({ behavior = cmp.ConfirmBehavior.Replace }),
-
-					['<A-CR>'] = function(fallback)
-						if luasnip.expandable() then
-							luasnip.expand()
-						else
-							fallback()
-						end
-					end,
 
 					['<Tab>'] = function(fallback)
 						if cmp.visible() then
@@ -316,6 +305,7 @@ return {
 							fallback()
 						end
 					end,
+
 					['<S-Tab>'] = function(fallback)
 						if cmp.visible() then
 							cmp.select_prev_item({ behavior = cmp.SelectBehavior.Select})
@@ -326,9 +316,51 @@ return {
 						end
 					end,
 
+					['<A-Tab>'] = function(fallback)
+						if luasnip.choice_active() then  -- Shows the choice selector if in insert mode and inside a choice node
+							require('luasnip.extras.select_choice')()
+						else
+							fallback()
+						end
+					end,
+
+					-- Accept the suggestions or snippet entry
+					['<CR>'] = function(fallback)
+						if cmp.get_active_entry() then
+							cmp.confirm({ behavior = cmp.ConfirmBehavior.Insert})
+						elseif luasnip.choice_active() then  -- Shows the choice selector if in insert mode and inside a choice node
+							require('luasnip.extras.select_choice')()
+						else
+							fallback()
+						end
+					end,
+
+					['<S-CR>'] = function(fallback)
+						if cmp.visible() then
+							cmp.close()
+						else
+							fallback()
+						end
+					end,
+
+					-- Expand the snippet entry
+					['<A-CR>'] = function(fallback)
+						if luasnip.expandable() then
+							luasnip.expand()
+						else
+							fallback()
+						end
+					end,
+
+					-- Abort the completion
+					['<A-q>'] = cmp.mapping.close(),
+					['<A-a>'] = cmp.mapping.close(),
+					['<Left>'] = close_completion,
+					['<Right>'] = close_completion,
+
 					-- Docs
-					['<C-d>'] = cmp.mapping.scroll_docs(4),
-					['<C-u>'] = cmp.mapping.scroll_docs(-4),
+					['<A-d>'] = cmp.mapping.scroll_docs(6),
+					['<A-u>'] = cmp.mapping.scroll_docs(-6),
 				},
 
 				 snippet = {
