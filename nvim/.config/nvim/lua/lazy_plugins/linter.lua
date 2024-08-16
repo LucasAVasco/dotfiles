@@ -13,11 +13,14 @@ return {
 		event = 'BufWrite',
 
 		keys = {
-			{'<leader>C', mode = 'n', desc = 'Checkers (linters and formatters)'},
 			{ '<leader>Cl', function()
 				require('lint').try_lint()
 			end, mode = 'n', noremap = true, silent = true, desc = 'Try to execute the linter on the current buffer' },
 		},
+
+		init = function()
+			MYPLUGFUNC.set_keymap_name('<leader>C', 'Checkers (linters and testers)')
+		end,
 
 		config = function()
 			local nvim_lint = require('lint')
