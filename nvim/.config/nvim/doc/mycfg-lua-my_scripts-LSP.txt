@@ -1,4 +1,4 @@
-mycfg-LSP.txt                                                                        *mycfg-LSP.txt*
+mycfg-lua-my_scripts-LSP.txt                                          *mycfg-lua-my_scripts-LSP.txt*
 ====================================================================================================
 LSP mappings                                                                        *mycfg-lsp-maps*
 
@@ -32,3 +32,5 @@ LSP commands                                                                    
 `LspInfo`   Show the language server info
 `LspLog`    Show the language server log
 
+
+ vim:ft=help:norl:

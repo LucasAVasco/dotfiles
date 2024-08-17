@@ -6,8 +6,8 @@ Loclist and quickfix mappings (Plugin)                                         *
 
 Movement~
 
-`<leader>Tgg`   Go to first trouble diagnostics
-`<leader>TG`    Go to last trouble diagnostics
-`<F3>`          Go to previous trouble diagnostics
-`<S-F2>`          Go to next trouble diagnostics
+`<leader>Tgg`   Go to first trouble item
+`<leader>TG`    Go to last trouble item
 
+
+ vim:ft=help:norl:

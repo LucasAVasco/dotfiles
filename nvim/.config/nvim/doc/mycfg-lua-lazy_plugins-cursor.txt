@@ -61,7 +61,7 @@ Menus~
 *<leader>`*  Some menus. E.g, show lines in quickfix.
 `<leader>"`  Show VM registers
 
-Other informations~
+Other information~
 
 General mappings: |vm-mappings-qr|
 quick reference with some maps: |vm-quick-reference|
@@ -76,3 +76,5 @@ Multi-cursor commands (Plugin)                                        *plugin-mu
 `VMSearch`      Selects all matches the range as in extend mode.
 `VMRegisters`   Show the registers and its contents.
 
+
+ vim:ft=help:norl:

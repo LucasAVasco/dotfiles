@@ -1,0 +1,16 @@
+mycfg-lua-lazy_plugins-DAP.txt                                      *mycfg-lua-lazy_plugins-DAP.txt*
+====================================================================================================
+DAP commands (Plugin)                                                          *plugin-DAP-commands*
+
+`DapLoadLaunchJSON`: Load the 'launch.json' file
+`DapEditLaunchFile`: Edit the 'launch.json' file
+
+
+====================================================================================================
+DAP information (Plugin)                                                           *plugin-DAP-info*
+
+Adapter configuration: |dap-adapter|
+`launch.json` configuration: |dap-launch.json|
+
+
+ vim:ft=help:norl:

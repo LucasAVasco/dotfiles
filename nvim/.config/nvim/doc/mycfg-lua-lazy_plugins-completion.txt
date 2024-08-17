@@ -4,3 +4,5 @@ Auto-completion commands (Plugin)                                       *plugin-
 
 `LuaSnipEditFiles` Edit the LuaSnip snippets files
 
+
+ vim:ft=help:norl:

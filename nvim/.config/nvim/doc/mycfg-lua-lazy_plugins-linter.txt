@@ -4,3 +4,5 @@ Linter mappings (Plugin)                                                        
 
 `<leader>Tl` Try to execute the linter on the current buffer.
 
+
+ vim:ft=help:norl:

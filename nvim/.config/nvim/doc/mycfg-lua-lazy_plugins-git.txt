@@ -5,7 +5,7 @@ Git commands (Plugin)                                                          *
 Fugitive~
 
 `Git`                   Show git status
-`Git difftool {, -y}`   Shows each file diff in the quickfix. With -y, insted opens Gdiffsplit.
+`Git difftool {, -y}`   Shows each file diff in the quickfix. With -y, instead opens Gdiffsplit.
 `Git mergetool`         Like difftool, but for merge conflicts.
 `Ggrep -q`              Shows the results of the 'git grep' in the quickfix.
 `Gclog`                 Shows the git log in the quickfix.
@@ -42,3 +42,5 @@ gitsigns~
 `{[,]}c`       Jump to next/previous hunk
 `<Leader>hp`   Preview current hunk
 
+
+ vim:ft=help:norl:

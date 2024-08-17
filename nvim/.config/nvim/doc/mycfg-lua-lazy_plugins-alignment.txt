@@ -13,3 +13,5 @@ Shortcuts (interactive mode)~
 `<Ctrl-G>`     Switch the ignore group option.
 `<Backspace>`  remove the last delimiter and try another one. Repeat the delimiter to apply the changes.
 
+
+ vim:ft=help:norl:

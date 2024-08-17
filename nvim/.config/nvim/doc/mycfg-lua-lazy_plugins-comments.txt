@@ -2,10 +2,10 @@ mycfg-lua-lazy_plugins-comments.txt                            *mycfg-lua-lazy_p
 ====================================================================================================
 Comment mappings (Plugin)                                                     *plugin-comments-maps*
 
-`<leader>cc` Comment a line or block of code.
-`<leader>cu` remove the comment of a line or block of code.
+`gc` Toggle comment of a line or block of code.
+`gb` Like `gc`, but applies a block comment
 
-To change the comment style (if available), use the `<leader>ca` command.
+`gd{a,c,f,t}` Generate documentation for the current archive, class, function or type
 
-To comment at the end of the line, use the `<leader>cA` command.
 
+ vim:ft=help:norl:

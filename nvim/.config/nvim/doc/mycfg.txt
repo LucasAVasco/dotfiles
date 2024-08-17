@@ -10,47 +10,48 @@ Cmd                                                                             
 ====================================================================================================
 Files                                                                                  *mycfg-files*
 
-mycfg-LSP.txt                                                                        |mycfg-LSP.txt|
-mycfg-lua-lazy_plugins-linter.txt                                |mycfg-lua-lazy_plugins-linter.txt|
 mycfg-lua-lazy_plugins-tagbar.txt                                |mycfg-lua-lazy_plugins-tagbar.txt|
+mycfg-lua-lazy_plugins-alignment.txt                          |mycfg-lua-lazy_plugins-alignment.txt|
+mycfg-lua-lazy_plugins-comments.txt                            |mycfg-lua-lazy_plugins-comments.txt|
 mycfg-lua-lazy_plugins-git.txt                                      |mycfg-lua-lazy_plugins-git.txt|
 mycfg-lua-lazy_plugins-loclist.txt                              |mycfg-lua-lazy_plugins-loclist.txt|
-mycfg-lua-lazy_plugins-AI.txt                                        |mycfg-lua-lazy_plugins-AI.txt|
-mycfg-lua-lazy_plugins-file_explorer.txt                  |mycfg-lua-lazy_plugins-file_explorer.txt|
-mycfg-lua-lazy_plugins-alignment.txt                          |mycfg-lua-lazy_plugins-alignment.txt|
-mycfg-lua-lazy_plugins-cursor.txt                                |mycfg-lua-lazy_plugins-cursor.txt|
-mycfg-lua-lazy_plugins-comments.txt                            |mycfg-lua-lazy_plugins-comments.txt|
+mycfg-lua-lazy_plugins-parser.txt                                |mycfg-lua-lazy_plugins-parser.txt|
 mycfg-lua-lazy_plugins-completion.txt                        |mycfg-lua-lazy_plugins-completion.txt|
-mycfg-lua-lazy_plugins-surrounds.txt                          |mycfg-lua-lazy_plugins-surrounds.txt|
+mycfg-lua-lazy_plugins-linter.txt                                |mycfg-lua-lazy_plugins-linter.txt|
+mycfg-lua-lazy_plugins-DAP.txt                                      |mycfg-lua-lazy_plugins-DAP.txt|
+mycfg-lua-lazy_plugins-cursor.txt                                |mycfg-lua-lazy_plugins-cursor.txt|
+mycfg-lua-lazy_plugins-file_explorer.txt                  |mycfg-lua-lazy_plugins-file_explorer.txt|
+mycfg-lua-my_scripts-LSP.txt                                          |mycfg-lua-my_scripts-LSP.txt|
 
 ====================================================================================================
 Info                                                                                    *mycfg-info*
 
+DAP information (Plugin)                                                           |plugin-DAP-info|
 Multi-cursor info (Plugin)                                                |plugin-multi-cursor-info|
 
 ====================================================================================================
 Maps                                                                                    *mycfg-maps*
 
-LSP mappings                                                                        |mycfg-lsp-maps|
-Linter mappings (Plugin)                                                        |plugin-linter-maps|
 Tagbar mappings (Plugin)                                                        |plugin-tagbar-maps|
+Alignment mappings (Plugin)                                                  |plugin-alignment-maps|
+Comment mappings (Plugin)                                                     |plugin-comments-maps|
 Git mappings (Plugin)                                                              |plugin-git-maps|
 Loclist and quickfix mappings (Plugin)                                         |plugin-loclist-maps|
-AI mappings (Plugin)                                                                |plugin-ai-maps|
-File explorer mappings (Plugin)                                          |plugin-file-explorer-maps|
-Alignment mappings (Plugin)                                                  |plugin-alignment-maps|
+Linter mappings (Plugin)                                                        |plugin-linter-maps|
 Multi-cursor mappings (Plugin)                                            |plugin-multi-cursor-maps|
-Comment mappings (Plugin)                                                     |plugin-comments-maps|
-Surrounds mappings (Plugin)                                                   |plugin-surronds-maps|
+File explorer mappings (Plugin)                                          |plugin-file-explorer-maps|
+LSP mappings                                                                        |mycfg-lsp-maps|
 
 ====================================================================================================
 Cmd                                                                                      *mycfg-cmd*
 
-LSP commands                                                                        |mycfg-lsp-cmds|
 Git commands (Plugin)                                                          |plugin-git-commands|
-AI commands (Plugin)                                                            |plugin-ai-commands|
-Multi-cursor commands (Plugin)                                        |plugin-multi-cursor-commands|
+Tree-sitter commands                                                          |tree-sitter-commands|
+Tree-sitter information                                                           |tree-sitter-info|
 Auto-completion commands (Plugin)                                       |plugin-completion-commands|
+DAP commands (Plugin)                                                          |plugin-DAP-commands|
+Multi-cursor commands (Plugin)                                        |plugin-multi-cursor-commands|
+LSP commands                                                                        |mycfg-lsp-cmds|
 
 
  vim:ft=help:norl:

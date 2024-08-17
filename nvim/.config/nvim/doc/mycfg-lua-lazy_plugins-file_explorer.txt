@@ -27,3 +27,5 @@ Filter files~
 `f` Enable regex (vimscript) filter. Only show files that match the regex.
 `F` Disable regex filter.
 
+
+ vim:ft=help:norl:
