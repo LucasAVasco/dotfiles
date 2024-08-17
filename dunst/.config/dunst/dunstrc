@@ -1,0 +1,15 @@
+[global]
+
+font = Hack Nerd Font Mono 12
+
+corner_radius = 10
+
+# Colors
+foreground = "#ffffff"
+background = "#555555"
+frame_color = "#777777"
+separator_color = "#aaaaaa"
+highlight = "#ffff44"
+
+
+# vi: ft=cfg
