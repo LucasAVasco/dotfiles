@@ -1,0 +1,15 @@
+#!/bin/bash
+#
+# Show a git commit in the current terminal instance and waits for the user input to terminate
+#
+# Press any key to terminate
+#
+# This script is required by the './git_show_new_term' script
+#
+# Dependencies:
+#
+# * git
+# * bash
+
+
+git show "$@" && read -n1

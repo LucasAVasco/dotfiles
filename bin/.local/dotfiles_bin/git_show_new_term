@@ -1,0 +1,13 @@
+#!/bin/bash
+#
+# Show a git commit in a new terminal instance of the default terminal emulator
+#
+# Press any key to terminate
+#
+# Dependencies:
+#
+# * A script called 'default_term' that opens the default terminal emulator
+# * A script called 'git_show' that runs `git show` and waits for the user input to terminate
+
+
+default_term git_show "$@"
