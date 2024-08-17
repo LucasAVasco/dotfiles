@@ -20,4 +20,17 @@ return {
 			'UndotreeToggle',
 		},
 	},
+	{
+		'debugloop/telescope-undo.nvim',
+
+		dependencies = {
+			'nvim-telescope/telescope.nvim',
+		},
+
+		lazy = true,
+
+		init = function()
+			MYPLUGFUNC.load_telescope_extension('undo', { 'undo' })
+		end,
+	},
 }

@@ -237,15 +237,6 @@ return {
 		end
 	},
 	{
-		'debugloop/telescope-undo.nvim',
-
-		lazy = true,
-
-		init = function()
-			MYPLUGFUNC.load_telescope_extension('undo', { 'undo' })
-		end
-	},
-	{
 		'nvim-pack/nvim-spectre',
 
 		keys = {
