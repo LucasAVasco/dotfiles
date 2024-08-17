@@ -1,0 +1,9 @@
+% navi, setup, cheats
+
+
+# Navi's welcome/initial window
+navi fn welcome
+
+
+# Remove installed cheats
+trash ~/.local/share/navi/cheats

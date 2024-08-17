@@ -1,0 +1,9 @@
+% git, lfs
+
+
+# Fetch all git LFS objects from the repository
+git lfs fetch --all
+
+
+# Replace the LFS file by its original content
+git lfs checkout
