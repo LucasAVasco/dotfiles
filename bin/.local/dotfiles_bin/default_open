@@ -33,6 +33,29 @@
 set -e
 
 
+# Open a desktop file
+open_desktop() {
+	# Content of the desktop file
+	declare -A desktop_content
+
+	while IFS=$' =' read entry_name entry_value; do
+		if [[ -n "$entry_value" ]]; then
+			desktop_content["$entry_name"]="$entry_value"
+		fi
+	done < "$1"
+
+	# Action based in the desktop file type
+	case "${desktop_content[Type]}" in
+		Link)
+			exec xdg-open "${desktop_content['URL']}"
+			;;
+		*)
+			exec notify-send "Unsupported desktop type: ${desktop_content[Type]}"
+			;;
+	esac
+}
+
+
 # Open a generic path (file or folder)
 #
 # Open files in Neovim. Open folders with the default file manager. Always open in a new window
@@ -45,8 +68,12 @@ open_path() {
 		file_cmd_response=($(file --mime-type "$1"))
 		mime_type="${file_cmd_response[1]}"
 
-		# Only open text files with Neovim
-		if [[ "$mime_type" =~ ^text/ ]]; then
+		# Desktop entries
+		if [[ "$1" =~ .desktop$ ]]; then
+			open_desktop "$1" "${@:2}"
+
+		# Open text files with Neovim
+		elif [[ "$mime_type" =~ ^text/ ]]; then
 			exec nvim_new_win "$1" "${@:2}"
 		fi
 
