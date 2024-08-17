@@ -125,6 +125,17 @@ open_git() {
 file_path="${1#file://}"
 
 
+# Removes an empty line number indicator.
+# Example: 'file-path:' will become 'file-path'
+# The last ':' does not point to a file line, so it must be removed from the file path
+if [[ "$file_path" =~ \#$ ]]; then
+	file_path="${file_path%%#}"
+
+elif [[ "$file_path" =~ \:$ ]]; then
+	file_path="${file_path%%:}"
+fi
+
+
 # Removes the name of the current host, if added to the path
 current_hostname=$(uname -n)
 file_hostname="${file_path%%/*}"
@@ -144,11 +155,11 @@ fi
 line_number=''
 
 if [[ "$1" =~ \#[0-9]+ ]]; then   # Line number is after a '#'
-	line_number="+${1##*#}"
+	line_number="+${file_path##*#}"
 	file_path="${file_path%#*}"
 
 elif [[ "$1" =~ \:[0-9]+ ]]; then # Line number is after a ':'
-	line_number="+${1##*:}"
+	line_number="+${file_path##*:}"
 	file_path="${file_path%:*}"
 fi
 
