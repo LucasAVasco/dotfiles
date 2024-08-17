@@ -9,5 +9,5 @@
 # * kitty
 
 
-~/.config/kitty/init-config-file.sh
+~/.config/kitty/setup.sh
 exec kitty "$@"
