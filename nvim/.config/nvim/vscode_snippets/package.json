@@ -12,6 +12,12 @@
 				"language": [
 					"sh"
 				],
+				"path": "./shell/read.json"
+			},
+			{
+				"language": [
+					"sh"
+				],
 				"path": "./shell/paths.json"
 			},
 			{

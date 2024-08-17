@@ -1,0 +1,11 @@
+{
+	"Read a configuration file (line is a pair of entry name and value)": {
+		"prefix": "read_config_file_name_value",
+		"description": "Read a configuration file. Line format: $entry_name$separator$entry_value. Example: type=Link",
+		"body": [
+			"while IFS=\\$'${2:separators}' read ${3:entry_name} ${4:entry_value}; do",
+			"\t$0",
+			"done < '${1:File path}'"
+		]
+	}
+}
