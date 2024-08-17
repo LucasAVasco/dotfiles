@@ -204,7 +204,10 @@ return {
 					'Telescope',
 					'NvimTree',
 
-					-- `nvim-dap-ui` plugin
+					-- 'undotree' plugin
+					'undotree',
+
+					-- 'nvim-dap-ui' plugin
 					'dapui_watches',
 					'dapui_stacks',
 					'dapui_breakpoints',
