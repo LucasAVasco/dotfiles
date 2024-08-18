@@ -60,7 +60,19 @@ return {
 			'GBrowse'
 		}
 	},
+	{
+		'sindrets/diffview.nvim',
 
+		cmd = {
+			'DiffviewClose',
+			'DiffviewFileHistory',
+			'DiffviewFocusFiles',
+			'DiffviewLog',
+			'DiffviewOpen',
+			'DiffviewRefresh',
+			'DiffviewToggleFiles',
+		}
+	},
 	{
 		'lewis6991/gitsigns.nvim',
 
