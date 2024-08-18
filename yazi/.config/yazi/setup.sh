@@ -65,6 +65,10 @@ download_flavor() {
 # }}}
 
 
+# Ensures the user can install external software
+[[ "$ALLOW_EXTERNAL_SOFTWARE" != 'y' ]] && exit
+
+
 # Themes
 download_flavor 'https://github.com/BennyOe/tokyo-night.yazi'
 download_flavor 'https://github.com/Mellbourn/ls-colors.yazi'
