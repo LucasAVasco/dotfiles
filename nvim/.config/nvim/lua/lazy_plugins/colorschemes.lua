@@ -37,5 +37,15 @@ return {
 		opts = {
 			transparent = false,
 		}
-	}
+	},
+	{
+		'rose-pine/neovim',
+		name = 'rose-pine',
+		lazy = true,
+		opts = {
+			styles = {
+				transparency = false,
+			},
+		},
+	},
 }
