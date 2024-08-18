@@ -1,0 +1,13 @@
+% python, venv
+
+
+# Create a virtual environment
+python -m venv .venv
+
+
+# Activate a virtual environment
+source .venv/bin/activate
+
+
+# Create and activate a virtual environment
+python -m venv .venv && source .venv/bin/activate
