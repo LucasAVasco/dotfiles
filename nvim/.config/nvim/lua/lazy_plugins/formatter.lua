@@ -158,4 +158,39 @@ return {
 			-- }}}
 		end,
 	},
+	{
+		'johmsalas/text-case.nvim',
+
+		cmd = {
+			'Subs',
+			'TextCaseOpenTelescope',
+			'TextCaseOpenTelescopeLSPChange',
+			'TextCaseOpenTelescopeQuickChange',
+			'TextCaseStartReplacingCommand',
+		},
+
+		keys = {
+			'<leader>C',
+
+			{ '<leader>C.', '<CMD>TextCaseOpenTelescope<CR>', desc = 'Change the case with Telescope' },
+		},
+
+		opts = {
+			prefix = '<leader>C',
+		},
+
+		init = function()
+			MYPLUGFUNC.load_telescope_extension('textcase', {
+				'normal_mode',
+				'normal_mode_lsp_change',
+				'normal_mode_quick_change',
+				'textcase',
+				'visual_mode',
+			})
+		end,
+
+		config = function(_, opts)
+			require('textcase').setup(opts)
+		end,
+	},
 }
