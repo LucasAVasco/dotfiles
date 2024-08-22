@@ -29,17 +29,18 @@ local extensions_to_lazy_load = {}
 --- @param real_pickers table<string, any> Table that maps the real pickers to anything
 --- @param name string Name of the extension
 local function check_lazy_loaded_pickers(lazy_pickers, real_pickers, name)
-	for real_picker, _ in pairs(real_pickers) do
-		if lazy_pickers[real_picker] == nil then
-			vim.notify( {
-				('The "%s" picker is not lazy loaded.'):format(real_picker),
-				('This means that the user can not run it with ":Telescope %s" before loading the extension.'):format(real_picker),
-				('Extension name = "%s"'):format(name),
-				'',
-				('To fix this warning, you need to go to your `lazy.nvim` configuration and add the "%s"'):format(real_picker),
-				'picker to the extension configuration in the "MYPLUGFUNC.load_telescope_extension()" function.'
-			}, vim.log.levels.WARN, {
-				title = 'Telescope picker not Lazy loaded!',
+	for real_picker_name, _ in pairs(real_pickers) do
+		if lazy_pickers[real_picker_name] == nil then
+			vim.notify(
+				(
+					'The "%s" picker is not lazy loaded.\n' ..
+					'This means that the user can not run it with ":Telescope %s %s" before loading the extension.\n' ..
+					'Extension name = "%s"\n' ..
+					'To fix this warning, you need to go to your `lazy.nvim` configuration and add the "%s"\n' ..
+					'picker to the extension configuration in the "MYPLUGFUNC.load_telescope_extension()" function.\n'
+				):format(real_picker_name, name, real_picker_name, name, real_picker_name),
+				vim.log.levels.WARN, {
+					title = 'Telescope picker not Lazy loaded!',
 			})
 		end
 	end
