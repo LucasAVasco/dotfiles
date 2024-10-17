@@ -1,4 +1,4 @@
-#!/bib/bash
+#!/bin/bash
 #
 # Script to clear the user clipboard
 
