@@ -17,7 +17,7 @@ help_message() {
 	  status              Check if the Bucklespring is running. Returns 'on' or 'off'.
 	  start               Start the Bucklespring.
 	  stop                Stop the Bucklespring.
-	  toogle              Toggles the Bucklespring playback. If the Bucklespring is not running, start it. If the Bucklespring is running, stop it.
+	  toggle              Toggles the Bucklespring playback. If the Bucklespring is not running, start it. If the Bucklespring is running, stop it.
 	" | sed 's/^\t//g'
 }
 
@@ -47,7 +47,7 @@ case "$1" in
 		stop_buckle
 		;;
 
-	toogle)
+	toggle)
 		# Toggle the Bucklespring playback. If the Bucklespring is not running, start it. If the Bucklespring is running, stop it.
 		#
 		# It is required to have PulseAudio server running before starting Bucklespring. Otherwise, this script will wait for

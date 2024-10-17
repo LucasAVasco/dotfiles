@@ -136,7 +136,7 @@ super + {F10,F11}
 
 # Bucklespring (keyboard sound emulator)
 super + b
-	~/.config/bspwm/buckle.sh toogle
+	~/.config/keyboard/sound_emulator.sh toggle
 
 # #endregion
 
