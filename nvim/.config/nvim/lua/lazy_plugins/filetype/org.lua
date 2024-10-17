@@ -29,4 +29,40 @@ return {
 			org_capture_templates = {},
 		},
 	},
+	{
+		'nvim-orgmode/telescope-orgmode.nvim',
+
+		dependencies = {
+			'nvim-orgmode/orgmode',
+			'nvim-telescope/telescope.nvim',
+		},
+
+		keys = {
+			{
+				'<leader>ohr',
+				function()
+					require('telescope').extensions.orgmode.refile_heading()
+				end,
+				desc = 'Refile a heading with Telescope',
+			},
+			{
+				'<leader>os',
+				function()
+					require('telescope').extensions.orgmode.search_headings()
+				end,
+				desc = 'Search a heading or org file (C-Space to switch between them)',
+			},
+			{
+				'<leader>oil',
+				function()
+					require('telescope').extensions.orgmode.insert_link()
+				end,
+				desc = 'Insert a link (C-Space to switch between headline or orgfile)',
+			},
+		},
+
+		init = function()
+			MYPLUGFUNC.load_telescope_extension('orgmode', { 'refile_heading', 'search_headings', 'insert_link' })
+		end,
+	},
 }
