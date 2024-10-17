@@ -89,7 +89,7 @@ return {
 		cmd = { 'NvimTreeOpen', 'NvimTreeClose', 'NvimTreeToggle', 'NvimTreeFocus', 'NvimTreeFindFile', 'NvimTreeFindFileToggle' },
 
 		keys = {
-			{ 'gf', '<cmd>NvimTreeFocus<CR>', mode = 'n' },
+			{ '<leader>gfe', '<cmd>NvimTreeFocus<CR>', mode = 'n', desc = 'Open file explorer' },
 		},
 
 		opts = {
