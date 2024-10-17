@@ -41,7 +41,7 @@ help_msg() {
 	  show | show-active - show the 'name' or 'path' of the current desktop
 	  add | make <index> <name> - create a new desktop with the label <name> in the <index> folder
 	  cp | copy <src_name> <dest_path> - copy the <src_name> desktop to a the path <dest_name>
-	  rm | remove | dell <name> - delete a desktop witk the label <name>
+	  rm | remove | dell <name> - delete a desktop with the label <name>
 	  change <name> - change to the desktop with the label <name>
 	  help | -h | --help - show this message
 

@@ -10,10 +10,10 @@
 # * Support to open text files in a specific line with the '#line number' and ':line number' suffixes
 # * Support to open text files in a specific line with the '+line number' argument
 #
-# This script only support to open one file at the same command. To open several files, the user need to call this script multiple times.
+# This script only support to open one file at the same command. To open several files, the user needs to call this script multiple times.
 # One per file
 #
-# This script can open a custom URI related to git: 'git://'. This is not a standard URI. I created it to use with my scripts. See the
+# This script can open a custom URI related to Git: 'git://'. This is not a standard URI. I created it to use with my scripts. See the
 # supported sub-protocols in the `open_git()` function
 #
 # Usage:
@@ -79,7 +79,7 @@ open_path() {
 
 		# Fallback
 		exec xdg-open "$1" "${@:2}"
-	
+
 	# Directory
 	elif [[ -d "$1" ]]; then
 		exec default_file_manager "$1" "${@:2}"
@@ -129,7 +129,7 @@ open_git() {
 				git_dir_arg="--git-dir=$repo_dir/.git"
 				repo_url=$(git "$git_dir_arg" remote get-url "$remote_name")
 				commit=$(git "$git_dir_arg" rev-parse "$commit")  # Full version of the commit
-			
+
 			else  # Local repository path is not provided (use the current repository)
 				repo_url=$(git remote get-url "$remote_name")
 				commit=$(git rev-parse "$commit")  # Full version of the commit
@@ -142,7 +142,7 @@ open_git() {
 			;;
 
 		*)
-			notify-send "Unknown git sub-protocol! Recived: '$1' Aborting..."
+			notify-send "Unknown git sub-protocol! Received: '$1' Aborting..."
 			exit 1
 			;;
 	esac
@@ -177,7 +177,7 @@ fi
 
 
 # Line number indicator. Some applications can output the file URI as file://<path>#<line number> or file://<path>:<line number> to mark a
-# specific line position. Need to get the line number and remove it form the file path. The line number need to be prefixed by a '+'
+# specific line position. Need to get the line number and remove it from the file path. The line number needs to be prefixed by a '+'
 # character to be used with Neovim
 line_number=''
 
