@@ -132,23 +132,17 @@ return {
 			end, default_options('Toggle auto preview'))
 
 			-- Movement mappings
-			local default_modes = { 'n', 'v', 'i' }
+			local default_modes = { 'n', 'v' }
 
 			vim.keymap.set(default_modes, '<A-m>', close_only_markers_and_regions, default_options('Close only markers folds'))
-			vim.keymap.set(default_modes, '<A-k>', decorator_apply_peek(ufo.goPreviousClosedFold), default_options('Previous fold'))
-			vim.keymap.set(default_modes, '<A-j>', decorator_apply_peek(ufo.goNextClosedFold), default_options('Next fold'))
 
-			vim.keymap.set(default_modes, '<A-H>', MYFUNC.decorator_call_function(set_fold_level, { '-1' }), default_options('Fold level -1'))
-			vim.keymap.set(default_modes, '<A-L>', MYFUNC.decorator_call_function(set_fold_level, { '+1' }), default_options('Fold level +1'))
+			vim.keymap.set(default_modes, 'zh', MYFUNC.decorator_call_function(set_fold_level, { '-1' }), default_options('Fold level -1'))
+			vim.keymap.set(default_modes, 'zl', MYFUNC.decorator_call_function(set_fold_level, { '+1' }), default_options('Fold level +1'))
+			vim.keymap.set(default_modes, '<A-H>', 'zc', default_options('Close previous fold'))
+			vim.keymap.set(default_modes, '<A-L>', 'zo', default_options('Open current fold'))
 
-			vim.keymap.set(default_modes, '<A-h>', function()  -- Go to previous start fold and closes it
-				ufo.goPreviousStartFold()
-				vim.cmd('silent! normal zc')  -- Silent because this command can show a error message if not found a fold
-			end, default_options('Close previous fold'))
-
-			vim.keymap.set(default_modes, '<A-l>', function()  -- Go into the next fold (opens it)
-				vim.cmd('silent! normal zo')  -- Silent because this command can show a error message if not found a fold
-			end, default_options('Open current fold'))
+			vim.keymap.set(default_modes, '<A-K>', decorator_apply_peek(ufo.goPreviousClosedFold), default_options('Previous fold'))
+			vim.keymap.set(default_modes, '<A-J>', decorator_apply_peek(ufo.goNextClosedFold), default_options('Next fold'))
 
 			-- #endregion
 
