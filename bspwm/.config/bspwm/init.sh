@@ -73,7 +73,7 @@ source ~/.config/bspwm/padding.sh
 
 # #region hardware and devices configurations
 
-~/.config/bspwm/touchpad.sh
+~/.config/touchpad/setup.sh
 
 # #endregion
 

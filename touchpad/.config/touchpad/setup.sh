@@ -3,6 +3,12 @@
 # Configure the touchpad to support tapping with one, two and triple fingers
 
 
+# Only works in Xorg
+if [[ -n "$WAYLAND_DISPLAY" ]]; then
+	return
+fi
+
+
 # Get a input device id by the name
 #
 # $1: Device name
