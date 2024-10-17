@@ -11,5 +11,6 @@ if [[ -z "$WAYLAND_DISPLAY" ]]; then
 
 # Clears the clipboard in a Wayland session
 else
-	echo 'to do'
+	wl-copy --clear
+	wl-copy --primary --clear
 fi
