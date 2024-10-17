@@ -75,15 +75,36 @@
 	`VMRegisters`   Show the registers and its contents.
 ]]
 
+local vim_visual_multi_leader = '\\\\' -- Double '\'
 
 return {
 	{
 		'mg979/vim-visual-multi',
 
+		keys = {
+			vim_visual_multi_leader,
+			'<C-Down>',
+			'<C-Up>',
+			'<C-n>',
+			'<S-left>',
+			'<S-right>',
+			'<C-LeftMouse>',
+		},
+
+		cmd = {
+			'VMClear',
+			'VMDebug',
+			'VMFromSearch',
+			'VMLive',
+			'VMRegisters',
+			'VMSearch',
+			'VMTheme',
+		},
+
 		init = function()
 			MYPLUGFUNC.set_keymap_name('\\\\', 'Multi cursor mappings')
-			vim.g.VM_leader = '\\\\'  -- Double '\'
+			vim.g.VM_leader = vim_visual_multi_leader
 			vim.g.VM_mouse_mappings = 1
-		end
-	}
+		end,
+	},
 }
