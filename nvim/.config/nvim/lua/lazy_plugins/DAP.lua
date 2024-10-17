@@ -195,8 +195,8 @@ return {
 
 			-- Fulfills the function keys mappings. The order is based in the `nvim-dap-ui` interface
 
-			dap_fkeys.shift = { dap.pause, dap.step_out, dap.step_back, dap.down }
-			dap_fkeys.normal = { dap.continue, dap.step_into, dap.step_over, dap.up }
+			dap_fkeys.shift = { dap.pause, dap.step_out, dap.step_back, dap.down, dap.disconnect }
+			dap_fkeys.normal = { dap.continue, dap.step_into, dap.step_over, dap.up, dap.restart }
 
 			-- Configure `dap.adapters` table to automatically query the adapters configuration from the 'lua/my_configs/DAP/' folders
 			-- inside any runtime directory at `vim.opt.rtp`
