@@ -85,10 +85,10 @@ return {
 		cmd = 'Neogen',
 
 		keys = {
-			{'gda', '<CMD>Neogen file<CR>', desc = 'Generate archive documentation', {silent = true, remap = false}},
-			{'gdc', '<CMD>Neogen class<CR>', desc = 'Generate class documentation', {silent = true, remap = false}},
-			{'gdf', '<CMD>Neogen func<CR>', desc = 'Generate function documentation', {silent = true, remap = false}},
-			{'gdt', '<CMD>Neogen type<CR>', desc = 'Generate type documentation', {silent = true, remap = false}},
+			{'<leader>da', '<CMD>Neogen file<CR>', desc = 'Generate archive documentation', {silent = true, remap = false}},
+			{'<leader>dc', '<CMD>Neogen class<CR>', desc = 'Generate class documentation', {silent = true, remap = false}},
+			{'<leader>df', '<CMD>Neogen func<CR>', desc = 'Generate function documentation', {silent = true, remap = false}},
+			{'<leader>dt', '<CMD>Neogen type<CR>', desc = 'Generate type documentation', {silent = true, remap = false}},
 		},
 
 		opts = {
