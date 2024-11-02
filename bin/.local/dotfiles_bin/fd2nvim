@@ -1,0 +1,6 @@
+#!/bin/bash
+#
+# Run `fd` and open the files that have some match in Neovim
+
+
+fd "${@:1}" | xargs nvim
