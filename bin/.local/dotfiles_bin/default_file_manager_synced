@@ -11,4 +11,4 @@
 
 
 ~/.config/yazi/setup.sh
-exec default_term_synced yazi "$@"
+exec default_term_synced default_term_file_manager "$@"

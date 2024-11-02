@@ -1,0 +1,12 @@
+#!/bin/bash
+#
+# Open the default terminal file manager into current terminal emulator instance
+#
+# This is not a Linux standard functionality. I just use it in my scripts
+#
+# Dependencies:
+# * bash
+# * yazi
+
+
+yazi "$@"
