@@ -29,7 +29,6 @@ return {
 
 		opts = {
 			keymaps = {
-				['l'] = 'actions.jump',
 				['<tab>'] = 'actions.jump',
 			},
 
