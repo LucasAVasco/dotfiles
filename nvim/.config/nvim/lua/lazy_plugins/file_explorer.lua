@@ -201,8 +201,14 @@ return {
 				-- Custom keymaps
 				vim.keymap.set('n', 'T', decorator_return_to_tree(api.node.open.tab_drop),
 					key_options('Open file in new tab (if not already opened)'))
+
 				vim.keymap.set('n', 't', api.node.open.tab_drop,
 					key_options('Go to file (if not already opened, open in new tab) and close the tree'))
+
+				vim.keymap.set('n', 'g.', function()
+					api.tree.toggle_hidden_filter()
+					api.tree.toggle_gitignore_filter()
+				end, key_options('Show/hide ignored and hidden files'))
 			end
 
 			-- Setup
