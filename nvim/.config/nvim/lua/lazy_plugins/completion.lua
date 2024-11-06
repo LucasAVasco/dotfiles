@@ -343,6 +343,8 @@ return {
 						end
 					end,
 
+					['<C-Space>'] = cmp.mapping.complete(),
+
 					-- Expand the snippet entry
 					['<A-CR>'] = function(fallback)
 						if luasnip.expandable() then
