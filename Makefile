@@ -39,8 +39,8 @@
 # installation status, this Makefile will create a file named '.installed.ignore.stow' in the package directory. Packages with this file
 # are installed, packages without this file are not installed.
 #
-# NOTE: When manually manager the packages with Stow, the user need to manually update the '.installed.ignore.stow' file in the package
-# directory. Otherwise, some installation scripts will not be executed when a package is enabled or disabled with this script.
+# NOTE(LucasAVasco): : When manually manager the packages with Stow, the user need to manually update the '.installed.ignore.stow' file in
+# the package directory. Otherwise, some installation scripts will not be executed when a package is enabled or disabled with this script.
 #
 # TIPS AND TRICKS
 # ---------------
