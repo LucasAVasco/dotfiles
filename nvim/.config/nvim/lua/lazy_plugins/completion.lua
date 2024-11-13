@@ -284,10 +284,22 @@ return {
 					priority_weight = 1,
 
 					comparators = {
-						-- Words next to the cursor line have higher priority
-						function(...)
-							return cmp_buffer:compare_locality(...)
-						end
+						---Shows LSP entries first
+						---@module 'cmp'
+						---@param entry1 cmp.Entry
+						---@param entry2 cmp.Entry
+						function (entry1, entry2)
+							if entry1.source.name == 'nvim_lsp' then
+								if entry2.source.name ~= 'nvim_lsp' then
+									return true
+								end
+
+							elseif entry2.source.name == 'nvim_lsp' then
+								return false
+							end
+						end,
+
+						cmp.config.compare.locality,
 					}
 				},
 
