@@ -51,7 +51,8 @@
 # ```
 #
 # The '-C' option will change the current directory to the dot files directory to be able to manage them. The 'SD' variable sets the folder
-# that the 'add' target will use to search for the source. With 'SD=$(pwd)', the 'add' command will add the dot files in the current directory
+# that the 'add' target will use to search for the source. With 'SD=$(pwd)', the 'add' command will add the dot files in the current
+# directory
 #
 # DEPENDENCIES
 # ------------
@@ -82,9 +83,9 @@ STOW_CMD = stow --verbose --ignore='\.stow' --target=${HOME}
 # Each file of the current directory (without starting with '.') is a package
 PACKAGES = $(wildcard */)
 
-# Name of the sub folder where to serach by scripts. Each package will have its own sub folder. E.g. The package 'package1' will rave the
-# 'package1/${SCRIPTS_SUB_FOLDER}/<script_folder>' sub folder. Where <script_folder> can be: 'before_enable', 'after_enable', 'before_disable',
-# 'after_disable', 'once_before_enable', 'once_after_enable', 'once_before_disable', 'once_after_disable'
+# Name of the sub folder where to search by scripts. Each package will have its own sub folder. E.g. The package 'package1' will rave the
+# 'package1/${SCRIPTS_SUB_FOLDER}/<script_folder>' sub folder. Where <script_folder> can be: 'before_enable', 'after_enable',
+# 'before_disable', 'after_disable', 'once_before_enable', 'once_after_enable', 'once_before_disable', 'once_after_disable'
 SCRIPTS_SUB_FOLDER = scripts.stow
 
 
@@ -93,8 +94,9 @@ SCRIPTS_SUB_FOLDER = scripts.stow
 # Run some scripts of the package. The user need to provide the package name as $(1) and the script type as $(2).
 # This recipe will run all the scripts of this package that are of the specified type
 #
-# This function is named 'no_once' because it will run the script independently if it has already been executed and should not be executed any more.
-# Script types that starts with 'once_' should be run only once, buts this recipe will run the script regardless if it has been executed or not
+# This function is named 'no_once' because it will run the script independently if it has already been executed and should not be executed
+# any more. Script types that starts with 'once_' should be run only once, buts this recipe will run the script regardless if it has been
+# executed or not
 #
 # Parameters
 # ----------
@@ -108,9 +110,9 @@ endef
 
 # Run some scripts of the package. The user need to provide the package name as $(1) and the script type as $(2).
 #
-# This recipe is equivalent to the 'run_package_no_once_scripts', but only runs the script if it has not been executed in the current installation
-# This means that if the user installed a software, the 'once_*_enable' scripts will not be run anymore. And, if the user uninstalled the software, the
-# 'once_*_disable' scripts will not be run anymore
+# This recipe is equivalent to the 'run_package_no_once_scripts', but only runs the script if it has not been executed in the current
+# installation This means that if the user installed a software, the 'once_*_enable' scripts will not be run anymore. And, if the user
+# uninstalled the software, the 'once_*_disable' scripts will not be run anymore
 #
 # Parameters
 # ----------
@@ -171,7 +173,8 @@ endef
 
 # Disable the packages. The user need to provide the list of package names as $(1)
 #
-# These packaged will be 'deleted' with Stow from the home directory. Also run all the disable scripts of the provided packages in the correct order
+# These packaged will be 'deleted' with Stow from the home directory. Also run all the disable scripts of the provided packages in the
+# correct order
 #
 # Parameters
 # ----------
@@ -201,9 +204,9 @@ endef
 get_user_input = $(shell read -p $(strip $(1)) input && echo -n $$input)
 
 
-# Show a prompt message and get the user input and convert it to a boolean. Its is required to provide the true value. A string that
-# defines if the user selected true or false. If this is string can be found in the user response, it will be returned by this recipe. Otherwise,
-# it will return a empty string. It is possible to use this recipe with the $(if) command:
+# Show a prompt message and get the user input and convert it to a boolean. Its is required to provide the true value. A string that defines
+# if the user selected true or false. If this is string can be found in the user response, it will be returned by this recipe. Otherwise, it
+# will return a empty string. It is possible to use this recipe with the $(if) command:
 #
 # $(if $(call get_user_input_bool, 'print true? [y/N] ',y), echo true, echo false)
 #
