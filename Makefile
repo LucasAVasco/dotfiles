@@ -338,6 +338,13 @@ create-package: FORCE
 	$(call create_script_folder, ${PACKAGE}, after_disable)
 
 
+# Shows the base dot files directory
+#
+# May be used in automation scripts
+get-root-dir:
+	@pwd
+
+
 # Run a new instance of the specified shell in the dot files directory
 #
 # The user can change the shell by setting the 'CD_SHELL' variable
