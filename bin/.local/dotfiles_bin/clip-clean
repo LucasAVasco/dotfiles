@@ -1,0 +1,6 @@
+#!/bin/bash
+#
+# Clear the user clipboard. Works in Xorg and Wayland. See the '~/.config/clipboard/clear.sh' for further information
+
+
+~/.config/clipboard/clear.sh "$@"

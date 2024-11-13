@@ -1,0 +1,6 @@
+#!/bin/bash
+#
+# Copy content to the clipboard. See the '~/.config/clipboard/copy.sh' for further information
+
+
+~/.config/clipboard/copy.sh "$@"

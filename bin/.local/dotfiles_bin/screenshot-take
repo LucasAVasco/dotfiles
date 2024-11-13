@@ -1,0 +1,6 @@
+#!/bin/bash
+#
+# Take a screenshot. Works in Xorg and Wayland. See the '~/.config/screenshot/take.sh' for further information
+
+
+~/.config/screenshot/take.sh "$@"
