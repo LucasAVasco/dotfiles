@@ -130,7 +130,7 @@ return {
 			local function add_scroll_keymap(key, scroll_amount)
 				local movement_keymap = vim.api.nvim_replace_termcodes('<C-' .. key .. '>zz', true, false, true)
 
-				vim.keymap.set({'n', 'i'}, '<A-' .. key .. '>', function()
+				vim.keymap.set({'n', 'v', 'i'}, '<A-' .. key .. '>', function()
 					-- Applies the scroll operation and ends
 					if nc_lsp.scroll(scroll_amount) then
 						return
