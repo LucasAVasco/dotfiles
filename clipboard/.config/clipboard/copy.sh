@@ -5,6 +5,7 @@
 # Usage:
 # `./copy.sh arg1 arg2`: copy 'arg1 arg2' to the clipboard
 # `./copy.sh -- --arg1 --arg2`: copy '--arg1 --arg2' to the clipboard
+# `./copy.sh`: copy the standard input to the clipboard
 # `./copy.sh --stdin`: copy the standard input to the clipboard
 # `./copy.sh --stdin --xorg_target image/png`: copy an image provided from the standard input to the clipboard (Xorg requires a `target`)
 #
@@ -15,6 +16,11 @@
 
 copy_stdin='n'
 xorg_target=()
+
+
+if [[ $# == 0 ]]; then
+	copy_stdin='y'
+fi
 
 
 while [[ $# -gt 0 ]]; do
