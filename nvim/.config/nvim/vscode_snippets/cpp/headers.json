@@ -1,0 +1,12 @@
+{
+	"Header guards of a C/C++ module:": {
+		"prefix": "header-guards",
+		"description": "Create header guards to the current header",
+		"body": [
+			"#ifndef ${1:${TM_FILENAME/(.*)([\\.])(.*)/${1:/upcase}_${3:/upcase}/g}}",
+			"#define ${1} ${2:version}",
+			"$0",
+			"#endif // end of ${1}"
+		]
+	}
+}

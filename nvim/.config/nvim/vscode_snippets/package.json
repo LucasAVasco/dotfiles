@@ -31,6 +31,13 @@
 					"yaml"
 				],
 				"path": "./yaml/schemas.json"
+			},
+			{
+				"language": [
+					"cpp",
+					"c"
+				],
+				"path": "./cpp/headers.json"
 			}
 		]
 	}
