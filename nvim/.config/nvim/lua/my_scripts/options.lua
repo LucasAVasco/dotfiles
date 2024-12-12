@@ -75,16 +75,16 @@ local function update_listchars(buffer_nr, all_windows)
 
 	-- First indentation level of the multi spaces characters
 
-	local lead_multispace_char = spaces_before_index_num .. '⁰' .. spaces_after_index_num .. '┋' -- Spaces before any text
+	local lead_multispace_char = spaces_before_index_num .. '⁰' .. spaces_after_index_num .. '󰇙' -- Spaces before any text
 	local multispace_char = '𝅙⋅𝅙₀' -- Spaces after any text
 
 	-- Creates the components of the 'listchars' option that have index numbers
 	for _, index_char in ipairs(superscript_numbers) do
-		lead_multispace_char = lead_multispace_char .. spaces_before_index_num .. index_char .. spaces_after_index_num .. '┋'
+		lead_multispace_char = lead_multispace_char .. spaces_before_index_num .. index_char .. spaces_after_index_num .. ''
 		multispace_char = multispace_char .. '𝅙⋅𝅙' .. index_char
 	end
 
-	window_opts.listchars = 'tab:𝅙𝅙┋,leadmultispace:' .. lead_multispace_char .. ',multispace:' .. multispace_char
+	window_opts.listchars = 'tab:𝅙𝅙,leadmultispace:' .. lead_multispace_char .. ',multispace:' .. multispace_char
 	-- Alternative characters that you may want to use -> 󰇝┆┃󱋱╎⎜┇¦╏┇┋┆┆┊󰇙⍿⟊¦‖⎸⋅⋯﴾﴿
 end
 
