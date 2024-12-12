@@ -57,6 +57,29 @@ vim.keymap.set('n', '<BS>', '<CMD>execute "normal! <C-W><C-P>"<CR>', get_default
 vim.keymap.set('n', '<A-u>', '<C-u>zz', get_default_opt('Scroll down the window and centralize'))
 vim.keymap.set('n', '<A-d>', '<C-d>zz', get_default_opt('Scroll up the window and centralize'))
 
+---@alias key_direction
+---| 'h' # left
+---| 'j' # down
+---| 'k' # up
+---| 'l' # right
+
+---Create a key map to move the focus to another window
+---@param direction key_direction
+---@param keys string[] List of keys to map
+---@param description string Description of the created key map
+local function create_move_keymap(direction, keys, description)
+	local right_term_of_keymap = '<C-w>' .. direction
+	local option_table = get_default_opt(description)
+	for _, key in ipairs(keys) do
+		vim.keymap.set('n', '<A-' .. key .. '>', right_term_of_keymap, option_table)
+	end
+end
+
+create_move_keymap('h', {'h', 'left'}, 'Move focus to the window left of the current one')
+create_move_keymap('j', {'j', 'down'}, 'Move focus to the window down of the current one')
+create_move_keymap('k', {'k', 'up'}, 'Move focus to the window up of the current one')
+create_move_keymap('l', {'l', 'right'}, 'Move focus to the window right of the current one')
+
 -- Search
 vim.keymap.set('n', 'ch', '<CMD>nohlsearch<CR>', get_default_opt('Clear current search highlight'))
 
