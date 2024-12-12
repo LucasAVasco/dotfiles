@@ -38,6 +38,12 @@
 					"c"
 				],
 				"path": "./cpp/headers.json"
+			},
+			{
+				"language": [
+					"dockerfile"
+				],
+				"path": "./dockerfile/cached-build.json"
 			}
 		]
 	}

@@ -1,0 +1,22 @@
+{
+	"Set Golang module cache:": {
+		"description": "Set the folder to save the cached modules",
+		"prefix": [
+			"go-cache",
+			"set-go-cache-folder"
+		],
+		"body": [
+			"ENV GOCACHE=/go_cache"
+		]
+	},
+	"Build Golang package:": {
+		"description": "Build a Golang package. ***NOTE:*** You may want to set the modules cache folder before building the package",
+		"prefix": [
+			"go-build",
+			"build-go-package"
+		],
+		"body": [
+			"RUN --mount=type=cache,target=/go_cache go build$0"
+		]
+	}
+}
