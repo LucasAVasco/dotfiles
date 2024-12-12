@@ -25,6 +25,12 @@
 					"zsh"
 				],
 				"path": "./zsh/paths.json"
+			},
+			{
+				"language": [
+					"yaml"
+				],
+				"path": "./yaml/schemas.json"
 			}
 		]
 	}

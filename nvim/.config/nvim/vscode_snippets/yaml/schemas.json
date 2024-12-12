@@ -1,0 +1,9 @@
+{
+	"Yaml Schema configuration": {
+		"prefix": "yaml-schema-configuration",
+		"description": "Create a comment with the configuration to set the file's schema (Yaml language server)",
+		"body": [
+			"# yaml-language-server: \\$schema=${1:SchemaUrl.json}"
+		]
+	}
+}
