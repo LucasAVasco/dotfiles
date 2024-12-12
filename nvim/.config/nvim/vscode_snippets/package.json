@@ -44,6 +44,12 @@
 					"dockerfile"
 				],
 				"path": "./dockerfile/cached-build.json"
+			},
+			{
+				"language": [
+					"dockerfile"
+				],
+				"path": "./dockerfile/CMD.json"
 			}
 		]
 	}
