@@ -11,10 +11,11 @@ return {
 
 		opts = {
 			-- Keywords
-			org_todo_keywords = { 'TODO', 'NEXT', 'PROGRESS', '|', 'DONE' },
+			org_todo_keywords = { 'TODO', 'NEXT', 'PROGRESS', '|', 'DONE', 'CANCELED' },
 			org_todo_keyword_faces = {
 				NEXT = ':foreground #ffffff :background #5555ff',
 				PROGRESS = ':foreground #cccc22 :background #444444',
+				CANCELED = ':foreground #aaaaaa :background #333333',
 			},
 
 			-- Appearance
