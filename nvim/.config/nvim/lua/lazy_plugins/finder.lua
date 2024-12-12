@@ -50,7 +50,7 @@ end
 --- Lazy load a Telescope extension (effective version)
 --- Create the pickers that will load the actual extension and its pickers when selected. Can NOT be called before Telescope setup
 --- @param name string Name of the extension. Same value given to the `require('telescope').load_extension()` function
---- @param pickers table<string> Name of the pickers that the extension provides
+--- @param pickers string[] Name of the pickers that the extension provides
 local function lazy_load_telescope_extension(name, pickers)
 	local telescope = require('telescope')
 	local new_lazy_extension = {}
@@ -64,7 +64,7 @@ local function lazy_load_telescope_extension(name, pickers)
 			-- Checks if the user provided all pickers in the *pickers* argument
 			check_lazy_loaded_pickers(lazy_extension, real_extension, name)
 
-			-- Calls the picker. Otherwise, the first call to the picker would not run the it
+			-- Calls the picker. Otherwise, the first call to the picker would not run it
 			telescope.extensions[name][picker](opts)
 		end
 	end

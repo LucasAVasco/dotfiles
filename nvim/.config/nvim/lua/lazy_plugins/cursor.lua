@@ -19,10 +19,10 @@
 
 	Cursor mode~
 
-	`<C-{Down,Up}}>`   Add multi cursor above or below the current cursor.
+	`<C-{Down,Up}>`    Add multi cursor above or below the current cursor.
 	`<VM_leader>\`     Add a multi cursor in the current vim cursor.
-	`|`                set cursors column
-	`&`                repeat the substitution
+	`|`                Set cursors column
+	`&`                Repeat the substitution
 	`<leader><CR>`     Toggle the single cursor mode. Switch between cursors with <Tab> and <S-Tab>.
 
 	Extend mode~
