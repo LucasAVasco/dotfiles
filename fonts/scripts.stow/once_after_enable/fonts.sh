@@ -3,7 +3,7 @@
 # Install some nerd fonts inside the '$fonts_folder' folder. Use the `download_font()` function to install the desired fonts
 
 
-nerdfonts_version=v3.2.1             # Version of the fonts from Nerd Fonts
+nerdfonts_version=v3.3.0             # Version of the fonts from Nerd Fonts
 google_emoji_version=v2.047          # Version of the Google's Emoji Fonts
 fonts_folder=~/.fonts/auto_installed # Install the fonts inside this folder
 
