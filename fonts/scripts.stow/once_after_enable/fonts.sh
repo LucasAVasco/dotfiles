@@ -23,10 +23,13 @@ trap "rm -r '${tmp_dir}'" EXIT
 download_font () {
 	# Folder to hold this specific font
 	install_folder="$fonts_folder/$1"
-	mkdir -p "$install_folder"
 
-	# Download, extract and install
+	# Download
 	curl --location "https://github.com/ryanoasis/nerd-fonts/releases/download/${2}/${1}.zip" --output "${tmp_dir}/font.zip"
+
+	# (Re)Installation
+	rm -r "$install_folder" 2> /dev/null
+	mkdir -p "$install_folder"
 	unzip "${tmp_dir}/font.zip" -d "$install_folder"
 
 	# Log message
@@ -55,9 +58,6 @@ download_emoji_font() {
 	# Log message
 	echo -e "\n\e[1;32m'Google Noto Emoji' version '$2' Installed\e[1;0m"
 }
-
-# Removes old fonts
-rm -r "$fonts_folder" 2> /dev/null
 
 # Installs the desired fonts
 download_font Hack $nerdfonts_version
