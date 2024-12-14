@@ -61,4 +61,5 @@ rm -r "$fonts_folder" 2> /dev/null
 
 # Installs the desired fonts
 download_font Hack $nerdfonts_version
+download_font JetBrainsMono $nerdfonts_version
 download_emoji_font $google_emoji_version
