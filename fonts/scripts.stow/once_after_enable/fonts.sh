@@ -15,7 +15,7 @@ trap "rm -r '${tmp_dir}'" EXIT
 
 # Install a nerd font
 #
-# Download from the GitHub repository. The fount will be installed inside a sub-folder in the '$fonts_folder' directory
+# Download from the GitHub repository. The font will be installed inside a sub-folder in the '$fonts_folder' directory
 #
 # $1: Fount name. You can get it at 'https://www.nerdfonts.com/font-downloads'. Place the mouse on top of the download button of the desired
 # font. This will show the zipped file to be downloaded. You need to provide the file name of this URL (without the '.zio' extension)
@@ -35,7 +35,7 @@ download_font () {
 
 # Install Google's Noto Emoji fonts
 #
-# Download from the GitHub repository. The fount will be installed inside a sub-folder in the '$fonts_folder' directory
+# Download from the GitHub repository. The font will be installed inside a sub-folder in the '$fonts_folder' directory
 #
 # $2: Version of the font to download
 download_emoji_font() {
