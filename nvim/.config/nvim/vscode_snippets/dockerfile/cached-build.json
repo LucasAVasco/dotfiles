@@ -6,7 +6,8 @@
 			"set-go-cache-folder"
 		],
 		"body": [
-			"ENV GOCACHE=/cache/go"
+			"ENV GOCACHE=/cache/go",
+			"ENV GOMODCACHE=/cache/gomod"
 		]
 	},
 	"Build Golang package:": {
