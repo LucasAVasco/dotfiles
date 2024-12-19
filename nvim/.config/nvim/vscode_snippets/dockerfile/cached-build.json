@@ -6,7 +6,7 @@
 			"set-go-cache-folder"
 		],
 		"body": [
-			"ENV GOCACHE=/go_cache"
+			"ENV GOCACHE=/cache/go"
 		]
 	},
 	"Build Golang package:": {
@@ -16,7 +16,7 @@
 			"build-go-package"
 		],
 		"body": [
-			"RUN --mount=type=cache,target=/go_cache go build$0"
+			"RUN --mount=type=cache,target=/cache go build"
 		]
 	}
 }
