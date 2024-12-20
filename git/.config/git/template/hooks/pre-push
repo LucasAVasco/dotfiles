@@ -103,7 +103,7 @@ while read -r line; do
 
 			if [[ "$remote_branch" =~ $tmp_branch_regex ]]; then  # Pushing to a temporary branch
 				echo -e '\x1b[1;31m'  # set red color
-				echo 'Efective non temporary commit cannot be pushed to a temporary branch.'
+				echo 'Effective non temporary commit cannot be pushed to a temporary branch.'
 				show_commit_error_log ${obj_info[@]}
 
 				exit 1
