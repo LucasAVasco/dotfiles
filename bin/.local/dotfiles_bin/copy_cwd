@@ -1,0 +1,6 @@
+#!/bin/bash
+#
+# Copy the current working directory to the clipboard
+
+
+~/.config/clipboard/copy.sh -- "$(pwd)"
