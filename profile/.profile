@@ -24,7 +24,7 @@ test -d /home/linuxbrew/.linuxbrew && eval $(/home/linuxbrew/.linuxbrew/bin/brew
 
 
 # Configurations of Bspwm window manager
-if [ "$DESKTOP_SESSION" == "bspwm" ]; then
+if [ "$DESKTOP_SESSION" = "bspwm" ]; then
 	# Java applications that use AWT (Abstract Window Toolkit) may not work properly in Bspwm (window becomes white).
 	# To disable the reparenting of the toolkit fix this problem
 	export _JAVA_AWT_WM_NONREPARENTING=1
@@ -39,13 +39,13 @@ if ! [[ "$USER" =~ .*_dev$ ]]; then  # Only allow extensions to users that name 
 fi
 
 ID_RES=($(id))
-[ ${ID_RES[0]} == 'uid=0(root)' ] && ALLOW_EXTERNAL_SOFTWARE=n  # Disable extensions to root
+[ "${ID_RES[0]}" = 'uid=0(root)' ] && ALLOW_EXTERNAL_SOFTWARE=n  # Disable extensions to root
 
 for group in $(groups); do  # Disable extensions to users with sudo access
-	[ "$group" == 'sudo' ] && ALLOW_EXTERNAL_SOFTWARE=n
+	[ "$group" = 'sudo' ] && ALLOW_EXTERNAL_SOFTWARE=n
 done
 
-[ "${USER:0:5}" == 'admin' ] && ALLOW_EXTERNAL_SOFTWARE=n  # Disable extensions to '^admin.*' users
+[ "${USER:0:5}" = 'admin' ] && ALLOW_EXTERNAL_SOFTWARE=n  # Disable extensions to '^admin.*' users
 
 export ALLOW_EXTERNAL_SOFTWARE=$ALLOW_EXTERNAL_SOFTWARE
 
@@ -53,13 +53,13 @@ export ALLOW_EXTERNAL_SOFTWARE=$ALLOW_EXTERNAL_SOFTWARE
 # Apps configuration
 export FZF_DEFAULT_OPTS_FILE=~/.fzfrc
 
-if [ "$ALLOW_EXTERNAL_SOFTWARE" == y ]; then
+if [ "$ALLOW_EXTERNAL_SOFTWARE" = y ]; then
 	# Default shell. Some terminal emulators use this environment variable to select its shell
 	export SHELL=/bin/zsh
 
 	# If the user's default shell is Bash, enable ASDF. This allows applications that are not launched directly by an interactive bash
 	# session to use some software installed by ASDF. Requires the user's default shell to be `bash`
-	if [ "$0" == 'bash' -o "$0" == '-bash' ]; then
+	if [ "$0" = 'bash' -o "$0" = '-bash' ]; then
 		test -f ~/.asdf/asdf.sh && source ~/.asdf/asdf.sh
 	fi
 fi
