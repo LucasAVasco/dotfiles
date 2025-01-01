@@ -14,4 +14,8 @@ highlight = "#ffff44"
 dmenu = /usr/bin/rofi -dmenu -p Dunst
 browser = ~/.local/dotfiles_bin/default_open
 
+# Key binds
+mouse_middle_click = close_all
+mouse_right_click = do_action, open_url, close_current
+
 # vi: ft=cfg
