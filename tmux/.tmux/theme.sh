@@ -13,7 +13,7 @@ color_window_status_current='#8fcfdc'
 color_window_status_last='#d1c499'
 color_window_status_bell='#cc2222'
 color_window_status_activity='#d1af52'
-color_window_separator='#393C51'
+color_window_separator='#393c51'
 
 color_clock='#eeaa00'
 
@@ -34,7 +34,7 @@ color_left_prefix_fg='#000000'
 # Right status
 color_right_bg='#2e303d'
 color_right_fg='#aaaaaa'
-color_right_separator='#393C51'
+color_right_separator='#393c51'
 color_right_uptime='#efd378'
 color_right_hostname='#18c6e9'
 
