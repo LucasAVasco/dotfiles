@@ -1,0 +1,20 @@
+#!/bin/bash
+#
+# Open the default web browser. Create a new process in the background.
+#
+# This is not a Linux standard functionality. I just use it in my scripts.
+#
+# Dependencies:
+# * bash
+# * firefox
+# * qutebrowser
+
+
+web_browser_cmd='firefox'
+
+if [[ "$ALLOW_EXTERNAL_SOFTWARE" == 'y' ]]; then
+	web_browser_cmd='qutebrowser'
+fi
+
+
+nohup "$web_browser_cmd" "$@" > /dev/null 2>&1 &
