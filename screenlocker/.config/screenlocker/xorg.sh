@@ -35,7 +35,7 @@ EOF
 }
 
 enable_screen_locker() {
-	pkill -u "$UID" xss-lock 2> /dev/null
+	pkill-wait -u "$UID" xss-lock 2> /dev/null
 	nohup xss-lock -- "$current_dir/xorg.sh" run > /dev/null 2>&1 &
 
 	xset s on
@@ -48,7 +48,7 @@ enable_screen_locker() {
 }
 
 disable_screen_locker() {
-	pkill -u "$UID" xss-lock 2> /dev/null
+	pkill-wait -u "$UID" xss-lock 2> /dev/null
 
 	xset s off
 	xset s noblank

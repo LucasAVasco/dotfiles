@@ -1,0 +1,26 @@
+#!/bin/bash
+#
+# Wrapper that calls the `pkill` command, and waits all processes to end.
+#
+# Dependencies:
+#
+# * bash
+# * `pkill` command
+# * `pidwait` command
+# * `pgrep` command
+
+
+set -e
+
+
+# Does nothing if the process does not exists
+pgrep "$@" > /dev/null 2>&1 || {
+	exit 1
+}
+
+
+# Kill and wait
+pidwait "$@" &
+last_pid=$!
+pkill "$@"
+wait "$last_pid"

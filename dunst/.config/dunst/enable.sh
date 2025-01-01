@@ -2,5 +2,5 @@
 
 
 # Start/restart dunst
-pkill -u $UID dunst 2> /dev/null
+pkill-wait -u $UID dunst 2> /dev/null
 nohup dunst > /dev/null &
