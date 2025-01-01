@@ -12,5 +12,6 @@ separator_color = "#aaaaaa"
 highlight = "#ffff44"
 
 dmenu = /usr/bin/rofi -dmenu -p Dunst
+browser = ~/.local/dotfiles_bin/default_open
 
 # vi: ft=cfg
