@@ -33,16 +33,16 @@ export VISUAL=nvim
 
 
 # Bash aliases
-source ~/.bash/aliases.sh
+source ~/.config/bash/aliases.sh
 
 
 # User configurations
-source ~/.bash/non_root_config.sh
+source ~/.config/bash/non_root_config.sh
 
 
 # Source Prompt
 if [ "$TERM" == "linux" -o "$TERM" == "tmux" ]; then
-	source ~/.bash/ascii_prompt.sh
+	source ~/.config/bash/ascii_prompt.sh
 else
-	source ~/.bash/prompt.sh
+	source ~/.config/bash/prompt.sh
 fi

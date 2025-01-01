@@ -9,7 +9,7 @@
 
 
 # Extra software (e.g. ASDF, Conda, etc.)
-source ~/.bash/extra_software.sh
+source ~/.config/bash/extra_software.sh
 
 
 # Completion files
