@@ -49,7 +49,7 @@ Optional dependencies
 
 * 'fd' (if using the interactive restore)
 * 'fzf' (if using the interactive restore)
-* 'bat' (if using the interactive restore)
+* 'batcat' (if using the interactive restore)
 * 'eza' (if using the interactive restore)
 """
 
@@ -99,9 +99,9 @@ if len(selected_files) == 0:
 
         # '--preview' option. Add an auto-preview window that lists the content of
         # directories with `eza` (if the selection is a directory), or shows the file
-        # content with `bat` (if the selection is a file)
+        # content with `batcat` (if the selection is a file)
         (
-            f"--preview=bat --color=always {trash_files_folder}/{{1}} 2> /dev/null"
+            f"--preview=batcat --color=always {trash_files_folder}/{{1}} 2> /dev/null"
             "|| eza -A --icons=always --color=always --git "
             f"{trash_files_folder}/{{1}}"
         ),

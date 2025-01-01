@@ -1,0 +1,11 @@
+#!/bin/sh
+#
+# Wrapper to `batcat` command from Ubuntu.
+#
+# Dependencies:
+# * Bash
+# * `bat` or `batcat`
+
+
+[[ -f /bin/batcat ]] && exec /bin/batcat "$@"
+[[ -f /bin/bat ]] && exec /bin/bat "$@"
