@@ -1,0 +1,20 @@
+#!/bin/bash
+#
+# Automatically show the help message of a command.
+
+
+# Remove all environment variables before the command. Example: `VAR1=value1 V2=value2 command arg1` will become `command arg1`
+while [[ "$1" =~ .*=.* ]]; do
+	shift
+done
+
+cmd_show_help=(batcat --language=help --style='grid' --paging=always --pager='less --raw-control-chars --clear-screen')
+
+case "$1" in
+	go)
+		go help "${@:2}" | "${cmd_show_help[@]}"
+	;;
+	*)
+		"$@" --help 2>&1 | "${cmd_show_help[@]}"
+	;;
+esac
