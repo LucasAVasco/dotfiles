@@ -1,6 +1,6 @@
 configuration {
 	columns: 4;
-	font: "NotoSans Nerd Font 12";
+	font: "NotoSans Nerd Font 15";
 
 	window-format: "{w} - {c}: {t}";
 	display-window: "Window:";
@@ -10,10 +10,13 @@ configuration {
 
 * {
 	background-color: rgba(0, 0, 0, 0%);
+	text-color: rgb(200, 200, 200);
 }
 
 #window {
-	background-color: rgba(0, 0, 0, 0);
+	background-color: rgba(0, 0, 0, 60%);
+
+	border-radius: 20;
 
 	height: 80%;
 	width: 80%;
@@ -23,70 +26,99 @@ configuration {
 	y-offset: 0;
 }
 
-
 #inputbar {
-	background-color: rgb(230, 230, 230);
-	border-color: rgba(0, 0, 0, 50%);
-	text-color: rgb(0,0,0);
+	background-color: rgba(0, 0, 0, 30%);
 
-	margin: 0 20% 30 20%;
-	padding: 5 20 5 20;
+	border-radius: 15 15 0 0;
+
+	margin: 0;
+	padding: 5% 20% 5% 20%;
 	border: 7;
-	border-radius: 50;
-}
-
-#entry {
-	padding: 5;
 }
 
 #prompt {
-	padding: 5;
+	background-color: rgb(255, 200, 111);
+	text-color: rgb(0, 0, 0);
+
+	border-radius: 10;
+
+	padding: 10 20;
+}
+
+#entry {
+	background-color: rgba(100, 100, 100, 80%);
+	placeholder: "Window name...";
+
+	border-radius: 10;
+	padding: 10 2 10 15;
+	margin: 2 5 0 5;
+}
+
+#case-indicator {
+	enabled: false;
 }
 
 #listview {
-	background-color: rgba(100, 100, 100, 80%);
+	lines: 4;
+	columns: 4;
+	fixed-columns: true;
+
 	margin: 10 10;
 	padding: 50;
-	border-radius: 50;
-	spacing: 10;
+	spacing: 20;
 	scrollbar: false;
-	lines: 2;
-	columns: 3;
-	fixed-columns: true;
 }
 
 #element {
-	padding: 10 5 10 5;
-	border: 2;
+	background-color: rgb(30, 30, 30);
+	border-color: rgb(255, 200, 111);
+
 	border-radius: 20;
-	orientation: vertical;
-	border-color: rgba(0, 0, 0, 0%);
+
+	padding: 10 5 10 5;
 }
 
 #element-icon {
-	/* icon size = width size - imputbar margin, border and padding - listview margin and padding */
-	/* There are 4 elements per column. So, divide by 3. This is the element size */
+	/* icon size = width size - 2*inputbar margin, border and padding - listview margin and padding */
+	/* There are 4 elements per column. So, divide by 4. This is the element size */
 	/* Divide by 2 because there are the element-text */
-	size: calc((80% - 20% - 40 - 14 - 20 - 100)/3 /2);
+	size: calc((80% - 2*(0 - 40 - 14) - 20 - 100)/8 /2);
+
+	border-radius: 10;
+	border: 0 0 2 2;
+
+	padding: 10;
+}
+
+#element-icon.selected.normal {
 }
 
 #element-text {
 	horizontal-align: 0.5;
 	vertical-align: 0.5;
 	text-color: rgb(255,255,255);
+
+	font: "NotoSans Nerd Font 15";
+
+	border-radius: 5;
+
+	padding: 4;
+	margin: 0 10;
 }
 
-#element.selected.normal {
-	background-color: rgba(255, 255, 255, 30%);
+
+#element.selected {
+	background-color: rgb(50, 50, 50);
+	border-color: rgb(255, 200, 111);
+	border: 0 0 2 2;
 }
 
 #element.selected.active {
-	border-color: rgba(255, 255, 255, 30%);
-	background-color: rgba(255, 255, 255, 30%);
+	border: 5;
 }
 
 #element.normal.active {
-	border-color: rgba(255, 255, 255, 30%);
+	border: 5;
 }
 
 #element.normal.urgent {
@@ -98,4 +130,4 @@ configuration {
 	border-color: rgb(255, 0, 0);
 }
 
-/* vim:ft=css
+/* vim: set ft=css: */

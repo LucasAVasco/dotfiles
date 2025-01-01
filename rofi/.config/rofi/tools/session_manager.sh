@@ -9,7 +9,7 @@ current_dir=$(realpath -m -- "$0/../")
 
 # Content to be displayed in Rofi
 buttons=(
-	'Shutdown;system-shutdown' 'Reboot;system-reboot' 'Suspend;system-suspend' 'Hibernate;system-hibernate'
+	'Shutdown;kshutdown' 'Reboot;system-restart' 'Suspend;system-suspend' 'Hibernate;system-hibernate'
 	'Lock screen;lock-screen' 'Logout;system-switch-user'
 	)
 

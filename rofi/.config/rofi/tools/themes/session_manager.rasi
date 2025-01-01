@@ -6,15 +6,17 @@ configuration {
 
 * {
 	background-color: rgba(0, 0, 0, 0%);
-	text-color: rgba(100, 100, 100, 100%);
+	text-color: rgb(200, 200, 200);
 }
 
 #window {
-	background-color: rgba(255, 255, 255, 90%);
+	background-color: rgba(0, 0, 0, 80%);
 
-	border-radius: 20;
+	border: 5;
+	border-radius: 30;
+	border-color: rgba(255, 200, 100, 60%);
 
-	height: 370;
+	height: 430;
 	width: 250;
 	location: north east;
 	anchor: north east;
@@ -22,15 +24,12 @@ configuration {
 	y-offset: 40;
 }
 
-#mainbox {
-}
-
 #inputbar {
 	enabled: false;
 }
 
 #listview {
-	spacing: 2;
+	spacing: 10;
 	scrollbar: false;
 
 	padding: 20;
@@ -38,7 +37,10 @@ configuration {
 }
 
 #element {
-	padding: 10 20;
+	border-color: rgba(0, 0, 0, 0%);
+	background-color: rgb(20, 20, 20);
+
+	padding: 10 20 10 20;
 	border-radius: 20;
 }
 
@@ -48,10 +50,14 @@ configuration {
 
 #element-text {
 	horizontal-align: 0.5;
+	margin: 5 0 0 0;
 }
 
 #element.selected.normal {
-	background-color: rgba(255, 255, 255, 100%);
+	border-color: rgb(255, 200, 111);
+	background-color: rgb(50, 50, 50);
+
+	border: 0 0 3 3;
 }
 
 #element.normal.urgent {
@@ -63,4 +69,4 @@ configuration {
 	border-color: rgb(255, 0, 0);
 }
 
-/* vim:ft=css
+/* vim: set ft=css: */
