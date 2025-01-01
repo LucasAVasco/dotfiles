@@ -1,0 +1,60 @@
+#!/bin/bash
+#
+# Like the `fd` command, but shows all entries from the top most directories to the bottom most directory.
+#
+# This scripts is slower than the default `fd` command, and it may take some time processing the files and directories of a layer (depth)
+# before displaying them.
+#
+# Arguments:
+#
+# $1..n: arguments passed to `fd`
+#
+# Example of result with `fd` command:
+#
+# - dir1/
+# - dir1/dira/
+# - dir1/dira/dirX/
+# - dir1/dira/dirY/
+# - dir1/dirb/
+# - dir1/dirb/dirX/
+# - dir1/dirb/dirY/
+# - dir2/
+# - dir2/dira/
+# - dir2/dira/dirX/
+# - dir2/dira/dirY/
+# - dir2/dirb/
+# - dir2/dirb/dirX/
+# - dir2/dirb/dirY/
+#
+# Example of result with this script:
+#
+# - dir1/
+# - dir2/
+# - dir1/dira/
+# - dir1/dirb/
+# - dir2/dira/
+# - dir2/dirb/
+# - dir1/dira/dirX/
+# - dir1/dira/dirY/
+# - dir1/dirb/dirX/
+# - dir1/dirb/dirY/
+# - dir2/dira/dirX/
+# - dir2/dira/dirY/
+# - dir2/dirb/dirX/
+# - dir2/dirb/dirY/
+
+
+set -e
+
+
+for ((depth = 1; ; depth++)); do
+	search_depth_res=$(fd --color=always --exact-depth "$depth" "$@")
+
+	# Ends if there are not sub-directories in the current depth
+	if [[ -z "${search_depth_res:0:1}" ]]; then
+		break
+	fi
+
+	# Shows the result and goes to the next iteration
+	echo "$search_depth_res"
+done
