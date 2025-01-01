@@ -11,5 +11,6 @@ frame_color = "#777777"
 separator_color = "#aaaaaa"
 highlight = "#ffff44"
 
+dmenu = /usr/bin/rofi -dmenu -p Dunst
 
 # vi: ft=cfg
