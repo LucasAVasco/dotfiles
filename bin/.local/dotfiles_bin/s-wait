@@ -1,0 +1,79 @@
+#!/bin/bash
+#
+# Disable the screen-locker until a process ends.
+#
+# Dependencies:
+# * bash
+# * waitpid
+# * pidwait
+# * My '~/.config/screenlocker/manager.sh' script.
+
+
+screenlocker_manager=~/.config/screenlocker/manager.sh
+follow_pid='n'
+follow_pattern='n'
+
+show_help(){
+	cat << EOF
+Usage:
+	To execute a command and disable the screen-locker until it ends:
+
+	./$(basename $0) [--] Command
+
+	To follow running processes by its PID and disable the screen-locker until it ends:
+
+	./$(basename $0) --pid PID...
+
+	To follow running processes by a pattern and disable the screen-locker until them ends:
+
+	./$(basename $0) --pattern [pidwait options...] PATTERN
+
+Commands:
+	help | --help: Show this message
+EOF
+}
+
+while [[ -n "$1" ]]; do
+	case "$1" in
+		--pid)
+			follow_pid='y'
+			shift
+			break
+			;;
+		--pattern)
+			follow_pattern='y'
+			shift
+			break
+			;;
+		help | --help)
+			show_help
+			exit 0
+			;;
+		--)
+			shift
+			break
+			;;
+		*)
+			break
+			;;
+	esac
+
+	shift
+done
+
+
+# Ensures the screen-locker will be re-enabled after the script end
+if [[ $("$screenlocker_manager" is-enabled) == y ]]; then
+	trap "$screenlocker_manager enable" EXIT
+	"$screenlocker_manager" disable
+fi
+
+
+# Run or follow the program
+if [[ "$follow_pid" == 'y' ]]; then
+	waitpid "${@}"
+elif [[ "$follow_pattern" == 'y' ]]; then
+	pidwait "${@}"
+else
+	"$@"
+fi
