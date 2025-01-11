@@ -49,6 +49,11 @@ vim.keymap.set('n', '<leader>Lh', vim.lsp.buf.hover, default_options('Show LSP h
 vim.keymap.set('n', '<leader>Ls', vim.lsp.buf.document_symbol, default_options('Show LSP symbols'))
 vim.keymap.set('n', '<leader>Lic', vim.lsp.buf.incoming_calls, default_options('Show LSP incoming calls'))
 vim.keymap.set('n', '<leader>Loc', vim.lsp.buf.outgoing_calls, default_options('Show LSP outgoing calls'))
+vim.keymap.set('n', '<leader>Lih', function()
+	local inlay_hint_is_enabled = vim.lsp.inlay_hint.is_enabled()
+	vim.notify((inlay_hint_is_enabled and "Disabling" or "Enabling") .. " inlay hints")
+	vim.lsp.inlay_hint.enable(not inlay_hint_is_enabled)
+end, default_options('Toggle LSP inlay hints visualization'))
 
 -- Manage the code
 vim.keymap.set('n', '<leader>Lr', vim.lsp.buf.rename, default_options('Code rename with LSP'))
