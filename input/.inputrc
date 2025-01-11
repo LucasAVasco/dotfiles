@@ -1,5 +1,7 @@
 # Keybinds used by readline. The \e is an escape key that maps the ESC or ALT key. So \es is ESC + s or ALT-s.
 #
+# To see the keybind code of a key, open GDB and press C-v + <keybind>. Example: to see the <A-CR> keybind, you can use <C-v> + <A-CR>.
+#
 # The $if and $endif are used to enable and disable certain keybinds unique to an application.
 
 
