@@ -4,6 +4,7 @@
 #
 # The $if and $endif are used to enable and disable certain keybinds unique to an application.
 
+set editing-mode vi
 
 $if gdb
 	# ALT-d
