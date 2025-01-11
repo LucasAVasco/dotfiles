@@ -89,6 +89,12 @@ vim.keymap.set('v', '<leader>ri', ':s///g<left><left><left>', get_default_opt_no
 vim.keymap.set('n', '<leader>rs', ':%s/<C-r>///g<left><left>', get_default_opt_no_silence('Replace searched text in all file'))
 vim.keymap.set('v', '<leader>rs', ':s/<C-r>///g<left><left>', get_default_opt_no_silence('Replace searched text only in selected text'))
 vim.keymap.set('v', '<leader>rv', '""y:%s/<C-r>"//g<left><left>', get_default_opt_no_silence('Replace visual selected text in all file'))
+vim.keymap.set('n', '<leader>res', ':%s/<C-r>//<C-r>//g<left><left>',
+	get_default_opt_no_silence('Replace searched text by its edited content (all file)'))
+vim.keymap.set('v', '<leader>res', ':s/<C-r>//<C-r>//g<left><left>',
+	get_default_opt_no_silence('Replace searched text by its edited content (selected text)'))
+vim.keymap.set('v', '<leader>rev', '""y:%s/<C-r>"/<C-r>"/g<left><left>',
+	get_default_opt_no_silence('Replace visual selected text by its edited content (all file)'))
 
 -- Indentation
 vim.keymap.set('v', '<S-TAB>', '<gv', get_default_opt('Indent current selection to left'))
