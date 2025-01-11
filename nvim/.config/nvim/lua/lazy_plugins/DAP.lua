@@ -293,8 +293,43 @@ return {
 
 		lazy = true,
 
+		---@module 'nvim-dap-virtual-text'
+		---@class nvim_dap_virtual_text_options
 		opts = {
-			commented = true,
+			---@module 'dap'
+			---@param variable Variable Information about the variable
+			---@param bufnr number Number of the virtual text buffer
+			---@param stack_frame dap.StackFrame Source location
+			---@param ts_node userdata Tree-sitter node of the variable
+			---@param opts nvim_dap_virtual_text_options Plugin options
+			---@return string? string Text to be placed at the virtual text
+			---@diagnostic disable-next-line: unused-local
+			display_callback = function(variable, bufnr, stack_frame, ts_node, opts)
+				---@type string
+				local res = ''
+
+				-- name
+				if opts.virt_text_pos == 'eol' then
+					res = ' ' .. variable.name .. ': '
+				elseif opts.virt_text_pos == 'inline' then
+					res = ' 󰙎: '
+				else
+					vim.notify('Unrecognized virtual text position: ' .. opts.virt_text_pos)
+				end
+
+				-- Value
+				res = res .. variable.value
+
+				-- Removes sequential spaces
+				res = res:gsub('%s+', ' ')
+
+				-- Max length
+				if #res > 30 then
+					res = res:sub(0, 29) .. '…'
+				end
+
+				return res
+			end,
 		},
 	},
 	{
