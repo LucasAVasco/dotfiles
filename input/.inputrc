@@ -22,3 +22,10 @@ $if gdb
 	"\er": "layout regs\n"
 	"\ew": "layout split\n"
 $endif
+
+
+# `A-p` to accept an entry (like press Enter) but not save it in the history (useful for passwords)
+"\ep": rlwrap-accept-line-and-forget
+
+# Open the entry in the "$RLWRAP_EDITOR". Must provide '-m' to `rlwrap`
+"\C-e": rlwrap-call-editor
