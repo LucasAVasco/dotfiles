@@ -84,9 +84,15 @@ return {
 				return false
 			end
 
-			local client_capabilities = require('cmp_nvim_lsp').default_capabilities()
 			local lspconfig = require('lspconfig')
-			local schemastore = require('schemastore')
+			local client_capabilities = require('cmp_nvim_lsp').default_capabilities()
+
+			---Default settings applied to all LSP servers
+			---@type MyLspServerConfig
+			local default_lspconfiguration = {
+				capabilities = client_capabilities
+			}
+
 			mason_lspconfig.setup_handlers({
 				---Fallback handler used when not provided a specific server configuration. Need to be the first element in this table
 				---@param lsp_server_name string
@@ -95,46 +101,18 @@ return {
 						return
 					end
 
-					lspconfig[lsp_server_name].setup({
-						capabilities=client_capabilities
-					})
-				end,
+					-- Gets the LSP server options from my configuration directory
 
-				['jsonls'] = function(lsp_server_name)
-					if should_abort_lsp_config(lsp_server_name) then
-						return
+					---@type boolean, any
+					local ok, server_opts = pcall(require, "my_configs.LSP.configs." .. lsp_server_name)
+
+					if ok then
+						server_opts.capabilities = client_capabilities
+					else
+						server_opts=default_lspconfiguration
 					end
 
-					lspconfig[lsp_server_name].setup({
-						capabilities=client_capabilities,
-						settings = {
-							---@diagnostic disable-next-line: missing-fields
-							json = {
-								validate = { enable = true },
-								schemas = schemastore.json.schemas(),
-							}
-						},
-					})
-				end,
-
-				['yamlls'] = function(lsp_server_name)
-					if should_abort_lsp_config(lsp_server_name) then
-						return
-					end
-
-					lspconfig[lsp_server_name].setup({
-						capabilities=client_capabilities,
-						settings = {
-							yaml = {
-								schemas = schemastore.yaml.schemas(),
-								schemaStore = {
-									-- Disables the default schema store (use `schemastore.nvim` instead)
-									enable = false,
-									url = "",
-								},
-							},
-						},
-					})
+					lspconfig[lsp_server_name].setup(server_opts)
 				end,
 			})
 
