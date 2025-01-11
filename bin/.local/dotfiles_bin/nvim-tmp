@@ -3,6 +3,16 @@
 # Create a temporary file to edit with Neovim.
 #
 # After editing finishes, ask to remove the temporary file.
+#
+# Arguments:
+#
+# $1: append this argument to the temporary file path.
+#
+# # Dependencies:
+#
+# * Bash
+# * Neovim
+# * `mktemp` command
 
 
 delete_temp_file() {
@@ -17,7 +27,7 @@ delete_temp_file() {
 }
 
 date="$(date '+%F_%Hh%Mmin%Ss')"
-file=$(mktemp /tmp/nvim-tmp_"$date"_XXXXXXXXXX)
+file=$(mktemp /tmp/nvim-tmp_"$date"_XXXXXXXXXX --suffix="$1")
 echo "Temporary file: $file"
 trap "delete_temp_file '$file'" EXIT
 nvim "$file"
