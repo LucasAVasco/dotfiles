@@ -3,7 +3,7 @@
 		"prefix": "current_directory",
 		"description": "Create a variable with the current directory path",
 		"body": [
-			"current_dir=$(realpath -m -- \"\\${BASH_SOURCE[0]}/../\")"
+			"current_dir=\\$(dirname `realpath \"\\${BASH_SOURCE[0]}\"`)"
 		]
 	},
 
@@ -11,7 +11,8 @@
 		"prefix": "top_directory",
 		"description": "Create a variable with the top directory path",
 		"body": [
-			"top_directory=$(realpath -m -- \"\\${BASH_SOURCE[0]}/../../\")"
+			"current_dir=\\$(dirname `realpath \"\\${BASH_SOURCE[0]}\"`)",
+			"top_dir=\\$(dirname \"\\$current_dir\")"
 		]
 	}
 }
