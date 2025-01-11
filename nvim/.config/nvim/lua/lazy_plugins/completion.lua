@@ -239,14 +239,34 @@ return {
 							---@return string current_working_directory
 							get_cwd = function(cmp_data)
 								local buffer_nr = cmp_data.context.bufnr
-								local path_expand_expr = ':p:h'
+								local buffer_file_type = vim.bo[buffer_nr].filetype
+								local buffer_path = vim.api.nvim_buf_get_name(buffer_nr)
+								local base_dir = vim.fn.fnamemodify(buffer_path, ':p:h') -- Current working directory
 
-								-- Use the git repository root directory when editing the '.git/COMMIT_EDITMSG' file
-								if vim.bo[buffer_nr].filetype == 'gitcommit' then
-									path_expand_expr = ':p:h:h'
+								---Splits the `base_dir` at the provided index an use the first division as the new `base_dir`.
+								---@param index number? Split the `base_dir` at this index. If `nil` aborts the operation.
+								---@return boolean split If the `base_dir` has been split.
+								local function split_base_dir_at_index(index)
+									if index ~= nil then
+										base_dir = string.sub(base_dir, 0, index)
+										return true
+									end
+
+									return false
 								end
 
-								return vim.fn.expand('#' .. buffer_nr .. path_expand_expr)
+								-- Use the git repository root directory when editing the '.git/COMMIT_EDITMSG' file
+								if buffer_file_type == 'gitcommit' then
+									base_dir = vim.fn.fnamemodify(base_dir, ":h")
+
+								elseif buffer_file_type == 'yaml' then
+									-- Use the root directory of the GitHub workflow
+									if split_base_dir_at_index(string.find(base_dir, '/.github/workflows', 0, true)) then
+										return base_dir
+									end
+								end
+
+								return base_dir
 							end
 						}
 					},
