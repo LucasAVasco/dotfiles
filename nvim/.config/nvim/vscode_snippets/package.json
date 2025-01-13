@@ -56,6 +56,12 @@
 					"dockerfile"
 				],
 				"path": "./dockerfile/package-manager.json"
+			},
+			{
+				"language": [
+					"dockerfile"
+				],
+				"path": "./dockerfile/users-and-groups.json"
 			}
 		]
 	}

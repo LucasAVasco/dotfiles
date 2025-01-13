@@ -1,0 +1,29 @@
+{
+	"Create an user with `adduser`": {
+		"prefix": "RUN-adduser",
+		"description": [
+			"Create a new user with the `adduser` command. Command available in the Alpine Linux distribution."
+		],
+		"body": [
+			"RUN adduser -D -u ${1:1000} ${2:user_name}"
+		]
+	},
+	"Create an group with `addgroup`": {
+		"prefix": "RUN-addgroup-create-group",
+		"description": [
+			"Create a new group with the `addgroup` command. Command available in the Alpine Linux distribution."
+		],
+		"body": [
+			"RUN addgroup -g ${1:1000} -S ${2:group_name}"
+		]
+	},
+	"Add an user to a group with `addgroup`": {
+		"prefix": "RUN-addgroup-add-user-to-group",
+		"description": [
+			"Add an existing user to a existing group with the `addgroup` command. Command available in the Alpine Linux distribution."
+		],
+		"body": [
+			"RUN addgroup ${1:user_name} ${2:group_name}"
+		]
+	}
+}
