@@ -49,10 +49,6 @@ return {
 		---@module 'conform'
 		---@type conform.setupOpts
 		opts = {
-			formatters_by_ft = {
-				lua = { 'stylua' },
-			},
-
 			default_format_opts = {
 				lsp_format = 'fallback',
 			},
@@ -77,7 +73,11 @@ return {
 			end,
 		},
 
+		---@param _ string
+		---@param opts conform.setupOpts
 		config = function(_, opts)
+			opts.formatters_by_ft = require('my_configs.formatter.settings').filetype2formatter
+
 			-- Setup
 			require('conform').setup(vim.tbl_deep_extend('force', opts, vim.g.conform_opts or {}))
 
