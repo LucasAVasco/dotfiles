@@ -3,18 +3,15 @@ _G.uv = vim.uv or vim.loop
 vim.uv = vim.uv or uv
 vim.loop = vim.loop or uv
 
-
 -- Global functions go here
 _G.MYFUNC = {}
 _G.MYVAR = {}
-_G.MYPLUGFUNC = {}  -- For plugins
-
+_G.MYPLUGFUNC = {} -- For plugins
 
 ---You can use this global variable to disable some LSP servers. Add their names (same used by `lspconfig`) to this list before the
 ---`lspconfig` configuration
 ---@type string[]
 MYVAR.lsp_servers_to_disable = {}
-
 
 -- #region Utility functions
 
@@ -32,10 +29,10 @@ function MYFUNC.tbl_set(tbl, args, value)
 		local sub_tbl = tbl
 
 		-- Iterate trough the `tbl`. The `sub_tbl` will be the last element in the table before the `args[#args]`.
-		for i = 1, #args-1 do
+		for i = 1, #args - 1 do
 			local next_tbl = sub_tbl[args[i]]
 
-			if type(next_tbl) ~= 'table' then  -- Creates the `sub_tbl` if it doesn't exist in the table
+			if type(next_tbl) ~= 'table' then -- Creates the `sub_tbl` if it doesn't exist in the table
 				next_tbl = {}
 				sub_tbl[args[i]] = next_tbl
 			end
@@ -47,7 +44,6 @@ function MYFUNC.tbl_set(tbl, args, value)
 		sub_tbl[args[#args]] = value
 	end
 end
-
 
 --- Splits a string into a table using a Lua pattern.
 ---@param text string String to be split
@@ -63,7 +59,6 @@ function MYFUNC.str_split(text, pattern)
 	return result
 end
 
-
 --- Get the ID of the window from the buffer number
 --- The user need to provide the buffer number. This function will return the ID of the window associated to this buffer. More that one
 --- window can be associated to the same buffer. In this case, this function will select one of them and return. The criteria to select the
@@ -77,7 +72,7 @@ function MYFUNC.get_window_by_buffer(buffer_nr)
 
 	local window_id = vim.api.nvim_get_current_win()
 
-	if vim.fn.winbufnr(window_id) ~= buffer_nr then  -- Overrides if the current window does not have the correct buffer attached to it
+	if vim.fn.winbufnr(window_id) ~= buffer_nr then -- Overrides if the current window does not have the correct buffer attached to it
 		window_id = vim.fn.bufwinid(buffer_nr)
 	end
 
@@ -85,7 +80,6 @@ function MYFUNC.get_window_by_buffer(buffer_nr)
 end
 
 -- #endregion
-
 
 -- #region Decorators to call vim functions
 
@@ -100,7 +94,6 @@ function MYFUNC.decorator_call_vim_function(func, args)
 	end
 end
 
-
 --- Decorator that receives a lua function and returns a Lua function that runs it with the provided arguments.
 --- The returned function will always call the provided function with these arguments. You don't need to pass them.
 --- If you pass more than one argument, the others will be used as the parameters of the provided function.
@@ -114,7 +107,6 @@ function MYFUNC.decorator_call_function(func, args)
 end
 
 -- #endregion
-
 
 -- #region functions to manage colors
 
@@ -142,7 +134,7 @@ end
 ---@return string hexadecimal_color. E.g. '#12d687'.
 function MYFUNC.normalize_rgb(integer_value, sum_each_color)
 	local get_color_from_hex = function(hex_value, color_index)
-		local hex = string.sub(hex_value, 2*color_index-1, 2*color_index)
+		local hex = string.sub(hex_value, 2 * color_index - 1, 2 * color_index)
 		return tonumber(hex, 16)
 	end
 
@@ -164,7 +156,6 @@ end
 
 -- #endregion
 
-
 -- #region Functions to manage Highlight groups
 
 --- Get the definition of a highlight group (pass through the links to the original highlight group)
@@ -181,13 +172,11 @@ function MYFUNC.get_hl_definition(hl_group_name)
 	return hl_group_def
 end
 
-
 --- Variable to store the file type that the user should not apply highlight groups to
 --- Some windows have special use cases and configuration that applies special highlight groups. Example: a dashboard and a 'help'
 --- window (like the ones that ':h' open). The user should not change the highlight groups in these windows. This variable stores the
 --- file type that the user should not apply highlight groups to. It will be used by the 'user_can_change_appearance' function
-MYVAR.ft_to_disable_user_appearance = {'help'}
-
+MYVAR.ft_to_disable_user_appearance = { 'help' }
 
 --- Returns if the user can change the appearance of the window
 --- Some windows have special use cases and configuration that require special appearance. Example: a dashboard and a 'help'
@@ -201,13 +190,13 @@ function MYFUNC.user_can_change_appearance(window_id, buffer_nr)
 	-- Automatically queries the not provided parameters
 	window_id = window_id or MYFUNC.get_window_by_buffer(buffer_nr)
 
-	if window_id < 0 then  -- Invalid window
+	if window_id < 0 then -- Invalid window
 		return false
 	end
 
 	buffer_nr = buffer_nr or vim.api.nvim_win_get_buf(window_id)
 
-	if buffer_nr < 0 then  -- Invalid buffer
+	if buffer_nr < 0 then -- Invalid buffer
 		return false
 	end
 
@@ -237,9 +226,7 @@ end
 
 -- #endregion
 
-
 -- #region Functions related to `nvim_create_user_command`
-
 
 --- Return a list with the possible completions for a command.
 --- You need to provide a table with the arguments configuration. If the item is a string, its content is a possible completion. If it is a
@@ -259,7 +246,7 @@ function MYFUNC.get_complete_suggestions(current_arg_lead, entire_command, curso
 		table.insert(command_args, arg)
 	end
 
-	table.remove(command_args, 1)  -- Removes the function name
+	table.remove(command_args, 1) -- Removes the function name
 
 	-- Removes the current argument being completed if it is the last command because the completions will be
 	-- in the same depth as the current argument
@@ -268,7 +255,7 @@ function MYFUNC.get_complete_suggestions(current_arg_lead, entire_command, curso
 	end
 
 	-- Iterate through the arguments table until the last element (before the current tipping argument)
-	local completions = vim.tbl_get(arguments_table, unpack(command_args))  -- If `command_args` is empty, `completions` will be nil
+	local completions = vim.tbl_get(arguments_table, unpack(command_args)) -- If `command_args` is empty, `completions` will be nil
 
 	-- If `command_args` is empty, use the complete with the arguments in the first depth
 	if command_args[1] == nil then
@@ -277,7 +264,7 @@ function MYFUNC.get_complete_suggestions(current_arg_lead, entire_command, curso
 
 	-- Formats the completions to be returned as a list of strings
 	local index = 1
-	local response = {}  -- Formatted completions
+	local response = {} -- Formatted completions
 	for key, value in pairs(completions or {}) do
 		if type(value) == 'table' then
 			response[index] = key
@@ -313,7 +300,6 @@ end
 
 -- #endregion
 
-
 -- #region Functions related to key maps.
 
 --- Decorator to create a function that returns a options table equal the `default_options` with the `desc` option overridden.
@@ -329,12 +315,10 @@ function MYFUNC.decorator_create_options_table(default_options)
 	end
 end
 
-
 -- #region Functions to set key map names
 
-MYVAR.is_wichkey_loaded = false    -- If the `which-key` plugin is loaded (required to apply the keymap names)
-local which_key_maps_to_load = {}  -- Until the `which-key` plugin is loaded, the keymap names will be stored here
-
+MYVAR.is_wichkey_loaded = false -- If the `which-key` plugin is loaded (required to apply the keymap names)
+local which_key_maps_to_load = {} -- Until the `which-key` plugin is loaded, the keymap names will be stored here
 
 --- Sets the key map name
 --- Does not check if the `which-key` plugin is loaded. This functions is designed to be used by other functions to implement the key map
@@ -345,7 +329,6 @@ local which_key_maps_to_load = {}  -- Until the `which-key` plugin is loaded, th
 local function set_keymap_name(keymap, name, modes)
 	require('which-key').add({ keymap, desc = name, mode = modes })
 end
-
 
 --- Load all pending key maps with `which-key`
 --- All pending key map names (in the `which_key_maps_to_load` variable) will be added. This table will be cleared after the update and will
@@ -359,7 +342,6 @@ function MYPLUGFUNC.load_pending_keymaps()
 	MYVAR.is_wichkey_loaded = true
 	which_key_maps_to_load = nil
 end
-
 
 --- Global function to set key map names (with `which-key`)
 --- Add the key map names with the `which-key` plugin, or stores it to be added after the `which-key` plugin setup
@@ -378,7 +360,6 @@ end
 
 -- #endregion
 
-
 -- #region Debug functions
 
 --- Show the elapsed time of a function.
@@ -392,7 +373,7 @@ function MYFUNC.show_elapsed_time_function(func, times, args)
 	local dbg_time = {}
 
 	for _ = 1, times or 1 do
-		dbg_time[#dbg_time+1] = vim.fn.reltime()
+		dbg_time[#dbg_time + 1] = vim.fn.reltime()
 
 		func(unpack(args or {}))
 

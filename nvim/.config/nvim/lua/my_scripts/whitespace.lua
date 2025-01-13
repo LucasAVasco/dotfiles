@@ -1,8 +1,8 @@
 local whitespace_error_group = vim.api.nvim_create_augroup('WhitespaceErrorGroup', { clear = true })
 
-
-vim.api.nvim_create_autocmd({ 'BufWinEnter', 'BufNewFile'}, {
-	group = whitespace_error_group, callback = function(arguments)
+vim.api.nvim_create_autocmd({ 'BufWinEnter', 'BufNewFile' }, {
+	group = whitespace_error_group,
+	callback = function(arguments)
 		local buffer_nr = arguments.buf
 		local window_id = MYFUNC.get_window_by_buffer(buffer_nr)
 
@@ -29,25 +29,24 @@ vim.api.nvim_create_autocmd({ 'BufWinEnter', 'BufNewFile'}, {
 		local match_config = {
 			window = window_id,
 		}
-		vim.fn.matchadd('WhitespaceError', [[\s\+$]], priority, -1, match_config)   -- Spaces at the end of line
-		vim.fn.matchadd('WhitespaceError', [[\ \+\t]], priority, -1, match_config)  -- Spaces before tabs
-	end
+		vim.fn.matchadd('WhitespaceError', [[\s\+$]], priority, -1, match_config) -- Spaces at the end of line
+		vim.fn.matchadd('WhitespaceError', [[\ \+\t]], priority, -1, match_config) -- Spaces before tabs
+	end,
 })
-
 
 --- Updates the 'WhitespaceError' highlight group over the active color scheme
 local function update_highlight_group()
 	-- Shows whitespace errors in red
 	vim.api.nvim_set_hl(0, 'WhitespaceError', {
-		bg='red',
-		ctermbg='red',
+		bg = 'red',
+		ctermbg = 'red',
 	})
 end
 
 update_highlight_group()
 
-
 -- Creates an auto-command to update the highlight group when the color scheme is changed
-vim.api.nvim_create_autocmd({'ColorScheme'}, {
-	group = whitespace_error_group, callback = update_highlight_group
+vim.api.nvim_create_autocmd({ 'ColorScheme' }, {
+	group = whitespace_error_group,
+	callback = update_highlight_group,
 })

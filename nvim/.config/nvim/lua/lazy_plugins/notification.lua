@@ -12,12 +12,11 @@ vim.notify = function(msg, level, opts)
 	vim.notify(msg, level, opts)
 end
 
-
 return {
 	{
 		'rcarriga/nvim-notify',
 		lazy = true,
-		priority = 9500,  -- Notification system
+		priority = 9500, -- Notification system
 
 		opts = {
 			top_down = false,
@@ -31,6 +30,6 @@ return {
 			-- Override the default function
 			vim.notify = require('notify')
 			vim.notify.setup(opts)
-		end
-	}
+		end,
+	},
 }

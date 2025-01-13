@@ -28,20 +28,20 @@ return {
 			}
 
 			require('neoconf.plugins').register({
-				name='Lsp-select',
+				name = 'Lsp-select',
 				on_schema = function(schema)
 					schema:import('selected-lsp', selected_lsp)
 
 					schema:set('selected-lsp.enable', {
-						description = "LSP servers to enable (disable all others)",
-						anyOf = { {type = 'string'} },
+						description = 'LSP servers to enable (disable all others)',
+						anyOf = { { type = 'string' } },
 					})
 
 					schema:set('selected-lsp.disable', {
-						description = "LSP servers to disable (enable all others)",
-						anyOf = { {type = 'string'} },
+						description = 'LSP servers to disable (enable all others)',
+						anyOf = { { type = 'string' } },
 					})
-				end
+				end,
 			})
 
 			-- Query the selected LSP servers from `neoconf`. The user can not provide the 'enabled' and 'disable' fields at the same time.
@@ -50,16 +50,16 @@ return {
 
 			-- Mason configuration to automatically download LSP servers. The setup order is required: 1. mason, 2. mason-lspconfig,
 			-- 3. nvim-lspconfig
-			require('mason')  -- Configured in another file
+			require('mason') -- Configured in another file
 			local mason_lspconfig = require('mason-lspconfig')
 
 			mason_lspconfig.setup({
 				automatic_installation = true,
 
 				ensure_installed = {
-					'lua_ls',     -- Used to check Neovim configuration
-					'typos_lsp',  -- Spell checker
-					'jsonls',     -- Used by `neoconf.nvim`
+					'lua_ls', -- Used to check Neovim configuration
+					'typos_lsp', -- Spell checker
+					'jsonls', -- Used by `neoconf.nvim`
 					'yamlls',
 				},
 			})
@@ -70,8 +70,10 @@ return {
 			---@nodiscard
 			local function should_abort_lsp_config(server_name)
 				-- Lists of LSP servers to disable
-				if vim.tbl_contains(selected_lsp.disable, server_name) or
-					vim.tbl_contains(MYVAR.lsp_servers_to_disable, server_name) then
+				if
+					vim.tbl_contains(selected_lsp.disable, server_name)
+					or vim.tbl_contains(MYVAR.lsp_servers_to_disable, server_name)
+				then
 					return true
 				end
 
@@ -90,13 +92,13 @@ return {
 			---Default settings applied to all LSP servers
 			---@type MyLspServerConfig
 			local default_lspconfiguration = {
-				capabilities = client_capabilities
+				capabilities = client_capabilities,
 			}
 
 			mason_lspconfig.setup_handlers({
 				---Fallback handler used when not provided a specific server configuration. Need to be the first element in this table
 				---@param lsp_server_name string
-				function (lsp_server_name)
+				function(lsp_server_name)
 					if should_abort_lsp_config(lsp_server_name) then
 						return
 					end
@@ -104,12 +106,12 @@ return {
 					-- Gets the LSP server options from my configuration directory
 
 					---@type boolean, any
-					local ok, server_opts = pcall(require, "my_configs.LSP.configs." .. lsp_server_name)
+					local ok, server_opts = pcall(require, 'my_configs.LSP.configs.' .. lsp_server_name)
 
 					if ok then
 						server_opts.capabilities = client_capabilities
 					else
-						server_opts=default_lspconfiguration
+						server_opts = default_lspconfiguration
 					end
 
 					lspconfig[lsp_server_name].setup(server_opts)
@@ -119,21 +121,18 @@ return {
 			-- TODO(LucasAVasco): Find a decent way to run 'yarn dlx @yarnpkg/sdks base' in a Yarn repository to configure `tsserver`
 
 			-- Overrides the default configuration
-			lspconfig.util.default_config = vim.tbl_deep_extend(
-				'force', lspconfig.util.default_config,
-				{
-					handlers = {
-						-- Adds rounded borders to hover pop up
-						['textDocument/hover'] =  vim.lsp.with(vim.lsp.handlers.hover, {border = 'rounded'}),
-					}
-				}
-			)
+			lspconfig.util.default_config = vim.tbl_deep_extend('force', lspconfig.util.default_config, {
+				handlers = {
+					-- Adds rounded borders to hover pop up
+					['textDocument/hover'] = vim.lsp.with(vim.lsp.handlers.hover, { border = 'rounded' }),
+				},
+			})
 
 			-- Manually starts the LSP servers. `nvim-lspconfig` needs to be configured before Neovim attempts to start an LSP server in a
 			-- buffer. Otherwise, `nvim-lspconfig` may not configure it. The following line ensures that the LSP servers will be started
 			-- even if `nvim-lspconfig` is configured after Neovim's attempt
 			vim.cmd('LspStart')
-		end
+		end,
 	},
 	{
 		'nvimdev/lspsaga.nvim',
@@ -149,13 +148,13 @@ return {
 
 		opts = {
 			lightbulb = {
-				virtual_text = false,  -- Only shows the light bulb in the sign column
+				virtual_text = false, -- Only shows the light bulb in the sign column
 			},
 
 			ui = {
 				border = 'rounded',
-				code_action = '󰌵',  -- The default light bulb icon did not work with my font
+				code_action = '󰌵', -- The default light bulb icon did not work with my font
 			},
-		}
-	}
+		},
+	},
 }

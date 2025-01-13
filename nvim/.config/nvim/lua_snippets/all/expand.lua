@@ -5,7 +5,6 @@ local i = ls.insert_node
 local d = ls.dynamic_node
 local extras = require('luasnip.extras')
 
-
 --- Return the snippet structure of the 'expand(%d+)' pattern
 ---@param args_text table<string> COntent of the nodes that the dynamic node depends on
 ---@param parent any Parent snippet of the node
@@ -13,7 +12,7 @@ local extras = require('luasnip.extras')
 ---@param user_args any User provided arguments
 ---@diagnostic disable-next-line: unused-local
 local function d_expand(args_text, parent, old_state, user_args)
-	local num_expands=tonumber(parent.captures[1]) or 1
+	local num_expands = tonumber(parent.captures[1]) or 1
 
 	local nodes = {
 		i(1, 'prefix.'),
@@ -24,9 +23,9 @@ local function d_expand(args_text, parent, old_state, user_args)
 
 	if num_expands > 1 then
 		for index = 2, num_expands do
-			table.insert(nodes, extras.rep(1))                                     -- Prefix
-			table.insert(nodes, i(index+3, '( index' .. tostring(index) .. ' )'))  -- Entry
-			table.insert(nodes, extras.rep(2))                                     -- Suffix
+			table.insert(nodes, extras.rep(1)) -- Prefix
+			table.insert(nodes, i(index + 3, '( index' .. tostring(index) .. ' )')) -- Entry
+			table.insert(nodes, extras.rep(2)) -- Suffix
 
 			-- The separator will not be added to the last entry
 			if index < num_expands then
@@ -38,7 +37,6 @@ local function d_expand(args_text, parent, old_state, user_args)
 	return sn(nil, nodes)
 end
 
-
 return {
 	s({
 		trigEngine = 'pattern',
@@ -47,5 +45,5 @@ return {
 		desc = 'Expand text entries and repeat the same prefix and suffix. Each entry will be separated by a provided separator',
 	}, {
 		d(1, d_expand),
-	})
+	}),
 }

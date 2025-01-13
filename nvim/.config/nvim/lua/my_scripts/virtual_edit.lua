@@ -8,6 +8,6 @@ end, {
 		'block',
 		'insert',
 		'none',
-		'onemore'
-	})
+		'onemore',
+	}),
 })

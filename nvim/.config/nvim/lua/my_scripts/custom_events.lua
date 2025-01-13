@@ -3,7 +3,7 @@
 vim.api.nvim_create_autocmd({ 'BufReadPre', 'BufNewFile' }, {
 	callback = function()
 		vim.api.nvim_exec_autocmds('User', {
-			pattern='MyEventOpenEditableFile'
+			pattern = 'MyEventOpenEditableFile',
 		})
-	end
+	end,
 })

@@ -8,25 +8,31 @@
 	languages other than Python.
 ]]
 
-
 local ls = require('luasnip')
 local s = ls.snippet
 local f = ls.function_node
-
 
 local todo_comments_list = {
 	-- From `todo-comments.nvim`
 	'TODO',
 	'HACK',
-	'WARN', 'WARNING', 'XXX',
-	'PERF', 'OPTIM', 'PERFORMANCE', 'OPTIMIZE',
-	'NOTE', 'INFO',
-	'TEST', 'TESTING', 'PASSED', 'FAILED',
+	'WARN',
+	'WARNING',
+	'XXX',
+	'PERF',
+	'OPTIM',
+	'PERFORMANCE',
+	'OPTIMIZE',
+	'NOTE',
+	'INFO',
+	'TEST',
+	'TESTING',
+	'PASSED',
+	'FAILED',
 
 	-- My TODO comments
 	'NOPUSH',
 }
-
 
 --- Generate the text of the TODO comment to a LuaSnip function node
 --- Add the git user name as the author of the TODO comment if it is configured (the 'user.name' option). The author is
@@ -36,7 +42,7 @@ local todo_comments_list = {
 local function get_todo_comment_text(_, _, todo_text)
 	-- Append the git user name between parenthesis to the TODO comment (before the colon).
 	-- Example: # TODOCOMMENT(LucasAVasco): example of the result
-	local git_user_name = vim.system({ 'git', 'config', 'user.name' }, {text=true}):wait().stdout
+	local git_user_name = vim.system({ 'git', 'config', 'user.name' }, { text = true }):wait().stdout
 	if git_user_name then
 		git_user_name = string.gsub(git_user_name, '\n', '')
 
@@ -46,17 +52,19 @@ local function get_todo_comment_text(_, _, todo_text)
 	return todo_text .. ': '
 end
 
-
 -- Snippets creation
 local snippets = {}
 for _, todo_text in pairs(todo_comments_list) do
-	table.insert(snippets, s({
-		trig = todo_text,
-		name = todo_text .. ' comment',
-		desc = 'Create a "' .. todo_text ..'" comment with the current git user name as the author',
-	}, {
-		f(get_todo_comment_text, {}, {user_args = { todo_text }})
-	}))
+	table.insert(
+		snippets,
+		s({
+			trig = todo_text,
+			name = todo_text .. ' comment',
+			desc = 'Create a "' .. todo_text .. '" comment with the current git user name as the author',
+		}, {
+			f(get_todo_comment_text, {}, { user_args = { todo_text } }),
+		})
+	)
 end
 
 return snippets

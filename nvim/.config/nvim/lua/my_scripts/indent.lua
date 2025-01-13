@@ -6,7 +6,7 @@ local indent_colors = {
 	'#999900',
 	'#119999',
 	'#990099',
-	'#555aaa'
+	'#555aaa',
 }
 
 -- Number of times to repeat the colors in the next indentation level. This script will apply all the colors of *indent_colors*'. The
@@ -14,7 +14,6 @@ local indent_colors = {
 -- { '#118110', '#004488' } and *repeats* is 2, the indentation levels will have colors: '#118110', '#004488', '#118110', '#004488',
 -- '#118110', '#004488', in this order (left to right)
 local repeat_times = 10
-
 
 -- #region Functions
 
@@ -37,13 +36,12 @@ local function create_highlight_groups(indent_fg_colors, namespace_id)
 	-- Creates the highlight groups
 	for index, color in ipairs(indent_fg_colors) do
 		vim.api.nvim_set_hl(namespace_id, indent_groups[index], {
-			fg=color,
+			fg = color,
 		})
 	end
 
 	return indent_groups
 end
-
 
 --- Apply the matches to the indentation syntax groups
 --- Apply the indentation highlight groups to the current window. Repeat the highlight groups *repeats* times. Example: If the
@@ -57,10 +55,10 @@ end
 ---@return table matches_list List of the created matches
 local function apply_matches(indent_groups, repeats, window_id)
 	-- Applies the matches to the indentation syntax groups
-	local indent_size = vim.bo.tabstop  -- Number of spaces of a indentation level
+	local indent_size = vim.bo.tabstop -- Number of spaces of a indentation level
 
 	local indent_index = 1
-	local priority = 15  -- Matches priority (default value is 10)
+	local priority = 15 -- Matches priority (default value is 10)
 	local match_config = {
 		window = window_id,
 	}
@@ -69,15 +67,24 @@ local function apply_matches(indent_groups, repeats, window_id)
 	for _ = 1, repeats do
 		for _, group_name in ipairs(indent_groups) do
 			-- Applies the match to space indentation (soft tabs)
-			local start_column = (indent_index-1) * indent_size + 1  -- Start column of the current indentation (not used by hard tabs)
-			local match = vim.fn.matchadd(group_name,
+			local start_column = (indent_index - 1) * indent_size + 1 -- Start column of the current indentation (not used by hard tabs)
+			local match = vim.fn.matchadd(
+				group_name,
 				string.format([[^\s*\zs\%%%sc%s]], start_column, string.rep(' ', indent_size)),
-				priority, -1, match_config
+				priority,
+				-1,
+				match_config
 			)
 			table.insert(matches, match)
 
 			-- Applies the match to tab indentation (hard tabs)
-			match = vim.fn.matchadd(group_name, string.format([[^\s*\zs\%%%sc\t]], indent_index), priority, -1, match_config)
+			match = vim.fn.matchadd(
+				group_name,
+				string.format([[^\s*\zs\%%%sc\t]], indent_index),
+				priority,
+				-1,
+				match_config
+			)
 			table.insert(matches, match)
 
 			-- Next indentation level
@@ -87,7 +94,6 @@ local function apply_matches(indent_groups, repeats, window_id)
 
 	return matches
 end
-
 
 --- Like apply_matches, but checks if the user can apply the matches to the current window.
 --- Only apply the matches if the user can apply the highlight groups to the current window.
@@ -114,7 +120,6 @@ end
 
 -- #endregion
 
-
 -- #region Setup
 
 local indent_groups = create_highlight_groups(indent_colors)
@@ -122,18 +127,19 @@ local indent_groups = create_highlight_groups(indent_colors)
 local indent_hl_augroup = vim.api.nvim_create_augroup('IndentHlAugroup', { clear = true })
 
 -- Automatically updates the matches when the buffer is loaded in the window
-vim.api.nvim_create_autocmd({ 'BufWinEnter', 'BufNewFile'}, {
-	group = indent_hl_augroup, callback = function(arguments)
+vim.api.nvim_create_autocmd({ 'BufWinEnter', 'BufNewFile' }, {
+	group = indent_hl_augroup,
+	callback = function(arguments)
 		local window_id = MYFUNC.get_window_by_buffer(arguments.buf)
 
 		update_window_matches(indent_groups, repeat_times, window_id)
-	end
+	end,
 })
 
-
 -- Updates the matches when the 'tabstop' option or the color scheme is change
-vim.api.nvim_create_autocmd({'ColorScheme', 'OptionSet'}, {
-	group = indent_hl_augroup, callback = function(arguments)
+vim.api.nvim_create_autocmd({ 'ColorScheme', 'OptionSet' }, {
+	group = indent_hl_augroup,
+	callback = function(arguments)
 		-- Need to recreate the matches related to white spaces if the `tabstop` option is changed because this option changes the number of
 		-- spaces in an indentation level, so the matches need to be updated to correspond to the new number of spaces
 		if arguments.event == 'OptionSet' and arguments.match == 'tabstop' then
@@ -146,7 +152,7 @@ vim.api.nvim_create_autocmd({'ColorScheme', 'OptionSet'}, {
 			-- change the color scheme. No need to recreate it
 			indent_groups = create_highlight_groups(indent_colors)
 		end
-	end
+	end,
 })
 
 -- #endregion

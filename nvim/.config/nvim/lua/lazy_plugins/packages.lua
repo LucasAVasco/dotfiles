@@ -6,7 +6,6 @@
 	after `mason.nvim` setup (call to `require('mason')`)
 ]]
 
-
 -- #region API to ensure that a `mason.nvim` package is installed
 
 ---@type string[]
@@ -36,7 +35,6 @@ end
 
 -- #endregion
 
-
 return {
 	{
 		'williamboman/mason.nvim',
@@ -50,7 +48,7 @@ return {
 				MYPLUGFUNC.ensure_mason_package_installed(package)
 			end
 			mason_packages_to_install = {}
-		end
+		end,
 	},
 	{
 		'williamboman/mason-lspconfig.nvim',
@@ -59,5 +57,5 @@ return {
 			'LspInstall',
 			'LspUninstall',
 		},
-	}
+	},
 }

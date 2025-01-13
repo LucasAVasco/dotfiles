@@ -42,23 +42,38 @@
 	`<Leader>hp`   Preview current hunk
 ]]
 
-
 return {
 	{
 		'tpope/vim-fugitive',
 
 		cmd = {
-			'G', 'Git',
-			'Ggrep', 'Glgrep',
-			'Gclog', 'Gllog',
-			'Gcd', 'Glcd',
-			'Gedit', 'Gtabedit', 'Gpedit',
-			'Gsplit', 'Gvsplit',
-			'Gdrop', 'Gread', 'Gwrite', 'Gwq',
-			'Gdiffsplit', 'Gvdiffsplit', 'Ghdiffsplit',
-			'GMove', 'GRename', 'GDelete', 'GRemove', 'GUnlink',
-			'GBrowse'
-		}
+			'G',
+			'Git',
+			'Ggrep',
+			'Glgrep',
+			'Gclog',
+			'Gllog',
+			'Gcd',
+			'Glcd',
+			'Gedit',
+			'Gtabedit',
+			'Gpedit',
+			'Gsplit',
+			'Gvsplit',
+			'Gdrop',
+			'Gread',
+			'Gwrite',
+			'Gwq',
+			'Gdiffsplit',
+			'Gvdiffsplit',
+			'Ghdiffsplit',
+			'GMove',
+			'GRename',
+			'GDelete',
+			'GRemove',
+			'GUnlink',
+			'GBrowse',
+		},
 	},
 	{
 		'sindrets/diffview.nvim',
@@ -71,7 +86,7 @@ return {
 			'DiffviewOpen',
 			'DiffviewRefresh',
 			'DiffviewToggleFiles',
-		}
+		},
 	},
 	{
 		'lewis6991/gitsigns.nvim',
@@ -87,20 +102,28 @@ return {
 			-- #region Style options
 
 			signs = {
-				untracked    = { text = '¦' , show_count = true },
-				add          = { text = '┃' , show_count = true },
-				change       = { text = '󰇙' , show_count = true },
-				topdelete    = { text = '󰘣' , show_count = true },
-				delete       = { text = '󰘡' , show_count = true },
-				changedelete = { text = '' , show_count = true },
+				untracked = { text = '¦', show_count = true },
+				add = { text = '┃', show_count = true },
+				change = { text = '󰇙', show_count = true },
+				topdelete = { text = '󰘣', show_count = true },
+				delete = { text = '󰘡', show_count = true },
+				changedelete = { text = '', show_count = true },
 			},
 
 			count_chars = {
-				'₁', '₂', '₃', '₄', '₅', '₆', '₇', '₈', '₉',
-				['+'] = '₊'
+				'₁',
+				'₂',
+				'₃',
+				'₄',
+				'₅',
+				'₆',
+				'₇',
+				'₈',
+				'₉',
+				['+'] = '₊',
 			},
 
-			preview_config = {  -- Same values passed to `nvim_open_win`
+			preview_config = { -- Same values passed to `nvim_open_win`
 				style = 'minimal',
 				border = 'rounded',
 				row = 1,
@@ -127,14 +150,14 @@ return {
 			-- Keymaps
 			local options = MYFUNC.decorator_create_options_table({
 				noremap = true,
-				silent = true
+				silent = true,
 			})
 
-			MYPLUGFUNC.set_keymap_name('<leader>h', 'Gitsigns hunk mappings', {'n'})
+			MYPLUGFUNC.set_keymap_name('<leader>h', 'Gitsigns hunk mappings', { 'n' })
 			vim.keymap.set('n', '<leader>hp', gitsigns.preview_hunk, options('Preview current hunk'))
 
-			MYPLUGFUNC.set_keymap_name('<leader>G', 'Git mappings', {'n'})
-			MYPLUGFUNC.set_keymap_name('<leader>Gb', 'Git line blame mappings', {'n'})
+			MYPLUGFUNC.set_keymap_name('<leader>G', 'Git mappings', { 'n' })
+			MYPLUGFUNC.set_keymap_name('<leader>Gb', 'Git line blame mappings', { 'n' })
 			vim.keymap.set('n', '<leader>Gbt', gitsigns.toggle_current_line_blame, options('Toggle current line blame'))
 
 			-- Override default ]c and [c mappings
@@ -150,13 +173,13 @@ return {
 
 					-- Fallback to normal commands without overriding the default mapping
 					else
-						vim.cmd.normal({ fallback_command, bang = true })  -- Need the bang option to not override the default mapping
+						vim.cmd.normal({ fallback_command, bang = true }) -- Need the bang option to not override the default mapping
 					end
 				end
 			end
 
 			vim.keymap.set('n', ']c', decorator_fallback_diff_mode(gitsigns.next_hunk, ']c'), options('Next hunk'))
 			vim.keymap.set('n', '[c', decorator_fallback_diff_mode(gitsigns.prev_hunk, '[c'), options('Previous hunk'))
-		end
-	}
+		end,
+	},
 }

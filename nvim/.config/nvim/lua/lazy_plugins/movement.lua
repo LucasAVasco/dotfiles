@@ -6,7 +6,7 @@ return {
 
 		config = function()
 			require('mini.ai').setup()
-		end
+		end,
 	},
 	{
 		'folke/flash.nvim',
@@ -14,42 +14,51 @@ return {
 		keys = {
 			{
 				'<leader>Ft',
-				function ()
+				function()
 					require('flash').toggle()
-				end, desc = 'Toggle Flash in search mode'
+				end,
+				desc = 'Toggle Flash in search mode',
 			},
 			{
-				'r', mode = { 'o' },  -- Flash remote motion
-				function ()
+				'r',
+				mode = { 'o' }, -- Flash remote motion
+				function()
 					require('flash').remote()
-				end, desc = 'At another position given by Flash'
+				end,
+				desc = 'At another position given by Flash',
 			},
 			{
-				'<A-f>', mode = { 'n', 'v', 'o' },  -- Jump in normal and visual mode
-				function ()
+				'<A-f>',
+				mode = { 'n', 'v', 'o' }, -- Jump in normal and visual mode
+				function()
 					require('flash').jump()
-				end, desc = 'To a position given by Flash'
+				end,
+				desc = 'To a position given by Flash',
 			},
 			{
-				'<A-t>', mode = { 'n', 'v', 'o' },  -- Select in normal and visual mode
-				function ()
+				'<A-t>',
+				mode = { 'n', 'v', 'o' }, -- Select in normal and visual mode
+				function()
 					require('flash').treesitter()
-				end, desc = 'A treesitter area with Flash'
+				end,
+				desc = 'A treesitter area with Flash',
 			},
 			{
-				'<A-s>', mode = {'n', 'v', 'o' },  -- Select in normal mode, jump in visual mode
-				function ()
+				'<A-s>',
+				mode = { 'n', 'v', 'o' }, -- Select in normal mode, jump in visual mode
+				function()
 					require('flash').treesitter_search()
-				end, desc = 'A search and treesitter area given by Flash'
+				end,
+				desc = 'A search and treesitter area given by Flash',
 			},
 		},
 
 		opts = {
 			modes = {
 				char = {
-					jump_labels = true
-				}
-			}
-		}
-	}
+					jump_labels = true,
+				},
+			},
+		},
+	},
 }

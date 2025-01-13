@@ -8,19 +8,17 @@
 	`gd{a,c,f,t}` Generate documentation for the current archive, class, function or type
 ]]
 
-
 -- `ts_context_commentstring` integration with `comment.nvim`. This function will be queried and called in `Comment.nvim` pre_hook function
 local ts_context_commentstring_pre_hook = nil
-
 
 return {
 	{
 		'JoosepAlviste/nvim-ts-context-commentstring',
-		lazy = true,  -- Loaded in `Comment.nvim`
+		lazy = true, -- Loaded in `Comment.nvim`
 
 		opts = {
 			enable_autocmd = false,
-		}
+		},
 	},
 	{
 		'numToStr/Comment.nvim',
@@ -30,20 +28,25 @@ return {
 		},
 
 		keys = {
-			'gcc', 'gbb', 'gcO', 'gco', 'gcA',
-			{ 'gc', mode = {'n', 'x'}},
-			{ 'gb', mode = {'n', 'x'}},
+			'gcc',
+			'gbb',
+			'gcO',
+			'gco',
+			'gcA',
+			{ 'gc', mode = { 'n', 'x' } },
+			{ 'gb', mode = { 'n', 'x' } },
 		},
 
 		opts = {
-			ignore = '^$',  -- Ignores empty lines, so the user can move between the commented lines with '{' and '}'
+			ignore = '^$', -- Ignores empty lines, so the user can move between the commented lines with '{' and '}'
 
 			---Function called before any comment operation
 			---@module 'Comment.utils'
 			---@param context CommentCtx Context of the comment operation. See the 'Comment.utils' module for further information
 			pre_hook = function(context)
 				if ts_context_commentstring_pre_hook == nil then
-					ts_context_commentstring_pre_hook = require('ts_context_commentstring.integrations.comment_nvim').create_pre_hook()
+					ts_context_commentstring_pre_hook =
+						require('ts_context_commentstring.integrations.comment_nvim').create_pre_hook()
 				end
 
 				ts_context_commentstring_pre_hook(context)
@@ -59,7 +62,7 @@ return {
 				-- Removes white spaces errors. The `padding` option of `Comment.nvim` adds a space between the comment string and the
 				-- commented text. I like this feature, but it result in white space errors if the commented text has tabs. To avoid white
 				-- space errors, this hook replaces the generated spaces by tabs if they are applied before a tab character
-				if context.cmode == 1 then  -- When commenting a text
+				if context.cmode == 1 then -- When commenting a text
 					local lines = vim.api.nvim_buf_get_lines(0, start_line, end_line, true)
 
 					---@type string[]
@@ -72,32 +75,52 @@ return {
 
 					vim.api.nvim_buf_set_lines(0, start_line, end_line, true, response)
 				end
-			end
+			end,
 		},
 	},
 	{
 		'danymat/neogen',
 
 		dependencies = {
-			'L3MON4D3/LuaSnip'
+			'L3MON4D3/LuaSnip',
 		},
 
 		cmd = 'Neogen',
 
 		keys = {
-			{'<leader>da', '<CMD>Neogen file<CR>', desc = 'Generate archive documentation', {silent = true, remap = false}},
-			{'<leader>dc', '<CMD>Neogen class<CR>', desc = 'Generate class documentation', {silent = true, remap = false}},
-			{'<leader>df', '<CMD>Neogen func<CR>', desc = 'Generate function documentation', {silent = true, remap = false}},
-			{'<leader>dt', '<CMD>Neogen type<CR>', desc = 'Generate type documentation', {silent = true, remap = false}},
+			{
+				'<leader>da',
+				'<CMD>Neogen file<CR>',
+				desc = 'Generate archive documentation',
+				{ silent = true, remap = false },
+			},
+			{
+				'<leader>dc',
+				'<CMD>Neogen class<CR>',
+				desc = 'Generate class documentation',
+				{ silent = true, remap = false },
+			},
+			{
+				'<leader>df',
+				'<CMD>Neogen func<CR>',
+				desc = 'Generate function documentation',
+				{ silent = true, remap = false },
+			},
+			{
+				'<leader>dt',
+				'<CMD>Neogen type<CR>',
+				desc = 'Generate type documentation',
+				{ silent = true, remap = false },
+			},
 		},
 
 		opts = {
-			snippet_engine = 'luasnip'
+			snippet_engine = 'luasnip',
 		},
 
 		init = function()
 			MYPLUGFUNC.set_keymap_name('gd', 'Generate documentation')
-		end
+		end,
 	},
 	{
 		'folke/todo-comments.nvim',
@@ -111,7 +134,7 @@ return {
 				NOPUSH = {
 					icon = '󱃆',
 					color = 'error',
-				}
+				},
 			},
 
 			highlight = {
@@ -144,9 +167,9 @@ return {
 
 			search = {
 				args = {
-					'--no-config',    -- Does not applies the user configurations to the `rg` command. Avoids breaking search behavior
-					'--hidden',       -- Search within hidden files and folders. Does not apply to ignored files (E.g. Ignored by Git)
-					'--iglob=!.git',  -- Ignore '.git' folders. Otherwise, the '--hidden' argument allows to search within it
+					'--no-config', -- Does not applies the user configurations to the `rg` command. Avoids breaking search behavior
+					'--hidden', -- Search within hidden files and folders. Does not apply to ignored files (E.g. Ignored by Git)
+					'--iglob=!.git', -- Ignore '.git' folders. Otherwise, the '--hidden' argument allows to search within it
 
 					-- `todo-comments.nvim` requires these arguments to work properly
 					'--no-heading',
@@ -168,11 +191,11 @@ return {
 				-- `(\(.*\))?` matches, optionally, everything between parenthesis and the parenthesis itself. `\b` matches a word boundary
 				-- (position between a word and a non-word match)
 				pattern = [[\b(KEYWORDS)(\(.*\))?\s*:]],
-			}
+			},
 		},
 
 		init = function()
 			MYPLUGFUNC.load_telescope_extension('todo-comments', { 'todo-comments', 'todo' })
-		end
-	}
+		end,
+	},
 }

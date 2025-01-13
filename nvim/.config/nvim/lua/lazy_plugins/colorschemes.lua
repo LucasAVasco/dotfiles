@@ -18,7 +18,7 @@ return {
 		opts = {
 			options = {
 				transparent = false,
-			}
+			},
 		},
 		lazy = true,
 	},
@@ -36,7 +36,7 @@ return {
 		lazy = true,
 		opts = {
 			transparent = false,
-		}
+		},
 	},
 	{
 		'rose-pine/neovim',

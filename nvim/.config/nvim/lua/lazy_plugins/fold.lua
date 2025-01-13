@@ -9,7 +9,6 @@ local function set_fold_level(new_level)
 	-- Plus and Minus operations
 	if first_char == '+' then
 		level = level + tonumber(new_level:sub(2))
-
 	elseif first_char == '-' then
 		level = level - tonumber(new_level:sub(2))
 
@@ -26,7 +25,6 @@ local function set_fold_level(new_level)
 	vim.w.ufo_fold_level = level
 end
 
-
 --- Custom virtual text in the fold
 --- Returns the list of elements of the custom text to be shown in the closed fold
 ---@param virtual_text UfoExtmarkVirtTextChunk[] List of elements of the first line of the fold
@@ -41,7 +39,7 @@ local function fold_text_handler(virtual_text, start_line, end_line, width, trun
 	local suffix = ('   󰦸 %d '):format(end_line - start_line)
 	local suffix_width = vim.fn.strdisplaywidth(suffix)
 	local new_virt_text = virtual_text
-	local available_width = width - suffix_width  -- width of the text to be added to the new virtual text
+	local available_width = width - suffix_width -- width of the text to be added to the new virtual text
 
 	for index, chunk in ipairs(virtual_text) do
 		-- chunk[1] is the text
@@ -53,23 +51,22 @@ local function fold_text_handler(virtual_text, start_line, end_line, width, trun
 
 		-- Available width is not enough to add the next chunk
 		if available_width <= 0 then
-			new_virt_text = {unpack(virtual_text, 1, index)}  -- Copies the virtual text up to the current index (last)
-			new_virt_text[#new_virt_text][1] = truncate_fun(chunk[1], chunk_width + available_width)  -- Crops the last item to fit the width
+			new_virt_text = { unpack(virtual_text, 1, index) } -- Copies the virtual text up to the current index (last)
+			new_virt_text[#new_virt_text][1] = truncate_fun(chunk[1], chunk_width + available_width) -- Crops the last item to fit the width
 			break
 		end
 	end
 
 	-- Adds the remaining elements to the new virtual text and returns
-	table.insert(new_virt_text, {suffix, 'MoreMsg'})
+	table.insert(new_virt_text, { suffix, 'MoreMsg' })
 	return new_virt_text
 end
-
 
 return {
 	{
 		'kevinhwang91/nvim-ufo',
 		dependencies = {
-			'kevinhwang91/promise-async'
+			'kevinhwang91/promise-async',
 		},
 
 		config = function()
@@ -100,9 +97,14 @@ return {
 							local buf_nr = vim.api.nvim_win_get_buf(win_id)
 
 							-- Remaps key that go to insert mode to trace to the previewed code (<CR>) before it
-							local insert_maps = {'i', 'I', 'a', 'A', 'o', 'O', 'gI', 'gi', 'c', 'cc', 'C', 's', 'S'}
+							local insert_maps = { 'i', 'I', 'a', 'A', 'o', 'O', 'gI', 'gi', 'c', 'cc', 'C', 's', 'S' }
 							for _, key in ipairs(insert_maps) do
-								vim.keymap.set('n', key, '<CR>' .. key, {buffer = buf_nr, remap = true, silent = true})
+								vim.keymap.set(
+									'n',
+									key,
+									'<CR>' .. key,
+									{ buffer = buf_nr, remap = true, silent = true }
+								)
 							end
 						end
 					end
@@ -111,41 +113,69 @@ return {
 
 			--- Function that only closes the markers, but opens the rest
 			local function close_only_markers_and_regions()
-				ufo.openFoldsExceptKinds({'marker', 'region'})
+				ufo.openFoldsExceptKinds({ 'marker', 'region' })
 			end
 
 			-- #endregion
-
 
 			-- #region Mappings
 
 			local default_options = MYFUNC.decorator_create_options_table({ noremap = true, silent = true })
 
-			MYPLUGFUNC.set_keymap_name('<leader>z', 'Folding mappings', {'n'})
-			vim.keymap.set('n', 'zR', ufo.openAllFolds, default_options('Open all folds'))  -- UFO requires to remap the `zR` and `zM` keys
+			MYPLUGFUNC.set_keymap_name('<leader>z', 'Folding mappings', { 'n' })
+			vim.keymap.set('n', 'zR', ufo.openAllFolds, default_options('Open all folds')) -- UFO requires to remap the `zR` and `zM` keys
 			vim.keymap.set('n', 'zM', ufo.closeAllFolds, default_options('Close all folds'))
-			vim.keymap.set('n', '<leader>zm', close_only_markers_and_regions, default_options('Close only markers folds'))
+			vim.keymap.set(
+				'n',
+				'<leader>zm',
+				close_only_markers_and_regions,
+				default_options('Close only markers folds')
+			)
 			vim.keymap.set('n', '<leader>zp', ufo.peekFoldedLinesUnderCursor, default_options('Peek current fold'))
 
-			vim.keymap.set('n', '<leader>ztp', function()  -- Toggle auto preview
+			vim.keymap.set('n', '<leader>ztp', function() -- Toggle auto preview
 				vim.g.ufo_auto_preview = not vim.g.ufo_auto_preview
 			end, default_options('Toggle auto preview'))
 
 			-- Movement mappings
 			local default_modes = { 'n', 'v' }
 
-			vim.keymap.set(default_modes, '<A-m>', close_only_markers_and_regions, default_options('Close only markers folds'))
+			vim.keymap.set(
+				default_modes,
+				'<A-m>',
+				close_only_markers_and_regions,
+				default_options('Close only markers folds')
+			)
 
-			vim.keymap.set(default_modes, 'zh', MYFUNC.decorator_call_function(set_fold_level, { '-1' }), default_options('Fold level -1'))
-			vim.keymap.set(default_modes, 'zl', MYFUNC.decorator_call_function(set_fold_level, { '+1' }), default_options('Fold level +1'))
+			vim.keymap.set(
+				default_modes,
+				'zh',
+				MYFUNC.decorator_call_function(set_fold_level, { '-1' }),
+				default_options('Fold level -1')
+			)
+			vim.keymap.set(
+				default_modes,
+				'zl',
+				MYFUNC.decorator_call_function(set_fold_level, { '+1' }),
+				default_options('Fold level +1')
+			)
 			vim.keymap.set(default_modes, '<A-H>', 'zc', default_options('Close previous fold'))
 			vim.keymap.set(default_modes, '<A-L>', 'zo', default_options('Open current fold'))
 
-			vim.keymap.set(default_modes, '<A-K>', decorator_apply_peek(ufo.goPreviousClosedFold), default_options('Previous fold'))
-			vim.keymap.set(default_modes, '<A-J>', decorator_apply_peek(ufo.goNextClosedFold), default_options('Next fold'))
+			vim.keymap.set(
+				default_modes,
+				'<A-K>',
+				decorator_apply_peek(ufo.goPreviousClosedFold),
+				default_options('Previous fold')
+			)
+			vim.keymap.set(
+				default_modes,
+				'<A-J>',
+				decorator_apply_peek(ufo.goNextClosedFold),
+				default_options('Next fold')
+			)
 
 			-- #endregion
-
 
 			-- #region User commands
 
@@ -155,32 +185,56 @@ return {
 			end, {
 				nargs = 1,
 				complete = MYFUNC.create_complete_function({
-					'+0', '+1', '+2', '+3', '+4', '+5', '+6', '+7', '+8', '+9', '-0', '-1', '-2', '-3', '-4', '-5', '-6', '-7', '-8', '-9',
-					'0', '1', '2', '3', '4', '5', '6', '7', '8', '9'
-				})
+					'+0',
+					'+1',
+					'+2',
+					'+3',
+					'+4',
+					'+5',
+					'+6',
+					'+7',
+					'+8',
+					'+9',
+					'-0',
+					'-1',
+					'-2',
+					'-3',
+					'-4',
+					'-5',
+					'-6',
+					'-7',
+					'-8',
+					'-9',
+					'0',
+					'1',
+					'2',
+					'3',
+					'4',
+					'5',
+					'6',
+					'7',
+					'8',
+					'9',
+				}),
 			})
 
 			-- User command to configure the auto preview
 			vim.api.nvim_create_user_command('SetFoldAutoPreview', function(arguments)
 				if arguments.fargs[1] == 'y' then
 					vim.g.ufo_auto_preview = true
-
 				elseif arguments.fargs[1] == 'n' then
 					vim.g.ufo_auto_preview = false
-
 				elseif arguments.fargs[1] == 'toggle' then
 					vim.g.ufo_auto_preview = not vim.g.ufo_auto_preview
-
 				else
 					print('Argument 1 must be either "y", "n" or "toggle"')
 				end
 			end, {
 				nargs = 1,
-				complete = MYFUNC.create_complete_function({ 'y', 'n', 'toggle' })
+				complete = MYFUNC.create_complete_function({ 'y', 'n', 'toggle' }),
 			})
 
 			-- #endregion
-
 
 			-- UFO setup
 			ufo.setup({
@@ -190,12 +244,12 @@ return {
 				end,
 
 				close_fold_kinds_for_ft = {
-					default = { 'marker', 'region' }  -- Closes the markers and regions after open a buffer
+					default = { 'marker', 'region' }, -- Closes the markers and regions after open a buffer
 				},
 
-				fold_virt_text_handler = fold_text_handler,  -- Custom virtual text in the fold
+				fold_virt_text_handler = fold_text_handler, -- Custom virtual text in the fold
 
-				open_fold_hl_timeout = 300,  -- milliseconds
+				open_fold_hl_timeout = 300, -- milliseconds
 
 				-- If you need the `get_fold_virt_text` function in `fold_context` of the 'fold_virt_text_handler',
 				-- you need to set it to `true`
@@ -205,9 +259,9 @@ return {
 					mappings = {
 						scrollE = '<A-e>',
 						scrollY = '<A-y>',
-					}
+					},
 				},
 			})
-		end
-	}
+		end,
+	},
 }

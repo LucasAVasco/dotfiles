@@ -16,7 +16,6 @@ vim.ui.input = function(opts, callback_input)
 	vim.ui.input(opts, callback_input)
 end
 
-
 ---@class vim_ui_select_opts
 ---@field prompt? string Title of the prompt
 ---@field format_item? fun(item: string): string Function that overrides the appearance of the item in the UI
@@ -36,7 +35,6 @@ vim.ui.select = function(item_list, opts, callback_select)
 	vim.ui.select(item_list, opts, callback_select)
 end
 
-
 return {
 	{
 		'stevearc/dressing.nvim',
@@ -49,36 +47,36 @@ return {
 
 		opts = {
 			input = {
-				insert_only = false,  -- enable others modes (like normal)
+				insert_only = false, -- enable others modes (like normal)
 				relative = 'editor',
 
 				min_width = { 40, 0.6 },
 				mappings = {
 					n = {
-						['<Esc>'] = false,  -- Disable <esc> because this can conflict with the normal mode
+						['<Esc>'] = false, -- Disable <esc> because this can conflict with the normal mode
 						['<A-a>'] = 'Close',
 						['<A-q>'] = 'Close',
 					},
 					i = {
 						['<A-a>'] = 'Close',
 						['<A-q>'] = 'Close',
-					}
-				}
+					},
+				},
 			},
 
 			select = {
-				insert_only = false,  -- enable others modes (like normal)
+				insert_only = false, -- enable others modes (like normal)
 				relative = 'editor',
 				backend = { 'telescope' },
-			}
-		}
+			},
+		},
 	},
 	{
 		'folke/noice.nvim',
 		event = 'VeryLazy',
 
 		dependencies = {
-			'MunifTanjim/nui.nvim'
+			'MunifTanjim/nui.nvim',
 		},
 
 		opts = {
@@ -86,7 +84,7 @@ return {
 				backend = 'cmp',
 			},
 			lsp = {
-				override = { },  -- Will be fulfilled in the configuration function
+				override = {}, -- Will be fulfilled in the configuration function
 			},
 			presets = {
 				lsp_doc_border = true,
@@ -94,10 +92,10 @@ return {
 			views = {
 				cmdline_popup = {
 					size = {
-						width = '60%'
-					}
-				}
-			}
+						width = '60%',
+					},
+				},
+			},
 		},
 
 		config = function(plugin, opts)
@@ -130,19 +128,19 @@ return {
 			local function add_scroll_keymap(key, scroll_amount)
 				local movement_keymap = vim.api.nvim_replace_termcodes('<C-' .. key .. '>zz', true, false, true)
 
-				vim.keymap.set({'n', 'v', 'i'}, '<A-' .. key .. '>', function()
+				vim.keymap.set({ 'n', 'v', 'i' }, '<A-' .. key .. '>', function()
 					-- Applies the scroll operation and ends
 					if nc_lsp.scroll(scroll_amount) then
 						return
 					end
 
 					-- Moves the cursor
-					vim.cmd.normal({movement_keymap, bang=true})
-				end, { remap=false, silent=true})
+					vim.cmd.normal({ movement_keymap, bang = true })
+				end, { remap = false, silent = true })
 			end
 
 			add_scroll_keymap('d', 6)
 			add_scroll_keymap('u', -6)
-		end
-	}
+		end,
+	},
 }

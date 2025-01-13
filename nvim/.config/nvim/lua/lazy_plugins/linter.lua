@@ -5,7 +5,6 @@
 	`<leader>Tl` Try to execute the linter on the current buffer.
 ]]
 
-
 return {
 	{
 		'mfussenegger/nvim-lint',
@@ -13,9 +12,16 @@ return {
 		event = 'BufWrite',
 
 		keys = {
-			{ '<leader>Cl', function()
-				require('lint').try_lint()
-			end, mode = 'n', noremap = true, silent = true, desc = 'Try to execute the linter on the current buffer' },
+			{
+				'<leader>Cl',
+				function()
+					require('lint').try_lint()
+				end,
+				mode = 'n',
+				noremap = true,
+				silent = true,
+				desc = 'Try to execute the linter on the current buffer',
+			},
 		},
 
 		init = function()
@@ -35,8 +41,8 @@ return {
 				group = nvim_lint_group,
 				callback = function()
 					nvim_lint.try_lint()
-				end
+				end,
 			})
-		end
-	}
+		end,
+	},
 }

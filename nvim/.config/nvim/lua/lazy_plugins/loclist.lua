@@ -33,9 +33,19 @@ local key_options = MYFUNC.decorator_create_options_table({
 	silent = true,
 })
 
-vim.keymap.set('n', '[l', MYFUNC.decorator_set_fkey_mappings(diagnostics_fkeys, 1, true), key_options('Previous loclist item'))
+vim.keymap.set(
+	'n',
+	'[l',
+	MYFUNC.decorator_set_fkey_mappings(diagnostics_fkeys, 1, true),
+	key_options('Previous loclist item')
+)
 vim.keymap.set('n', ']l', MYFUNC.decorator_set_fkey_mappings(diagnostics_fkeys, 1), key_options('Next loclist item'))
-vim.keymap.set('n', '[q', MYFUNC.decorator_set_fkey_mappings(diagnostics_fkeys, 2, true), key_options('Previous quickfix item'))
+vim.keymap.set(
+	'n',
+	'[q',
+	MYFUNC.decorator_set_fkey_mappings(diagnostics_fkeys, 2, true),
+	key_options('Previous quickfix item')
+)
 vim.keymap.set('n', ']q', MYFUNC.decorator_set_fkey_mappings(diagnostics_fkeys, 2), key_options('Next quickfix item'))
 
 -- }}}
@@ -59,21 +69,21 @@ return {
 			--Behavior
 			auto_close = true,
 			auto_refresh = true,
-			auto_preview = false,  -- If `true`, may cause some bugs with `nvim-tree.lua`
+			auto_preview = false, -- If `true`, may cause some bugs with `nvim-tree.lua`
 
 			throttle = {
-				preview = {ms = 0},
+				preview = { ms = 0 },
 			},
 
 			-- Appearance
 			icons = {
 				indent = {
-					last = '╰╴'
-				}
-			}
+					last = '╰╴',
+				},
+			},
 		},
 
-		init = function ()
+		init = function()
 			MYPLUGFUNC.set_keymap_name('<leader>T', 'Trouble (list plugin)')
 		end,
 
@@ -97,11 +107,19 @@ return {
 				end
 			end
 
-			local modes = {'n', 'v'}
-			vim.keymap.set(modes, '<leader>Tgg', decorator_focus_trouble_and_jump(trouble.first),
-				key_options('Go to first trouble diagnostics'))
-			vim.keymap.set(modes, '<leader>TG', decorator_focus_trouble_and_jump(trouble.last),
-				key_options('Go to last trouble diagnostics'))
+			local modes = { 'n', 'v' }
+			vim.keymap.set(
+				modes,
+				'<leader>Tgg',
+				decorator_focus_trouble_and_jump(trouble.first),
+				key_options('Go to first trouble diagnostics')
+			)
+			vim.keymap.set(
+				modes,
+				'<leader>TG',
+				decorator_focus_trouble_and_jump(trouble.last),
+				key_options('Go to last trouble diagnostics')
+			)
 
 			---Go to next or previous position in Trouble and jump to it
 			---@param next boolean If `true`, go to next position, otherwise go to previous
@@ -126,10 +144,10 @@ return {
 			end
 
 			-- Overrides the function key mappings that loads `trouble.nvim` by the ones that jumps to a `trouble.nvim` entry
-			diagnostics_fkeys.shift[3] = MYFUNC.decorator_call_function(next_position, {false})
-			diagnostics_fkeys.normal[3] = MYFUNC.decorator_call_function(next_position, {true})
+			diagnostics_fkeys.shift[3] = MYFUNC.decorator_call_function(next_position, { false })
+			diagnostics_fkeys.normal[3] = MYFUNC.decorator_call_function(next_position, { true })
 
-			MYFUNC.set_fkey_mappings(diagnostics_fkeys, nil, nil, true)  -- Reload after the changes
-		end
-	}
+			MYFUNC.set_fkey_mappings(diagnostics_fkeys, nil, nil, true) -- Reload after the changes
+		end,
+	},
 }

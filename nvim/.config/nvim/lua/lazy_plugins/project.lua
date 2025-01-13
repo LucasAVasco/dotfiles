@@ -5,7 +5,7 @@ return {
 
 		cmd = 'Neoconf',
 
-		priority = 8500,  -- Configuration system
+		priority = 8500, -- Configuration system
 
 		opts = {
 			plugins = {
@@ -38,5 +38,5 @@ return {
 				vim.opt.spellfile:append(project_config_dir .. 'spell_adds/main.UTF-8.add')
 			end
 		end,
-	}
+	},
 }

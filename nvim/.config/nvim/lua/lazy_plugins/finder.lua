@@ -13,7 +13,6 @@
 	before it, this function will save the extension data and load it after Telescope configuration.
 ]]
 
-
 -- #region API to lazy load Telescope extensions
 
 --- If the user can lazy load a Telescope extension (true) or need to save it in the `extensions_to_lazy_load` variable (false)
@@ -21,7 +20,6 @@ local can_lazy_load_extensions = false
 
 --- Extensions to lazy load after Telescope startup
 local extensions_to_lazy_load = {}
-
 
 --- Check if all pickers are lazy loaded
 --- Shows a notification if the user does not lazy loaded all pickers
@@ -33,19 +31,20 @@ local function check_lazy_loaded_pickers(lazy_pickers, real_pickers, name)
 		if lazy_pickers[real_picker_name] == nil then
 			vim.notify(
 				(
-					'The "%s" picker is not lazy loaded.\n' ..
-					'This means that the user can not run it with ":Telescope %s %s" before loading the extension.\n' ..
-					'Extension name = "%s"\n' ..
-					'To fix this warning, you need to go to your `lazy.nvim` configuration and add the "%s"\n' ..
-					'picker to the extension configuration in the "MYPLUGFUNC.load_telescope_extension()" function.\n'
+					'The "%s" picker is not lazy loaded.\n'
+					.. 'This means that the user can not run it with ":Telescope %s %s" before loading the extension.\n'
+					.. 'Extension name = "%s"\n'
+					.. 'To fix this warning, you need to go to your `lazy.nvim` configuration and add the "%s"\n'
+					.. 'picker to the extension configuration in the "MYPLUGFUNC.load_telescope_extension()" function.\n'
 				):format(real_picker_name, name, real_picker_name, name, real_picker_name),
-				vim.log.levels.WARN, {
+				vim.log.levels.WARN,
+				{
 					title = 'Telescope picker not Lazy loaded!',
-			})
+				}
+			)
 		end
 	end
 end
-
 
 --- Lazy load a Telescope extension (effective version)
 --- Create the pickers that will load the actual extension and its pickers when selected. Can NOT be called before Telescope setup
@@ -58,7 +57,7 @@ local function lazy_load_telescope_extension(name, pickers)
 	for _, picker in pairs(pickers) do
 		new_lazy_extension[picker] = function(opts)
 			local lazy_extension = telescope.extensions[name]
-			telescope.extensions[name] = nil                      -- Removes the lazy extension
+			telescope.extensions[name] = nil -- Removes the lazy extension
 			local real_extension = telescope.load_extension(name) -- Loads the real extension
 
 			-- Checks if the user provided all pickers in the *pickers* argument
@@ -72,7 +71,6 @@ local function lazy_load_telescope_extension(name, pickers)
 	telescope.extensions[name] = new_lazy_extension
 end
 
-
 --- Lazy load a Telescope extension
 --- Create the pickers that will load the actual extension and its pickers when selected. Can be called before Telescope setup
 --- @param name string Name of the extension. Same value given to the `require('telescope').load_extension()` function
@@ -81,15 +79,13 @@ function MYPLUGFUNC.load_telescope_extension(name, pickers)
 	if can_lazy_load_extensions then
 		lazy_load_telescope_extension(name, pickers)
 	else
-		table.insert(extensions_to_lazy_load, {name, pickers})
+		table.insert(extensions_to_lazy_load, { name, pickers })
 	end
 end
 
 -- #endregion
 
-
 local normal_and_visual_modes = { 'n', 'x' }
-
 
 return {
 	{
@@ -104,8 +100,8 @@ return {
 		cmd = 'Telescope',
 
 		keys = {
-			{'<leader>gb', '<CMD>Telescope buffers<CR>', desc = 'Select a buffer with Telescope and go to it' },
-			{'<leader>gff', '<CMD>Telescope find_files<CR>', desc = 'Select files with Telescope and open them' },
+			{ '<leader>gb', '<CMD>Telescope buffers<CR>', desc = 'Select a buffer with Telescope and go to it' },
+			{ '<leader>gff', '<CMD>Telescope find_files<CR>', desc = 'Select files with Telescope and open them' },
 		},
 
 		config = function()
@@ -173,7 +169,7 @@ return {
 
 				for _, file2open in pairs(files) do
 					-- Open the file
-					vim.cmd.edit({args={file2open.path}, magic={file=false, bar=false}})
+					vim.cmd.edit({ args = { file2open.path }, magic = { file = false, bar = false } })
 
 					-- Set the cursor position (line and column)
 					local normal_cmd = ''
@@ -183,11 +179,11 @@ return {
 					end
 
 					if file2open.col and file2open.col > 0 then
-						normal_cmd = normal_cmd .. '0' .. (file2open.col) .. 'l'
+						normal_cmd = normal_cmd .. '0' .. file2open.col .. 'l'
 					end
 
 					if normal_cmd ~= '' then
-						vim.cmd.normal({args = {normal_cmd}, bang=true})
+						vim.cmd.normal({ args = { normal_cmd }, bang = true })
 					end
 				end
 			end
@@ -202,12 +198,12 @@ return {
 						},
 						vertical = {
 							prompt_position = 'top',
-						}
+						},
 					},
 
 					mappings = {
 						n = {
-							['<Esc>'] = false,  -- Disable <esc> because this can conflict with the normal mode
+							['<Esc>'] = false, -- Disable <esc> because this can conflict with the normal mode
 							['<A-a>'] = tl_actions.close,
 							['<A-q>'] = tl_actions.close,
 							['T'] = open_with_trouble,
@@ -222,9 +218,9 @@ return {
 							['<A-T>'] = open_with_trouble,
 							['<A-t>'] = add_to_trouble,
 							['<CR>'] = edit_selected_files,
-						}
-					}
-				}
+						},
+					},
+				},
 			})
 
 			-- Lazy loaded extensions (need to be loaded after the basic setup)
@@ -235,48 +231,58 @@ return {
 			-- Telescope is loaded, so the user can lazy load the extensions. Any next call to `MYPLUGFUNC.load_telescope_extension()` will
 			-- lazy load the extension instead of save it in the `extensions_to_lazy_load` variable
 			can_lazy_load_extensions = true
-		end
+		end,
 	},
 	{
 		'nvim-pack/nvim-spectre',
 
 		keys = {
 			{
-				'<leader>Sff', function()
+				'<leader>Sff',
+				function()
 					require('spectre').open_file_search()
-				end, mode = normal_and_visual_modes,
-				desc = 'Replace on current file'
+				end,
+				mode = normal_and_visual_modes,
+				desc = 'Replace on current file',
 			},
 			{
-				'<leader>Sfw', function()
-					require('spectre').open_file_search({select_word=true})
-				end, mode = 'n',
-				desc = 'Replace the current word in the current file'
+				'<leader>Sfw',
+				function()
+					require('spectre').open_file_search({ select_word = true })
+				end,
+				mode = 'n',
+				desc = 'Replace the current word in the current file',
 			},
 			{
-				'<leader>Sdd', function()
+				'<leader>Sdd',
+				function()
 					require('spectre').open_visual()
-				end, mode = normal_and_visual_modes,
-				desc = 'Replace in the current directory'
+				end,
+				mode = normal_and_visual_modes,
+				desc = 'Replace in the current directory',
 			},
 			{
-				'<leader>Sdw', function()
-					require('spectre').open_visual({select_word=true})
-				end, mode = 'n',
-				desc = 'Replace the current word in the current directory'
+				'<leader>Sdw',
+				function()
+					require('spectre').open_visual({ select_word = true })
+				end,
+				mode = 'n',
+				desc = 'Replace the current word in the current directory',
 			},
 			{
-				'<leader>St', function()
+				'<leader>St',
+				function()
 					require('spectre').toggle()
-				end, mode = normal_and_visual_modes,
-				desc = 'Toggle `spectre.nvim`'
+				end,
+				mode = normal_and_visual_modes,
+				desc = 'Toggle `spectre.nvim`',
 			},
 		},
 
 		opts = {
 			line_sep_start = '┌───────────────────────────────',
 			result_padding = '│   ',
-			line_sep       = '└───────────────────────────────',
+			line_sep = '└───────────────────────────────',
 		},
 
 		init = function()
@@ -284,6 +290,6 @@ return {
 			set_keymap_name('<Leader>S', '`spectre.nvim` maps', normal_and_visual_modes)
 			set_keymap_name('<Leader>Sf', 'Replace on the current file', normal_and_visual_modes)
 			set_keymap_name('<Leader>Sd', 'Replace on the current directory', normal_and_visual_modes)
-		end
-	}
+		end,
+	},
 }

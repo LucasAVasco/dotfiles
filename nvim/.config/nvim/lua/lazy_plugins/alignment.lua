@@ -14,18 +14,17 @@
 	`<Backspace>`  remove the last delimiter and try another one. Repeat the delimiter to apply the changes.
 ]]
 
-
 return {
 	{
 		'junegunn/vim-easy-align',
 
 		keys = {
 			{ '<CR>', '<Plug>(LiveEasyAlign)', mode = 'x', desc = 'LiveEasyAlign' },
-			{ '<leader>ga', '<Plug>(EasyAlign)', mode = {'n', 'x'}, desc = 'EasyAlign' },
+			{ '<leader>ga', '<Plug>(EasyAlign)', mode = { 'n', 'x' }, desc = 'EasyAlign' },
 		},
 
 		init = function()
-			vim.g.easy_align_ignore_unmatched = 1  -- Ignore lines with out delimiters
+			vim.g.easy_align_ignore_unmatched = 1 -- Ignore lines with out delimiters
 		end,
-	}
+	},
 }

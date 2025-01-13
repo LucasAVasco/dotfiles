@@ -1,10 +1,9 @@
 local custom_setup_functions = {}
 local custom_setup_functions_completion_table = {}
 
-
 -- Command to run a setup function
 vim.api.nvim_create_user_command('Setup', function(arguments)
-	local setup_function = vim.tbl_get(custom_setup_functions, unpack( arguments.fargs ))
+	local setup_function = vim.tbl_get(custom_setup_functions, unpack(arguments.fargs))
 
 	if setup_function ~= nil then
 		setup_function()
@@ -20,10 +19,14 @@ end, {
 			table.insert(arguments_table, setup_name)
 		end
 
-		return MYFUNC.get_complete_suggestions(current_arg_lead, entire_command, cursor_pos, custom_setup_functions_completion_table)
-	end
+		return MYFUNC.get_complete_suggestions(
+			current_arg_lead,
+			entire_command,
+			cursor_pos,
+			custom_setup_functions_completion_table
+		)
+	end,
 })
-
 
 --- Add a user setup command
 ---@param setup_name string Name of the setup command
@@ -36,7 +39,6 @@ function MYFUNC.add_setup_command(setup_name, setup_function)
 	MYFUNC.tbl_set(custom_setup_functions_completion_table, command_args, {})
 end
 
-
 -- Run all setup functions except 'all'
 local function run_all_setup_functions()
 	for setup_name, setup_function in ipairs(custom_setup_functions) do
@@ -45,6 +47,5 @@ local function run_all_setup_functions()
 		end
 	end
 end
-
 
 MYFUNC.add_setup_command('all', run_all_setup_functions)

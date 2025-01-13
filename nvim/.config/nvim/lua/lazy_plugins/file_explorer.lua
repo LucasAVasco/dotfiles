@@ -28,34 +28,33 @@
 	`F` Disable regex filter.
 ]]
 
-
 return {
 	{
 		'stevearc/oil.nvim',
 		dependencies = {
-			'nvim-tree/nvim-web-devicons'
+			'nvim-tree/nvim-web-devicons',
 		},
 
-		cmd='Oil',
+		cmd = 'Oil',
 
 		opts = {
-			default_file_explorer = true,  -- Replace `Netrw`
+			default_file_explorer = true, -- Replace `Netrw`
 			delete_to_trash = true,
 		},
 
 		init = function()
 			-- Disable 'Netrw'. `oil.nvim` will be the default file manager
-			vim.g.loaded_netrw       = 1
+			vim.g.loaded_netrw = 1
 			vim.g.loaded_netrwPlugin = 1
 
 			-- Creates an auto-command to load `oil.nvim` if the user open a directory. `oil.nvim` can not be lazy loaded without this.
 			-- `oil.nvim` can open only one directory at the same time
 			local nvim_startup_done = false
-			local file_explorer_augroup = vim.api.nvim_create_augroup("FileExplorer", {clear=true})
+			local file_explorer_augroup = vim.api.nvim_create_augroup('FileExplorer', { clear = true })
 
 			vim.api.nvim_create_autocmd({ 'VimEnter', 'BufEnter' }, {
 				group = file_explorer_augroup,
-				callback=function(arguments)
+				callback = function(arguments)
 					-- `oil.nvim` can not open a directory before Neovim ends its start process. Neovim emits a 'VimEnter' event after this
 					if arguments.event == 'VimEnter' then
 						nvim_startup_done = true
@@ -75,9 +74,9 @@ return {
 						-- automatically track the folders the user opens
 						require('oil').open(file)
 					end
-				end
+				end,
 			})
-		end
+		end,
 	},
 	{
 		'nvim-tree/nvim-tree.lua',
@@ -86,7 +85,14 @@ return {
 			'nvim-tree/nvim-web-devicons',
 		},
 
-		cmd = { 'NvimTreeOpen', 'NvimTreeClose', 'NvimTreeToggle', 'NvimTreeFocus', 'NvimTreeFindFile', 'NvimTreeFindFileToggle' },
+		cmd = {
+			'NvimTreeOpen',
+			'NvimTreeClose',
+			'NvimTreeToggle',
+			'NvimTreeFocus',
+			'NvimTreeFindFile',
+			'NvimTreeFindFileToggle',
+		},
 
 		keys = {
 			{ '<leader>gfe', '<cmd>NvimTreeFocus<CR>', mode = 'n', desc = 'Open file explorer' },
@@ -100,9 +106,9 @@ return {
 				width = 60,
 			},
 			renderer = {
-				add_trailing = true,     -- Append a trailing slash to folder names
-				group_empty = true,      -- Group empty folders in one group
-				highlight_git = 'icon',  -- Highlight git attributes
+				add_trailing = true, -- Append a trailing slash to folder names
+				group_empty = true, -- Group empty folders in one group
+				highlight_git = 'icon', -- Highlight git attributes
 				highlight_diagnostics = 'icon',
 				highlight_opened_files = 'name',
 				highlight_modified = 'name',
@@ -110,8 +116,8 @@ return {
 				indent_markers = {
 					enable = true,
 					icons = {
-						corner = "╰",
-					}
+						corner = '╰',
+					},
 				},
 			},
 
@@ -135,8 +141,8 @@ return {
 			actions = {
 				expand_all = {
 					-- Do not expand this folders automatically
-					exclude = { '.git' }
-				}
+					exclude = { '.git' },
+				},
 			},
 
 			-- Does not disable `Netrw` in `nvim-tree` configuration. The `oil.nvim` configuration will do it
@@ -196,14 +202,27 @@ return {
 
 				-- Override 'h' and 'l' to improve movement in the tree
 				vim.keymap.set('n', 'h', api.node.navigate.parent_close, key_options('Close the current folder'))
-				vim.keymap.set('n', 'l', decorator_ignore_open_folder(open_and_return_to_tree), key_options('Open folder or file'))
+				vim.keymap.set(
+					'n',
+					'l',
+					decorator_ignore_open_folder(open_and_return_to_tree),
+					key_options('Open folder or file')
+				)
 
 				-- Custom keymaps
-				vim.keymap.set('n', 'T', decorator_return_to_tree(api.node.open.tab_drop),
-					key_options('Open file in new tab (if not already opened)'))
+				vim.keymap.set(
+					'n',
+					'T',
+					decorator_return_to_tree(api.node.open.tab_drop),
+					key_options('Open file in new tab (if not already opened)')
+				)
 
-				vim.keymap.set('n', 't', api.node.open.tab_drop,
-					key_options('Go to file (if not already opened, open in new tab) and close the tree'))
+				vim.keymap.set(
+					'n',
+					't',
+					api.node.open.tab_drop,
+					key_options('Go to file (if not already opened, open in new tab) and close the tree')
+				)
 
 				vim.keymap.set('n', 'g.', function()
 					api.tree.toggle_hidden_filter()
@@ -214,6 +233,6 @@ return {
 			-- Setup
 			opts.on_attach = apply_custom_keymaps
 			require('nvim-tree').setup(opts)
-		end
-	}
+		end,
+	},
 }

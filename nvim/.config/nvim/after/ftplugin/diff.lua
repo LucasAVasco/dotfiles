@@ -7,15 +7,12 @@ local function disable_line(line)
 
 	if first_char == '+' then
 		return
-
 	elseif first_char == '-' then
 		return ' ' .. line:sub(2, #line)
-
 	else
 		return line
 	end
 end
-
 
 ---Disable the diff patch in a range of lines of the current buffer.
 ---Also disable the patch in the *start* and *end* lines.
@@ -45,14 +42,12 @@ local function disable_buffer_lines(start_line, end_line)
 	vim.api.nvim_buf_set_lines(buffer_br, start_line, end_line, true, disabled_lines)
 end
 
-
 ---Disable the diff patch in the current line
 local function disable_current_line()
-	local line = vim.api.nvim_win_get_cursor(0)[1]  -- Line starts in 1
+	local line = vim.api.nvim_win_get_cursor(0)[1] -- Line starts in 1
 
-	disable_buffer_lines(line-1, line-1)
+	disable_buffer_lines(line - 1, line - 1)
 end
-
 
 ---Disable the diff patch in the visual selected lines
 local function disable_visual_selected_lines()
@@ -61,12 +56,11 @@ local function disable_visual_selected_lines()
 
 	-- Get positions of the last visual selected block with the '<' and '>' marks
 
-	local start_line = vim.api.nvim_buf_get_mark(0, '<')[1]  -- Line starts in 1
-	local end_line = vim.api.nvim_buf_get_mark(0, '>')[1]    -- Line starts in 1
+	local start_line = vim.api.nvim_buf_get_mark(0, '<')[1] -- Line starts in 1
+	local end_line = vim.api.nvim_buf_get_mark(0, '>')[1] -- Line starts in 1
 
 	disable_buffer_lines(start_line - 1, end_line - 1)
 end
-
 
 -- Key maps to disable lines of diff patches
 

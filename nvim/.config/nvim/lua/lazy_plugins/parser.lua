@@ -32,13 +32,12 @@
 	* https://tree-sitter.github.io/tree-sitter/syntax-highlighting#language-injection
 ]]
 
-
 return {
 	{
 		'nvim-treesitter/nvim-treesitter',
 
 		dependencies = {
-			'LucasAVasco/project_runtime_dirs.nvim'  -- Used by `TSEditQueryRtd`
+			'LucasAVasco/project_runtime_dirs.nvim', -- Used by `TSEditQueryRtd`
 		},
 
 		build = ':TSUpdate',
@@ -47,7 +46,7 @@ return {
 			-- 'markdown_inline' is required by `trouble.nvim`. `regex` is required by `noicenvim`
 			ensure_installed = { 'lua', 'vim', 'vimdoc', 'markdown_inline', 'regex' },
 			sync_install = false,
-			auto_install = true,  -- Install missing parser when entering a buffer that requires it
+			auto_install = true, -- Install missing parser when entering a buffer that requires it
 
 			highlight = { enable = true },
 			incremental_selection = { enable = true },
@@ -59,8 +58,8 @@ return {
 		},
 
 		config = function(_, opts)
-			require('mason')  -- Configured in another file
-			MYPLUGFUNC.ensure_mason_package_installed('tree-sitter-cli')  -- Required to use `:TSInstallFromGrammar`
+			require('mason') -- Configured in another file
+			MYPLUGFUNC.ensure_mason_package_installed('tree-sitter-cli') -- Required to use `:TSInstallFromGrammar`
 
 			require('nvim-treesitter.configs').setup(opts)
 
@@ -72,7 +71,6 @@ return {
 				require('project_runtime_dirs.api.project.enabled_rtd').select_by_name(function(rtd)
 					rtd:edit(query_folder .. query_name .. '.scm', true)
 				end)
-
 			end, {
 				desc = 'Edit a Tree-sitter query file in a project runtime directory',
 				nargs = 1,
@@ -85,12 +83,12 @@ return {
 					'matchup',
 				}),
 			})
-		end
+		end,
 	},
 	{
 		'Wansmer/treesj',
 		dependencies = {
-			'nvim-treesitter/nvim-treesitter'
+			'nvim-treesitter/nvim-treesitter',
 		},
 
 		cmd = { 'TSJToggle', 'TSJSplit', 'TSJJoin' },
@@ -101,14 +99,14 @@ return {
 				function()
 					require('treesj').split()
 				end,
-				desc='Split a block (tree-sj)',
+				desc = 'Split a block (tree-sj)',
 			},
 			{
 				'<leader>j',
 				function()
 					require('treesj').join()
 				end,
-				desc='Join a block (tree-sj)',
+				desc = 'Join a block (tree-sj)',
 			},
 		},
 
@@ -120,10 +118,10 @@ return {
 		'jmbuhr/otter.nvim',
 		dependencies = {
 			'nvim-treesitter/nvim-treesitter',
-			'LucasAVasco/project_runtime_dirs.nvim'  -- Used to query the project directory and some configurations
+			'LucasAVasco/project_runtime_dirs.nvim', -- Used to query the project directory and some configurations
 		},
 
-		cmd = {'LspInjectionsEnable'},
+		cmd = { 'LspInjectionsEnable' },
 
 		opts = {
 			lsp = {
@@ -145,6 +143,6 @@ return {
 			vim.api.nvim_create_user_command('LspInjectionsEnable', function()
 				otter.activate()
 			end, {})
-		end
-	}
+		end,
+	},
 }

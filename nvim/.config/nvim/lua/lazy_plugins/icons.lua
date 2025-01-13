@@ -5,7 +5,7 @@ return {
 
 		opts = {
 			default = true,
-			strict = true    -- Prevents the plugin from loading wrong icons
-		}
-	}
+			strict = true, -- Prevents the plugin from loading wrong icons
+		},
+	},
 }

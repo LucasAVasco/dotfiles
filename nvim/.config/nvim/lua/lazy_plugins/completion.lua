@@ -5,7 +5,6 @@
 	`LuaSnipEditFiles` Edit the LuaSnip snippets files
 ]]
 
-
 return {
 	-- {
 	--     'nvimtools/none-ls.nvim',
@@ -13,10 +12,10 @@ return {
 	--     dependencies = {
 	--         'nvim-lua/plenary.nvim'
 	--     },
-    --
+	--
 	--     config = function()
 	--         null_ls = require('null-ls')
-    --
+	--
 	--         null_ls.setup({
 	--             sources = {
 	--                 -- E.null_ls.builtins.formatting.stylua,
@@ -29,10 +28,10 @@ return {
 		version = 'v2.*',
 
 		dependencies = {
-			'rafamadriz/friendly-snippets'
+			'rafamadriz/friendly-snippets',
 		},
 
-		build = 'make install_jsregexp',  -- Required to use variable/placeholder transformations in the snippets
+		build = 'make install_jsregexp', -- Required to use variable/placeholder transformations in the snippets
 
 		cmd = {
 			'LuaSnipEditFiles',
@@ -40,12 +39,12 @@ return {
 			'LuaSnipUnlinkCurrent',
 		},
 
-		lazy = true,  -- Will be loaded by `nvim-cmp`
+		lazy = true, -- Will be loaded by `nvim-cmp`
 
 		config = function()
 			-- Command to easy edit the snippets files
 			vim.api.nvim_create_user_command('LuaSnipEditFiles', function()
-				require("luasnip.loaders").edit_snippet_files()
+				require('luasnip.loaders').edit_snippet_files()
 			end, {})
 
 			-- Disables the snippet files reloading after any modification. This feature throws errors messages every time the user saves an
@@ -63,11 +62,15 @@ return {
 			require('luasnip.loaders.from_vscode').lazy_load({ fs_event_providers = fs_event_providers })
 
 			-- My snippets
-			require('luasnip.loaders.from_vscode').lazy_load({ paths = {'~/.config/nvim/vscode_snippets'},
-				fs_event_providers = fs_event_providers })
-			require('luasnip.loaders.from_lua').lazy_load({ paths = {'~/.config/nvim/lua_snippets'},
-				fs_event_providers = fs_event_providers })
-		end
+			require('luasnip.loaders.from_vscode').lazy_load({
+				paths = { '~/.config/nvim/vscode_snippets' },
+				fs_event_providers = fs_event_providers,
+			})
+			require('luasnip.loaders.from_lua').lazy_load({
+				paths = { '~/.config/nvim/lua_snippets' },
+				fs_event_providers = fs_event_providers,
+			})
+		end,
 	},
 	{
 		'windwp/nvim-autopairs',
@@ -79,7 +82,7 @@ return {
 
 		opts = {
 			disable_filetype = { 'TelescopePrompt', 'NvimTree' },
-			fast_wrap = {},  -- Required to enable `fast_wrap`
+			fast_wrap = {}, -- Required to enable `fast_wrap`
 		},
 
 		config = function(_, opts)
@@ -89,33 +92,30 @@ return {
 			npairs.setup(opts)
 
 			npairs.add_rules({
-				Rule("`", "`"),  -- Crasis pair (like the used in Markdown)
+				Rule('`', '`'), -- Crasis pair (like the used in Markdown)
 
-				Rule('"""', '"""'),  -- Triple double quotes string (like the Python docstrings)
-				Rule("'''", "'''"),  -- Triple quotes string (like the Python docstrings)
+				Rule('"""', '"""'), -- Triple double quotes string (like the Python docstrings)
+				Rule("'''", "'''"), -- Triple quotes string (like the Python docstrings)
 
 				-- Triple crasis pair (like the used in Markdown), the right pair just completest the right pair created by
 				-- the 'crasis pair' rule. Because of this, there are only one crasis in the right pair
-				Rule("```", "`"),
+				Rule('```', '`'),
 			})
 
 			-- Auto-pairs integration with cmp-nvim
-			require('cmp').event:on(
-				'confirm_done',
-				require('nvim-autopairs.completion.cmp').on_confirm_done()
-			)
+			require('cmp').event:on('confirm_done', require('nvim-autopairs.completion.cmp').on_confirm_done())
 		end,
 	},
 	{
 		'folke/lazydev.nvim',
 
 		dependencies = {
-			'Bilal2453/luvit-meta',  -- Support to 'vim.loop'
+			'Bilal2453/luvit-meta', -- Support to 'vim.loop'
 		},
 
 		-- Only enabled if editing a Lua file and the user is inside a directory owned by Neovim
 		ft = 'lua',
-		enabled=function()
+		enabled = function()
 			-- Current directory. The comparison that defines whether the current directory belongs to Neovim checks whether the given
 			-- directory path is a sub-string of the current directory path. Adding a trailing slash allows the user to optionally provide a
 			-- path with a trailing slash. Do not use the `getcwd()` function because this function follows symbolic links. This may break
@@ -129,15 +129,16 @@ return {
 				return current_dir:find(top_dir, 1, true) ~= nil
 			end
 
-			return current_dir_is_inside_folder(MYPATHS.config) or current_dir_is_inside_folder(MYPATHS.data) or
-				current_dir_is_inside_folder(MYPATHS.dev)
+			return current_dir_is_inside_folder(MYPATHS.config)
+				or current_dir_is_inside_folder(MYPATHS.data)
+				or current_dir_is_inside_folder(MYPATHS.dev)
 		end,
 
 		opts = {
 			library = {
-				{ path = 'luvit-meta/library', words = { 'vim.loop', 'vim.uv', 'uv' }},
-			}
-		}
+				{ path = 'luvit-meta/library', words = { 'vim.loop', 'vim.uv', 'uv' } },
+			},
+		},
 	},
 	{
 		'hrsh7th/nvim-cmp',
@@ -152,7 +153,7 @@ return {
 			-- LSP
 			'hrsh7th/cmp-nvim-lsp',
 			'onsails/lspkind.nvim',
-			'folke/lazydev.nvim',  -- LuaLS configuration to edit Neovim configuration files
+			'folke/lazydev.nvim', -- LuaLS configuration to edit Neovim configuration files
 
 			-- Snippets
 			'saadparwaiz1/cmp_luasnip',
@@ -185,20 +186,21 @@ return {
 				for hl_group_name, _ in pairs(all_hl_groups) do
 					if string.find(hl_group_name, 'CmpItemKind', 1, true) then
 						local new_hl = MYFUNC.get_hl_definition(hl_group_name)
-						new_hl.standout = true  -- Swap background and foreground colors
+						new_hl.standout = true -- Swap background and foreground colors
 						new_hl.bold = true
 
 						-- The format returned by `get_hl_definition` is the same as the received by `nvim_set_hl`, but LuasLS does not
 						-- recognize it. So I am disabling the diagnostic to the next line
 						---@diagnostic disable-next-line: param-type-mismatch
-						vim.api.nvim_set_hl(0, hl_group_name, new_hl )
+						vim.api.nvim_set_hl(0, hl_group_name, new_hl)
 					end
 				end
 			end
 
 			-- Applies the custom highlighting to all color schemes
 			vim.api.nvim_create_autocmd('ColorScheme', {
-				pattern = '*', callback = update_cmp_hl
+				pattern = '*',
+				callback = update_cmp_hl,
 			})
 
 			update_cmp_hl()
@@ -257,18 +259,19 @@ return {
 
 								-- Use the git repository root directory when editing the '.git/COMMIT_EDITMSG' file
 								if buffer_file_type == 'gitcommit' then
-									base_dir = vim.fn.fnamemodify(base_dir, ":h")
-
+									base_dir = vim.fn.fnamemodify(base_dir, ':h')
 								elseif buffer_file_type == 'yaml' then
 									-- Use the root directory of the GitHub workflow
-									if split_base_dir_at_index(string.find(base_dir, '/.github/workflows', 0, true)) then
+									if
+										split_base_dir_at_index(string.find(base_dir, '/.github/workflows', 0, true))
+									then
 										return base_dir
 									end
 								end
 
 								return base_dir
-							end
-						}
+							end,
+						},
 					},
 					{
 						name = 'buffer',
@@ -283,8 +286,11 @@ return {
 								end
 
 								-- Does not use large files
-								local buffer_size = vim.api.nvim_buf_get_offset(buf_nr, vim.api.nvim_buf_line_count(buf_nr))
-								if buffer_size > 10 * 1024 * 1024 then return false end
+								local buffer_size =
+									vim.api.nvim_buf_get_offset(buf_nr, vim.api.nvim_buf_line_count(buf_nr))
+								if buffer_size > 10 * 1024 * 1024 then
+									return false
+								end
 
 								return true
 							end
@@ -292,11 +298,11 @@ return {
 							-- Gets all buffers and filter them before send to CMP
 							local buffers = vim.api.nvim_list_bufs()
 							return vim.tbl_filter(filter_buffers, buffers)
-						end
+						end,
 					},
 					{ name = 'nvim_lsp' },
 					{ name = 'luasnip' },
-					{ name = 'lazydev' },  -- Suggestions to `require()`
+					{ name = 'lazydev' }, -- Suggestions to `require()`
 					{ name = 'orgmode' },
 				},
 
@@ -308,25 +314,24 @@ return {
 						---@module 'cmp'
 						---@param entry1 cmp.Entry
 						---@param entry2 cmp.Entry
-						function (entry1, entry2)
+						function(entry1, entry2)
 							if entry1.source.name == 'nvim_lsp' then
 								if entry2.source.name ~= 'nvim_lsp' then
 									return true
 								end
-
 							elseif entry2.source.name == 'nvim_lsp' then
 								return false
 							end
 						end,
 
 						cmp.config.compare.locality,
-					}
+					},
 				},
 
 				mapping = {
 					-- Navigate thought the suggestions
 					['<Down>'] = cmp.mapping.select_next_item({ behavior = cmp.SelectBehavior.Select, count = 6 }),
-					['<Up>'] = cmp.mapping.select_prev_item({ behavior = cmp.SelectBehavior.Select , count = 6 }),
+					['<Up>'] = cmp.mapping.select_prev_item({ behavior = cmp.SelectBehavior.Select, count = 6 }),
 
 					['<Tab>'] = function(fallback)
 						if cmp.visible() then
@@ -340,7 +345,7 @@ return {
 
 					['<S-Tab>'] = function(fallback)
 						if cmp.visible() then
-							cmp.select_prev_item({ behavior = cmp.SelectBehavior.Select})
+							cmp.select_prev_item({ behavior = cmp.SelectBehavior.Select })
 						elseif luasnip.jumpable(-1) then
 							luasnip.jump(-1)
 						else
@@ -349,7 +354,7 @@ return {
 					end,
 
 					['<A-Tab>'] = function(fallback)
-						if luasnip.choice_active() then  -- Shows the choice selector if in insert mode and inside a choice node
+						if luasnip.choice_active() then -- Shows the choice selector if in insert mode and inside a choice node
 							require('luasnip.extras.select_choice')()
 						else
 							fallback()
@@ -359,8 +364,8 @@ return {
 					-- Accept the suggestions or snippet entry
 					['<CR>'] = function(fallback)
 						if cmp.get_active_entry() then
-							cmp.confirm({ behavior = cmp.ConfirmBehavior.Insert})
-						elseif luasnip.choice_active() then  -- Shows the choice selector if in insert mode and inside a choice node
+							cmp.confirm({ behavior = cmp.ConfirmBehavior.Insert })
+						elseif luasnip.choice_active() then -- Shows the choice selector if in insert mode and inside a choice node
 							require('luasnip.extras.select_choice')()
 						else
 							fallback()
@@ -397,10 +402,10 @@ return {
 					['<A-u>'] = cmp.mapping.scroll_docs(-6),
 				},
 
-				 snippet = {
+				snippet = {
 					expand = function(args)
 						luasnip.lsp_expand(args.body)
-					end
+					end,
 				},
 
 				-- Custom formatting to the suggestions
@@ -410,14 +415,13 @@ return {
 					fields = { 'kind', 'abbr', 'menu' },
 
 					format = function(entry, vim_completed_item)
-						local kind = lspkind.presets.default[vim_completed_item.kind]        -- Convert the kind with lspkind
+						local kind = lspkind.presets.default[vim_completed_item.kind] -- Convert the kind with lspkind
 						vim_completed_item.kind = ' ' .. (kind or '?') .. ' '
-						vim_completed_item.menu =  source_name2item_menu[entry.source.name]  -- Add the source name to the menu
+						vim_completed_item.menu = source_name2item_menu[entry.source.name] -- Add the source name to the menu
 
 						return vim_completed_item
 					end,
 				},
-
 			})
 
 			-- Completions for search modes
@@ -426,7 +430,7 @@ return {
 				sources = {
 					{ name = 'path' },
 					{ name = 'buffer' },
-				}
+				},
 			})
 
 			-- Completions for command mode
@@ -435,8 +439,8 @@ return {
 				sources = cmp.config.sources({
 					{ name = 'path' },
 					{ name = 'cmdline' },
-				})
+				}),
 			})
-		end
+		end,
 	},
 }

@@ -2,7 +2,6 @@
 	Snippets to place ANSI escape colors
 ]]
 
-
 local ls = require('luasnip')
 local sn = ls.snippet_node
 local s = ls.snippet
@@ -11,14 +10,12 @@ local c = ls.choice_node
 local f = ls.function_node
 local d = ls.dynamic_node
 
-
 -- Escapes sequences used to apply the ANSI escape color
 local escapes = {
 	octal = '\\033',
 	hex = '\\x1b',
 	unicode = '\\u001b',
 }
-
 
 -- Base number of foreground and background colors. Foreground colors starts at number 30 and so on
 local grounds = {
@@ -27,7 +24,6 @@ local grounds = {
 	brightfg = 90,
 	brightbg = 100,
 }
-
 
 -- Some useful terminal modifiers. Follows the ANSI escape modifiers order. Not all terminals support all these modifiers
 local modifiers = {
@@ -43,7 +39,6 @@ local modifiers = {
 	strike = 9,
 }
 
-
 -- Color index to sum to the ground base number
 local colors = {
 	black = 0,
@@ -55,7 +50,6 @@ local colors = {
 	cyan = 6,
 	white = 7,
 }
-
 
 ---Create a choice snippet with the provided elements.
 ---Each element will be converted in a text node.
@@ -72,7 +66,6 @@ local function create_choice_snippet(index, choices)
 	return c(index, content)
 end
 
-
 ---Replace the generated ANSI color identifier by the ANSI color escape.
 ---@param parent any parent node of the current function node
 ---@return string escape_color
@@ -85,7 +78,6 @@ local function replace_ansi_snippet(_, parent, _)
 	return ('%s[%s;%sm'):format(escapes[escape], modifiers[mod], grounds[ground] + colors[color])
 end
 
-
 ---Replace the generated ANSI reset color identifier by the ANSI color escape
 ---@param parent any parent node of the current function node
 ---@return string escape_color
@@ -95,7 +87,6 @@ local function replace_ansi_reset_snippet(_, parent, _)
 	return ('%s[0m'):format(escapes[escape])
 end
 
-
 return {
 	-- Insert a ANSI color escape
 	s({
@@ -103,7 +94,7 @@ return {
 		name = 'ANSI color identifier.',
 		desc = 'Create a identifier that can be exanded (as any other snippet) to a ANSI color escape sequence.',
 	}, {
-		d(1, function()  -- Use a dynamic node to avoid create all choice snippets at the startup
+		d(1, function() -- Use a dynamic node to avoid create all choice snippets at the startup
 			return sn(nil, {
 				t('<<ansi-color-'),
 				create_choice_snippet(1, escapes),
@@ -115,7 +106,7 @@ return {
 				create_choice_snippet(4, modifiers),
 				t('>>'),
 			})
-		end, {})
+		end, {}),
 	}),
 	s({
 		trigEngine = 'pattern',
@@ -124,7 +115,7 @@ return {
 		name = 'ANSI color identifier to ANSI color escape.',
 		desc = 'Exapand the current ANSI color identifier to its respective ANSI color escape sequence.',
 	}, {
-		f(replace_ansi_snippet, {})
+		f(replace_ansi_snippet, {}),
 	}),
 
 	-- Insert a ANSI reset color escape
@@ -133,13 +124,13 @@ return {
 		name = 'Reset ANSI color.',
 		desc = 'Create a identifier that can be exanded (as any other snippet) to a ANSI reset color escape sequence.',
 	}, {
-		d(1, function()  -- Use a dynamic node to avoid create all choice snippets at the startup
+		d(1, function() -- Use a dynamic node to avoid create all choice snippets at the startup
 			return sn(nil, {
 				t('<<ansi-reset-color-'),
 				create_choice_snippet(1, escapes),
 				t('>>'),
 			})
-		end, {})
+		end, {}),
 	}),
 	s({
 		trigEngine = 'pattern',
@@ -148,6 +139,6 @@ return {
 		name = 'ANSI reset color identifier to ANSI reset color escape.',
 		desc = 'Exapand the current ANSI reset color identifier to its respective ANSI reset color escape sequence.',
 	}, {
-		f(replace_ansi_reset_snippet, {})
+		f(replace_ansi_reset_snippet, {}),
 	}),
 }

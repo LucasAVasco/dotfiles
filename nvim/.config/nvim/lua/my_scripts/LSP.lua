@@ -32,9 +32,7 @@
 	`LspLog`    Show the language server log
 ]]
 
-
 local default_options = MYFUNC.decorator_create_options_table({ noremap = true, silent = true })
-
 
 -- Go to
 vim.keymap.set('n', '<leader>gd', vim.lsp.buf.definition, default_options('Go to LSP definition'))
@@ -43,7 +41,7 @@ vim.keymap.set('n', '<leader>gi', vim.lsp.buf.implementation, default_options('G
 vim.keymap.set('n', '<leader>gt', vim.lsp.buf.type_definition, default_options('Go to LSP type definition'))
 
 -- Show information
-MYPLUGFUNC.set_keymap_name('<leader>L', 'LSP mappings', {'n'})
+MYPLUGFUNC.set_keymap_name('<leader>L', 'LSP mappings', { 'n' })
 vim.keymap.set('n', '<leader>Lr', vim.lsp.buf.references, default_options('Show LSP references'))
 vim.keymap.set('n', '<leader>Lh', vim.lsp.buf.hover, default_options('Show LSP hover'))
 vim.keymap.set('n', '<leader>Ls', vim.lsp.buf.document_symbol, default_options('Show LSP symbols'))
@@ -51,7 +49,7 @@ vim.keymap.set('n', '<leader>Lic', vim.lsp.buf.incoming_calls, default_options('
 vim.keymap.set('n', '<leader>Loc', vim.lsp.buf.outgoing_calls, default_options('Show LSP outgoing calls'))
 vim.keymap.set('n', '<leader>Lih', function()
 	local inlay_hint_is_enabled = vim.lsp.inlay_hint.is_enabled()
-	vim.notify((inlay_hint_is_enabled and "Disabling" or "Enabling") .. " inlay hints")
+	vim.notify((inlay_hint_is_enabled and 'Disabling' or 'Enabling') .. ' inlay hints')
 	vim.lsp.inlay_hint.enable(not inlay_hint_is_enabled)
 end, default_options('Toggle LSP inlay hints visualization'))
 
@@ -61,7 +59,7 @@ vim.keymap.set('n', '<leader>La', vim.lsp.buf.code_action, default_options('LSP 
 vim.keymap.set('n', '<leader>Lf', vim.lsp.buf.format, default_options('Code format with LSP'))
 
 -- Workspaces
-MYPLUGFUNC.set_keymap_name('<leader>Lw', 'LSP Workspaces mappings', {'n'})
+MYPLUGFUNC.set_keymap_name('<leader>Lw', 'LSP Workspaces mappings', { 'n' })
 vim.keymap.set('n', '<leader>Lws', vim.lsp.buf.workspace_symbol, default_options('List LSP workspace symbols'))
 vim.keymap.set('n', '<leader>Lwa', vim.lsp.buf.add_workspace_folder, default_options('Add LSP workspace folder'))
 vim.keymap.set('n', '<leader>Lwr', vim.lsp.buf.remove_workspace_folder, default_options('Remove LSP workspace folder'))
@@ -80,9 +78,8 @@ vim.keymap.set('n', '<leader>Lwl', function()
 end, default_options('List LSP workspace folders'))
 
 -- Codelens
-MYPLUGFUNC.set_keymap_name('<leader>Lc', 'LSP Codelens mappings', {'n'})
+MYPLUGFUNC.set_keymap_name('<leader>Lc', 'LSP Codelens mappings', { 'n' })
 vim.keymap.set('n', '<leader>Lcr', vim.lsp.codelens.run, default_options('Run LSP codelens of the current line'))
-
 
 --- Return a function that refreshes the code lens in a specific buffer
 --- The `vim.lsp.codelens.refresh()` function refreshes the code lens in all buffers. To refresh the code lens of a specif buffer, we need to
@@ -93,10 +90,9 @@ vim.keymap.set('n', '<leader>Lcr', vim.lsp.codelens.run, default_options('Run LS
 ---@return function refresh_function Function that refreshes the code lens in the specified buffer
 local function get_refresh_codelens_function(client_id, buffer_nr)
 	return function()
-		vim.lsp.codelens.refresh({client_id=client_id, bufnr=buffer_nr})
+		vim.lsp.codelens.refresh({ client_id = client_id, bufnr = buffer_nr })
 	end
 end
-
 
 -- Auto commands. Need to check if the language server supports it. See the capabilities at:
 -- https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#serverCapabilities
@@ -117,19 +113,25 @@ vim.api.nvim_create_autocmd('LspAttach', {
 		-- Enables highlighting references. The current color scheme need to support it (provide 'LspReferenceText'
 		-- 'LspReferenceRead' and 'LspReferenceWrite' highlight groups)
 		if client.server_capabilities.documentHighlightProvider then
-			vim.api.nvim_create_autocmd({'CursorHold', 'CursorHoldI'}, {
-				group = LSP_group, buffer = buffer_nr, callback = vim.lsp.buf.document_highlight
+			vim.api.nvim_create_autocmd({ 'CursorHold', 'CursorHoldI' }, {
+				group = LSP_group,
+				buffer = buffer_nr,
+				callback = vim.lsp.buf.document_highlight,
 			})
 
-			vim.api.nvim_create_autocmd({'CursorMoved', 'CursorMovedI'}, {
-				group = LSP_group, buffer = buffer_nr, callback = vim.lsp.buf.clear_references
+			vim.api.nvim_create_autocmd({ 'CursorMoved', 'CursorMovedI' }, {
+				group = LSP_group,
+				buffer = buffer_nr,
+				callback = vim.lsp.buf.clear_references,
 			})
 		end
 
 		-- Shows the codelens
 		if client.server_capabilities.codeLensProvider then
-			vim.api.nvim_create_autocmd({'BufEnter', 'InsertLeave', 'CursorHold'}, {
-				group = LSP_group, buffer = buffer_nr, callback = get_refresh_codelens_function(client_id, buffer_nr)
+			vim.api.nvim_create_autocmd({ 'BufEnter', 'InsertLeave', 'CursorHold' }, {
+				group = LSP_group,
+				buffer = buffer_nr,
+				callback = get_refresh_codelens_function(client_id, buffer_nr),
 			})
 		end
 	end,
