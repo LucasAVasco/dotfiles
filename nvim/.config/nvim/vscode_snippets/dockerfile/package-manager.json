@@ -1,0 +1,11 @@
+{
+	"Install package with apk": {
+		"prefix": "RUN-apk-add",
+		"description": [
+			"Install a package with `apk`. Optimized for Dockerfiles"
+		],
+		"body": [
+			"RUN apk add --force-refresh --no-cache ${0:packages}"
+		]
+	}
+}

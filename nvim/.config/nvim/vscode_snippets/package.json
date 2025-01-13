@@ -50,6 +50,12 @@
 					"dockerfile"
 				],
 				"path": "./dockerfile/CMD.json"
+			},
+			{
+				"language": [
+					"dockerfile"
+				],
+				"path": "./dockerfile/package-manager.json"
 			}
 		]
 	}
