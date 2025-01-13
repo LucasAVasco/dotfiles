@@ -1,0 +1,11 @@
+#!/bin/bash
+#
+# Run `helm` in a kind cluster. You must export the kind cluster name with the "KIND_CURRENT_CLUSTER" environment variable (without the
+# 'kind-') prefix.
+#
+# Dependencies:
+# * Bash
+# * Helm
+# * Kind
+
+helm --kube-context kind-"$KIND_CURRENT_CLUSTER" "$@"
