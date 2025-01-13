@@ -209,8 +209,15 @@ return {
 
 			-- Loads debug configurations from a Json file like VS Code
 
-			local project_dir = require('project_runtime_dirs.api.project').get_project_directory() or vim.fn.getcwd()
-			local launchjs_file = project_dir .. '.nvim_dap_launch.json'
+			local project_config_dir = require('project_runtime_dirs.api.project').get_project_configuration_directory()
+
+			---Custom launch file. `nil` if the configuration folder does not exist
+			---@type string?
+			local launchjs_file
+			if project_config_dir then
+				launchjs_file = project_config_dir .. '/launch.json'
+			end
+
 			local dap_settings = require('my_configs.DAP.settings')
 
 			local nc = require('noi' .. 'ce') -- Separates the module name because `typos_lsp` throws an error
@@ -220,6 +227,13 @@ return {
 			local deactivate_nc = true
 
 			local function load_launchjs()
+				-- The file must exist at the configuration folder
+				if not launchjs_file then
+					vim.notify('Launch file does not exist. Check the project configuration directory by it.')
+					return
+				end
+
+				-- Should be able to read the file
 				if vim.fn.filereadable(launchjs_file) == 0 then
 					return
 				end
@@ -249,6 +263,12 @@ return {
 
 			-- User command to edit the my `launch.json` file
 			vim.api.nvim_create_user_command('DapEditLaunchJSON', function()
+				-- The file must exist at the configuration folder
+				if not launchjs_file then
+					vim.notify('Project configuration directory does not exist. You must create a project.')
+					return
+				end
+
 				vim.cmd.edit({ args = { launchjs_file }, magic = { file = false, bar = false } })
 			end, {})
 
