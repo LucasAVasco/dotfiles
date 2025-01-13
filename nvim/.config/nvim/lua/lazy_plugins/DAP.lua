@@ -203,7 +203,7 @@ return {
 
 			setmetatable(dap.adapters, {
 				__index = function(_, adapter_type)
-					return require('my_configs.DAP.' .. adapter_type)
+					return require('my_configs.DAP.configs.' .. adapter_type)
 				end,
 			})
 
@@ -211,7 +211,7 @@ return {
 
 			local project_dir = require('project_runtime_dirs.api.project').get_project_directory() or vim.fn.getcwd()
 			local launchjs_file = project_dir .. '.nvim_dap_launch.json'
-			local dap2filetype = {}
+			local dap_settings = require('my_configs.DAP.settings')
 
 			local nc = require('noi' .. 'ce') -- Separates the module name because `typos_lsp` throws an error
 
@@ -235,7 +235,7 @@ return {
 				end
 
 				if data then
-					require('dap.ext.vscode').load_launchjs(launchjs_file, dap2filetype)
+					require('dap.ext.vscode').load_launchjs(launchjs_file, dap_settings.dap2filetype)
 				end
 			end
 
