@@ -1,6 +1,6 @@
 vim.opt.spell = true
 vim.opt.spelllang = 'en_us'
-vim.opt.spellfile = MYPATHS.config .. 'spell_adds/main.UTF-8.add'
+vim.opt.spellfile:append(MYPATHS.config .. 'spell_adds/main.UTF-8.add')
 vim.opt.complete:append('k')
 vim.opt.spelloptions:append('camel')
 
