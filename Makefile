@@ -119,7 +119,7 @@ endef
 # $(1): The name of the package
 # $(2): The type of the scripts to run
 define run_package_once_scripts =
-	$(if $(findstring disabled, $(1)),
+	$(if $(findstring disable, $(2)),
 		$(if $(wildcard $(strip $(1))/.installed.ignore.stow), $(call run_package_no_once_scripts, $(1), $(2))),
 
 		$(if $(wildcard $(strip $(1))/.installed.ignore.stow), , $(call run_package_no_once_scripts, $(1), $(2)))
