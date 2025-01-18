@@ -3,6 +3,9 @@
 local Config = {
 	filetype2formatter = {
 		lua = { 'stylua' },
+		yaml = { 'prettier' },
+		json = { 'prettier' },
+		jsonc = { 'prettier' },
 	},
 }
 
