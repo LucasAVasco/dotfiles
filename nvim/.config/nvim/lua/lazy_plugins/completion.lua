@@ -175,6 +175,7 @@ return {
 				cmdline = '󱞪 CmdLine',
 				lazydev = ' LazyDev',
 				orgmode = ' OrgMode',
+				['vim-dadbod-completion'] = ' Database',
 			}
 
 			--- Configures the highlighting groups that will be used in the suggestions menu
@@ -302,8 +303,11 @@ return {
 					},
 					{ name = 'nvim_lsp' },
 					{ name = 'luasnip' },
+
+					-- Specific to some filetypes
 					{ name = 'lazydev' }, -- Suggestions to `require()`
 					{ name = 'orgmode' },
+					{ name = 'vim-dadbod-completion' },
 				},
 
 				sorting = {

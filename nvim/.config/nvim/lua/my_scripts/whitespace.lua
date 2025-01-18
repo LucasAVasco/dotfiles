@@ -1,5 +1,9 @@
 local whitespace_error_group = vim.api.nvim_create_augroup('WhitespaceErrorGroup', { clear = true })
 
+local ignore_filetypes = {
+	['dbout'] = true,
+}
+
 vim.api.nvim_create_autocmd({ 'BufWinEnter', 'BufNewFile' }, {
 	group = whitespace_error_group,
 	callback = function(arguments)
@@ -14,7 +18,13 @@ vim.api.nvim_create_autocmd({ 'BufWinEnter', 'BufNewFile' }, {
 		-- The filetype will be text, c, cpp, editable files. If Neovim is started without a file, this option will be empty and the matches
 		-- will not be added. This prevents the matches from being added to the start screen, but requires that the user provides a file to
 		-- edit. Otherwise, the matches will not be added
-		if vim.bo[buffer_nr].filetype == '' then
+		local filetype = vim.bo[buffer_nr].filetype
+		if filetype == '' then
+			return
+		end
+
+		-- Ignore some filetypes
+		if ignore_filetypes[filetype] then
 			return
 		end
 
