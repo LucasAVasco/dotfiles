@@ -6,6 +6,7 @@ local Config = {
 		yaml = { 'prettier' },
 		json = { 'prettier' },
 		jsonc = { 'prettier' },
+		markdown = { 'prettier', 'markdown-toc' },
 	},
 }
 
