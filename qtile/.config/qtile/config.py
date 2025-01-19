@@ -44,7 +44,7 @@ from typing import TYPE_CHECKING, cast
 
 from libqtile import bar, hook, layout
 from libqtile import qtile as __qtile_indefined
-from libqtile.config import Click, Drag, Group, Key, Screen
+from libqtile.config import Click, Drag, Group, Key, Match, Screen
 
 import margin
 import mouse_grow
@@ -180,6 +180,13 @@ layouts = [
     layout.Stack(**default_layout_parameters, num_stacks=2),
     layout.Stack(**default_layout_parameters, num_stacks=3),
 ]
+
+floating_layout = layout.Floating(**default_layout_parameters,
+    float_rules=[
+        *layout.Floating.default_float_rules,
+        Match(wm_class="launcher"),
+    ],
+)
 
 # end_marker }}}
 
