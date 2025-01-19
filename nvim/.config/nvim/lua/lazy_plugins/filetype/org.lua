@@ -66,4 +66,44 @@ return {
 			MYPLUGFUNC.load_telescope_extension('orgmode', { 'refile_heading', 'search_headings', 'insert_link' })
 		end,
 	},
+	{
+		'chipsenkbeil/org-roam.nvim',
+		dependencies = {
+			'nvim-orgmode/orgmode',
+		},
+
+		ft = 'org',
+		keys = {
+			{ '<leader>O', desc = 'org-roam key mappings' },
+		},
+
+		opts = {
+			bindings = {
+				prefix = '<leader>O',
+			},
+
+			directory = MYPATHS.org .. '/notes',
+
+			immediate = {
+				-- Based in the configuration at https://github.com/chipsenkbeil/org-roam.nvim/blob/main/DOCS.org
+				-- I just swap the slug and the date indicator
+				target = '%[slug]-%<%Y%m%d%H%M%S>.org',
+			},
+
+			templates = {
+				-- Use the same template from the default configuration, but changes the target. I just swap the slug and the date
+				-- indicator. Based on the configuration at https://github.com/chipsenkbeil/org-roam.nvim/blob/main/DOCS.org
+				d = {
+					description = 'default',
+					target = '%[slug]-%<%Y%m%d%H%M%S>.org',
+				},
+			},
+
+			extensions = {
+				dailies = {
+					directory = MYPATHS.org .. '/journals',
+				},
+			},
+		},
+	},
 }
