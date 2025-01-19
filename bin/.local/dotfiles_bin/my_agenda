@@ -1,0 +1,8 @@
+#!/bin/bash
+#
+# Open my agenda with Neovim
+#
+# I use the Neovim Orgmode plugin (https://github.com/nvim-orgmode/orgmode) to manage my agenda
+
+
+cd ~/Org/agenda && nvim main.org
