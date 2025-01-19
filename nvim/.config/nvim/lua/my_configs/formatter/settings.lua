@@ -7,6 +7,8 @@ local Config = {
 		json = { 'prettier' },
 		jsonc = { 'prettier' },
 		markdown = { 'prettier', 'markdown-toc' },
+		javascript = { 'prettier' },
+		typescript = { 'prettier' },
 	},
 }
 
