@@ -2,6 +2,11 @@
 .vscode
 
 
+# Project configuration directory used by 'project_runtime_dirs.nvim' plugin. These configurations are not shared with other users, so this
+# folder should not be added to a Git repository
+.nvim-proj
+
+
 # Cache files and folders used by some applications that I use, but the project that I'm working on does not need them
 .ccls-cache
 .cache
