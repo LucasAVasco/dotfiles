@@ -1,0 +1,116 @@
+#!/bin/bash
+#
+# Script to manage project directories created and used by the 'project_runtime_dirs.nvim' plugin for Neovim.
+#
+# Commands:
+#
+# `pwd`: Print the path of the current project directory.
+#
+# `pwd-config`: Print the path of the current project configuration directory.
+#
+# `open`: Open the default file manager at the current project directory.
+#
+# `open-config`: Open the default file manager at the current project configuration directory.
+#
+# Dependencies:
+#
+# * Bash
+# * `notify-send` (only to send notifications)
+# * My `default_file_manager` script (only to use the commands that open directories)
+
+
+
+
+command_name=$(basename "$0")
+log_prefix="[$command_name]"
+nvim_proj_basename='.nvim-proj'
+
+help_msg() {
+	cat << EOF
+$command_name COMMAND
+
+COMMANDS
+	pwd: Print the path of the current project directory.
+
+	pwd-config: Print the path of the current project configuration directory.
+
+	open: Open the default file manager at the current project directory.
+
+	open-config: Open the default file manager at the current project configuration directory.
+
+	ENVIRONMENT VARIABLES
+
+	NOTIFY_SEND: Enable sending notification to the user with `notify-send`.
+EOF
+
+}
+
+notify() {
+	echo "$command_name:" "$@"
+
+	if [[ "$NOTIFY_SEND" == y ]]; then
+		notify-send "$command_name" "$@"
+	fi
+}
+
+# Return nothing if it can not find the project directory.
+get_nvim_proj_dir() {
+	local current_dir=$(realpath "$PWD")
+
+	# Loop ends when "$current_dir" has a "$nvim_proj_basename" sub-directory
+	while ! [[ -d "$current_dir/$nvim_proj_basename" ]]; do
+		current_dir=$(dirname "$current_dir")
+
+		# "$nvim_proj_basename" not found
+		if [[ "$current_dir" == '/' ]]; then
+			return
+		fi
+	done
+
+	echo "$current_dir"
+}
+
+# Return nothing if it can not find the project directory.
+get_nvim_proj_config_dir() {
+	local proj_dir=$(get_nvim_proj_dir)
+
+	if [[ -n "$proj_dir" ]]; then
+		echo "$proj_dir/$nvim_proj_basename"
+	fi
+}
+
+case "$1" in
+	pwd)
+		get_nvim_proj_dir
+	;;
+
+	pwd-config)
+		get_nvim_proj_config_dir
+	;;
+
+	open)
+		proj_dir=$(get_nvim_proj_dir)
+
+		if [[ -n "$proj_dir" ]]; then
+			default_file_manager "$proj_dir"
+		else
+			notify 'Project directory not found'
+		fi
+	;;
+
+	open-config)
+		proj_config_dir=$(get_nvim_proj_config_dir)
+
+		if [[ -n "$proj_config_dir" ]]; then
+			default_file_manager "$proj_config_dir"
+		else
+			notify 'Project configuration directory not found'
+		fi
+	;;
+
+	*)
+		echo "$log_prefix Unknown command: $1"
+
+		help_msg
+	;;
+esac
