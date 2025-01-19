@@ -4,6 +4,10 @@ local diagnostic_type2icon = {
 	hint = '',
 }
 
+local bufferline_ignored_buffers = {
+	['calendar'] = true,
+}
+
 return {
 	{
 		'akinsho/bufferline.nvim',
@@ -52,6 +56,15 @@ return {
 				offsets = {
 					{ filetype = 'NvimTree' },
 				},
+
+				---Ignore some buffers (do not show on the buffer bar).
+				---@param buffer_nr number number of the buffer to filter.
+				---@param _ any
+				---@return boolean show_buffer `true` to show the buffer. `false` to ignore the buffer.
+				custom_filter = function(buffer_nr, _)
+					local filetype = vim.bo[buffer_nr].filetype
+					return not bufferline_ignored_buffers[filetype]
+				end,
 			},
 		},
 
@@ -248,6 +261,7 @@ return {
 				ignore_focus = {
 					'Telescope',
 					'NvimTree',
+					'calendar',
 
 					-- 'undotree' plugin
 					'undotree',

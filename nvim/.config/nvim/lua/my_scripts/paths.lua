@@ -10,6 +10,7 @@ MYPATHS = {
 	home = home,
 	config = config,
 	dev = home .. '/Repositories/neovim_repos/', -- Development folder (used to load plugins in 'dev' mode)
+	org = home .. '/Org', -- Organization related data (notes, agenda, etc)
 	data = data,
 	lazy_nvim = data .. '/lazy/lazy.nvim/', -- Where to install Lazy.nvim
 
