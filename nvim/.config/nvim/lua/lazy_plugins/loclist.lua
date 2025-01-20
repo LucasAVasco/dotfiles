@@ -33,19 +33,9 @@ local key_options = MYFUNC.decorator_create_options_table({
 	silent = true,
 })
 
-vim.keymap.set(
-	'n',
-	'[l',
-	MYFUNC.decorator_set_fkey_mappings(diagnostics_fkeys, 1, true),
-	key_options('Previous loclist item')
-)
+vim.keymap.set('n', '[l', MYFUNC.decorator_set_fkey_mappings(diagnostics_fkeys, 1, true), key_options('Previous loclist item'))
 vim.keymap.set('n', ']l', MYFUNC.decorator_set_fkey_mappings(diagnostics_fkeys, 1), key_options('Next loclist item'))
-vim.keymap.set(
-	'n',
-	'[q',
-	MYFUNC.decorator_set_fkey_mappings(diagnostics_fkeys, 2, true),
-	key_options('Previous quickfix item')
-)
+vim.keymap.set('n', '[q', MYFUNC.decorator_set_fkey_mappings(diagnostics_fkeys, 2, true), key_options('Previous quickfix item'))
 vim.keymap.set('n', ']q', MYFUNC.decorator_set_fkey_mappings(diagnostics_fkeys, 2), key_options('Next quickfix item'))
 
 -- }}}

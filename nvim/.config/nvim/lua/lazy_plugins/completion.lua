@@ -263,9 +263,7 @@ return {
 									base_dir = vim.fn.fnamemodify(base_dir, ':h')
 								elseif buffer_file_type == 'yaml' then
 									-- Use the root directory of the GitHub workflow
-									if
-										split_base_dir_at_index(string.find(base_dir, '/.github/workflows', 0, true))
-									then
+									if split_base_dir_at_index(string.find(base_dir, '/.github/workflows', 0, true)) then
 										return base_dir
 									end
 								end
@@ -287,8 +285,7 @@ return {
 								end
 
 								-- Does not use large files
-								local buffer_size =
-									vim.api.nvim_buf_get_offset(buf_nr, vim.api.nvim_buf_line_count(buf_nr))
+								local buffer_size = vim.api.nvim_buf_get_offset(buf_nr, vim.api.nvim_buf_line_count(buf_nr))
 								if buffer_size > 10 * 1024 * 1024 then
 									return false
 								end

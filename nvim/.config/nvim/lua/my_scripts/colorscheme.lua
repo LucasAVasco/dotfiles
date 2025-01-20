@@ -30,9 +30,6 @@ if file ~= nil then
 	local success, result = pcall(vim.cmd.colorscheme, colorscheme)
 
 	if not success then
-		vim.notify(
-			('Can not load the color scheme: %s. Result: %s'):format(colorscheme, vim.inspect(result)),
-			vim.log.levels.ERROR
-		)
+		vim.notify(('Can not load the color scheme: %s. Result: %s'):format(colorscheme, vim.inspect(result)), vim.log.levels.ERROR)
 	end
 end

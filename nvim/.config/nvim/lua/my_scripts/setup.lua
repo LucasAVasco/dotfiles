@@ -19,12 +19,7 @@ end, {
 			table.insert(arguments_table, setup_name)
 		end
 
-		return MYFUNC.get_complete_suggestions(
-			current_arg_lead,
-			entire_command,
-			cursor_pos,
-			custom_setup_functions_completion_table
-		)
+		return MYFUNC.get_complete_suggestions(current_arg_lead, entire_command, cursor_pos, custom_setup_functions_completion_table)
 	end,
 })
 

@@ -70,10 +70,7 @@ return {
 			---@nodiscard
 			local function should_abort_lsp_config(server_name)
 				-- Lists of LSP servers to disable
-				if
-					vim.tbl_contains(selected_lsp.disable, server_name)
-					or vim.tbl_contains(MYVAR.lsp_servers_to_disable, server_name)
-				then
+				if vim.tbl_contains(selected_lsp.disable, server_name) or vim.tbl_contains(MYVAR.lsp_servers_to_disable, server_name) then
 					return true
 				end
 

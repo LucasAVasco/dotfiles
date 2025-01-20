@@ -45,8 +45,7 @@ return {
 			---@param context CommentCtx Context of the comment operation. See the 'Comment.utils' module for further information
 			pre_hook = function(context)
 				if ts_context_commentstring_pre_hook == nil then
-					ts_context_commentstring_pre_hook =
-						require('ts_context_commentstring.integrations.comment_nvim').create_pre_hook()
+					ts_context_commentstring_pre_hook = require('ts_context_commentstring.integrations.comment_nvim').create_pre_hook()
 				end
 
 				ts_context_commentstring_pre_hook(context)

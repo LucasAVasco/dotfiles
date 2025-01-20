@@ -202,12 +202,7 @@ return {
 
 				-- Override 'h' and 'l' to improve movement in the tree
 				vim.keymap.set('n', 'h', api.node.navigate.parent_close, key_options('Close the current folder'))
-				vim.keymap.set(
-					'n',
-					'l',
-					decorator_ignore_open_folder(open_and_return_to_tree),
-					key_options('Open folder or file')
-				)
+				vim.keymap.set('n', 'l', decorator_ignore_open_folder(open_and_return_to_tree), key_options('Open folder or file'))
 
 				-- Custom keymaps
 				vim.keymap.set(

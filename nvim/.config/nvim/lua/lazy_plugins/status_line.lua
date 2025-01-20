@@ -43,9 +43,7 @@ return {
 					local result = ''
 					for _, diagnostic_type in ipairs({ 'error', 'warning', 'hint' }) do
 						if diagnostics_number[diagnostic_type] then
-							result = result
-								.. diagnostic_type2icon[diagnostic_type]
-								.. diagnostics_number[diagnostic_type]
+							result = result .. diagnostic_type2icon[diagnostic_type] .. diagnostics_number[diagnostic_type]
 						end
 					end
 
@@ -93,8 +91,7 @@ return {
 			end
 
 			-- Automatic groups
-			local docs_filetypes =
-				{ 'tex', 'texmf', 'texinfo', 'markdown', 'asciidoc', 'rst', 'text', 'help', 'help_ru' }
+			local docs_filetypes = { 'tex', 'texmf', 'texinfo', 'markdown', 'asciidoc', 'rst', 'text', 'help', 'help_ru' }
 
 			local conf_filetypes = {
 				'conf',
@@ -164,12 +161,7 @@ return {
 
 			MYPLUGFUNC.set_keymap_name('<leader>B', 'Buffer keymaps')
 			vim.keymap.set('n', '<leader>Bg', bufferline.pick, get_map_opts('Pick a buffer and go to it'))
-			vim.keymap.set(
-				'n',
-				'<leader>Bp',
-				'<CMD>BufferLineTogglePin<CR>',
-				get_map_opts('Pin/unpin the current buffer')
-			)
+			vim.keymap.set('n', '<leader>Bp', '<CMD>BufferLineTogglePin<CR>', get_map_opts('Pin/unpin the current buffer'))
 			vim.keymap.set('n', '<leader>BC', bufferline.close_others, get_map_opts('Close other buffers'))
 
 			vim.keymap.set('n', '<leader>Bc', function()
@@ -203,12 +195,7 @@ return {
 				bufferline.cycle(1)
 			end
 
-			vim.keymap.set(
-				'n',
-				'<A-0>',
-				MYFUNC.decorator_call_function(bufferline.go_to, { -1, true }),
-				get_map_opts('Go to last buffer')
-			)
+			vim.keymap.set('n', '<A-0>', MYFUNC.decorator_call_function(bufferline.go_to, { -1, true }), get_map_opts('Go to last buffer'))
 			vim.keymap.set('n', '<A-[>', cycle_prev_buf, get_map_opts('Go to previous buffer'))
 			vim.keymap.set('n', '<A-]>', cycle_next_buf, get_map_opts('Go to next buffer'))
 
@@ -218,30 +205,10 @@ return {
 				shift = { cycle_prev_buf, '<CMD>tabp<CR>' },
 				normal = { cycle_next_buf, '<CMD>tabn<CR>' },
 			}
-			vim.keymap.set(
-				'n',
-				'[b',
-				MYFUNC.decorator_set_fkey_mappings(buffer_move_fkeys, 1, true),
-				get_map_opts('Previous buffer')
-			)
-			vim.keymap.set(
-				'n',
-				']b',
-				MYFUNC.decorator_set_fkey_mappings(buffer_move_fkeys, 1),
-				get_map_opts('Next buffer')
-			)
-			vim.keymap.set(
-				'n',
-				'[t',
-				MYFUNC.decorator_set_fkey_mappings(buffer_move_fkeys, 2, true),
-				get_map_opts('Previous tab')
-			)
-			vim.keymap.set(
-				'n',
-				']t',
-				MYFUNC.decorator_set_fkey_mappings(buffer_move_fkeys, 2),
-				get_map_opts('Next tab')
-			)
+			vim.keymap.set('n', '[b', MYFUNC.decorator_set_fkey_mappings(buffer_move_fkeys, 1, true), get_map_opts('Previous buffer'))
+			vim.keymap.set('n', ']b', MYFUNC.decorator_set_fkey_mappings(buffer_move_fkeys, 1), get_map_opts('Next buffer'))
+			vim.keymap.set('n', '[t', MYFUNC.decorator_set_fkey_mappings(buffer_move_fkeys, 2, true), get_map_opts('Previous tab'))
+			vim.keymap.set('n', ']t', MYFUNC.decorator_set_fkey_mappings(buffer_move_fkeys, 2), get_map_opts('Next tab'))
 		end,
 	},
 	{

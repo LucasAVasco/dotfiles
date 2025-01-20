@@ -80,30 +80,10 @@ vim.keymap.set('n', 'ch', '<CMD>nohlsearch<CR>', get_default_opt('Clear current 
 
 -- Find and replace
 vim.keymap.set('n', '<leader>ri', ':%s///g<left><left><left>', get_default_opt_no_silence('Replace input in all file'))
-vim.keymap.set(
-	'v',
-	'<leader>ri',
-	':s///g<left><left><left>',
-	get_default_opt_no_silence('Replace input only in selected text')
-)
-vim.keymap.set(
-	'n',
-	'<leader>rs',
-	':%s/<C-r>///g<left><left>',
-	get_default_opt_no_silence('Replace searched text in all file')
-)
-vim.keymap.set(
-	'v',
-	'<leader>rs',
-	':s/<C-r>///g<left><left>',
-	get_default_opt_no_silence('Replace searched text only in selected text')
-)
-vim.keymap.set(
-	'v',
-	'<leader>rv',
-	'""y:%s/<C-r>"//g<left><left>',
-	get_default_opt_no_silence('Replace visual selected text in all file')
-)
+vim.keymap.set('v', '<leader>ri', ':s///g<left><left><left>', get_default_opt_no_silence('Replace input only in selected text'))
+vim.keymap.set('n', '<leader>rs', ':%s/<C-r>///g<left><left>', get_default_opt_no_silence('Replace searched text in all file'))
+vim.keymap.set('v', '<leader>rs', ':s/<C-r>///g<left><left>', get_default_opt_no_silence('Replace searched text only in selected text'))
+vim.keymap.set('v', '<leader>rv', '""y:%s/<C-r>"//g<left><left>', get_default_opt_no_silence('Replace visual selected text in all file'))
 vim.keymap.set(
 	'n',
 	'<leader>res',

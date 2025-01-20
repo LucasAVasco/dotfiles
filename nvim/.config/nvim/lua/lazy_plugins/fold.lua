@@ -99,12 +99,7 @@ return {
 							-- Remaps key that go to insert mode to trace to the previewed code (<CR>) before it
 							local insert_maps = { 'i', 'I', 'a', 'A', 'o', 'O', 'gI', 'gi', 'c', 'cc', 'C', 's', 'S' }
 							for _, key in ipairs(insert_maps) do
-								vim.keymap.set(
-									'n',
-									key,
-									'<CR>' .. key,
-									{ buffer = buf_nr, remap = true, silent = true }
-								)
+								vim.keymap.set('n', key, '<CR>' .. key, { buffer = buf_nr, remap = true, silent = true })
 							end
 						end
 					end
@@ -125,12 +120,7 @@ return {
 			MYPLUGFUNC.set_keymap_name('<leader>z', 'Folding mappings', { 'n' })
 			vim.keymap.set('n', 'zR', ufo.openAllFolds, default_options('Open all folds')) -- UFO requires to remap the `zR` and `zM` keys
 			vim.keymap.set('n', 'zM', ufo.closeAllFolds, default_options('Close all folds'))
-			vim.keymap.set(
-				'n',
-				'<leader>zm',
-				close_only_markers_and_regions,
-				default_options('Close only markers folds')
-			)
+			vim.keymap.set('n', '<leader>zm', close_only_markers_and_regions, default_options('Close only markers folds'))
 			vim.keymap.set('n', '<leader>zp', ufo.peekFoldedLinesUnderCursor, default_options('Peek current fold'))
 
 			vim.keymap.set('n', '<leader>ztp', function() -- Toggle auto preview
@@ -140,40 +130,15 @@ return {
 			-- Movement mappings
 			local default_modes = { 'n', 'v' }
 
-			vim.keymap.set(
-				default_modes,
-				'<A-m>',
-				close_only_markers_and_regions,
-				default_options('Close only markers folds')
-			)
+			vim.keymap.set(default_modes, '<A-m>', close_only_markers_and_regions, default_options('Close only markers folds'))
 
-			vim.keymap.set(
-				default_modes,
-				'zh',
-				MYFUNC.decorator_call_function(set_fold_level, { '-1' }),
-				default_options('Fold level -1')
-			)
-			vim.keymap.set(
-				default_modes,
-				'zl',
-				MYFUNC.decorator_call_function(set_fold_level, { '+1' }),
-				default_options('Fold level +1')
-			)
+			vim.keymap.set(default_modes, 'zh', MYFUNC.decorator_call_function(set_fold_level, { '-1' }), default_options('Fold level -1'))
+			vim.keymap.set(default_modes, 'zl', MYFUNC.decorator_call_function(set_fold_level, { '+1' }), default_options('Fold level +1'))
 			vim.keymap.set(default_modes, '<A-H>', 'zc', default_options('Close previous fold'))
 			vim.keymap.set(default_modes, '<A-L>', 'zo', default_options('Open current fold'))
 
-			vim.keymap.set(
-				default_modes,
-				'<A-K>',
-				decorator_apply_peek(ufo.goPreviousClosedFold),
-				default_options('Previous fold')
-			)
-			vim.keymap.set(
-				default_modes,
-				'<A-J>',
-				decorator_apply_peek(ufo.goNextClosedFold),
-				default_options('Next fold')
-			)
+			vim.keymap.set(default_modes, '<A-K>', decorator_apply_peek(ufo.goPreviousClosedFold), default_options('Previous fold'))
+			vim.keymap.set(default_modes, '<A-J>', decorator_apply_peek(ufo.goNextClosedFold), default_options('Next fold'))
 
 			-- #endregion
 

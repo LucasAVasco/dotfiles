@@ -78,13 +78,7 @@ local function apply_matches(indent_groups, repeats, window_id)
 			table.insert(matches, match)
 
 			-- Applies the match to tab indentation (hard tabs)
-			match = vim.fn.matchadd(
-				group_name,
-				string.format([[^\s*\zs\%%%sc\t]], indent_index),
-				priority,
-				-1,
-				match_config
-			)
+			match = vim.fn.matchadd(group_name, string.format([[^\s*\zs\%%%sc\t]], indent_index), priority, -1, match_config)
 			table.insert(matches, match)
 
 			-- Next indentation level
