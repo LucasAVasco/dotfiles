@@ -107,8 +107,27 @@ define run_package_no_once_scripts =
 	$(foreach script,$(scripts), ./$(script); )
 endef
 
+# Run some script of the package if the package is installed (it has the '.installed.ignore.stow' file)
+#
+# Parameters
+# ----------
+# $(1): The name of the package
+# $(2): The type of the script to run
+define run_script_if_package_is_installed =
+	$(if $(wildcard $(strip $(1))/.installed.ignore.stow), $(call run_package_no_once_scripts, $(1), $(2)))
+endef
 
-# Run some scripts of the package. The user need to provide the package name as $(1) and the script type as $(2).
+# Run some script of the package if the package is not installed (it does not have the '.installed.ignore.stow' file)
+#
+# Parameters
+# ----------
+# $(1): The name of the package
+# $(2): The type of the script to run
+define run_script_if_package_is_not_installed =
+	$(if $(wildcard $(strip $(1))/.installed.ignore.stow), , $(call run_package_no_once_scripts, $(1), $(2)))
+endef
+
+# Run some script of the package. The user need to provide the package name as $(1) and the script type as $(2)
 #
 # This recipe is equivalent to the 'run_package_no_once_scripts', but only runs the script if it has not been executed in the current
 # installation This means that if the user installed a software, the 'once_*_enable' scripts will not be run anymore. And, if the user
@@ -117,12 +136,12 @@ endef
 # Parameters
 # ----------
 # $(1): The name of the package
-# $(2): The type of the scripts to run
+# $(2): The type of the script to run
 define run_package_once_scripts =
 	$(if $(findstring disable, $(2)),
-		$(if $(wildcard $(strip $(1))/.installed.ignore.stow), $(call run_package_no_once_scripts, $(1), $(2))),
-
-		$(if $(wildcard $(strip $(1))/.installed.ignore.stow), , $(call run_package_no_once_scripts, $(1), $(2)))
+		$(call run_script_if_package_is_installed, $(1), $(2))
+		,
+		$(call run_script_if_package_is_not_installed, $(1), $(2))
 	)
 endef
 
