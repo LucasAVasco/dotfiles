@@ -1,10 +1,5 @@
 [flavor]
-use = "tokyo-night"
-
-# Removes the blue semi circle after the mode indicator
-[status]
-separator_style = { bg = "#414868", fg = "#414868" }
-
+dark = "tokyo-night"
 
 # The 'LS Colors' theme will be placed bellow. You can not add it to [flavor] because Yazi does not support more than one flavor at the same
 # time

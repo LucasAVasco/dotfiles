@@ -1,85 +1,34 @@
-#!/bin/env bash
+#!/bin/bash
 #
-# Setup script to complete the Yazi configuration. Downloads the plugins and flavors, and generate the missing files required to configure
+# Setup script to complete my Yazi configuration. Installs the plugins and flavors, and generates the missing files required to configure
 # Yazi
-
-
-yazi_config_dir=~/.config/yazi/
-
-
-# Functions {{{
-
-# Get the name of a Git repository.
-# $1: Repository URL
-# $2: Optional overriding value. Returns this value if provided
-get_repository_name() {
-	name="$2"
-
-	if [[ -z "$name" ]]; then
-		name=${1##*/}  # Removes anything before a '/' character
-		name=${name%.git}  # Removes the '.git' suffix
-	fi
-
-	echo "$name"
-}
-
-
-# Download a Git repository.
-# $1: Download the Git repository inside this folder
-# $2: Repository URL
-# $3: Overrides the installation directory. Path relative to "$1"
-install_git_repository() {
-	repository_name=$(get_repository_name "$2" "$3")
-	installation_dir="$yazi_config_dir/$1/$repository_name"
-
-	# Does not install more than once
-	if [[ -d "$installation_dir" ]]; then
-		return
-	fi
-
-	# Ensures the parent folder existis
-	mkdir -p `dirname "$installation_dir"`
-
-	# Installation
-	echo -e "Installing \e[1;31m${2}\e[1;0m inside \e[1;33m${installation_dir}\e[1;0m"
-	git clone "$2" "$installation_dir"
-}
-
-
-# Download a Yazi plugin.
-# Install a Git repository inside './plugins/'
-# $1: repository URL
-# $2: Overrides the installation directory. Path relative to './plugins/'
-download_plugin() {
-	install_git_repository 'plugins' "$1" "$2"
-}
-
-# Download a Yazi flavor.
-# Install a Git repository inside './flavors/'
-# $1: repository URL
-# $2: Overrides the installation directory. Path relative to './flavors/'
-download_flavor() {
-	install_git_repository 'flavors' "$1" "$2"
-}
-
-# }}}
-
 
 # Ensures the user can install external software
 [[ "$ALLOW_EXTERNAL_SOFTWARE" != 'y' ]] && exit
 
+yazi_config_dir=~/.config/yazi/
+yazi_flavor_dir="$yazi_config_dir/flavors"
+yazi_plugin_dir="$yazi_config_dir/plugins"
 
-# Themes
-download_flavor 'https://github.com/BennyOe/tokyo-night.yazi'
-download_flavor 'https://github.com/Mellbourn/ls-colors.yazi'
+# Install packages (plugins and flavors)
+if [[ ! -d "$yazi_plugin_dir" || ! -d "$yazi_flavor_dir" ]]; then
+	notify-send 'Yazi setup' 'Installing flavors and plugins'
+	ya pack -i
+
+	# Ensures the next call to this script will not re-install the packages
+	mkdir -p "$yazi_plugin_dir" "$yazi_flavor_dir"
+fi
+
+# LS colors installation. I could not install it with `ya pack`
+[[ -d "$yazi_flavor_dir/ls-colors.yazi" ]] || git clone https://github.com/Mellbourn/ls-colors.yazi "$yazi_flavor_dir/ls-colors.yazi"
 
 # Generates the './theme.toml' file from './base_theme.toml' and LS Colors
 theme_file="$yazi_config_dir/theme.toml"
+ls_colors_theme="$yazi_flavor_dir/ls-colors.yazi/theme.toml"
 base_theme_file="$yazi_config_dir/base_theme.toml"
 
+if [[ ! -f "$theme_file" || "$base_theme_file" -nt "$theme_file" || "$ls_colors_theme" -nt "$theme_file" ]]; then
+	notify-send 'Yazi setup' 'Generating "theme.toml"'
 
-if [[ ! -f  "$theme_file" || "$base_theme_file" -nt "$theme_file" ]]; then
-	ls_colors="$yazi_config_dir/flavors/ls-colors.yazi/theme.toml"
-
-	cat "$base_theme_file" "$ls_colors" > "$theme_file"
+	cat "$base_theme_file" "$ls_colors_theme" > "$theme_file"
 fi
