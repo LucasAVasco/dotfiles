@@ -12,7 +12,7 @@ configuration {
 #window {
 	background-color: rgba(0, 0, 0, 80%);
 
-	border: 10 0 10 0;
+	border: 0 0 10 10;
 	border-radius: 20;
 	border-color: rgba(255, 200, 100, 60%);
 
