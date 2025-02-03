@@ -9,6 +9,7 @@ local Config = {
 		markdown = { 'prettier', 'markdown-toc' },
 		javascript = { 'prettier' },
 		typescript = { 'prettier' },
+		go = { 'gofmt' },
 		sql = { 'sql_formatter' },
 	},
 }
