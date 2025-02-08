@@ -200,6 +200,10 @@ return {
 					vim.keymap.set('n', key, open_and_return_to_tree, key_options('Open to edit'))
 				end
 
+				-- Does not delete files, only trashes them
+				vim.keymap.set('n', 'd', api.fs.trash, key_options('Trash current file or folder'))
+				vim.keymap.set('n', 'bd', api.marks.bulk.trash, key_options('Trash all marked nodes'))
+
 				-- Override 'h' and 'l' to improve movement in the tree
 				vim.keymap.set('n', 'h', api.node.navigate.parent_close, key_options('Close the current folder'))
 				vim.keymap.set('n', 'l', decorator_ignore_open_folder(open_and_return_to_tree), key_options('Open folder or file'))
