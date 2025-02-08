@@ -11,11 +11,6 @@
 	`Gclog`                 Shows the git log in the quickfix.
 	`G{v,h}diffsplit`       Shows the diff in a vertical or horizontal split.
 
-	Gitsigns~
-
-	`Gitsigns toggle_current_line_blame`   Toggle the visibility of the current line blame
-	`Gitsigns setloclist`                  Open the location list with the current git hunks
-
 	====================================================================================================
 	Git mappings (Plugin)[maps]                                                        *plugin-git-maps*
 
@@ -93,6 +88,8 @@ return {
 
 		event = 'User MyEventOpenEditableFile',
 
+		cmd = 'Gitsigns',
+
 		opts = {
 			sign_priority = 6,
 			update_debounce = 100,
@@ -148,28 +145,72 @@ return {
 			gitsigns.setup(opts)
 
 			-- Keymaps
-			local options = MYFUNC.decorator_create_options_table({
+
+			local n_mode = 'n'
+			local n_v_mode = { 'n', 'v' }
+			local get_opts = MYFUNC.decorator_create_options_table({
 				noremap = true,
 				silent = true,
 			})
 
-			MYPLUGFUNC.set_keymap_name('<leader>h', 'Gitsigns hunk mappings', { 'n' })
-			vim.keymap.set('n', '<leader>hp', gitsigns.preview_hunk, options('Preview current hunk'))
+			MYPLUGFUNC.set_keymap_name('<leader>G', 'Git mappings', n_v_mode)
+			vim.keymap.set(n_mode, '<leader>Gh', gitsigns.preview_hunk_inline, get_opts('Preview current hunk'))
+			vim.keymap.set(n_mode, '<leader>Gb', gitsigns.toggle_current_line_blame, get_opts('Toggle current line blame'))
+			vim.keymap.set(n_mode, '<leader>Gw', gitsigns.toggle_word_diff, get_opts('Toggle word diff'))
+			vim.keymap.set(n_mode, '<leader>Gd', gitsigns.toggle_deleted, get_opts('Toggle deleted'))
+			vim.keymap.set(n_mode, '<leader>Gl', gitsigns.setloclist, get_opts('Show hunks in loclist'))
+			vim.keymap.set(
+				n_mode,
+				'<leader>GL',
+				MYFUNC.decorator_call_function(gitsigns.setloclist, { 0, 'all' }),
+				get_opts('Show all hunks in loclist')
+			)
 
-			MYPLUGFUNC.set_keymap_name('<leader>G', 'Git mappings', { 'n' })
-			MYPLUGFUNC.set_keymap_name('<leader>Gb', 'Git line blame mappings', { 'n' })
-			vim.keymap.set('n', '<leader>Gbt', gitsigns.toggle_current_line_blame, options('Toggle current line blame'))
+			-- Hunks management
+
+			vim.keymap.set(n_mode, '<leader>GS', gitsigns.stage_buffer, get_opts('Stage buffer'))
+			vim.keymap.set(n_mode, '<leader>GR', gitsigns.reset_buffer, get_opts('Reset buffer'))
+
+			vim.keymap.set(n_v_mode, '<leader>Gs', function()
+				local mode = vim.api.nvim_get_mode().mode
+				vim.notify(mode)
+
+				if mode == 'n' then
+					gitsigns.stage_hunk()
+				elseif mode == 'v' or mode == 'V' then
+					local selected_area = MYFUNC.get_visual_selected_area()
+					gitsigns.stage_hunk({ selected_area.cursor_line, selected_area.start_selected_line })
+				end
+			end, get_opts('Stage hunk'))
+
+			vim.keymap.set(n_v_mode, '<leader>Gr', function()
+				local mode = vim.api.nvim_get_mode().mode
+
+				if mode == 'n' then
+					gitsigns.reset_hunk()
+				elseif mode == 'v' or mode == 'V' then
+					local selected_area = MYFUNC.get_visual_selected_area()
+					gitsigns.reset_hunk({ selected_area.cursor_line, selected_area.start_selected_line })
+				end
+			end, get_opts('Reset hunk'))
+
+			vim.keymap.set(n_v_mode, '<leader>Gu', gitsigns.undo_stage_hunk, get_opts('Unstage hunk'))
+
+			-- Operators
+
+			vim.keymap.set({ 'o', 'x' }, 'ih', gitsigns.select_hunk, get_opts('Select hunk'))
 
 			-- Override default ]c and [c mappings
 
 			--- Decorator that applies a fallback that runs a normal command if not in diff mode
-			---@param func fun() Function that will be called if not in diff mode
+			---@param func fun(args: table) Function that will be called if not in diff mode
+			---@param func_args table Arguments passed to the function
 			---@param fallback_command string Normal command that will be called if in diff mode
 			---@return fun() decorated_function
-			local function decorator_fallback_diff_mode(func, fallback_command)
+			local function decorator_fallback_diff_mode(func, func_args, fallback_command)
 				return function()
 					if not vim.wo.diff then
-						func()
+						func(unpack(func_args))
 
 					-- Fallback to normal commands without overriding the default mapping
 					else
@@ -178,8 +219,10 @@ return {
 				end
 			end
 
-			vim.keymap.set('n', ']c', decorator_fallback_diff_mode(gitsigns.next_hunk, ']c'), options('Next hunk'))
-			vim.keymap.set('n', '[c', decorator_fallback_diff_mode(gitsigns.prev_hunk, '[c'), options('Previous hunk'))
+			vim.keymap.set(n_mode, ']c', decorator_fallback_diff_mode(gitsigns.nav_hunk, { 'next' }, ']c'), get_opts('Next change'))
+			vim.keymap.set(n_mode, '[c', decorator_fallback_diff_mode(gitsigns.nav_hunk, { 'prev' }, '[c'), get_opts('Previous change'))
+			vim.keymap.set(n_mode, ']C', decorator_fallback_diff_mode(gitsigns.nav_hunk, { 'last' }, 'G'), get_opts('Last change'))
+			vim.keymap.set(n_mode, '[C', decorator_fallback_diff_mode(gitsigns.nav_hunk, { 'first' }, 'gg'), get_opts('First change'))
 		end,
 	},
 }

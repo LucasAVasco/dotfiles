@@ -79,6 +79,19 @@ function MYFUNC.get_window_by_buffer(buffer_nr)
 	return window_id
 end
 
+---@class (exact) myfunc.visual_selected_area Start and end line of a visual selected area
+---@field cursor_line integer Line of the cursor
+---@field start_selected_line integer The visual selected area starts in this line
+
+---Return the area of the current visual selected area
+---@return myfunc.visual_selected_area
+function MYFUNC.get_visual_selected_area()
+	return {
+		cursor_line = vim.fn.line('.'),
+		start_visual_line = vim.fn.line('v'),
+	}
+end
+
 -- #endregion
 
 -- #region Decorators to call vim functions
