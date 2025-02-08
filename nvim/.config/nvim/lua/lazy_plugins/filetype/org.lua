@@ -23,7 +23,11 @@ return {
 			org_hide_emphasis_markers = true,
 
 			-- Note files
-			org_agenda_files = MYPATHS.org .. '/**/*.org',
+			org_agenda_files = {
+				MYPATHS.org .. '/agenda/**/*.org',
+				MYPATHS.org .. '/notes/**/*.org',
+				MYPATHS.org .. '/journals/**/*.org',
+			},
 			org_default_notes_file = MYPATHS.org .. '/agenda/main.org',
 
 			-- Custom captures. See https://github.com/nvim-orgmode/orgmode/blob/master/DOCS.md#org_capture_templates
