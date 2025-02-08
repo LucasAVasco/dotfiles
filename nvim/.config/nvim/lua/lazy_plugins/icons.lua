@@ -1,7 +1,10 @@
 return {
 	{
 		'nvim-tree/nvim-web-devicons',
-		lazy = true,
+
+		cmd = {
+			'NvimWebDeviconsHiTest',
+		},
 
 		opts = {
 			default = true,
