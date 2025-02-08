@@ -132,6 +132,27 @@ return {
 		end,
 	},
 	{
+		'kosayoda/nvim-lightbulb',
+		event = 'LspAttach',
+
+		opts = {
+			autocmd = {
+				enabled = true,
+				events = {
+					-- Default events tracked by the plugin
+					'CursorHold',
+					'CursorHoldI',
+
+					-- Events that I want to track
+					'CursorMoved',
+					'CursorMovedI',
+				},
+			},
+
+			code_lenses = true,
+		},
+	},
+	{
 		'nvimdev/lspsaga.nvim',
 
 		dependencies = {
@@ -145,12 +166,11 @@ return {
 
 		opts = {
 			lightbulb = {
-				virtual_text = false, -- Only shows the light bulb in the sign column
+				enable = false, -- I use 'nvim-lightbulb' instead
 			},
 
 			ui = {
 				border = 'rounded',
-				code_action = '󰌵', -- The default light bulb icon did not work with my font
 			},
 		},
 	},
