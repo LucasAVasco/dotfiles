@@ -19,6 +19,12 @@ return {
 
 		opts = {
 			options = {
+				-- The default commands forces the buffer deletion (lose the unwritten changes). I do not like it, so I am changing these
+				-- commands to do not force the buffer deletion
+				close_command = 'bdelete %d',
+				right_mouse_command = 'bdelete %d',
+
+				-- Appearance
 				separator_style = 'slant',
 
 				hover = {
@@ -27,6 +33,7 @@ return {
 					delay = 0,
 				},
 
+				-- Hidden buffers
 				toggle_hidden_on_enter = true, -- Opens a hidden buffer when entering it
 
 				-- Diagnostics
