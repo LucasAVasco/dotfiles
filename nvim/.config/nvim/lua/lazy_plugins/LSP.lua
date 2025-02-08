@@ -160,11 +160,12 @@ return {
 			'nvim-tree/nvim-web-devicons',
 		},
 
-		event = 'LspAttach',
-
 		cmd = 'Lspsaga',
 
 		opts = {
+			symbol_in_winbar = {
+				enable = false, -- I use 'dropbar.nvim' instead
+			},
 			lightbulb = {
 				enable = false, -- I use 'nvim-lightbulb' instead
 			},

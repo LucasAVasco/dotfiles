@@ -219,6 +219,16 @@ return {
 		end,
 	},
 	{
+		'Bekaboo/dropbar.nvim',
+
+		dependencies = {
+			'nvim-tree/nvim-web-devicons',
+		},
+
+		event = 'VeryLazy',
+		opts = {},
+	},
+	{
 		'nvim-lualine/lualine.nvim',
 
 		dependencies = {
