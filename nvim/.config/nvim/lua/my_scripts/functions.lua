@@ -110,7 +110,7 @@ end
 --- Decorator that receives a lua function and returns a Lua function that runs it with the provided arguments.
 --- The returned function will always call the provided function with these arguments. You don't need to pass them.
 --- If you pass more than one argument, the others will be used as the parameters of the provided function.
----@param func fun() Lua function that will be called.
+---@param func fun(args: table) Lua function that will be called.
 ---@param args table List of arguments that will be passed to the provided function.
 ---@return fun() decorated_function A Lua function that runs the provided function with the provided arguments.
 function MYFUNC.decorator_call_function(func, args)
@@ -378,7 +378,7 @@ end
 --- Show the elapsed time of a function.
 --- Test it multiple times and shows the average value of the elapsed time.
 --- Useful for debugging.
----@param func fun() Function to be executed.
+---@param func fun(args: table) Function to be executed.
 ---@param times number Number of times the function will be executed.
 ---@param args table Arguments to be passed to the function.
 function MYFUNC.show_elapsed_time_function(func, times, args)
