@@ -1,5 +1,20 @@
 return {
 	{
+		'preservim/vim-pencil',
+
+		cmd = {
+			'HardPencil',
+			'NoPencil',
+			'Pencil',
+			'PencilHard',
+			'PencilOff',
+			'PencilSoft',
+			'PencilToggle',
+			'SoftPencil',
+			'TogglePencil',
+		},
+	},
+	{
 		'dhruvasagar/vim-table-mode',
 
 		cmd = {
