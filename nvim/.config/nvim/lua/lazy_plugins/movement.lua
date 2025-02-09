@@ -9,6 +9,39 @@ return {
 		end,
 	},
 	{
+		'nvim-treesitter/nvim-treesitter-textobjects',
+
+		dependencies = {
+			'nvim-treesitter/nvim-treesitter',
+		},
+
+		config = function()
+			-- Configuration based on the official documentation at: https://github.com/nvim-treesitter/nvim-treesitter-textobjects
+
+			-- Repeat selection, swap and movement
+
+			local ts_repeatable_move = require('nvim-treesitter.textobjects.repeatable_move')
+
+			local modes = { 'n', 'o', 'x' }
+			local get_opts = MYFUNC.decorator_create_options_table({
+				remap = false,
+			})
+			vim.keymap.set(modes, ',', ts_repeatable_move.repeat_last_move_previous, get_opts('Previous repeated text object'))
+			vim.keymap.set(modes, ';', ts_repeatable_move.repeat_last_move_next, get_opts('Next repeated text object'))
+
+			-- Overrides 'f', 'F', 't', and 'T'
+
+			local get_opts_expr = MYFUNC.decorator_create_options_table({
+				remap = false,
+				expr = true,
+			})
+			vim.keymap.set(modes, 'F', ts_repeatable_move.builtin_F_expr, get_opts_expr('Move previous char'))
+			vim.keymap.set(modes, 'T', ts_repeatable_move.builtin_T_expr, get_opts_expr('Move before previous char'))
+			vim.keymap.set(modes, 'f', ts_repeatable_move.builtin_f_expr, get_opts_expr('Move next char'))
+			vim.keymap.set(modes, 't', ts_repeatable_move.builtin_t_expr, get_opts_expr('Move before next char'))
+		end,
+	},
+	{
 		'folke/flash.nvim',
 
 		keys = {
