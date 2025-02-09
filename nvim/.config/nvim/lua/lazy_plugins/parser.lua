@@ -233,7 +233,7 @@ return {
 
 		keys = {
 			{
-				'<leader>s',
+				'<leader>sb',
 				function()
 					require('treesj').split()
 				end,

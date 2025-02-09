@@ -94,4 +94,33 @@ return {
 			},
 		},
 	},
+	{
+		'mizlan/iswap.nvim',
+
+		cmd = {
+			'IMove',
+			'IMoveNode',
+			'IMoveNodeWith',
+			'IMoveNodeWithLeft',
+			'IMoveNodeWithRight',
+			'IMoveWith',
+			'IMoveWithLeft',
+			'IMoveWithRight',
+			'ISwap',
+			'ISwapNode',
+			'ISwapNodeWith',
+			'ISwapNodeWithLeft',
+			'ISwapNodeWithRight',
+			'ISwapWith',
+			'ISwapWithLeft',
+			'ISwapWithRight',
+		},
+
+		keys = {
+			{ '<leader>sn', '<CMD>ISwapNodeWith<CR>', desc = 'Interactively swap node' },
+			{ '<leader>sp', '<CMD>ISwap<CR>', desc = 'Interactively swap parameter' },
+		},
+
+		opts = {},
+	},
 }
