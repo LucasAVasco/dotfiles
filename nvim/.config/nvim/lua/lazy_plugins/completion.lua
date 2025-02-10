@@ -236,6 +236,7 @@ return {
 				sources = {
 					{
 						name = 'path',
+						priority = 50,
 						option = {
 							---Return the directory that `cmp-path` will use when inserting relative paths
 							---@param cmp_data table<string, any> Data provided by `cmp-path`
@@ -298,34 +299,22 @@ return {
 							return vim.tbl_filter(filter_buffers, buffers)
 						end,
 					},
-					{ name = 'nvim_lsp' },
+					{ name = 'nvim_lsp', priority = 30 },
 					{ name = 'luasnip' },
 
 					-- Specific to some filetypes
 					{ name = 'lazydev' }, -- Suggestions to `require()`
-					{ name = 'orgmode' },
-					{ name = 'vim-dadbod-completion' },
+					{ name = 'orgmode', priority = 20 },
+					{ name = 'vim-dadbod-completion', priority = 20 },
 				},
 
 				sorting = {
 					priority_weight = 1,
 
 					comparators = {
-						---Shows LSP entries first
-						---@module 'cmp'
-						---@param entry1 cmp.Entry
-						---@param entry2 cmp.Entry
-						function(entry1, entry2)
-							if entry1.source.name == 'nvim_lsp' then
-								if entry2.source.name ~= 'nvim_lsp' then
-									return true
-								end
-							elseif entry2.source.name == 'nvim_lsp' then
-								return false
-							end
-						end,
-
+						cmp.config.compare.recently_used,
 						cmp.config.compare.locality,
+						cmp.config.compare.score,
 					},
 				},
 
