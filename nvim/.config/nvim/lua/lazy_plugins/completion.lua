@@ -353,8 +353,8 @@ return {
 
 					-- Accept the suggestions or snippet entry
 					['<CR>'] = function(fallback)
-						if cmp.get_active_entry() then
-							cmp.confirm({ behavior = cmp.ConfirmBehavior.Insert })
+						if cmp.get_selected_entry() then
+							cmp.confirm({ behavior = cmp.ConfirmBehavior.Insert, select = true })
 						elseif luasnip.choice_active() then -- Shows the choice selector if in insert mode and inside a choice node
 							require('luasnip.extras.select_choice')()
 						else
