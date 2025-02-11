@@ -107,6 +107,30 @@ return {
 		end,
 	},
 	{
+		'windwp/nvim-ts-autotag',
+
+		opts = {},
+
+		ft = {
+			-- Copied from https://github.com/windwp/nvim-ts-autotag
+			'astro',
+			'glimmer',
+			'handlebars',
+			'html',
+			'javascript',
+			'jsx',
+			'markdown',
+			'php',
+			'rescript',
+			'svelte',
+			'tsx',
+			'twig',
+			'typescript',
+			'vue',
+			'xml',
+		},
+	},
+	{
 		'folke/lazydev.nvim',
 
 		dependencies = {
