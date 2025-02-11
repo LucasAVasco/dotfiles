@@ -234,6 +234,27 @@ return {
 		end,
 	},
 	{
+		'ibhagwan/fzf-lua',
+
+		dependencies = 'nvim-tree/nvim-web-devicons',
+
+		cmd = 'FzfLua',
+
+		opts = {
+			fzf_colors = {
+				border = { 'fg', { 'FzfLuaBorder' } },
+				gutter = '-1',
+			},
+		},
+
+		config = function(_, opts)
+			local fzf_lua = require('fzf-lua')
+			fzf_lua.setup(opts)
+
+			vim.api.nvim_set_hl(0, 'FzfLuaBorder', { link = 'FloatBorder' })
+		end,
+	},
+	{
 		'nvim-pack/nvim-spectre',
 
 		keys = {
