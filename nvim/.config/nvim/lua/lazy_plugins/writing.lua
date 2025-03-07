@@ -30,6 +30,7 @@ return {
 
 		keys = {
 			{ '<leader>t', desc = 'Table mode mappings' },
+			{ '<leader>tA', "ggVG:'<,'>Tableize<CR>", desc = 'Tableize all file' },
 		},
 	},
 }
