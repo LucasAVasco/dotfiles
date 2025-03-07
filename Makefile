@@ -304,7 +304,7 @@ add: FORCE
 	$(if $(SOURCE), , $(error Does not provided SOURCE))
 
 	@# Get the PACKAGE directory name
-	$(if $(PACKAGE), , $(eval PACKAGE=$(shell FZF_DEFAULT_COMMAND='find . -maxdepth 1 -type d -regex "./\\w*" -printf "%f\\n"' fzf)))
+	$(if $(PACKAGE), , $(eval PACKAGE=$(shell FZF_DEFAULT_COMMAND='find . -maxdepth 1 -type d -regex "./\\w.*" -printf "%f\\n"' fzf)))
 	$(if $(PACKAGE), , $(error Does not provided PACKAGE))
 
 	@# Gets the absolute path of the SOURCE
