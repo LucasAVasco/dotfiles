@@ -23,14 +23,33 @@ return {
 			top_down = false,
 		},
 
+		cmd = {
+			'Notifications',
+			'NotificationsClear',
+
+			-- My commands
+			'NotificationsDismiss',
+		},
+
 		init = function()
 			MYPLUGFUNC.load_telescope_extension('notify', { 'notify' })
 		end,
 
 		config = function(_, opts)
+			local notify = require('notify')
+			notify.setup(opts)
+
 			-- Override the default function
-			vim.notify = require('notify')
-			vim.notify.setup(opts)
+			vim.notify = notify
+
+			vim.api.nvim_create_user_command('NotificationsDismiss', function()
+				notify.dismiss({
+					pending = true,
+					silent = false,
+				})
+			end, {
+				desc = 'Dismiss all notifications',
+			})
 		end,
 	},
 }
