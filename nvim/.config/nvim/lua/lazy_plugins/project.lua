@@ -35,7 +35,7 @@ return {
 
 			local project_config_dir = api_project.get_project_configuration_directory()
 			if project_config_dir then
-				vim.opt.spellfile:append(project_config_dir .. 'spell_adds/main.UTF-8.add')
+				vim.opt.spellfile:prepend(project_config_dir .. 'spell_adds/main.UTF-8.add')
 			end
 		end,
 	},
