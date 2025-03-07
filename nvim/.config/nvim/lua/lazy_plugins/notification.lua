@@ -19,7 +19,6 @@ return {
 		priority = 9500, -- Notification system
 
 		opts = {
-			render = 'wrapped-compact',
 			top_down = false,
 		},
 
