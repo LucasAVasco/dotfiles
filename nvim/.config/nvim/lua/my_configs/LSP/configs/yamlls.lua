@@ -1,11 +1,15 @@
 local schemastore = require('schemastore')
+local schemas = schemastore.yaml.schemas()
+schemas.kubernetes = { 'k8s/*.yaml', 'k8s-*.yaml', 'k3s/*.yaml', 'k3s-*.yaml', 'k8s/*.yml', 'k8s-*.yml', 'k3s/*.yml', 'k3s-*.yml' }
 
 ---@module "my_configs.LSP.types"
 ---@type MyLspServerConfig
+---@diagnostic disable-next-line: missing-fields
 local Config = {
 	settings = {
 		yaml = {
-			schemas = schemastore.yaml.schemas(),
+			schemas = schemas,
+
 			schemaStore = {
 				-- Disables the default schema store (use `schemastore.nvim` instead)
 				enable = false,
