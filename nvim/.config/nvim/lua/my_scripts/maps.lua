@@ -43,6 +43,7 @@ end
 -- Functions to generate the option tables
 local get_default_opt = MYFUNC.decorator_create_options_table({ remap = false, silent = true })
 local get_default_opt_no_silence = MYFUNC.decorator_create_options_table({ remap = false, silent = false })
+local get_default_opt_expr_no_silence = MYFUNC.decorator_create_options_table({ remap = false, expr = true, silent = false })
 
 -- My documentation help
 vim.keymap.set('n', '<F12>', '<CMD>:h mycfg.txt<CR>', get_default_opt('Open my documentation help'))
@@ -84,18 +85,30 @@ vim.keymap.set('v', '<leader>ri', ':s///g<left><left><left>', get_default_opt_no
 vim.keymap.set('n', '<leader>rs', ':%s/<C-r>///g<left><left>', get_default_opt_no_silence('Replace searched text in all file'))
 vim.keymap.set('v', '<leader>rs', ':s/<C-r>///g<left><left>', get_default_opt_no_silence('Replace searched text only in selected text'))
 vim.keymap.set('v', '<leader>rv', '""y:%s/<C-r>"//g<left><left>', get_default_opt_no_silence('Replace visual selected text in all file'))
-vim.keymap.set(
-	'n',
-	'<leader>res',
-	':%s/<C-r>//<C-r>//g<left><left>',
-	get_default_opt_no_silence('Replace searched text by its edited content (all file)')
-)
-vim.keymap.set(
-	'v',
-	'<leader>res',
-	':s/<C-r>//<C-r>//g<left><left>',
-	get_default_opt_no_silence('Replace searched text by its edited content (selected text)')
-)
+
+local function get_search_item_without_escapes()
+	local search = vim.fn.getreg('/')
+
+	if search:sub(0, 2) == '\\V' then
+		search = search:sub(3)
+	end
+
+	if search:sub(0, 2) == '\\<' then
+		local search_size = #search
+		search = search:sub(3, search_size - 2)
+	end
+
+	return search
+end
+
+vim.keymap.set('n', '<leader>res', function()
+	return ':%s/<C-r>//' .. get_search_item_without_escapes() .. '/g<left><left>'
+end, get_default_opt_expr_no_silence('Replace searched text by its edited content (all file)'))
+
+vim.keymap.set('v', '<leader>res', function()
+	return ':s/<C-r>//' .. get_search_item_without_escapes() .. '/g<left><left>'
+end, get_default_opt_expr_no_silence('Replace searched text by its edited content (selected text)'))
+
 vim.keymap.set(
 	'v',
 	'<leader>rev',
