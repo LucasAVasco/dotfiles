@@ -1,0 +1,11 @@
+#!/bin/bash
+#
+# Opens my organization subdirectory.
+
+org_type="$1"
+
+if [[ "$org_type" == 'agenda' ]]; then
+	my_agenda
+else
+	cd ~/Org/"$org_type" && nvim .
+fi
