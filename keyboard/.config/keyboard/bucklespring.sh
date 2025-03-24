@@ -39,6 +39,10 @@ case "$1" in
 		pgrep -f "^${buckle_command}$" > /dev/null && echo 'on' || echo 'off'
 		;;
 
+	is-active)
+		pgrep -f "^${buckle_command}$" > /dev/null && echo 'y' || echo 'n'
+		;;
+
 	start)
 		start_buckle
 		;;
