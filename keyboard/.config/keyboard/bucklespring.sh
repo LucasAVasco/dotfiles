@@ -24,7 +24,9 @@ help_message() {
 
 # Starts bucklespring in parallel
 start_buckle() {
-	pgrep -f "$buckle_command" > /dev/null || nohup $buckle_command > /dev/null &
+	if [[ -z $(pgrep -f "$buckle_command") ]]; then
+		nohup $buckle_command > /dev/null &
+	fi
 }
 
 
