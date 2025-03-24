@@ -11,6 +11,7 @@ local Config = {
 		typescript = { 'prettier' },
 		go = { 'gofmt' },
 		sql = { 'sql_formatter' },
+		tex = { 'tex-fmt' },
 	},
 }
 
