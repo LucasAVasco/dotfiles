@@ -1,0 +1,13 @@
+{
+	"New SSH host": {
+		"prefix": "host",
+		"description": "Create a host shortcut",
+		"body": [
+			"Host ${1:identifier}",
+			"\tHostName      ${2:hostname}",
+			"\tUser          ${3:user}",
+			"\tIdentityFile  ${4:~/.ssh/keys/path.key}",
+			"$0"
+		]
+	}
+}

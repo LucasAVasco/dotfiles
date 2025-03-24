@@ -68,6 +68,12 @@
 					"dockerfile"
 				],
 				"path": "./dockerfile/users-and-groups.json"
+			},
+			{
+				"language": [
+					"sshconfig"
+				],
+				"path": "./ssh/ssh-host.json"
 			}
 		]
 	}
