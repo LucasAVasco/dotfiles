@@ -13,15 +13,10 @@
 # - xclip (Xorg)
 # - wl-copy (Wayland)
 
-
+# Parses the arguments
 copy_stdin='n'
 xorg_target=()
-
-
-if [[ $# == 0 ]]; then
-	copy_stdin='y'
-fi
-
+clear_after=''
 
 while [[ $# -gt 0 ]]; do
 	case "$1" in
@@ -31,6 +26,11 @@ while [[ $# -gt 0 ]]; do
 
 		-t | --xorg_target )
 			xorg_target=(-t "$2")
+			shift
+			;;
+
+		-c | --clear )
+			clear_after="$2"
 			shift
 			;;
 
@@ -47,6 +47,10 @@ while [[ $# -gt 0 ]]; do
 	shift
 done
 
+# If there are not a content to copy from the command line arguments, fallback to copy the standard input
+if [[ $# == 0 ]]; then
+	copy_stdin='y'
+fi
 
 # Xorg session
 if [[ -z "$WAYLAND_DISPLAY" ]]; then
@@ -66,4 +70,10 @@ else
 	else
 		wl-copy -- "$@"
 	fi
+fi
+
+# Clears the clipboard
+if [[ -n "$clear_after" ]]; then
+	current_dir=$(dirname `realpath "${BASH_SOURCE[0]}"`)
+	"$current_dir/clear.sh" --async "$clear_after"
 fi
