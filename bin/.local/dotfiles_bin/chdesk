@@ -25,7 +25,7 @@ check_cmd_parameters_number() {
 
 # Folders with the desktops that can be managed by he Chdesk tool.
 # Provided as an array. Each element is a path to a folder with its own desktops.
-chdesk_dirs=("$HOME/.Desktops" "$HOME/.DesktopsSync")
+chdesk_dirs=("/home/shared_folder/Desktops" "/home/shared_folder/DesktopsSync")
 
 
 # Show help message
