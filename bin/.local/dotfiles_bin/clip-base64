@@ -1,0 +1,74 @@
+#!/bin/bash
+#
+# Encode/decode the clipboard content to/from base64.
+#
+# Copies data from clipboard, encode/decode to/from base64 and copies the result to the clipboard.
+
+source ~/.config/bash/libs/linux/clipboard.sh
+source ~/.config/bash/libs/help.sh
+
+help() {
+	help_msg_format '\t' << EOL
+	DESCRIPTION
+
+	Encode/decode the clipboard content to/from base64.
+
+	Copies data from clipboard, encode/decode to/from base64 and copies the result to the clipboard.
+
+	USAGE
+		clip-base64 [options]
+
+	OPTIONS
+		-e | --encode | encode
+			Encode the clipboard content to base64. Default behavior.
+
+		-d | --decode | decode
+			Decode the clipboard content from base64.
+
+		-c | --clear <time-to-clear>
+			Time before clear the clipboard. Asynchronous operation.
+
+		-h | --help
+			Show this message.
+EOL
+}
+
+# Parses the arguments
+clear_after=''
+command='base64'
+
+while [[ "$#" -gt 0 ]]; do
+	case "$1" in
+		-e | --encode | encode )
+			command='base64' # The default operation is to encode
+			;;
+		-d | --decode | decode )
+			command='base64 -d'
+			;;
+
+		-c | --clear )
+			clear_after="$2"
+			shift
+			;;
+
+		-h | --help )
+			help
+			exit
+			;;
+
+		*)
+			echo "Unrecognized command: '$1'"
+			exit 1
+			;;
+	esac
+
+	shift
+done
+
+# Copies command arguments
+if [[ -n "$clear_after" ]]; then
+	copy_cmd_args="--clear $clear_after"
+fi
+
+# Converts the clipboard
+linux_clipboard_paste | $command -w0 | linux_clipboard_copy $copy_cmd_args
