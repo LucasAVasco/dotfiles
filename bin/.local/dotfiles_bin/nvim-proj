@@ -38,6 +38,8 @@ COMMANDS
 
 	open-config: Open the default file manager at the current project configuration directory.
 
+	run: Run a command in the current project directory.
+
 	ENVIRONMENT VARIABLES
 
 	NOTIFY_SEND: Enable sending notification to the user with `notify-send`.
@@ -107,6 +109,16 @@ case "$1" in
 			notify 'Project configuration directory not found'
 		fi
 	;;
+
+	run)
+		proj_dir=$(get_nvim_proj_dir)
+
+		if [[ -n "$proj_dir" ]]; then
+			cd "$proj_dir" && "${@:2}"
+		else
+			notify 'Project configuration directory not found'
+		fi
+		;;
 
 	*)
 		echo "$log_prefix Unknown command: $1"
