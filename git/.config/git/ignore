@@ -12,6 +12,15 @@
 .cache
 
 
+# Environment files
+.envrc
+.env
+.env.backup*
+.env.bkp*
+.env.key
+.env.*.key
+
+
 # Sometimes I user a backup script that saves the files as a '.zip' file. Ignore this files
 *.my_bkp_script.gitignore.py
 *.my_bkp_script.gitignore.zip
