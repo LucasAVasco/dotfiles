@@ -224,6 +224,8 @@ keys.extend([
     Key([SUPER], "s", lazy.spawn(HOME + "/.config/screenshot/take.sh -c")),
     Key([SUPER, SHIFT], "s",
         lazy.spawn(HOME + "/.config/screenshot/take.sh -i -c")),
+    Key([SUPER, SHIFT], "Escape", lazy.spawn(
+        HOME + "/.config/rofi/tools/session_manager.sh")),
 
     # end_marker }}}
 
