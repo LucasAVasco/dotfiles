@@ -1,33 +1,40 @@
 #!/bin/bash
 #
-# Clear the user clipboard
+# Clear the user clipboard.
 
-# Parses the arguments
-show_notification=y
-if [[ "$1" == '--no-notify' ]]; then
-	show_notification=n
+current_dir=$(dirname `realpath "${BASH_SOURCE[0]}"`)
+
+no_notify=n
+async=n
+
+while [[ "$#" -gt 0 ]]; do
+	case "$1" in
+		--no-notify )
+			no_notify=y
+			;;
+
+		--async )
+			async=y
+			;;
+
+		*)
+			break
+			;;
+	esac
+
 	shift
+done
+
+# Arguments of the main command
+args=''
+if [[ "$no_notify" == y ]]; then
+	args="$args --no-notify"
 fi
+args="$args $@"
 
-# Waits this time before to clear the clipboard
-time_to_wait="$1"
-if [[ -n "$time_to_wait" ]]; then
-	sleep "$time_to_wait"
-fi
-
-# Xorg session
-if [[ -z "$WAYLAND_DISPLAY" ]]; then
-	echo -n '' | xclip -i -sel primary
-	echo -n '' | xclip -i -sel secondary
-	echo -n '' | xclip -i -sel clipboard
-
-# Wayland session
+# Runs the main command
+if [[ "$async" == y ]]; then
+	nohup "$current_dir/__clear.sh" $args > /dev/null 2>&1 &
 else
-	wl-copy --clear
-	wl-copy --primary --clear
-fi
-
-# Shows a notification at the end
-if [[ $show_notification == y ]]; then
-	notify-send 'Clipboard cleared' "Cleared at $(date '+%Hh %Mmin %Ss')"
+	"$current_dir/__clear.sh" $args
 fi
