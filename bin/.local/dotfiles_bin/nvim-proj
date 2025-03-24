@@ -40,6 +40,8 @@ COMMANDS
 
 	run: Run a command in the current project directory.
 
+	make: Run `make` in the current project configuration directory.
+
 	ENVIRONMENT VARIABLES
 
 	NOTIFY_SEND: Enable sending notification to the user with `notify-send`.
@@ -115,6 +117,16 @@ case "$1" in
 
 		if [[ -n "$proj_dir" ]]; then
 			cd "$proj_dir" && "${@:2}"
+		else
+			notify 'Project configuration directory not found'
+		fi
+		;;
+
+	make)
+		proj_config_dir=$(get_nvim_proj_config_dir)
+
+		if [[ -n "$proj_config_dir" ]]; then
+			make -C "$proj_config_dir" "${@:2}"
 		else
 			notify 'Project configuration directory not found'
 		fi
