@@ -1,0 +1,5 @@
+#!/bin/bash
+#
+# Paste the current clipboard.
+
+~/.config/clipboard/paste.sh "$@"
