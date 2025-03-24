@@ -9,6 +9,12 @@ if [[ "$1" == '--no-notify' ]]; then
 	shift
 fi
 
+# Waits this time before to clear the clipboard
+time_to_wait="$1"
+if [[ -n "$time_to_wait" ]]; then
+	sleep "$time_to_wait"
+fi
+
 # Xorg session
 if [[ -z "$WAYLAND_DISPLAY" ]]; then
 	echo -n '' | xclip -i -sel primary
