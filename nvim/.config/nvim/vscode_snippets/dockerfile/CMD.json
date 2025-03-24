@@ -6,9 +6,7 @@
 			"***WARN:*** if the container does not support the `sleep infinity` command, try it with a while loop:",
 			"`CMD-sleep-infinity-while-loop`"
 		],
-		"body": [
-			"CMD [ \"sleep\", \"infinity\" ]"
-		]
+		"body": ["CMD [ \"sleep\", \"infinity\" ]"]
 	},
 	"Sleep infinity command (while loop)": {
 		"prefix": "CMD-sleep-infinity-while-loop",
