@@ -11,9 +11,9 @@ fi
 
 # Xorg session
 if [[ -z "$WAYLAND_DISPLAY" ]]; then
-	echo '' | xclip -i -sel primary
-	echo '' | xclip -i -sel secondary
-	echo '' | xclip -i -sel clipboard
+	echo -n '' | xclip -i -sel primary
+	echo -n '' | xclip -i -sel secondary
+	echo -n '' | xclip -i -sel clipboard
 
 # Wayland session
 else
