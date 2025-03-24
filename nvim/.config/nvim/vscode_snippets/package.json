@@ -41,6 +41,12 @@
 			},
 			{
 				"language": [
+					"go"
+				],
+				"path": "./go/test.json"
+			},
+			{
+				"language": [
 					"dockerfile"
 				],
 				"path": "./dockerfile/cached-build.json"

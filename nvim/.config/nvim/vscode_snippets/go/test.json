@@ -1,0 +1,23 @@
+{
+	"Sample test function": {
+		"prefix": "func-Test",
+		"description": "Sample test function.",
+		"body": [
+			"func Test${1:Name}(t *testing.T) {",
+			"\tt.Run(\"${2:subtest name}\", func(t *testing.T) {",
+			"\t\t$0",
+			"\t})",
+			"}"
+		]
+	},
+
+	"Sample subtest routine": {
+		"prefix": "tRun",
+		"description": "Sample subtest routine.",
+		"body": [
+			"t.Run(\"${2:subtest name}\", func(t *testing.T) {",
+			"\t$0",
+			"})"
+		]
+	}
+}
