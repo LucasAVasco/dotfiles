@@ -74,6 +74,12 @@
 					"sshconfig"
 				],
 				"path": "./ssh/ssh-host.json"
+			},
+			{
+				"language": [
+					"desktop"
+				],
+				"path": "./desktop.json"
 			}
 		]
 	}

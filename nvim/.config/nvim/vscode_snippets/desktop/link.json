@@ -1,0 +1,15 @@
+{
+	"Template to a Link desktop file": {
+		"prefix": "link-template",
+		"description": "Create a Link desktop entry",
+		"body": [
+			"[Desktop Entry]",
+			"Name=$1",
+			"Comment=$2",
+			"URL=$0",
+			"Encoding=UTF-8",
+			"Icon=user-bookmarks",
+			"Type=Link"
+		]
+	}
+}
