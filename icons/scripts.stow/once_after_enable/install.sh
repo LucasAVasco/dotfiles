@@ -10,8 +10,8 @@ local_cursor_folder=~/.local/share/icons/
 # source ~/.config/bash/libs/git.sh
 source "$MY_BASH_LIBS/git.sh"
 
-# source ~/.config/bash/libs/git_download.sh
-source "$MY_BASH_LIBS/git_download.sh"
+# source ~/.config/bash/libs/install/git.sh
+source "$MY_BASH_LIBS/install/git.sh"
 
 # source ~/.config/bash/libs/wget.sh
 source "$MY_BASH_LIBS/wget.sh"
@@ -27,7 +27,7 @@ install_icon_from_git() {
 	local dest_dir="$local_icons_folder/$2-auto-installed"
 
 	[[ -d "$dest_dir" ]] && rm -r "$dest_dir" # Remove old theme folder
-	git_download_export_files "$src_dir" "$dest_dir"
+	install_git_export_files "$src_dir" "$dest_dir"
 }
 
 # Install a icon package from the Wget download directory.
@@ -45,14 +45,14 @@ install_icon_from_wget() {
 }
 
 wget_init
-git_download_init
+install_git_init
 
 # Icon themes {{{
 
-git_download_clone 'https://github.com/numixproject/numix-icon-theme'
+install_git_clone 'https://github.com/numixproject/numix-icon-theme'
 install_icon_from_git numix-icon-theme/Numix Numix
 
-git_download_clone 'https://github.com/numixproject/numix-icon-theme-circle'
+install_git_clone 'https://github.com/numixproject/numix-icon-theme-circle'
 install_icon_from_git numix-icon-theme-circle/Numix-Circle Numix-Circle
 
 # }}}

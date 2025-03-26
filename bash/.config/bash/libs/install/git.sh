@@ -12,7 +12,7 @@
 __git_download_dir=''
 
 # You must call this function before use any other function.
-git_download_init() {
+install_git_init() {
 	__git_download_dir=$(mktemp -d /tmp/git_download-tmp-XXXXX)
 	trap "rm -rf '$__git_download_dir'" EXIT
 }
@@ -21,7 +21,7 @@ git_download_init() {
 #
 # $1..n: file name.
 # Return string with the absolute path.
-git_download_get_abs_path() {
+install_git_get_abs_path() {
 	echo -n "$__git_download_dir/$@"
 }
 
@@ -30,8 +30,8 @@ git_download_get_abs_path() {
 # $1: subdirectory path (relative to the download directory).
 # $2: arguments append to the `ls` command.
 # Return list of files (like the one returned by the `ls` command).
-git_download_list_files() {
-	local base_dir=$(git_download_get_abs_path "$1")
+install_git_list_files() {
+	local base_dir=$(install_git_get_abs_path "$1")
 	ls "$base_dir" "${@:2}"
 }
 
@@ -41,7 +41,7 @@ git_download_list_files() {
 # $2: clone into this directory
 # $3: branch to download. A empty string means the repository default branch.
 # $4..n: arguments to `git clone`
-git_download_clone() {
+install_git_clone() {
 	local source_url="$1"
 	local dest_dir="$2"
 	local branch="$3"
@@ -51,7 +51,7 @@ git_download_clone() {
 		dest_dir=$(basename "$source_url")
 	fi
 
-	dest_dir=$(git_download_get_abs_path "$dest_dir")
+	dest_dir=$(install_git_get_abs_path "$dest_dir")
 
 	if [[ -z "$branch" ]]; then
 		git clone "$source_url" "$dest_dir" --depth=1 "${@:4}"
@@ -64,13 +64,13 @@ git_download_clone() {
 #
 # $1..n-1: Files to copy (relative to the download directory).
 # $n: Absolute path of the destination or folder or file. Copy the files to this folder.
-git_download_export_files() {
+install_git_export_files() {
 	local -a abs_files
 	local dest_dir="${@:$#}"
 
 	local num_files=$(($# - 1))
 	for file_path in "${@:1:$num_files}"; do
-		abs_files+=($(git_download_get_abs_path "$file_path"))
+		abs_files+=($(install_git_get_abs_path "$file_path"))
 	done
 
 	mkdir -p "$(dirname "$dest_dir")" # Ensures the installation directory exists
