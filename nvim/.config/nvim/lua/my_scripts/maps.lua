@@ -2,6 +2,31 @@
 -- Keycodes can be found with this command ':h keycodes'
 -- You can see if key is already mapped with ':verbose map <key>'
 
+-- Functions {{{
+
+local simplified_keyword = '48-57,a-z,A-Z,192-255'
+
+---Run a normal command in a environment that a keyword is defined by alphanumeric characters.
+---@param callback string|function Normal command to execute.
+local function run_with_simplified_keyword(callback)
+	local iskeyword_bkp = vim.bo.iskeyword
+	vim.bo.iskeyword = simplified_keyword
+
+	local callback_type = type(callback)
+	if callback_type == 'string' then
+		vim.cmd.normal({
+			args = { callback },
+			bang = true,
+		})
+	elseif callback_type == 'function' then
+		callback()
+	end
+
+	vim.bo.iskeyword = iskeyword_bkp
+end
+
+-- }}}
+
 -- Leader key
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' ' -- Recommended to be equal to mapleader (some plugins use this)
@@ -147,31 +172,16 @@ vim.keymap.set('i', '<C-down>', '<CMD>normal! }<CR>', get_default_opt('Move curs
 
 -- Go to next/previous word
 
-local simplified_keyword = '48-57,a-z,A-Z,192-255'
-
----Run a normal command in a environment that a keyword is defined by alphanumeric characters.
----@param normal_command string Normal command to execute.
-local function normal_command_with_simplified_keyword(normal_command)
-	local iskeyword_bkp = vim.bo.iskeyword
-	vim.bo.iskeyword = simplified_keyword
-
-	vim.cmd.normal({
-		args = { normal_command },
-	})
-
-	vim.bo.iskeyword = iskeyword_bkp
-end
-
 vim.keymap.set({ 'n', 'v', 'i' }, '<A-w>', function()
-	normal_command_with_simplified_keyword('w')
+	run_with_simplified_keyword('w')
 end, get_default_opt('Forward to a simplified word'))
 
 vim.keymap.set({ 'n', 'v', 'i' }, '<A-e>', function()
-	normal_command_with_simplified_keyword('e')
+	run_with_simplified_keyword('e')
 end, get_default_opt('Forward to the end of a simplified word'))
 
 vim.keymap.set({ 'n', 'v', 'i' }, '<A-b>', function()
-	normal_command_with_simplified_keyword('b')
+	run_with_simplified_keyword('b')
 end, get_default_opt('Backward to a simplified word'))
 
 -- Fast repeat the macro saved in the 'q' register
@@ -181,7 +191,9 @@ vim.keymap.set('n', '<leader>.', ':let @q=@', get_default_opt('Copy a register c
 -- Backspace deletion. Some terminal emulators does not have a <C-BS> key. They use <C-w> or <C-h> instead
 vim.keymap.set('i', '<C-w>', '<C-BS>', { remap = true, silent = true, desc = 'Same as the <C-BS> key' })
 vim.keymap.set('i', '<C-h>', '<C-BS>', { remap = true, silent = true, desc = 'Same as the <C-BS> key' })
-vim.keymap.set('i', '<C-BS>', function()
+
+-- Delete the previous word. Like the <C-BS> key bind on others IDEs.
+local function delete_previous_word()
 	local cursor_pos = vim.api.nvim_win_get_cursor(0) -- Line (starts with 1) | column (starts with 0)
 	local last_col = vim.fn.col('$') - 1 -- Max column that the cursor can go in insert mode
 
@@ -201,10 +213,16 @@ vim.keymap.set('i', '<C-BS>', function()
 		cursor_pos = vim.api.nvim_win_get_cursor(0)
 		vim.api.nvim_win_set_cursor(0, { cursor_pos[1], cursor_pos[2] + 1 })
 	end
-end, get_default_opt('Delete the previous word'))
+end
 
--- Del the next word with <C-DEL>
-vim.keymap.set('i', '<C-DEL>', function()
+vim.keymap.set('i', '<C-BS>', delete_previous_word, get_default_opt('Delete the previous word'))
+
+vim.keymap.set('i', '<A-BS>', function()
+	run_with_simplified_keyword(delete_previous_word)
+end, get_default_opt('Delete the previous simplified word'))
+
+-- Delete the next word. Like the <C-Del> key bind on others IDEs.
+local function delete_next_word()
 	local cursor_pos = vim.api.nvim_win_get_cursor(0) -- Line (starts with 1) | column (starts with 0)
 	local last_col = vim.fn.col('$') - 1 -- Max column that the cursor can go in insert mode
 
@@ -218,4 +236,11 @@ vim.keymap.set('i', '<C-DEL>', function()
 	-- cursor position to the one before the delete operation
 	vim.cmd.normal({ 'dw', bang = true })
 	vim.api.nvim_win_set_cursor(0, cursor_pos)
-end, get_default_opt('Delete the next word'))
+end
+
+-- Del the next word with <C-DEL>
+vim.keymap.set('i', '<C-DEL>', delete_next_word, get_default_opt('Delete the next word'))
+
+vim.keymap.set('i', '<A-DEL>', function()
+	run_with_simplified_keyword(delete_next_word)
+end, get_default_opt('Delete the next simplified word'))
