@@ -145,6 +145,35 @@ vim.keymap.set('i', '<C-right>', '<CMD>normal! w<CR>', get_default_opt('Move cur
 vim.keymap.set('i', '<C-up>', '<CMD>normal! {<CR>', get_default_opt('Move cursor a paragraph back'))
 vim.keymap.set('i', '<C-down>', '<CMD>normal! }<CR>', get_default_opt('Move cursor a paragraph forward'))
 
+-- Go to next/previous word
+
+local simplified_keyword = '48-57,a-z,A-Z,192-255'
+
+---Run a normal command in a environment that a keyword is defined by alphanumeric characters.
+---@param normal_command string Normal command to execute.
+local function normal_command_with_simplified_keyword(normal_command)
+	local iskeyword_bkp = vim.bo.iskeyword
+	vim.bo.iskeyword = simplified_keyword
+
+	vim.cmd.normal({
+		args = { normal_command },
+	})
+
+	vim.bo.iskeyword = iskeyword_bkp
+end
+
+vim.keymap.set({ 'n', 'v', 'i' }, '<A-w>', function()
+	normal_command_with_simplified_keyword('w')
+end, get_default_opt('Forward to a simplified word'))
+
+vim.keymap.set({ 'n', 'v', 'i' }, '<A-e>', function()
+	normal_command_with_simplified_keyword('e')
+end, get_default_opt('Forward to the end of a simplified word'))
+
+vim.keymap.set({ 'n', 'v', 'i' }, '<A-b>', function()
+	normal_command_with_simplified_keyword('b')
+end, get_default_opt('Backward to a simplified word'))
+
 -- Fast repeat the macro saved in the 'q' register
 vim.keymap.set({ 'n', 'v' }, '<A-.>', '@q', get_default_opt('Repeat macro "q"'))
 vim.keymap.set('n', '<leader>.', ':let @q=@', get_default_opt('Copy a register content to "q" register'))

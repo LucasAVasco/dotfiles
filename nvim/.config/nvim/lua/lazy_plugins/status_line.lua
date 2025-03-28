@@ -183,7 +183,7 @@ return {
 				end
 			end, get_map_opts('Close all hidden buffers'))
 
-			vim.keymap.set('n', '<A-w>', bufferline.unpin_and_close, get_map_opts('Close the current buffer'))
+			vim.keymap.set('n', '<A-Q>', bufferline.unpin_and_close, get_map_opts('Close the current buffer'))
 
 			-- Key maps to jump to a buffer
 			for i = 1, 9 do

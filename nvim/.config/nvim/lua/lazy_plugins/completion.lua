@@ -82,7 +82,9 @@ return {
 
 		opts = {
 			disable_filetype = { 'TelescopePrompt', 'NvimTree' },
-			fast_wrap = {}, -- Required to enable `fast_wrap`
+			fast_wrap = {
+				map = '<A-r>',
+			},
 		},
 
 		config = function(_, opts)
