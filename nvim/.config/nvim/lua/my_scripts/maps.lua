@@ -170,6 +170,17 @@ vim.keymap.set('i', '<C-right>', '<CMD>normal! w<CR>', get_default_opt('Move cur
 vim.keymap.set('i', '<C-up>', '<CMD>normal! {<CR>', get_default_opt('Move cursor a paragraph back'))
 vim.keymap.set('i', '<C-down>', '<CMD>normal! }<CR>', get_default_opt('Move cursor a paragraph forward'))
 
+vim.keymap.set('i', '<A-left>', function()
+	run_with_simplified_keyword('b')
+end, get_default_opt('Move cursor a simplified word left'))
+
+vim.keymap.set('i', '<A-right>', function()
+	run_with_simplified_keyword('w')
+end, get_default_opt('Move cursor a simplified word right'))
+
+vim.keymap.set('i', '<A-up>', '<CMD>normal! k<CR>', get_default_opt('Move cursor up'))
+vim.keymap.set('i', '<A-down>', '<CMD>normal! j<CR>', get_default_opt('Move cursor down'))
+
 -- Go to next/previous word
 
 vim.keymap.set({ 'n', 'v', 'i' }, '<A-w>', function()
