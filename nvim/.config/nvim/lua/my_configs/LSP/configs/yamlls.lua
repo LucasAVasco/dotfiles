@@ -1,6 +1,17 @@
 local schemastore = require('schemastore')
 local schemas = schemastore.yaml.schemas()
-schemas.kubernetes = { 'k8s/*.yaml', 'k8s-*.yaml', 'k3s/*.yaml', 'k3s-*.yaml', 'k8s/*.yml', 'k8s-*.yml', 'k3s/*.yml', 'k3s-*.yml' }
+schemas.kubernetes = {
+	'k8s/*.yaml',
+	'k8s-*.yaml',
+	'k3s/*.yaml',
+	'k3s-*.yaml',
+	'k8s/*.yml',
+	'k8s-*.yml',
+	'k3s/*.yml',
+	'k3s-*.yml',
+	'kubectl-edit-*.yaml',
+	'kubectl-edit-*.yml',
+}
 
 ---@module "my_configs.LSP.types"
 ---@type MyLspServerConfig
