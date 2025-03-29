@@ -47,6 +47,12 @@
 			},
 			{
 				"language": [
+					"sql"
+				],
+				"path": "./sql/formatter.json"
+			},
+			{
+				"language": [
 					"dockerfile"
 				],
 				"path": "./dockerfile/cached-build.json"

@@ -1,0 +1,11 @@
+{
+	"Disable formatter": {
+		"prefix": "disable-formatter",
+		"description": "Disable 'sql-formatter' in a region of the file",
+		"body": [
+			"/* sql-formatter-disable */",
+			"$0",
+			"/* sql-formatter-enable */"
+		]
+	}
+}
