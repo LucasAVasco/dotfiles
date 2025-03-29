@@ -60,6 +60,15 @@ install_git_clone() {
 	fi
 }
 
+# Run a arbitrary command on the download directory.
+#
+# $@: command and its arguments.
+install_git_run() {
+	cd "$__git_download_dir"
+	"$@"
+	cd -
+}
+
 # Copy files from the download directory to a folder or file outside it.
 #
 # $1..n-1: Files to copy (relative to the download directory).
