@@ -131,7 +131,7 @@ return {
 						[']e'] = { query = '@frame.outer', desc = 'Outer part of a frame' },
 						[']m'] = { query = '@function.outer', desc = 'Outer part of a method/function' },
 						[']o'] = { query = '@loop.outer', desc = 'Outer part of a loop' },
-						['in'] = { query = '@number.inner', desc = 'Inner part of a number' },
+						[']n'] = { query = '@number.inner', desc = 'Inner part of a number' },
 						[']v'] = { query = '@parameter.outer', desc = 'Outer part of a parameter' },
 						[']x'] = { query = '@regex.outer', desc = 'Outer part of a regex' },
 						[']r'] = { query = '@return.outer', desc = 'Outer part of a return' },
