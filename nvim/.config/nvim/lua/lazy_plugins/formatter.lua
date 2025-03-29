@@ -62,6 +62,11 @@ return {
 					return
 				end
 
+				local filename = vim.api.nvim_buf_get_name(buffer_number)
+				if string.match(filename, '^/tmp/dadbodui-') then
+					return
+				end
+
 				-- Auto-format
 				local formatters_info = require('conform').list_formatters_to_run(buffer_number)
 
