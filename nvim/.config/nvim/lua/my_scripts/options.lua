@@ -48,22 +48,21 @@ vim.opt.colorcolumn = '+1'
 ---@param buffer_nr number Number of the buffer to update the `listchars` variable
 ---@param all_windows? boolean Apply to the global configuration if `true`. Apply to a local window if `false`
 local function update_listchars(buffer_nr, all_windows)
-	local indent_size = vim.bo[buffer_nr].tabstop -- Number of spaces of a indentation level
+	local indent_size = MYFUNC.get_indentation_size(buffer_nr)
 
-	local window_opts = vim.wo
+	local window_opts = vim.opt
 
-	if all_windows ~= nil then
+	if all_windows ~= true then
 		local window_id = MYFUNC.get_window_by_buffer(buffer_nr)
 		window_id = window_id >= 0 and window_id or 0
+		window_opts = vim.wo[window_id]
 
-		window_opts = window_opts[window_id]
-
-		-- Only update the list chars if the `tabstop` option changed
-		if vim.w[window_id].__last_window_indent_size == indent_size then
+		-- Only update the list chars if the indentation size changed
+		if vim.w[window_id].__listchars_last_window_indent_size == indent_size then
 			return
 		end
 
-		vim.w[window_id].__last_window_indent_size = indent_size
+		vim.w[window_id].__listchars_last_window_indent_size = indent_size
 	end
 
 	-- Data required to define the list chars
@@ -110,17 +109,25 @@ end
 vim.opt.list = true
 update_listchars(0, true)
 
--- Updates the `listchars` option when the `tabstop` option changes. As described in the `update_listchars()` function. Use this approach
--- because my custom `listchars` option depends on the `tabstop` option. Need to update after a `BufWinEnter` to update the `listchars`
--- option if the user opens more that one buffer in the command line. This ensures that the buffer is attached to a window when updating the
--- `listchars` option (this is a window option, so needs a window to be applied).
+-- Need to update the 'listchars' if any option related to the indentation size changes
 vim.api.nvim_create_autocmd({ 'OptionSet', 'BufWinEnter' }, {
 	callback = function(arguments)
-		if arguments.match == 'tabstop' or arguments.event == 'BufWinEnter' then
+		if MYFUNC.array_has({ 'tabstop', 'shiftwidth' }, arguments.match) then
 			-- Does not changes the `listchars` option if the user can not change the window appearance
 			if MYFUNC.user_can_change_appearance(nil, arguments.buf) then
 				update_listchars(arguments.buf)
 			end
+		end
+	end,
+})
+
+-- Need to update after a `BufWinEnter` to update the `listchars` option if the user opens more that one buffer in the command line. This
+-- ensures that the buffer is attached to a window when updating the `listchars` option (this is a window option, so needs a window to be
+-- applied).
+vim.api.nvim_create_autocmd({ 'BufWinEnter' }, {
+	callback = function(arguments)
+		if MYFUNC.user_can_change_appearance(nil, arguments.buf) then
+			update_listchars(arguments.buf)
 		end
 	end,
 })

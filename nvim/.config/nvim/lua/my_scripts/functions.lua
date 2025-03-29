@@ -59,6 +59,20 @@ function MYFUNC.str_split(text, pattern)
 	return result
 end
 
+---Checks if a array has a specific value.
+---@param array any[] Search by the value in this array.
+---@param value any Search by this value in the array.
+---@return boolean if_has_value
+function MYFUNC.array_has(array, value)
+	for _, array_value in ipairs(array) do
+		if array_value == value then
+			return true
+		end
+	end
+
+	return false
+end
+
 --- Get the ID of the window from the buffer number
 --- The user need to provide the buffer number. This function will return the ID of the window associated to this buffer. More that one
 --- window can be associated to the same buffer. In this case, this function will select one of them and return. The criteria to select the
@@ -90,6 +104,21 @@ function MYFUNC.get_visual_selected_area()
 		cursor_line = vim.fn.line('.'),
 		start_visual_line = vim.fn.line('v'),
 	}
+end
+
+---Return the number of spaces used by a indentation level.
+---@param buffer_num integer Get the indentation level of this buffer.
+---@return integer number_of_spaces
+function MYFUNC.get_indentation_size(buffer_num)
+	local bo = vim.bo[buffer_num]
+
+	local indent_size = bo.shiftwidth
+
+	if indent_size == 0 then
+		indent_size = bo.tabstop
+	end
+
+	return indent_size
 end
 
 -- #endregion

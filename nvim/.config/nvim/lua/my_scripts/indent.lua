@@ -51,12 +51,10 @@ end
 --- 'IndentGroup2'.
 ---@param indent_groups table Names of the indentation highlight groups
 ---@param repeats number Number of times to repeat the highlight groups in the next indentation level
+---@param indent_size number Number of spaces that composes an indentation level.
 ---@param window_id number ID of the window to apply the highlights
 ---@return table matches_list List of the created matches
-local function apply_matches(indent_groups, repeats, window_id)
-	-- Applies the matches to the indentation syntax groups
-	local indent_size = vim.bo.tabstop -- Number of spaces of a indentation level
-
+local function apply_matches(indent_groups, indent_size, repeats, window_id)
 	local indent_index = 1
 	local priority = 15 -- Matches priority (default value is 10)
 	local match_config = {
@@ -89,6 +87,21 @@ local function apply_matches(indent_groups, repeats, window_id)
 	return matches
 end
 
+---Check if there are matches applied to a window.
+---@param window_id integer ID of the window to check by the matches.
+---@return boolean matches_are_applied
+local function matches_are_applied(window_id)
+	return vim.w[window_id].__indent_hl_matches ~= nil
+end
+
+---Delete the matches applied to a window.
+---@param window_id integer ID of the window to delete the matches.
+local function delete_matches(window_id)
+	for _, match in ipairs(vim.w[window_id].__indent_hl_matches) do
+		vim.fn.matchdelete(match, window_id)
+	end
+end
+
 --- Like apply_matches, but checks if the user can apply the matches to the current window.
 --- Only apply the matches if the user can apply the highlight groups to the current window.
 --- Does not applies the matches more that one time
@@ -101,15 +114,23 @@ local function update_window_matches(indent_groups, repeats, window_id)
 		return
 	end
 
-	-- Only applies the matches one time. The matches are not removed when the user changes the color schemes
-	if vim.w[window_id].__indent_hl_matches_applied == true then
+	local buffern_num = vim.api.nvim_win_get_buf(window_id)
+	local indent_size = MYFUNC.get_indentation_size(buffern_num)
+
+	-- Only update the matches if the indentation size changed
+	if vim.w[window_id].__indentcolors_last_window_indent_size == indent_size then
 		return
 	end
 
-	vim.w[window_id].__indent_hl_matches_applied = true
+	vim.w[window_id].__indentcolors_last_window_indent_size = indent_size
+
+	-- Delete old matches
+	if matches_are_applied(window_id) then
+		delete_matches(window_id)
+	end
 
 	-- Matches creation
-	apply_matches(indent_groups, repeats, window_id)
+	vim.w[window_id].__indent_hl_matches = apply_matches(indent_groups, indent_size, repeats, window_id)
 end
 
 -- #endregion
@@ -125,27 +146,27 @@ vim.api.nvim_create_autocmd({ 'BufWinEnter', 'BufNewFile' }, {
 	group = indent_hl_augroup,
 	callback = function(arguments)
 		local window_id = MYFUNC.get_window_by_buffer(arguments.buf)
-
 		update_window_matches(indent_groups, repeat_times, window_id)
 	end,
 })
 
--- Updates the matches when the 'tabstop' option or the color scheme is change
-vim.api.nvim_create_autocmd({ 'ColorScheme', 'OptionSet' }, {
+-- Need to recreate the matches if any option related to the indentation size changes
+vim.api.nvim_create_autocmd({ 'OptionSet' }, {
 	group = indent_hl_augroup,
 	callback = function(arguments)
-		-- Need to recreate the matches related to white spaces if the `tabstop` option is changed because this option changes the number of
-		-- spaces in an indentation level, so the matches need to be updated to correspond to the new number of spaces
-		if arguments.event == 'OptionSet' and arguments.match == 'tabstop' then
+		if MYFUNC.array_has({ 'tabstop', 'shiftwidth' }, arguments.match) then
 			local window_id = MYFUNC.get_window_by_buffer(arguments.buf)
 			update_window_matches(indent_groups, repeat_times, window_id)
-
-		-- highlight groups are removed when the color scheme changes. Need to recreate the groups and matches
-		elseif arguments.event == 'ColorScheme' then
-			-- The highlight groups are removed after change the color scheme. Need to recreate them. The matches are not removed after
-			-- change the color scheme. No need to recreate it
-			indent_groups = create_highlight_groups(indent_colors)
 		end
+	end,
+})
+
+-- The highlight groups are removed after change the color scheme. Need to recreate them. The matches are not removed, so no need to
+-- recreate it
+vim.api.nvim_create_autocmd({ 'ColorScheme' }, {
+	group = indent_hl_augroup,
+	callback = function()
+		indent_groups = create_highlight_groups(indent_colors)
 	end,
 })
 
