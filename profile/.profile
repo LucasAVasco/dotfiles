@@ -5,13 +5,7 @@
 
 
 # Custom paths added to PATH variable
-FOLDERS_TO_PATH="$HOME/.bin $HOME/.local/bin $HOME/.local/dotfiles_bin"
-
-for folder in $FOLDERS_TO_PATH; do
-	if [ -d "$folder" ]; then
-		PATH="$folder:$PATH"
-	fi
-done
+export PATH="$PATH:$HOME/.local/bin:$HOME/.local/dotfiles_bin"
 
 
 # Custom 'share' folder to hold dot files shared data (e.g. Desktop applications)
