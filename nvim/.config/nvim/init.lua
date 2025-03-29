@@ -26,6 +26,7 @@ load_script('prose')
 load_script('virtual_edit')
 load_script('italics')
 load_script('LSP')
+load_script('open')
 load_script('file_types')
 
 -- Development options
