@@ -25,6 +25,10 @@ if [ "$DESKTOP_SESSION" = "bspwm" ]; then
 fi
 
 
+# Apps environment variables
+export PODMAN_COMPOSE_PROVIDER=podman-compose
+
+
 # This variable defines if the user can install external software, like extensions or plugins
 ALLOW_EXTERNAL_SOFTWARE=y
 
