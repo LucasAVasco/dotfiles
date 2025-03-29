@@ -88,6 +88,7 @@ return {
 
 			---Default settings applied to all LSP servers
 			---@type MyLspServerConfig
+			---@diagnostic disable-next-line: missing-fields
 			local default_lspconfiguration = {
 				capabilities = client_capabilities,
 			}
@@ -100,18 +101,26 @@ return {
 						return
 					end
 
-					-- Gets the LSP server options from my configuration directory
+					local filetypes = lspconfig[lsp_server_name].config_def.default_config.filetypes or '*'
 
-					---@type boolean, any
-					local ok, server_opts = pcall(require, 'my_configs.LSP.configs.' .. lsp_server_name)
+					vim.api.nvim_create_autocmd('FileType', {
+						pattern = filetypes,
+						callback = function()
+							---@type boolean, MyLspServerConfig
+							local ok, server_opts = pcall(require, 'my_configs.LSP.configs.' .. lsp_server_name)
 
-					if ok then
-						server_opts.capabilities = client_capabilities
-					else
-						server_opts = default_lspconfiguration
-					end
+							if ok then
+								server_opts.capabilities = client_capabilities
+							else
+								server_opts = default_lspconfiguration
+							end
 
-					lspconfig[lsp_server_name].setup(server_opts)
+							lspconfig[lsp_server_name].setup(server_opts)
+							vim.cmd.LspStart({ args = { lsp_server_name } })
+
+							return true -- Must setup the server only one time
+						end,
+					})
 				end,
 			})
 
