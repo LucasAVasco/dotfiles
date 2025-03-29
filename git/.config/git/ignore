@@ -17,6 +17,7 @@
 .env
 .env.backup*
 .env.bkp*
+.env.prod*
 .env.key
 .env.*.key
 
