@@ -29,6 +29,11 @@ fi
 export PODMAN_COMPOSE_PROVIDER=podman-compose
 
 
+# Defines UTF8 characters that LESS should print the icons instead of its numeric value
+# Source available at https://github.com/sharkdp/bat/issues/2578
+export LESSUTFCHARDEF=E000-F8FF:p,F0000-FFFFD:p,100000-10FFFD:p
+
+
 # This variable defines if the user can install external software, like extensions or plugins
 ALLOW_EXTERNAL_SOFTWARE=y
 
