@@ -59,6 +59,15 @@ wget_mv() {
 	mv "$src" "$dest"
 }
 
+# Run an arbitrary command on the wget download directory
+#
+# $@: command and its arguments
+wget_run() {
+	cd "$__wget_download_dir"
+	"$@"
+	cd -
+}
+
 # Extract compressed `tar` file inside the download directory.
 #
 # $1: file name of the compressed file (inside the download directory).
