@@ -26,6 +26,7 @@ load_script('prose')
 load_script('virtual_edit')
 load_script('italics')
 load_script('LSP')
+load_script('file_types')
 
 -- Development options
 local lazy_dev = false -- Use the 'lazy.nvim' repository in the development folder
