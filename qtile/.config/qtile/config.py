@@ -289,6 +289,16 @@ keys.extend([
 
     # end_marker }}}
 
+    # Back light {{{
+
+    Key([SUPER], "F6", lazy.spawn("brightnessctl set 5%-")),
+
+    Key([SUPER], "F7", lazy.spawn("brightnessctl set 15%")),
+
+    Key([SUPER], "F8", lazy.spawn("brightnessctl set +5%")),
+
+    # }}}
+
     # Sound and volume {{{
 
     Key([SUPER], "F9", lazy.spawn(
