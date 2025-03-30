@@ -107,6 +107,7 @@ def run_background(command: list[str]) -> None:
 
 # Input devices {{{
 
+
 wl_input_rules = None
 
 if not is_running_in_wayland:
@@ -181,8 +182,7 @@ layouts = [
     layout.Stack(**default_layout_parameters, num_stacks=3),
 ]
 
-floating_layout = layout.Floating(**default_layout_parameters,
-    float_rules=[
+floating_layout = layout.Floating(**default_layout_parameters, float_rules=[
         *layout.Floating.default_float_rules,
         Match(wm_class="launcher"),
     ],
@@ -191,6 +191,7 @@ floating_layout = layout.Floating(**default_layout_parameters,
 # end_marker }}}
 
 # Key mappings {{{
+
 
 @lazy.function
 def reset_window_state(qtile: Qtile) -> None:
