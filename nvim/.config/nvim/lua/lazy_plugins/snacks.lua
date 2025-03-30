@@ -15,6 +15,7 @@ return {
 			quickfile = { enabled = true },
 			bigfile = { enabled = true },
 			lazygit = { enabled = true },
+			scratch = {},
 		},
 
 		config = function(_, opts)
@@ -25,6 +26,15 @@ return {
 			vim.api.nvim_create_user_command('Lazygit', function()
 				snacks.lazygit.open()
 			end, {})
+
+			-- Scratch
+			vim.api.nvim_create_user_command('Scratch', function()
+				snacks.scratch()
+			end, { desc = 'Toggle scratch buffer' })
+
+			vim.api.nvim_create_user_command('ScratchSelect', function()
+				snacks.scratch.select()
+			end, { desc = 'Select scratch buffer' })
 
 			---Debug object
 			---@class my.debug.object
