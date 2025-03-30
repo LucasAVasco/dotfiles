@@ -1,0 +1,48 @@
+#!/bin/bash
+#
+# Filters the standard input on shows only the specified fields.
+
+source ~/.config/bash/libs/help.sh
+
+help() {
+	help_msg_format '\t\t' << EOF
+		DESCRIPTION
+
+		Filters the standard input on shows only the specified fields.
+
+		USAGE
+
+		fields [-d FIELD-SEPARATOR] FIELD-INDEXES...
+
+			FIELD-INDEXES
+				list of field index to maintain. Remove all index out of this list. separated by spaces.
+
+			FIELD-SEPARATOR
+				Separator between column fields (AWK regex). Default is to use at least one white space character (space and tabs).
+
+		To show the help message:
+
+		field -h
+		field --help
+EOF
+}
+
+# Help message
+if [[ "$1" == '-h' || "$1" == '--help' ]]; then
+	help
+	exit
+fi
+
+# Field separator
+separator="[[:space:]]{1,}" # At least one white space character (space and tabs)
+if [[ "$1" == '-d' ]]; then
+	separator="$2"
+	shift 2
+fi
+
+# Field expression used with the AWK command
+fields=$(echo -n "$@" | sed 's/ /,$/g')
+fields="\$$fields"
+
+# Output
+awk -F "$separator" "{print $fields}"
