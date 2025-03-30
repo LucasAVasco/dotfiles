@@ -366,6 +366,6 @@ if __name__ == "__main__":
     output_file.dump()
 
     # Generates the tag file
-    subprocess.run(
+    subprocess.run(  # noqa: S603
         ["/bin/nvim", "-c", "helptags ~/.config/nvim/doc", "+qall"],
-        check=True, shell=False)  # noqa: S603
+        check=True, shell=False)
