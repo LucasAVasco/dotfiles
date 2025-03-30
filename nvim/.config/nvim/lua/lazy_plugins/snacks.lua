@@ -12,6 +12,7 @@ return {
 		---@type snacks.Config
 		opts = {
 			image = {},
+			quickfile = {},
 			lazygit = {},
 		},
 
