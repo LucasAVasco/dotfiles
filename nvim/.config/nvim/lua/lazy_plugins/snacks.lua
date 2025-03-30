@@ -21,9 +21,20 @@ return {
 			local snacks = require('snacks')
 			snacks.setup(opts)
 
+			-- LazyGit
 			vim.api.nvim_create_user_command('Lazygit', function()
 				snacks.lazygit.open()
 			end, {})
+
+			---Debug object
+			---@class my.debug.object
+			---@field print fun(...)
+			---@field backtrace fun()
+			_G.vim.debug = {
+				print = snacks.debug.inspect,
+				backtrace = snacks.debug.backtrace,
+			}
+			vim.print = snacks.debug.inspect
 		end,
 	},
 }
