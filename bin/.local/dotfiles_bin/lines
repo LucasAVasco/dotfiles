@@ -1,0 +1,73 @@
+#!/bin/bash
+#
+# Return the specific lines of standard input.
+#
+# Dependencies:
+#
+# - Bash
+# - sed
+# - printf
+
+source ~/.config/bash/libs/help.sh
+
+help() {
+	help_msg_format '\t\t' << EOF
+		DESCRIPTION
+
+		Return the specific lines of standard input.
+
+		USAGE
+
+		lines <line-pair>...
+
+			A <line-pair> has the following format: <first-line>,<last-line>.
+
+			Prints the lines between (included) the <first-line> and the <last-line> of each <line-pair>. If a negative vales is provided,
+			it is treated as a position relative to the end of the input file. E.g.: line equal to -2 in a file with 5 lines is equivalent a
+			line equal to 3.
+EOF
+}
+
+# Converts a negative relative line in a absolute line. If the line is not negative, return the value unmodified.
+#
+# $1: total number of lines.
+# $2: line (absolute or negative).
+get_abs_line_index() {
+	local total_lines="$1"
+	local relative_line_index="$2"
+	local -i abs_line_index="$relative_line_index"
+
+	# Negative line index
+	if [[ "${relative_line_index:0:1}" == '-' ]]; then
+		abs_line_index=$(("$total_lines" "$relative_line_index"))
+
+	# line is zero
+	elif [[ "$relative_line_index" == 0 ]]; then
+		abs_line_index="$total_lines"
+	fi
+
+	echo -n "$abs_line_index"
+}
+
+# Help message
+if [[ "$1" == '-h' || "$1" == '--help' ]]; then
+	help
+	exit
+fi
+
+# File content
+input=$(cat /dev/stdin)
+total_lines=$(echo "$input" | wc -l)
+
+for lines_pair in "$@"; do
+	# Arguments
+	first_line="${lines_pair%%,*}"
+	last_line="${lines_pair##*,}"
+
+	# Absolute lines
+	first_line=$(get_abs_line_index "$total_lines" "$first_line")
+	last_line=$(get_abs_line_index "$total_lines" "$last_line")
+
+	# Filters the lines
+	printf "%s" "$input" | sed -n "${first_line},${last_line}p"
+done
