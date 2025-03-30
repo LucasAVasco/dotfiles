@@ -13,6 +13,7 @@ return {
 		opts = {
 			image = {},
 			quickfile = {},
+			bigfile = {},
 			lazygit = {},
 		},
 
