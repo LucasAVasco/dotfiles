@@ -233,7 +233,7 @@ keys.extend([
     # end_marker }}}
 
     Key([SUPER], "c", lazy.window.kill()),
-    Key([SUPER, SHIFT], "q", lazy.shutdown()),
+    Key([SUPER, CONTROL, SHIFT], "q", lazy.shutdown()),
     Key([SUPER, SHIFT], "x", lazy.reload_config()),
 
     Key([SUPER], "h", lazy.layout.left()),
