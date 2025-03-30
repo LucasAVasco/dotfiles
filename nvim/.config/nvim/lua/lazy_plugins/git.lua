@@ -157,7 +157,6 @@ return {
 			vim.keymap.set(n_mode, '<leader>Gh', gitsigns.preview_hunk_inline, get_opts('Preview current hunk'))
 			vim.keymap.set(n_mode, '<leader>Gb', gitsigns.toggle_current_line_blame, get_opts('Toggle current line blame'))
 			vim.keymap.set(n_mode, '<leader>Gw', gitsigns.toggle_word_diff, get_opts('Toggle word diff'))
-			vim.keymap.set(n_mode, '<leader>Gd', gitsigns.toggle_deleted, get_opts('Toggle deleted'))
 			vim.keymap.set(n_mode, '<leader>Gl', gitsigns.setloclist, get_opts('Show hunks in loclist'))
 			vim.keymap.set(
 				n_mode,
@@ -193,8 +192,6 @@ return {
 					gitsigns.reset_hunk({ selected_area.cursor_line, selected_area.start_selected_line })
 				end
 			end, get_opts('Reset hunk'))
-
-			vim.keymap.set(n_v_mode, '<leader>Gu', gitsigns.undo_stage_hunk, get_opts('Unstage hunk'))
 
 			-- Operators
 
