@@ -11,10 +11,10 @@ return {
 		---@module 'snacks'
 		---@type snacks.Config
 		opts = {
-			image = {},
-			quickfile = {},
-			bigfile = {},
-			lazygit = {},
+			image = { enabled = true },
+			quickfile = { enabled = true },
+			bigfile = { enabled = true },
+			lazygit = { enabled = true },
 		},
 
 		config = function(_, opts)
