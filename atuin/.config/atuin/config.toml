@@ -1,0 +1,39 @@
+# Full documentation available at: https://docs.atuin.sh/configuration/config/
+
+# sync_address = "https://api.atuin.sh"
+
+workspaces = false # Filter for commands executed in the current git repository
+
+# Ignore these command regex. Regex documentation at https://docs.rs/regex/latest/regex/#syntax
+history_filter = [
+	"^\\s",  # Do not save commands starting with a space character. ZSH has a similar option
+	"^pass"  # Password manager
+]
+
+# Ignore commands in these directories. Regex documentation at https://docs.rs/regex/latest/regex/#syntax
+cwd_filter = [
+	"^/home/.*/\\.ssh",
+	"^/home/.*/\\.gnupg"
+]
+
+secrets_filter = true
+
+enter_accept = false
+style = "full"
+inline_height = 0 # Full screen
+invert = true # Search prompt at the top
+keymap_cursor = { vim_insert = "steady-bar", vim_normal = "steady-block" }
+keymap_mode = "vim-insert"
+
+[stats]
+# Strip this prefixes from the calculations
+common_prefix = [
+	"sudo",
+	"dotenvx run",
+]
+
+[keys]
+scroll_exits = false
+
+[sync]
+records = true
