@@ -6,8 +6,8 @@ set -e
 
 local_themes_folder=~/.local/share/themes/
 
-# source ~/.config/bash/libs/wget.sh
-source "$MY_BASH_LIBS/wget.sh"
+# source ~/.config/bash/libs/install/wget.sh
+source "$MY_BASH_LIBS/install/wget.sh"
 
 # Install a theme  from the Wget download directory.
 #
@@ -20,12 +20,12 @@ install_theme_from_wget() {
 	local dest_dir="$local_themes_folder/$2-auto-installed"
 
 	[[ -d "$dest_dir" ]] && rm -r "$dest_dir" # Remove old theme folder
-	wget_export_files "$src_dir" "$dest_dir"
+	install_wget_export_files "$src_dir" "$dest_dir"
 }
 
-wget_init
+install_wget_init
 
 # Orchis GTK theme
-wget_download 'https://raw.githubusercontent.com/vinceliuice/Orchis-theme/refs/heads/master/release/Orchis.tar.xz' orchis.tar.xz
-wget_untar_file 'orchis.tar.xz' 'orchis'
+install_wget_download 'https://raw.githubusercontent.com/vinceliuice/Orchis-theme/refs/heads/master/release/Orchis.tar.xz' orchis.tar.xz
+install_wget_untar_file 'orchis.tar.xz' 'orchis'
 install_theme_from_wget	'orchis/Orchis' 'Orchis'

@@ -14,7 +14,7 @@
 __wget_download_dir=''
 
 # You must call this function before use any other function.
-wget_init() {
+install_wget_init() {
 	__wget_download_dir=$(mktemp -d /tmp/wget-tmp-XXXXX)
 	trap "rm -rf '$__wget_download_dir'" EXIT
 }
@@ -23,7 +23,7 @@ wget_init() {
 #
 # $1..n: file name.
 # Return string with the absolute path.
-wget_get_abs_path() {
+install_wget_get_abs_path() {
 	echo -n "$__wget_download_dir/$@"
 }
 
@@ -32,8 +32,8 @@ wget_get_abs_path() {
 # $1: subdirectory path (relative to the download directory).
 # $2: arguments append to the `ls` command.
 # Return list of files (like the one returned by the `ls` command).
-wget_list_files() {
-	local base_dir="$(wget_get_abs_path "$1")"
+install_wget_list_files() {
+	local base_dir="$(install_wget_get_abs_path "$1")"
 	ls "$base_dir" "${@:2}"
 }
 
@@ -41,20 +41,20 @@ wget_list_files() {
 #
 # $1: source file URL
 # $2: download in this file
-wget_download() {
+install_wget_download() {
 	local source_url="$1"
 	local dest_file="$2"
 
-	wget --output-document "$(wget_get_abs_path "$dest_file")" "$source_url"
+	wget --output-document "$(install_wget_get_abs_path "$dest_file")" "$source_url"
 }
 
 # Move a file or directory relative to the download directory.
 #
 # $1: source file or directory.
 # $2: destination file or directory.
-wget_mv() {
-	local src="$(wget_get_abs_path "$1")"
-	local dest="$(wget_get_abs_path "$2")"
+install_wget_mv() {
+	local src="$(install_wget_get_abs_path "$1")"
+	local dest="$(install_wget_get_abs_path "$2")"
 
 	mv "$src" "$dest"
 }
@@ -62,7 +62,7 @@ wget_mv() {
 # Run an arbitrary command on the wget download directory
 #
 # $@: command and its arguments
-wget_run() {
+install_wget_run() {
 	cd "$__wget_download_dir"
 	"$@"
 	cd -
@@ -72,9 +72,9 @@ wget_run() {
 #
 # $1: file name of the compressed file (inside the download directory).
 # $2: directory name of the extracted file (inside the download directory).
-wget_untar_file() {
-	local src_file=$(wget_get_abs_path "$1")
-	local dest_dir=$(wget_get_abs_path "$2")
+install_wget_untar_file() {
+	local src_file=$(install_wget_get_abs_path "$1")
+	local dest_dir=$(install_wget_get_abs_path "$2")
 
 	mkdir -p "$dest_dir"
 
@@ -85,13 +85,13 @@ wget_untar_file() {
 #
 # $1..n-1: Files to copy (relative to the download directory).
 # $n: Absolute path of the destination folder or file. Copy the files to this folder.
-wget_export_files() {
+install_wget_export_files() {
 	local -a abs_files
 	local dest_dir="${@:$#}"
 
 	local num_files=$(($# - 1))
 	for file_path in "${@:1:$num_files}"; do
-		abs_files+=($(wget_get_abs_path "$file_path"))
+		abs_files+=($(install_wget_get_abs_path "$file_path"))
 	done
 
 	mkdir -p "$(dirname "$dest_dir")" # Ensures the installation directory exists
