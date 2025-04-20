@@ -32,6 +32,7 @@ return {
 			local nvim_lint = require('lint')
 
 			nvim_lint.linters_by_ft = {
+				['*'] = { 'cspell' },
 				-- lua = { 'luacheck' },
 			}
 
@@ -40,7 +41,14 @@ return {
 			vim.api.nvim_create_autocmd({ 'BufWritePost' }, {
 				group = nvim_lint_group,
 				callback = function()
+					-- File type specific linters
 					nvim_lint.try_lint()
+
+					-- All files linters
+					local linters_all_filetypes = nvim_lint.linters_by_ft['*']
+					if linters_all_filetypes then
+						nvim_lint.try_lint(linters_all_filetypes)
+					end
 				end,
 			})
 		end,
