@@ -11,19 +11,6 @@ return {
 
 		event = 'BufWrite',
 
-		keys = {
-			{
-				'<leader>Cl',
-				function()
-					require('lint').try_lint()
-				end,
-				mode = 'n',
-				noremap = true,
-				silent = true,
-				desc = 'Try to execute the linter on the current buffer',
-			},
-		},
-
 		init = function()
 			MYPLUGFUNC.set_keymap_name('<leader>C', 'Checkers (linters and testers)')
 		end,
