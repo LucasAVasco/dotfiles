@@ -342,6 +342,44 @@ end
 
 -- #endregion
 
+-- #region Functions to manage diagnostics
+
+---Resets all diagnostics (`vim.diagnostic` API).
+---
+---This function is equivalent to clearing all diagnostics and setting them later.
+function MYFUNC.reset_diagnostics()
+	local namespaces = vim.diagnostic.get_namespaces()
+
+	for namespace_id, _ in pairs(namespaces) do
+		local namespace_diagnostics = vim.diagnostic.get(nil, { namespace = namespace_id })
+
+		---Table that relates each buffer to its diagnostics (at the current name-space)
+		---@type table<integer, vim.Diagnostic[]>
+		local buffer_to_diagnostics = {}
+
+		for _, diagnostic in ipairs(namespace_diagnostics) do
+			vim.diagnostic.set(namespace_id, 0, namespace_diagnostics, {})
+			local buffer_number = diagnostic.bufnr --[[@as integer]]
+
+			if buffer_to_diagnostics[buffer_number] == nil then
+				buffer_to_diagnostics[buffer_number] = {}
+			end
+
+			table.insert(buffer_to_diagnostics[buffer_number], diagnostic)
+		end
+
+		-- Resets the diagnostics
+		for buffer_number, diagnostics in pairs(buffer_to_diagnostics) do
+			-- Each call to `vim.diagnostics.set`overrides the last diagnostics of the given names-pace and buffer number. So you must set
+			-- all diagnostics related to a name-space and buffer at the same time
+			vim.diagnostic.reset(namespace_id, buffer_number)
+			vim.diagnostic.set(namespace_id, buffer_number, diagnostics, {})
+		end
+	end
+end
+
+-- #endregion
+
 -- #region Functions related to key maps.
 
 --- Decorator to create a function that returns a options table equal the `default_options` with the `desc` option overridden.
