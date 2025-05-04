@@ -229,6 +229,15 @@ return {
 		opts = {},
 	},
 	{
+		'nvim-treesitter/nvim-treesitter-context',
+		event = 'VeryLazy',
+		opts = {
+			max_lines = 4,
+			min_window_height = 30,
+			trim_scope = 'inner', -- Trims (discards) inner lines if `max_lines` is exceeded
+		},
+	},
+	{
 		'nvim-lualine/lualine.nvim',
 
 		dependencies = {
