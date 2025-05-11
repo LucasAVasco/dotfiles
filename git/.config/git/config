@@ -41,5 +41,5 @@
 	file-decoration-style = yellow ol ul ; Over-line and under-line in the file separator
 	file-style = yellow
 
-	; place the file path in the hunk header (`git diff`)
+	; Places the file path in the hunk header (`git diff`)
 	hunk-header-style = file syntax
