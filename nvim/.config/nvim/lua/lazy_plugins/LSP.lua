@@ -1,3 +1,6 @@
+---@type table<string, string[]|string> Relates the LSP server name with its filetypes
+MYPLUGVAR.lspFileTypes = {}
+
 return {
 	{
 		'neovim/nvim-lspconfig',
@@ -8,6 +11,9 @@ return {
 			'hrsh7th/cmp-nvim-lsp',
 			'folke/neoconf.nvim',
 			'b0o/schemastore.nvim', -- Used by 'jsonls' and 'yamlls'
+
+			-- Required by my commands
+			'MunifTanjim/nui.nvim', -- 'LspFileTypes' command
 		},
 
 		event = 'User MyEventOpenEditableFile',
@@ -18,6 +24,9 @@ return {
 			'LspRestart',
 			'LspStart',
 			'LspStop',
+
+			-- My commands
+			'LspFileTypes',
 		},
 
 		config = function()
@@ -102,6 +111,7 @@ return {
 					end
 
 					local filetypes = lspconfig[lsp_server_name].config_def.default_config.filetypes or '*'
+					MYPLUGVAR.lspFileTypes[lsp_server_name] = filetypes
 
 					vim.api.nvim_create_autocmd('FileType', {
 						pattern = filetypes,
@@ -138,6 +148,43 @@ return {
 			-- buffer. Otherwise, `nvim-lspconfig` may not configure it. The following line ensures that the LSP servers will be started
 			-- even if `nvim-lspconfig` is configured after Neovim's attempt
 			vim.cmd('LspStart')
+
+			-- Command to show configured LSP servers and its supported  file types
+			vim.api.nvim_create_user_command('LspFileTypes', function()
+				local NuiPopup = require('nui.popup')
+				local popup = NuiPopup({
+					focusable = true,
+					enter = true,
+					border = 'rounded',
+					position = '50%',
+					buf_options = {
+						filetype = 'lua',
+					},
+					size = {
+						width = '80%',
+						height = '80%',
+					},
+				})
+
+				popup:on('BufLeave', function()
+					popup:unmount()
+				end)
+
+				popup:map('n', 'q', function()
+					popup:unmount()
+				end)
+
+				-- Header (first line)
+				vim.api.nvim_buf_set_lines(popup.bufnr, 0, 0, true, { '-- LSP servers and its file types' })
+
+				-- body (LSP servers and its file types)
+				local lines = MYFUNC.str_split(vim.inspect(MYPLUGVAR.lspFileTypes), '\n')
+				vim.api.nvim_buf_set_lines(popup.bufnr, 2, -1, true, lines)
+
+				popup:mount()
+			end, {
+				desc = 'Shows the configured LSP servers',
+			})
 		end,
 	},
 	{

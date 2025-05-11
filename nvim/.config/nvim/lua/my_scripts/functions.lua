@@ -6,6 +6,7 @@ vim.loop = vim.loop or uv
 -- Global functions go here
 _G.MYFUNC = {}
 _G.MYVAR = {}
+_G.MYPLUGVAR = {}
 _G.MYPLUGFUNC = {} -- For plugins
 
 ---You can use this global variable to disable some LSP servers. Add their names (same used by `lspconfig`) to this list before the
@@ -45,15 +46,28 @@ function MYFUNC.tbl_set(tbl, args, value)
 	end
 end
 
---- Splits a string into a table using a Lua pattern.
----@param text string String to be split
----@param pattern string Pattern used to split the string
----@return table split_list List of strings that are the result of the split
-function MYFUNC.str_split(text, pattern)
+---Splits a string into a list (table) using a Lua pattern.
+---@param text string String to be split.
+---@param separator string Pattern used to split the string. It is not included in the result list.
+---@return string[] split_list List of strings that are the result of the split.
+function MYFUNC.str_split(text, separator)
 	local result = {}
 
-	for value in string.gmatch(text, pattern) do
-		table.insert(result, value)
+	local current_position = 0
+	while current_position <= #text do
+		local match_start, match_end = text:find(separator, current_position)
+
+		if not match_start or not match_end then
+			match_start = #text + 1
+			match_end = #text + 1
+		end
+
+		---Element of the response
+		local element = text:sub(current_position, match_start - 1)
+		table.insert(result, element)
+
+		-- Next position
+		current_position = match_end + 1
 	end
 
 	return result
