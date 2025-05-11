@@ -5,7 +5,7 @@
 
 
 # Custom paths added to PATH variable
-export PATH="$PATH:$HOME/.local/bin:$HOME/.local/dotfiles_bin"
+export PATH="$HOME/.local/dotfiles_bin_override:$PATH:$HOME/.local/bin:$HOME/.local/dotfiles_bin"
 
 
 # Custom 'share' folder to hold dot files shared data (e.g. Desktop applications)
