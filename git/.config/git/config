@@ -43,3 +43,6 @@
 
 	; Places the file path in the hunk header (`git diff`)
 	hunk-header-style = file syntax
+
+	; Style of file name inside hunk header
+	hunk-header-file-style = cyan
