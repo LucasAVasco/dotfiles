@@ -1,5 +1,6 @@
 #!/bin/bash
 
+source ~/.config/bash/libs/config_file.sh
 
 # Show help message
 help_msg()
@@ -34,12 +35,16 @@ number_error  () {
 # Change a file attribute
 #
 # $1: file path
-# $2: Attribute pathern
+# $2: Attribute name
 # $3: Attribute value
 change_file_attribute()
 {
-	# Change the file attribute
-	sed -i s/"${2}.*"/"${2}=${3}"/ "$1"
+	file_path="$1"
+	attribute="$2"
+	new_value="$3"
+
+	touch "$file_path"
+	config_file_set_key "$attribute" "=" "$new_value" "$file_path"
 }
 
 
