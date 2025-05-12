@@ -77,6 +77,21 @@ return {
 				end,
 			})
 		end,
+
+		config = function(_, opts)
+			require('oil').setup(opts)
+
+			-- Snacks rename. Integrates 'oil.nvim' rename file action with LSP 'workspace/willRenameFiles' method. Copied form
+			-- https://github.com/folke/snacks.nvim/blob/main/docs/rename.md
+			vim.api.nvim_create_autocmd('User', {
+				pattern = 'OilActionsPost',
+				callback = function(event)
+					if event.data.actions.type == 'move' then
+						Snacks.rename.on_rename_file(event.data.actions.src_url, event.data.actions.dest_url)
+					end
+				end,
+			})
+		end,
 	},
 	{
 		'nvim-tree/nvim-tree.lua',
@@ -232,6 +247,23 @@ return {
 			-- Setup
 			opts.on_attach = apply_custom_keymaps
 			require('nvim-tree').setup(opts)
+
+			-- Snacks rename. Integrates 'nvim-tree' rename file action with LSP 'workspace/willRenameFiles' method. Based on the
+			-- configuration from https://github.com/folke/snacks.nvim/blob/main/docs/rename.md
+
+			local nvim_tree_api_events = require('nvim-tree.api').events
+
+			local last_rename_data = {}
+
+			nvim_tree_api_events.subscribe(nvim_tree_api_events.Event.NodeRenamed, function(rename_data)
+				-- Prevents duplication of the call
+				if vim.deep_equal(last_rename_data, rename_data) then
+					return
+				end
+
+				last_rename_data = rename_data
+				require('snacks').rename.on_rename_file(rename_data.old_name, rename_data.new_name)
+			end)
 		end,
 	},
 }
