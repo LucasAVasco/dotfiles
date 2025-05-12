@@ -46,6 +46,21 @@ function MYFUNC.tbl_set(tbl, args, value)
 	end
 end
 
+---Implement a map with Lua patterns as keys.
+---
+---Compare the `key` argument with the keys of the `map`. Each key in the `map` is a Lua pattern. Cheeks if the `key` argument matches one
+---of the keys of the `map`. If true, returns the value of the entry.
+---@param key string Compares this key value with the Lua patterns of the `map`.
+---@param map table<string, any> Maps a Lua pattern to a value.
+---@return any? Value
+function MYFUNC.pattern_map_get(key, map)
+	for command_name, command_value in pairs(map) do
+		if key:match(command_name) then
+			return command_value
+		end
+	end
+end
+
 ---Splits a string into a list (table) using a Lua pattern.
 ---@param text string String to be split.
 ---@param separator string Pattern used to split the string. It is not included in the result list.
@@ -379,6 +394,23 @@ function MYFUNC.create_complete_function(arguments_table)
 	return function(current_arg_lead, entire_command, cursor_pos)
 		return MYFUNC.get_complete_suggestions(current_arg_lead, entire_command, cursor_pos, arguments_table)
 	end
+end
+
+---Get the command handler from its arguments.
+---
+---@param fargs string[] Arguments of the command.
+---@param map_cmd_to_handler table<string, any> Maps each command (separated by a single space ' ') to its handler.
+---@return any?
+function MYFUNC.get_fargs_handler(fargs, map_cmd_to_handler)
+	local args = table.concat(fargs, ' ')
+
+	---The command (fargs) must match the full key
+	local map = {}
+	for key, value in pairs(map_cmd_to_handler) do
+		map['^' .. key .. '$'] = value
+	end
+
+	return MYFUNC.pattern_map_get(args, map)
 end
 
 -- #endregion
