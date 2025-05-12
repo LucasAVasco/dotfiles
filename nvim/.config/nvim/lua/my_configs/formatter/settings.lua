@@ -12,6 +12,8 @@ local Config = {
 		go = { 'gofmt' },
 		sql = { 'sql_formatter' },
 		tex = { 'tex-fmt' },
+		c = { 'clang-format' },
+		cpp = { 'clang-format' },
 	},
 }
 
