@@ -135,6 +135,33 @@ function MYFUNC.get_indentation_size(buffer_num)
 	return indent_size
 end
 
+---Iterate over a path.
+---From the inner to the outer path. Returns the path accepted by the filter function.
+---@param path string Iterate through this path.
+---@param filter fun(iter_path: string): boolean? Return whether the path should be chosen (returned by the function) or not.
+---@return string? Accepted_path
+function MYFUNC.iter_path(path, filter)
+	local dirname = vim.fs.abspath(path)
+	dirname = vim.fs.normalize(dirname)
+
+	-- Runs the filter function on all folders until '/' (also checked)
+	while true do
+		local res = filter(dirname)
+
+		if res then
+			return dirname
+		end
+
+		-- Last checked directory
+		if dirname ~= '/' then
+			return
+		end
+
+		-- Next directory
+		dirname = vim.fs.dirname(dirname)
+	end
+end
+
 -- #endregion
 
 -- #region Decorators to call vim functions

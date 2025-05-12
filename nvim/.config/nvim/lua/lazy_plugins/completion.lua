@@ -41,7 +41,41 @@ return {
 
 		lazy = true, -- Will be loaded by `nvim-cmp`
 
-		config = function()
+		opts = {
+			---Defines the file types used to load snippets for the current buffer.
+			---@return string[] file_types Load snippets to these file types in the current buffer.
+			ft_func = function()
+				local file_types = vim.split(vim.bo.filetype, '.', { plain = true })
+
+				for _, file_type in ipairs(file_types) do
+					if file_type == 'helm' then
+						table.insert(file_types, 'yaml')
+					end
+				end
+
+				return file_types
+			end,
+
+			---Defines which file types belongs to a buffer. Used by the 'lazy_load' function to know what snippets to lazy load.
+			---@param buffer_num integer
+			---@return string[] file_types
+			load_ft_func = function(buffer_num)
+				local full_file_type = vim.api.nvim_get_option_value('filetype', { buf = buffer_num })
+				local file_types = vim.split(full_file_type, '.', { plain = true })
+
+				for _, file_type in ipairs(file_types) do
+					if file_type == 'helm' then
+						table.insert(file_types, 'yaml')
+					end
+				end
+
+				return file_types
+			end,
+		},
+
+		config = function(_, opts)
+			require('luasnip').setup(opts)
+
 			-- Command to easy edit the snippets files
 			vim.api.nvim_create_user_command('LuaSnipEditFiles', function()
 				require('luasnip.loaders').edit_snippet_files()

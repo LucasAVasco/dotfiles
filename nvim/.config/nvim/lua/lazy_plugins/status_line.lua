@@ -110,6 +110,7 @@ return {
 				'jsonnet',
 				'yaml',
 				'toml',
+				'helm',
 
 				-- Specif to applications
 				'i3config',
