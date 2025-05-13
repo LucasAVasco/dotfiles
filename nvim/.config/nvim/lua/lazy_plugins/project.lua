@@ -25,7 +25,7 @@ return {
 	},
 	{
 		'LucasAVasco/project_runtime_dirs.nvim',
-		priority = 10500,
+		priority = 100000,
 
 		config = function(opts)
 			require('project_runtime_dirs').setup(opts)
