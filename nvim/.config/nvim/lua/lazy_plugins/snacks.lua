@@ -16,6 +16,9 @@ return {
 			bigfile = { enabled = true },
 			lazygit = { enabled = true },
 			scratch = {},
+			picker = {
+				ui_select = true,
+			},
 		},
 
 		config = function(_, opts)
