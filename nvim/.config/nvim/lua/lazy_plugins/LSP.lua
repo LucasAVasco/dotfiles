@@ -136,14 +136,6 @@ return {
 
 			-- TODO(LucasAVasco): Find a decent way to run 'yarn dlx @yarnpkg/sdks base' in a Yarn repository to configure `tsserver`
 
-			-- Overrides the default configuration
-			lspconfig.util.default_config = vim.tbl_deep_extend('force', lspconfig.util.default_config, {
-				handlers = {
-					-- Adds rounded borders to hover pop up
-					['textDocument/hover'] = vim.lsp.with(vim.lsp.handlers.hover, { border = 'rounded' }),
-				},
-			})
-
 			-- Manually starts the LSP servers. `nvim-lspconfig` needs to be configured before Neovim attempts to start an LSP server in a
 			-- buffer. Otherwise, `nvim-lspconfig` may not configure it. The following line ensures that the LSP servers will be started
 			-- even if `nvim-lspconfig` is configured after Neovim's attempt
