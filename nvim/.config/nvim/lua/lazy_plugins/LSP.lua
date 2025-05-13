@@ -67,7 +67,6 @@ return {
 
 				ensure_installed = {
 					'lua_ls', -- Used to check Neovim configuration
-					'typos_lsp', -- Spell checker
 					'jsonls', -- Used by `neoconf.nvim`
 					'yamlls',
 				},
