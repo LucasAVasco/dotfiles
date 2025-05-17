@@ -39,7 +39,7 @@ return {
 				--- }}}
 			},
 
-			disabled_ft = {},
+			disabled_ft = MYVAR.utilities_ft,
 		},
 
 		init = function()
