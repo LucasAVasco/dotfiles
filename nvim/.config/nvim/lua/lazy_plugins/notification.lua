@@ -21,6 +21,7 @@ return {
 
 		opts = {
 			top_down = false,
+			render = 'wrapped-default',
 		},
 
 		cmd = {
