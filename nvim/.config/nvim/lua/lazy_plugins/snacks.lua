@@ -16,6 +16,7 @@ return {
 			bigfile = { enabled = true },
 			lazygit = { enabled = true },
 			terminal = {},
+			dashboard = require('lazy_plugins.snacks.dashboard'),
 			scratch = {},
 			picker = {
 				ui_select = true,
