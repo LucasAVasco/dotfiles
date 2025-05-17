@@ -10,4 +10,7 @@ return {
 			require('nvim-highlight-colors').setup(opts)
 		end,
 	},
+	{
+		'hiphish/rainbow-delimiters.nvim',
+	},
 }
