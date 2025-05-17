@@ -12,6 +12,8 @@ return {
 			'MunifTanjim/nui.nvim',
 		},
 
+		---@module "noice.config.init"
+		---@type NoiceConfig
 		opts = {
 			popupmenu = {
 				backend = 'cmp',
