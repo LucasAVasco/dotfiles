@@ -15,6 +15,7 @@ return {
 			quickfile = { enabled = true },
 			bigfile = { enabled = true },
 			lazygit = { enabled = true },
+			terminal = {},
 			scratch = {},
 			picker = {
 				ui_select = true,
@@ -24,6 +25,10 @@ return {
 		config = function(_, opts)
 			local snacks = require('snacks')
 			snacks.setup(opts)
+
+			vim.api.nvim_create_user_command('Colorize', function(args)
+				snacks.terminal.colorize()
+			end, {})
 
 			-- LazyGit
 			vim.api.nvim_create_user_command('Lazygit', function()
