@@ -1,0 +1,17 @@
+#!/bin/bash
+#
+# Run a shell color script.
+#
+# Automatically install if not installed.
+#
+# Usage:
+# ./shell-color-script <arguments passed to shell-color-scripts>
+
+repo_path=~/.local/share/shell-color-script/
+
+if [[ ! -d "${repo_path}" ]]; then
+	git clone --depth 1 https://gitlab.com/dwt1/shell-color-scripts.git "$repo_path"
+fi
+
+cd "$repo_path"
+DEV=1 ./colorscript.sh "$@"
