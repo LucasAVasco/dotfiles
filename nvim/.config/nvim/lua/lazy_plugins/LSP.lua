@@ -187,6 +187,18 @@ return {
 		end,
 	},
 	{
+		'ray-x/lsp_signature.nvim',
+		event = 'InsertEnter',
+		opts = {
+			floating_window = false, -- Only use virtual text
+
+			hint_scheme = '@variable.parameter',
+			hint_inline = function()
+				return 'eol'
+			end,
+		},
+	},
+	{
 		'kosayoda/nvim-lightbulb',
 		event = 'LspAttach',
 
