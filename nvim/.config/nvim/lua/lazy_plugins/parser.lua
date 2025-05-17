@@ -49,7 +49,7 @@ return {
 			-- 'markdown_inline' is required by `trouble.nvim`. `regex` is required by `noicenvim`
 			ensure_installed = { 'lua', 'vim', 'vimdoc', 'markdown_inline', 'regex' },
 			sync_install = false,
-			auto_install = true, -- Install missing parser when entering a buffer that requires it
+			auto_install = false, -- I use a custom 'auto_install' auto command
 
 			highlight = { enable = true },
 			incremental_selection = { enable = true },
@@ -200,6 +200,32 @@ return {
 			MYPLUGFUNC.ensure_mason_package_installed('tree-sitter-cli') -- Required to use `:TSInstallFromGrammar`
 
 			require('nvim-treesitter.configs').setup(opts)
+
+			-- Auto command to automatically install a 'treesitter' parser for the current file type
+
+			---Languages of the automatically installed parsers
+			---@type table<string, boolean>
+			local instaled_langs = {}
+			vim.api.nvim_create_autocmd('FileType', {
+				callback = function(args)
+					local parsers = require('nvim-treesitter.parsers')
+					local lang = parsers.get_buf_lang(args.buf)
+
+					-- Only installs the parser once
+					if instaled_langs[lang] then
+						return
+					end
+
+					instaled_langs[lang] = true
+
+					-- Checks if there is a configured parser to the language
+					if not parsers.get_parser_configs()[lang] then
+						return
+					end
+
+					require('nvim-treesitter.install').ensure_installed(lang)
+				end,
+			})
 
 			-- User command to edit a Tree-sitter query file in a project runtime directory
 			vim.api.nvim_create_user_command('TSEditQueryRtd', function(arguments)
