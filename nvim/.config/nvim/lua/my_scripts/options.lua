@@ -54,15 +54,7 @@ local function update_listchars(buffer_nr, all_windows)
 
 	if all_windows ~= true then
 		local window_id = MYFUNC.get_window_by_buffer(buffer_nr)
-		window_id = window_id >= 0 and window_id or 0
 		window_opts = vim.wo[window_id]
-
-		-- Only update the list chars if the indentation size changed
-		if vim.w[window_id].__listchars_last_window_indent_size == indent_size then
-			return
-		end
-
-		vim.w[window_id].__listchars_last_window_indent_size = indent_size
 	end
 
 	-- Data required to define the list chars
