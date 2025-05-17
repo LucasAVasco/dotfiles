@@ -63,6 +63,8 @@ return {
 			local mason_lspconfig = require('mason-lspconfig')
 
 			mason_lspconfig.setup({
+				automatic_enable = false,
+
 				automatic_installation = true,
 
 				ensure_installed = {
@@ -103,44 +105,41 @@ return {
 
 			local lsp_filetypes_overrides = require('my_configs.LSP.filetypes')
 
-			mason_lspconfig.setup_handlers({
-				---Fallback handler used when not provided a specific server configuration. Need to be the first element in this table
-				---@param lsp_server_name string
-				function(lsp_server_name)
-					if should_abort_lsp_config(lsp_server_name) then
-						return
-					end
+			local installed_mason_lsp_servers = mason_lspconfig.get_installed_servers()
+			for _, lsp_server_name in pairs(installed_mason_lsp_servers) do
+				if should_abort_lsp_config(lsp_server_name) then
+					return
+				end
 
-					---Attach the LSP server to these file types
-					---@type string|string[]
-					local filetypes = lspconfig[lsp_server_name].config_def.default_config.filetypes or '*'
+				---Attach the LSP server to these file types
+				---@type string|string[]
+				local filetypes = lspconfig[lsp_server_name].config_def.default_config.filetypes or '*'
 
-					if lsp_filetypes_overrides[lsp_server_name] then
-						filetypes = lsp_filetypes_overrides[lsp_server_name]
-					end
+				if lsp_filetypes_overrides[lsp_server_name] then
+					filetypes = lsp_filetypes_overrides[lsp_server_name]
+				end
 
-					MYPLUGVAR.lspFileTypes[lsp_server_name] = filetypes
+				MYPLUGVAR.lspFileTypes[lsp_server_name] = filetypes
 
-					vim.api.nvim_create_autocmd('FileType', {
-						pattern = filetypes,
-						callback = function()
-							---@type boolean, MyLspServerConfig
-							local ok, server_opts = pcall(require, 'my_configs.LSP.configs.' .. lsp_server_name)
+				vim.api.nvim_create_autocmd('FileType', {
+					pattern = filetypes,
+					callback = function()
+						---@type boolean, MyLspServerConfig
+						local ok, server_opts = pcall(require, 'my_configs.LSP.configs.' .. lsp_server_name)
 
-							if ok then
-								server_opts.capabilities = client_capabilities
-							else
-								server_opts = default_lspconfiguration
-							end
+						if ok then
+							server_opts.capabilities = client_capabilities
+						else
+							server_opts = default_lspconfiguration
+						end
 
-							lspconfig[lsp_server_name].setup(server_opts)
-							vim.cmd.LspStart({ args = { lsp_server_name } })
+						lspconfig[lsp_server_name].setup(server_opts)
+						vim.cmd.LspStart({ args = { lsp_server_name } })
 
-							return true -- Must setup the server only one time
-						end,
-					})
-				end,
-			})
+						return true -- Must setup the server only one time
+					end,
+				})
+			end
 
 			-- TODO(LucasAVasco): Find a decent way to run 'yarn dlx @yarnpkg/sdks base' in a Yarn repository to configure `tsserver`
 
