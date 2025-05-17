@@ -101,6 +101,8 @@ return {
 				capabilities = client_capabilities,
 			}
 
+			local lsp_filetypes_overrides = require('my_configs.LSP.filetypes')
+
 			mason_lspconfig.setup_handlers({
 				---Fallback handler used when not provided a specific server configuration. Need to be the first element in this table
 				---@param lsp_server_name string
@@ -109,7 +111,14 @@ return {
 						return
 					end
 
+					---Attach the LSP server to these file types
+					---@type string|string[]
 					local filetypes = lspconfig[lsp_server_name].config_def.default_config.filetypes or '*'
+
+					if lsp_filetypes_overrides[lsp_server_name] then
+						filetypes = lsp_filetypes_overrides[lsp_server_name]
+					end
+
 					MYPLUGVAR.lspFileTypes[lsp_server_name] = filetypes
 
 					vim.api.nvim_create_autocmd('FileType', {
