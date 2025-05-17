@@ -37,14 +37,6 @@ return {
 				},
 
 				--- }}}
-
-				overwrite_events = {
-					-- Default  events
-					'LspAttach',
-
-					-- Events that I want to track
-					'DiagnosticChanged', -- Required by my lazy loading setup
-				},
 			},
 
 			disabled_ft = {},
@@ -58,8 +50,23 @@ return {
 			local tiny_inline_diagnostic = require('tiny-inline-diagnostic')
 			tiny_inline_diagnostic.setup(opts)
 
-			-- My lazy loading configuration requires to reset all diagnostics in order to setup 'tiny-inline-diagnostic' auto-commands
-			MYFUNC.reset_diagnostics()
+			-- This plugin does not attach to buffers if the LSP server is already attached to it. You need to manually attach
+			-- 'tiny-inline-diagnostic' to all buffers with LSP servers already attached
+
+			local lsp_clients = vim.lsp.get_clients()
+
+			for _, client in pairs(lsp_clients) do
+				local data = {
+					client_id = client.id,
+				}
+
+				for buffer_number in pairs(client.attached_buffers) do
+					vim.api.nvim_exec_autocmds('LspAttach', {
+						buffer = buffer_number,
+						data = data,
+					})
+				end
+			end
 		end,
 	},
 }
