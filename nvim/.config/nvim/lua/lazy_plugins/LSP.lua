@@ -191,6 +191,8 @@ return {
 		event = 'LspAttach',
 
 		opts = {
+			priority = 100,
+
 			autocmd = {
 				enabled = true,
 				events = {
