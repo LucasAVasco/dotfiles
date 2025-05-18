@@ -3,11 +3,6 @@
 	Loclist and quickfix mappings (Plugin)[maps]                                   *plugin-loclist-maps*
 
 	`<leader>Td` Open diagnostics with Trouble
-
-	Movement~
-
-	`<leader>Tgg`   Go to first trouble item
-	`<leader>TG`    Go to last trouble item
 ]]
 
 -- Key maps to jump between loclist and quickfix entries {{{
@@ -46,9 +41,9 @@ return {
 		dependencies = { 'nvim-tree/nvim-web-devicons' },
 
 		keys = {
-			{ '<leader>Td', '<CMD>Trouble diagnostics toggle<CR>', desc = 'Open the diagnostics' },
-			{ '<leader>Tl', '<CMD>lclose<CR><CMD>Trouble loclist<CR>', desc = 'Open the loclist in Trouble' },
-			{ '<leader>Tq', '<CMD>qclose<CR><CMD>Trouble quickfix<CR>', desc = 'Open the quickfix in Trouble' },
+			{ '<leader>Qd', '<CMD>Trouble diagnostics toggle<CR>', desc = 'Open the diagnostics' },
+			{ '<leader>Ql', '<CMD>lclose<CR><CMD>Trouble loclist<CR>', desc = 'Open the loclist in Trouble' },
+			{ '<leader>Qq', '<CMD>cclose<CR><CMD>Trouble quickfix<CR>', desc = 'Open the quickfix in Trouble' },
 			{ '[T', MYFUNC.decorator_set_fkey_mappings(diagnostics_fkeys, 3, true), desc = 'Previous Trouble item' },
 			{ ']T', MYFUNC.decorator_set_fkey_mappings(diagnostics_fkeys, 3), desc = 'Next Trouble item' },
 		},
@@ -74,7 +69,7 @@ return {
 		},
 
 		init = function()
-			MYPLUGFUNC.set_keymap_name('<leader>T', 'Trouble (list plugin)')
+			MYPLUGFUNC.set_keymap_name('<leader>Q', 'Trouble (list plugin)')
 		end,
 
 		config = function(_, opts)
