@@ -172,6 +172,44 @@ end
 
 -- #endregion
 
+-- #region File management functions
+
+---Return `true` if the file exists (is readable) and `false` otherwise.
+---@param path string
+---@return boolean
+function MYFUNC.file_exists(path)
+	return vim.fn.filereadable(path) == 1
+end
+
+---Get the absolute path of a relative path.
+---Also normalize the path.
+---@param path string Path of the file. If it is an absolute path, this function only normalizes it.
+---@param base_dir string? Base directory of the relative path.
+---@return string
+function MYFUNC.absolute_path(path, base_dir)
+	if base_dir and path:sub(1, 1) ~= '/' then
+		path = base_dir .. '/' .. path
+	end
+
+	path = vim.fs.normalize(path)
+	return vim.fs.abspath(path)
+end
+
+---Read a file and convert its contents to Json.
+---@param path string File path.
+---@return {} content, boolean file_readable
+function MYFUNC.get_json_file_content(path)
+	if not MYFUNC.file_exists(path) then
+		return {}, false
+	end
+
+	local lines = vim.fn.readfile(path, 'b')
+	local content = table.concat(lines)
+	return vim.json.decode(content), true
+end
+
+-- #endregion
+
 -- #region Decorators to call vim functions
 
 --- Decorator that returns a Lua function that runs the provided vim function.

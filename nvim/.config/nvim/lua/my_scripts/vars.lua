@@ -10,6 +10,10 @@ MYVAR.utilities_ft = {
 	'snacks_picker_input', -- 'snacks.nvim'
 	'undotree',
 
+	-- Neotest
+	'neotest-summary',
+	'neotest-output-panel',
+
 	-- 'Telescope' plugin
 	'Telescope',
 	'TelescopePrompt',
