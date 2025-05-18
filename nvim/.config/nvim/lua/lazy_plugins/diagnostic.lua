@@ -24,6 +24,10 @@ return {
 					always_show = true,
 				},
 
+				virt_texts = {
+					priority = 5000, -- Bigger than the priority used by the search utility of the 'noice.nvim' plugin
+				},
+
 				-- }}}
 
 				--- Wrapping long messages {{{
