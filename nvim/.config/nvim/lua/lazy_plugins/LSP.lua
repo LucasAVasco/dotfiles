@@ -104,8 +104,9 @@ return {
 
 			local lsp_filetypes_overrides = require('my_configs.LSP.filetypes')
 
-			local installed_mason_lsp_servers = mason_lspconfig.get_installed_servers()
-			for _, lsp_server_name in pairs(installed_mason_lsp_servers) do
+			---Setup a LSP server by its name
+			---@param lsp_server_name string Name of the server. Same values used in `require('lspconfig')[lsp_server_name]`.
+			local function setup_lsp_server(lsp_server_name)
 				if should_abort_lsp_config(lsp_server_name) then
 					return
 				end
@@ -148,6 +149,11 @@ return {
 						return true -- Must setup the server only one time
 					end,
 				})
+			end
+
+			local installed_mason_lsp_servers = mason_lspconfig.get_installed_servers()
+			for _, lsp_server_name in ipairs(installed_mason_lsp_servers) do
+				setup_lsp_server(lsp_server_name)
 			end
 
 			-- TODO(LucasAVasco): Find a decent way to run 'yarn dlx @yarnpkg/sdks base' in a Yarn repository to configure `tsserver`
