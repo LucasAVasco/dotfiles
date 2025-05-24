@@ -97,8 +97,7 @@ return {
 			local client_capabilities = require('cmp_nvim_lsp').default_capabilities()
 
 			---Default settings applied to all LSP servers
-			---@type MyLspServerConfig
-			---@diagnostic disable-next-line: missing-fields
+			---@type MyLspServerConfig|{}
 			local default_lspconfiguration = {
 				capabilities = client_capabilities,
 			}
