@@ -111,6 +111,16 @@ return {
 					return
 				end
 
+				-- Drops server names that does not have a respective configuration
+
+				local ok = pcall(function()
+					require('lspconfig.configs.' .. lsp_server_name)
+				end)
+
+				if not ok then
+					return
+				end
+
 				---Attach the LSP server to these file types
 				---@type string|string[]
 				local filetypes = lspconfig[lsp_server_name].config_def.default_config.filetypes or '*'
