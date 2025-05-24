@@ -156,8 +156,6 @@ return {
 				setup_lsp_server(lsp_server_name)
 			end
 
-			-- TODO(LucasAVasco): Find a decent way to run 'yarn dlx @yarnpkg/sdks base' in a Yarn repository to configure `tsserver`
-
 			-- Command to show configured LSP servers and its supported  file types
 			vim.api.nvim_create_user_command('LspFileTypes', function()
 				local NuiPopup = require('nui.popup')
