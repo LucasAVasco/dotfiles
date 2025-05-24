@@ -208,6 +208,17 @@ function MYFUNC.get_json_file_content(path)
 	return vim.json.decode(content), true
 end
 
+---Get a character in the current line. The character position is relative to the cursor column. A offset equal to 1 returns the character
+---in the current column. You can provide 0 and negative values.
+---@param col_offset integer Offset applied to the cursor column before getting the character. 1 is the current column.
+---@return string char Returns the character or a empty string if can not get the character.
+function MYFUNC.get_current_line_char(col_offset)
+	local cursor = vim.api.nvim_win_get_cursor(0)
+	local col = cursor[2] + col_offset
+
+	return vim.api.nvim_get_current_line():sub(col, col)
+end
+
 -- #endregion
 
 -- #region Decorators to call vim functions
