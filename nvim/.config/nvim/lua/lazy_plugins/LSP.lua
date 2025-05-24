@@ -158,11 +158,6 @@ return {
 
 			-- TODO(LucasAVasco): Find a decent way to run 'yarn dlx @yarnpkg/sdks base' in a Yarn repository to configure `tsserver`
 
-			-- Manually starts the LSP servers. `nvim-lspconfig` needs to be configured before Neovim attempts to start an LSP server in a
-			-- buffer. Otherwise, `nvim-lspconfig` may not configure it. The following line ensures that the LSP servers will be started
-			-- even if `nvim-lspconfig` is configured after Neovim's attempt
-			vim.cmd('LspStart')
-
 			-- Command to show configured LSP servers and its supported  file types
 			vim.api.nvim_create_user_command('LspFileTypes', function()
 				local NuiPopup = require('nui.popup')
