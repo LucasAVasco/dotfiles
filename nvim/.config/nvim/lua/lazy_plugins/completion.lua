@@ -275,6 +275,12 @@ return {
 				fallback()
 			end
 
+			---Equivalent to the `cmp.visible()` function, but runs asynchronously.
+			---@return boolean
+			local function cmp_async_visible()
+				return cmp.core.view:visible() and vim.fn.pumvisible()
+			end
+
 			-- CMP configuration
 			cmp.setup({
 				window = {
@@ -384,7 +390,7 @@ return {
 					['<Up>'] = cmp.mapping.select_prev_item({ behavior = cmp.SelectBehavior.Select, count = 6 }),
 
 					['<Tab>'] = function(fallback)
-						if cmp.visible() then
+						if cmp_async_visible() and cmp.visible() then
 							cmp.select_next_item({ behavior = cmp.SelectBehavior.Select })
 						elseif luasnip.jumpable(1) then
 							luasnip.jump(1)
@@ -394,7 +400,7 @@ return {
 					end,
 
 					['<S-Tab>'] = function(fallback)
-						if cmp.visible() then
+						if cmp_async_visible() and cmp.visible() then
 							cmp.select_prev_item({ behavior = cmp.SelectBehavior.Select })
 						elseif luasnip.jumpable(-1) then
 							luasnip.jump(-1)
@@ -413,7 +419,7 @@ return {
 
 					-- Accept the suggestions or snippet entry
 					['<CR>'] = function(fallback)
-						if cmp.get_selected_entry() then
+						if cmp_async_visible() and cmp.get_selected_entry() then
 							cmp.confirm({ behavior = cmp.ConfirmBehavior.Insert, select = true })
 						elseif luasnip.choice_active() then -- Shows the choice selector if in insert mode and inside a choice node
 							require('luasnip.extras.select_choice')()
@@ -423,7 +429,7 @@ return {
 					end,
 
 					['<S-CR>'] = function(fallback)
-						if cmp.visible() then
+						if cmp_async_visible() and cmp.visible() then
 							cmp.close()
 						else
 							fallback()
