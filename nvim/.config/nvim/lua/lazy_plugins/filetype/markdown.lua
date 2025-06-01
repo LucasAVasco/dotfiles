@@ -20,6 +20,7 @@ return {
 	},
 	{
 		'iamcco/markdown-preview.nvim',
+		lazy = true,
 
 		cmd = {
 			'MarkdownPreview',
@@ -31,6 +32,10 @@ return {
 
 		init = function()
 			vim.g.mkdp_browser = 'default_open'
+		end,
+
+		config = function()
+			MYFUNC.reset_filetype('markdown')
 		end,
 	},
 	{

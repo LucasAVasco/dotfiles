@@ -170,6 +170,42 @@ function MYFUNC.iter_path(path, filter)
 	end
 end
 
+---Get a list of all buffers that matches a specific file-type.
+---@param filetype string
+---@return integer[]
+function MYFUNC.get_buffers_of_filetype(filetype)
+	---@type table<integer, boolean>
+	local buffers = {}
+
+	for _, tab_page in ipairs(vim.api.nvim_list_tabpages()) do
+		for _, buffer_num in ipairs(vim.fn.tabpagebuflist(tab_page)) do
+			buffers[buffer_num] = true
+		end
+	end
+
+	---@type integer[]
+	local res = {}
+	for buffer_br, _ in pairs(buffers) do
+		if vim.bo[buffer_br].filetype == filetype then
+			table.insert(res, buffer_br)
+		end
+	end
+
+	return res
+end
+
+---Reset the file type of all buffers that are of this file type. E.g.: `reset_filetype('markdown')` sets the file types of all markdown
+---files to 'markdown'. This throws the 'FileType' event to all markdown files.
+---
+---Useful if you want to attach some plug-in to a file type, but their file type is already defined (before plug-in loads).
+---@param filetype any
+function MYFUNC.reset_filetype(filetype)
+	local buffers = MYFUNC.get_buffers_of_filetype(filetype)
+	for _, buffer_nr in ipairs(buffers) do
+		vim.bo[buffer_nr].filetype = filetype
+	end
+end
+
 -- #endregion
 
 -- #region File management functions
