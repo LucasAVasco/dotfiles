@@ -1,5 +1,5 @@
 ---@module "my_configs.LSP.types"
----@type MyLspServerConfig
+---@type my_configs.LSP.LspServerConfig
 local Config = {
 	settings = {
 		Lua = {

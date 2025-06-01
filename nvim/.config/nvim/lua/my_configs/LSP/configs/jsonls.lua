@@ -1,7 +1,7 @@
 local schemastore = require('schemastore')
 
 ---@module "my_configs.LSP.types"
----@type MyLspServerConfig
+---@type my_configs.LSP.LspServerConfig
 local Config = {
 	settings = {
 		---@diagnostic disable-next-line: missing-fields

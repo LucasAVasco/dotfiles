@@ -14,7 +14,7 @@ schemas.kubernetes = {
 }
 
 ---@module "my_configs.LSP.types"
----@type MyLspServerConfig
+---@type my_configs.LSP.LspServerConfig
 ---@diagnostic disable-next-line: missing-fields
 local Config = {
 	settings = {

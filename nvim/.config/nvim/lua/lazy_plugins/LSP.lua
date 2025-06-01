@@ -97,7 +97,7 @@ return {
 			local client_capabilities = require('cmp_nvim_lsp').default_capabilities()
 
 			---Default settings applied to all LSP servers
-			---@type MyLspServerConfig|{}
+			---@type my_configs.LSP.LspServerConfig
 			local default_lspconfiguration = {
 				capabilities = client_capabilities,
 			}
@@ -134,7 +134,7 @@ return {
 				vim.api.nvim_create_autocmd('FileType', {
 					pattern = filetypes,
 					callback = function()
-						---@type boolean, MyLspServerConfig
+						---@type boolean, my_configs.LSP.LspServerConfig
 						local ok, server_opts = pcall(require, 'my_configs.LSP.configs.' .. lsp_server_name)
 
 						if ok then
