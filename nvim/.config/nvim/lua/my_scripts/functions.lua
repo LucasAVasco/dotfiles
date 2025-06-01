@@ -95,6 +95,18 @@ function MYFUNC.array_has(array, value)
 	return false
 end
 
+---Concat all elements of `src` into `dest`
+---@param dest any[] This array is modified,
+---@param src any[] This array is not modified.
+---@return any[]
+function MYFUNC.array_concat(dest, src)
+	for _, value in ipairs(src) do
+		table.insert(dest, value)
+	end
+
+	return dest
+end
+
 --- Get the ID of the window from the buffer number
 --- The user need to provide the buffer number. This function will return the ID of the window associated to this buffer. More that one
 --- window can be associated to the same buffer. In this case, this function will select one of them and return. The criteria to select the
@@ -206,6 +218,54 @@ function MYFUNC.reset_filetype(filetype)
 	end
 end
 
+---@class MyFunctions.BufferRegion
+---@field open integer[]
+---@field close integer[]
+
+---Get the last selection positions
+---@param buffer_number integer
+---@return MyFunctions.BufferRegion?
+function MYFUNC.get_last_selection(buffer_number)
+	local open_mark = vim.api.nvim_buf_get_mark(buffer_number, '<')
+	local close_mark = vim.api.nvim_buf_get_mark(buffer_number, '>')
+
+	if open_mark[1] == 0 or close_mark[1] == 0 then -- The user does not deselected any line
+		return
+	end
+
+	-- The '>' marker may point to a column position that does not exist if selecting text with 'CTRL-V'. But the `nvim_buf_set_text()`
+	-- function requires a existing column position
+
+	local last_selected_line = vim.api.nvim_buf_get_lines(buffer_number, close_mark[1] - 1, close_mark[1], true)[1]
+	if close_mark[2] > #last_selected_line then
+		close_mark[2] = #last_selected_line
+	end
+
+	return {
+		open = open_mark,
+		close = close_mark,
+	}
+end
+
+---Get the last selection lines.
+---@param buffer_number integer
+---@return string[]?
+function MYFUNC.get_last_selection_lines(buffer_number)
+	local selected_region = MYFUNC.get_last_selection(buffer_number)
+
+	if not selected_region then
+		return
+	end
+
+	return vim.api.nvim_buf_get_text(
+		0,
+		selected_region.open[1] - 1,
+		selected_region.open[2],
+		selected_region.close[1] - 1,
+		selected_region.close[2],
+		{}
+	)
+end
 -- #endregion
 
 -- #region File management functions

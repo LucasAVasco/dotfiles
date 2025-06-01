@@ -29,6 +29,7 @@ load_script('italics')
 load_script('LSP')
 load_script('open')
 load_script('file_types')
+load_script('translate')
 
 -- Development options
 local lazy_dev = false -- Use the 'lazy.nvim' repository in the development folder
