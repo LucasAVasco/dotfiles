@@ -59,7 +59,14 @@ return {
 		},
 
 		config = function(_, opts)
-			require('navigator').setup(opts)
+			local navigator = require('navigator')
+
+			opts.keymaps = {
+				-- Disables key-map used to toggle diagnostics
+				{ key = '<C-A-S-F11>', func = require('navigator.diagnostics').toggle_diagnostics, desc = 'toggle diagnostics' },
+			}
+
+			navigator.setup(opts)
 
 			-- Attach navigator to all buffers with a LSP server attached
 			vim.api.nvim_create_autocmd('LspAttach', {
