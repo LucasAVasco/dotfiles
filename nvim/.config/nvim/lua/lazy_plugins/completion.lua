@@ -441,7 +441,7 @@ return {
 					-- Expand the snippet entry
 					['<A-CR>'] = function(fallback)
 						if luasnip.expandable() then
-							luasnip.expand()
+							luasnip.expand({})
 						else
 							fallback()
 						end
