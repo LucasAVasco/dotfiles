@@ -2,4 +2,16 @@
 ---@type table<string, string[]|string> Relates the LSP server identifier (used by lspconfig) to its override file types
 return {
 	clangd = { 'c', 'cpp', 'objc', 'objcpp', 'cuda' },
+	ts_ls = {
+		-- Default supported files
+		'javascript',
+		'javascript.jsx',
+		'javascriptreact',
+		'typescript',
+		'typescript.tsx',
+		'typescriptreact',
+
+		-- Plugins and extension
+		'vue', -- Support Vue plugin
+	},
 }
