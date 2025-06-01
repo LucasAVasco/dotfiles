@@ -32,6 +32,12 @@ return {
 			local snacks = require('snacks')
 			snacks.setup(opts)
 
+			vim.api.nvim_create_autocmd('InsertEnter', {
+				callback = function()
+					snacks.image.doc.hover_close()
+				end,
+			})
+
 			vim.api.nvim_create_user_command('Colorize', function(args)
 				snacks.terminal.colorize()
 			end, {})
