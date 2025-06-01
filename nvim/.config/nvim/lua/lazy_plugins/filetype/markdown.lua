@@ -28,6 +28,10 @@ return {
 		},
 
 		build = 'cd app && npm install && git restore .',
+
+		init = function()
+			vim.g.mkdp_browser = 'default_open'
+		end,
 	},
 	{
 		'renerocksai/telekasten.nvim',
