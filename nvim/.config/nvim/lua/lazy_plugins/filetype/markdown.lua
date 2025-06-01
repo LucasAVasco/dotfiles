@@ -27,7 +27,7 @@ return {
 			'MarkdownPreviewToggle',
 		},
 
-		build = 'cd app && npm install',
+		build = 'cd app && npm install && git restore .',
 	},
 	{
 		'renerocksai/telekasten.nvim',
