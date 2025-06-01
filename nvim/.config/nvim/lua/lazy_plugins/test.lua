@@ -279,4 +279,132 @@ return {
 			})
 		end,
 	},
+	{
+		'andythigpen/nvim-coverage',
+		version = '*',
+
+		keys = { { '<leader>Tc', '<CMD>CoverageAuto<CR>', desc = 'Toggle coverage test visualization' } },
+
+		cmd = {
+			-- Original plugin commands
+			'Coverage',
+			'CoverageClear',
+			'CoverageHide',
+			'CoverageLoad',
+			'CoverageLoadLcov',
+			'CoverageShow',
+			'CoverageSummary',
+			'CoverageToggle',
+
+			-- My commands
+			'CoverageAuto',
+			'CoverageBuild',
+		},
+
+		opts = {
+			auto_reload = true,
+		},
+
+		config = function(_, opts)
+			local coverage = require('coverage')
+			coverage.setup(opts)
+
+			---Generates a converge file for the provided buffer.
+			---@param buffer_number integer
+			---@param callback? fun(out?: vim.SystemCompleted) Called after the build. Scheduled to the next event loop
+			local function generate_coverage_file(buffer_number, callback)
+				local filetype = vim.bo[buffer_number].filetype
+
+				---@module 'my_configs.coverage.types'
+				---@type boolean, my_config.coverage.CoverageBuildFunction
+				local ok, build_func = pcall(function()
+					return require('my_configs.coverage.builders.' .. filetype)
+				end)
+
+				-- Can not load the build function
+				if not ok then
+					return
+				end
+
+				---Run the callback in the next Neovim event loop
+				---@param out? vim.SystemCompleted
+				local scheduled_callback = function(out)
+					vim.schedule(function()
+						if callback then
+							callback(out)
+						end
+					end)
+				end
+
+				build_func(buffer_number, scheduled_callback)
+			end
+
+			vim.api.nvim_create_user_command('CoverageBuild', function()
+				generate_coverage_file(0, function() end)
+			end, {})
+
+			---Generate coverage files and show the result in the signs
+			---@param buffer_number integer
+			local function generate_coverage_file_and_show_signs(buffer_number)
+				generate_coverage_file(buffer_number, function()
+					coverage.load(false)
+					coverage.show()
+				end)
+			end
+
+			---Enable or disable the automatic build and visualization of coverage files
+			---@param enable boolean
+			---@param notify boolean? Show a notification of the state change.
+			local function coverage_auto(enable, notify)
+				if notify then
+					local prefix = enable and 'Enabling' or 'Disabling'
+
+					vim.notify(prefix .. ' automatic build and visualization of coverage files', vim.log.levels.INFO, {
+						title = 'Coverage',
+					})
+				end
+
+				local group = vim.api.nvim_create_augroup('CoverageAutoGroup', { clear = true })
+
+				if enable then
+					generate_coverage_file_and_show_signs(0)
+
+					vim.api.nvim_create_autocmd('BufWritePost', {
+						group = group,
+						callback = function(args)
+							generate_coverage_file_and_show_signs(args.buf)
+						end,
+					})
+				else
+					vim.api.nvim_del_augroup_by_id(group)
+					coverage.hide()
+				end
+			end
+
+			local auto_build = false
+			vim.api.nvim_create_user_command('CoverageAuto', function(args)
+				local fargs_1 = args.fargs[1] or 'toggle'
+
+				if fargs_1 == 'true' then
+					auto_build = true
+				elseif fargs_1 == 'false' then
+					auto_build = false
+				elseif fargs_1 == 'toggle' then
+					auto_build = not auto_build
+				else
+					vim.notify('Unrecognized command :' .. fargs_1, vim.log.levels.ERROR)
+					return
+				end
+
+				coverage_auto(auto_build, true)
+			end, {
+				nargs = '*',
+				complete = MYFUNC.create_complete_function({
+					'true',
+					'false',
+					'toggle',
+				}),
+			})
+		end,
+	},
 }
