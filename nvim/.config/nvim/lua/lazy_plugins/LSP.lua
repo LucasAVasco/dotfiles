@@ -1,4 +1,4 @@
----@type table<string, string[]|string> Relates the LSP server name with its filetypes
+---@type table<string, string[]|"*"> Relates the LSP server name with its filetypes
 MYPLUGVAR.lspFileTypes = {}
 
 return {
@@ -138,9 +138,16 @@ return {
 						local ok, server_opts = pcall(require, 'my_configs.LSP.configs.' .. lsp_server_name)
 
 						if ok then
-							server_opts.capabilities = client_capabilities
+							server_opts = vim.tbl_deep_extend('force', default_lspconfiguration, server_opts)
 						else
-							server_opts = default_lspconfiguration
+							server_opts = vim.tbl_deep_extend('keep', default_lspconfiguration, {})
+						end
+
+						-- File types supported by the LSP server
+						local file_types = MYPLUGVAR.lspFileTypes[lsp_server_name]
+
+						if type(file_types) == 'table' then -- `lspconfig` does not consider the '*' a valid file type
+							server_opts.filetypes = file_types
 						end
 
 						lspconfig[lsp_server_name].setup(server_opts)
