@@ -2,16 +2,48 @@
 #
 # Copy the provided arguments or standard input to the clipboard. Works in Xorg and Wayland.
 #
-# Usage:
-# `./copy.sh arg1 arg2`: copy 'arg1 arg2' to the clipboard
-# `./copy.sh -- --arg1 --arg2`: copy '--arg1 --arg2' to the clipboard
-# `./copy.sh`: copy the standard input to the clipboard
-# `./copy.sh --stdin`: copy the standard input to the clipboard
-# `./copy.sh --stdin --xorg_target image/png`: copy an image provided from the standard input to the clipboard (Xorg requires a `target`)
-#
 # Dependencies:
 # - xclip (Xorg)
 # - wl-copy (Wayland)
+
+source ~/.config/bash/libs/help.sh
+
+help() {
+	help_msg_format '\t\t' << EOF
+		Copy the provided arguments or standard input to the clipboard. Works in Xorg and Wayland.
+
+		USAGE
+		copy.sh [options] -- <content to copy>
+
+		OPTIONS
+			--stdin
+				copy the standard input to the clipboard.
+
+			-t | --xorg_target
+				Sets the Xorg target of the copied content.
+
+		EXAMPLES
+			copy.sh arg1 arg2
+				Copy 'arg1 arg2' to the clipboard.
+
+			copy.sh -- --arg1 --arg2
+				Copy '--arg1 --arg2' to the clipboard.
+
+			copy.sh
+				Copy the standard input to the clipboard.
+
+			copy.sh --stdin
+				Copy the standard input to the clipboard.
+
+			copy.sh --stdin --xorg_target image/png
+				Copy an image provided from the standard input to the clipboard (Xorg requires a \`target\`).
+EOF
+}
+
+if [[ "$1" == '-h' || "$1" == '--help' ]]; then
+	help
+	exit 0
+fi
 
 # Parses the arguments
 copy_stdin='n'
