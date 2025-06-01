@@ -1,0 +1,10 @@
+{
+	"Sample test function": {
+		"prefix": "toc",
+		"description": [
+			"Automatic table of contents.",
+			"Requires: [https://github.com/jonschlinkert/markdown-toc](https://github.com/jonschlinkert/markdown-toc)"
+		],
+		"body": ["<!-- toc -->"]
+	}
+}

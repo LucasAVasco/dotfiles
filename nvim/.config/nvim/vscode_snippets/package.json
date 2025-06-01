@@ -77,6 +77,12 @@
 			},
 			{
 				"language": [
+					"markdown"
+				],
+				"path": "./markdown/toc.json"
+			},
+			{
+				"language": [
 					"sshconfig"
 				],
 				"path": "./ssh/ssh-host.json"
