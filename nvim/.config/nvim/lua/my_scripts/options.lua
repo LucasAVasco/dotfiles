@@ -32,7 +32,7 @@ vim.cmd('filetype indent on')
 
 -- Indentation
 vim.opt.expandtab = false -- Expand tabs to spaces convert tabs to spaces
-vim.opt.smarttab = false -- The smarttab option change how to use the 'tabstop', 'softtabstop' and 'shiftwidth'options
+vim.opt.smarttab = true -- The smarttab option change how to use the 'tabstop', 'softtabstop' and 'shiftwidth'options
 vim.opt.tabstop = 4 -- Number of spaces that a Tab represents
 vim.opt.softtabstop = -1 -- Number of spaces added for Tab when editing ( <0 = use 'shiftwidth')
 vim.opt.shiftwidth = 0 -- Number of spaces added for each indentation (0 = use 'tabstop')
