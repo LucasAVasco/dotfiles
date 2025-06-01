@@ -110,22 +110,6 @@ vim.api.nvim_create_autocmd('LspAttach', {
 			return
 		end
 
-		-- Enables highlighting references. The current color scheme need to support it (provide 'LspReferenceText'
-		-- 'LspReferenceRead' and 'LspReferenceWrite' highlight groups)
-		if client.server_capabilities.documentHighlightProvider then
-			vim.api.nvim_create_autocmd({ 'CursorHold', 'CursorHoldI' }, {
-				group = LSP_group,
-				buffer = buffer_nr,
-				callback = vim.lsp.buf.document_highlight,
-			})
-
-			vim.api.nvim_create_autocmd({ 'CursorMoved', 'CursorMovedI' }, {
-				group = LSP_group,
-				buffer = buffer_nr,
-				callback = vim.lsp.buf.clear_references,
-			})
-		end
-
 		-- Shows the codelens
 		if client.server_capabilities.codeLensProvider then
 			vim.api.nvim_create_autocmd({ 'BufEnter', 'InsertLeave', 'CursorHold' }, {
