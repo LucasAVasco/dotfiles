@@ -60,6 +60,13 @@ install_git_clone() {
 	fi
 }
 
+# Change to a subdirectory inside the download directory.
+#
+# $1: subdirectory to change.
+install_git_cd() {
+	cd "$__git_download_dir/$1"
+}
+
 # Run a arbitrary command on the download directory.
 #
 # $@: command and its arguments.
