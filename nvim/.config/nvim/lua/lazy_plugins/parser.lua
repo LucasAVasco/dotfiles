@@ -314,8 +314,10 @@ return {
 
 		dependencies = 'nvim-treesitter/nvim-treesitter',
 
-		ft = { 'markdown', 'norg', 'org' },
+		ft = { 'norg', 'org' },
 
-		opts = {},
+		opts = {
+			markdown = { query = false },
+		},
 	},
 }
