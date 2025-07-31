@@ -317,6 +317,37 @@ end
 
 -- #endregion
 
+-- #region Runctions related to `ftplugin`
+
+---You should use this function only into configurations at 'ftplugin' directory.
+---
+---If the file type of the buffer is reset several times, this function ensures that the `func` callback is called only once.
+---This function only allows to recall the `func` callback if the current file type changes.
+---
+---@param func fun()
+function MYFUNC.call_once_ftplugin(func)
+	local file_type = vim.bo.filetype
+
+	if not vim.b.__ftplugin_file_type == file_type then
+		vim.b.__ftplugin_file_type = file_type
+
+		func()
+	end
+end
+
+---You should use this function only into configurations at 'ftplugin' directory.
+---
+---Only call `func` if editorconfig is not loaded to the current buffer.
+---
+---@param func fun()
+function MYFUNC.call_if_before_editor_config(func)
+	if vim.b.editorconfig == nil then
+		func()
+	end
+end
+
+-- #endregion
+
 -- #region Decorators to call vim functions
 
 --- Decorator that returns a Lua function that runs the provided vim function.
