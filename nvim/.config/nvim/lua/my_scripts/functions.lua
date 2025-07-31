@@ -210,7 +210,7 @@ end
 ---files to 'markdown'. This throws the 'FileType' event to all markdown files.
 ---
 ---Useful if you want to attach some plug-in to a file type, but their file type is already defined (before plug-in loads).
----@param filetype any
+---@param filetype string
 function MYFUNC.reset_filetype(filetype)
 	local buffers = MYFUNC.get_buffers_of_filetype(filetype)
 	for _, buffer_nr in ipairs(buffers) do
