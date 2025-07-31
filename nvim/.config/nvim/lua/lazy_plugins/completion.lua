@@ -409,7 +409,7 @@ return {
 						end
 					end,
 
-					['<A-Tab>'] = function(fallback)
+					['<C-Tab>'] = function(fallback)
 						if luasnip.choice_active() then -- Shows the choice selector if in insert mode and inside a choice node
 							require('luasnip.extras.select_choice')()
 						else

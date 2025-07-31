@@ -206,6 +206,7 @@ return {
 			vim.keymap.set('n', '<A-0>', MYFUNC.decorator_call_function(bufferline.go_to, { -1, true }), get_map_opts('Go to last buffer'))
 			vim.keymap.set('n', '<A-[>', cycle_prev_buf, get_map_opts('Go to previous buffer'))
 			vim.keymap.set('n', '<A-]>', cycle_next_buf, get_map_opts('Go to next buffer'))
+			vim.keymap.set('n', '<A-Backspace>', '<C-^>', get_map_opts('Go to alternate buffer'))
 
 			---Function key mappings to jump between buffers and tabs
 			---@type MyFunctionKeysMappings
