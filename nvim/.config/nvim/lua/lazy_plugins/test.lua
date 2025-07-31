@@ -312,6 +312,7 @@ return {
 			---Generates a converge file for the provided buffer.
 			---@param buffer_number integer
 			---@param callback? fun(out?: vim.SystemCompleted) Called after the build. Scheduled to the next event loop
+			---@return boolean can_build
 			local function generate_coverage_file(buffer_number, callback)
 				local filetype = vim.bo[buffer_number].filetype
 
@@ -323,7 +324,7 @@ return {
 
 				-- Can not load the build function
 				if not ok then
-					return
+					return false
 				end
 
 				---Run the callback in the next Neovim event loop
@@ -337,19 +338,38 @@ return {
 				end
 
 				build_func(buffer_number, scheduled_callback)
+
+				return true
 			end
 
 			vim.api.nvim_create_user_command('CoverageBuild', function()
-				generate_coverage_file(0, function() end)
+				if not generate_coverage_file(0, function() end) then
+					vim.notify('Can not build coverage file', vim.log.levels.ERROR, {
+						title = 'Coverage',
+					})
+				end
 			end, {})
 
 			---Generate coverage files and show the result in the signs
 			---@param buffer_number integer
-			local function generate_coverage_file_and_show_signs(buffer_number)
-				generate_coverage_file(buffer_number, function()
+			---@param show_error boolean
+			local function generate_coverage_file_and_show_signs(buffer_number, show_error)
+				local function load_and_show_signs()
 					coverage.load(false)
 					coverage.show()
-				end)
+				end
+
+				local can_build = generate_coverage_file(buffer_number, load_and_show_signs)
+
+				if not can_build then
+					if show_error then
+						vim.notify('Can not build coverage file', vim.log.levels.ERROR, {
+							title = 'Coverage',
+						})
+					end
+
+					load_and_show_signs()
+				end
 			end
 
 			---Enable or disable the automatic build and visualization of coverage files
@@ -367,12 +387,12 @@ return {
 				local group = vim.api.nvim_create_augroup('CoverageAutoGroup', { clear = true })
 
 				if enable then
-					generate_coverage_file_and_show_signs(0)
+					generate_coverage_file_and_show_signs(0, true)
 
 					vim.api.nvim_create_autocmd('BufWritePost', {
 						group = group,
 						callback = function(args)
-							generate_coverage_file_and_show_signs(args.buf)
+							generate_coverage_file_and_show_signs(args.buf, false)
 						end,
 					})
 				else
