@@ -1,4 +1,4 @@
 ---@meta
 
 ---@module "lspconfig.configs"
----@alias my_configs.LSP.LspServerConfig lspconfig.Config|{}
+---@alias my_configs.LSP.LspServerConfig vim.lsp.Config
