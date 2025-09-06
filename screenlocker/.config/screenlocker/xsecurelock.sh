@@ -18,7 +18,7 @@ is_buckle_on=$(~/.config/keyboard/sound_emulator.sh status)
 
 
 # Paths
-wallpapers_path="$HOME/Themes/wallpapers-locker"
+wallpapers_path="/home/shared_folder/screen_locker/wallpapers/"
 
 
 # XSecureLock configurations and run
