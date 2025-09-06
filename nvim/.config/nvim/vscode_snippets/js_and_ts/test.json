@@ -1,0 +1,19 @@
+{
+	"func-test": {
+		"prefix": ["func-test", "describe-test"],
+		"description": ["Sample test function."],
+		"body": [
+			"describe(\"${1:Name}\", () => {",
+			"\ttest(\"${2:sub-test name}\", () => {",
+			"\t\t$0",
+			"\t})",
+			"})"
+		]
+	},
+
+	"Sample subtest routine": {
+		"prefix": ["func-sub-test", "test"],
+		"description": "Sample sub-test routine.",
+		"body": ["test(\"${1:sub-test name}\", () => {", "\t$0", "})"]
+	}
+}

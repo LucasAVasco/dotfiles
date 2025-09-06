@@ -47,6 +47,13 @@
 			},
 			{
 				"language": [
+					"typescript",
+					"javascript"
+				],
+				"path": "./js_and_ts/test.json"
+			},
+			{
+				"language": [
 					"sql"
 				],
 				"path": "./sql/formatter.json"
