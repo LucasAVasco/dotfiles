@@ -8,6 +8,8 @@
 
 source ~/.config/bash/libs/help.sh
 
+set -e
+
 help() {
 	help_msg_format '\t\t' << EOF
 		Copy the provided arguments or standard input to the clipboard. Works in Xorg and Wayland.
@@ -84,6 +86,17 @@ if [[ $# == 0 ]]; then
 	copy_stdin='y'
 fi
 
+# Function that clears the clipboard after the provided time (from the command line arguments)
+async_clear_clipboard() {
+	if [[ -n "$clear_after" ]]; then
+		current_dir=$(dirname `realpath "${BASH_SOURCE[0]}"`)
+		"$current_dir/clear.sh" --async "$clear_after"
+	fi
+}
+
+# Clears the clipboard
+async_clear_clipboard
+
 # Xorg session
 if [[ -z "$WAYLAND_DISPLAY" ]]; then
 	if [[ "$copy_stdin" == 'y' ]]; then
@@ -104,8 +117,5 @@ else
 	fi
 fi
 
-# Clears the clipboard
-if [[ -n "$clear_after" ]]; then
-	current_dir=$(dirname `realpath "${BASH_SOURCE[0]}"`)
-	"$current_dir/clear.sh" --async "$clear_after"
-fi
+# Ensures the clipboard is cleared
+async_clear_clipboard

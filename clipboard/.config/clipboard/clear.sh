@@ -2,6 +2,8 @@
 #
 # Clear the user clipboard.
 
+set -e
+
 current_dir=$(dirname `realpath "${BASH_SOURCE[0]}"`)
 
 no_notify=n
