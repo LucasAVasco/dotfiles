@@ -1,0 +1,21 @@
+{
+	"Note left of": {
+		"prefix": "note-lf-of",
+		"description": "Note at left of a sub-entity.",
+		"body": [
+			"note left of ${1:entity}::${2:sub-entity}",
+			"\"${3:note description}\"",
+			"end note"
+		]
+	},
+
+	"Note right of": {
+		"prefix": "note-rt-of",
+		"description": "Note at right of a sub-entity.",
+		"body": [
+			"note right of ${1:entity}::${2:sub-entity}",
+			"\"${3:note description}\"",
+			"end note"
+		]
+	}
+}

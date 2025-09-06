@@ -99,6 +99,12 @@
 					"desktop"
 				],
 				"path": "./desktop.json"
+			},
+			{
+				"language": [
+					"plantuml"
+				],
+				"path": "./plantuml/note.json"
 			}
 		]
 	}
