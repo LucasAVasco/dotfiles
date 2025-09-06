@@ -1,0 +1,24 @@
+{
+	"Only one instance of the workflow at the same time": {
+		"prefix": "concurrency-only-one-instance",
+		"description": "Ensures only one instance of this workflow runs at the same time.",
+		"body": [
+			"name: ${1:workflow-name}",
+			"",
+			"concurrency:",
+			"\tgroup: ${1}",
+			"\tcancel-in-progress: true",
+			"$0"
+		]
+	},
+	"Disable job if running in Act": {
+		"prefix": "if-job-not-act",
+		"description": "Disable job if running with Act",
+		"body": ["if: ${{ !github.event.act }}"]
+	},
+	"Disable step if running in Act": {
+		"prefix": "if-step-not-act",
+		"description": "Disable step if running with Act",
+		"body": ["if: ${{ !env.ACT }}"]
+	}
+}

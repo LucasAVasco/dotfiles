@@ -34,6 +34,12 @@
 			},
 			{
 				"language": [
+					"yaml"
+				],
+				"path": "./yaml/act.json"
+			},
+			{
+				"language": [
 					"cpp",
 					"c"
 				],
