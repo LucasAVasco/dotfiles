@@ -1,3 +1,7 @@
+vim.api.nvim_create_user_command('ScrollBindToggle', 'set scrollbind!', {
+	desc = 'Toggle the scrollbind option of the current window.',
+})
+
 vim.api.nvim_create_user_command('AppendFileToClip', function(arguments)
 	local file = arguments.fargs[1]
 	if file == '%' then
