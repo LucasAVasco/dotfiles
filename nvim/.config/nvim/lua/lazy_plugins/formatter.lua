@@ -68,12 +68,6 @@ return {
 				end
 
 				-- Auto-format
-				local formatters_info = require('conform').list_formatters_to_run(buffer_number)
-
-				if #formatters_info == 0 then
-					return
-				end
-
 				return { async = true, lsp_format = 'fallback' }
 			end,
 		},
