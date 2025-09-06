@@ -1,0 +1,5 @@
+#!/bin/bash
+#
+# Send clipboard to sync folder.
+
+default_term bash -c "make -C '$HOME/.local/custom_scripts' WORKING_DIR='$HOME' SCRIPT='sync_folder/clipboard/send.sh'"
