@@ -47,7 +47,17 @@ return {
 		},
 
 		init = function()
-			vim.diagnostic.config({ virtual_text = false })
+			vim.diagnostic.config({
+				virtual_text = false,
+				signs = {
+					text = {
+						[vim.diagnostic.severity.HINT] = '',
+						[vim.diagnostic.severity.INFO] = '',
+						[vim.diagnostic.severity.WARN] = '',
+						[vim.diagnostic.severity.ERROR] = '',
+					},
+				},
+			})
 		end,
 
 		config = function(_, opts)

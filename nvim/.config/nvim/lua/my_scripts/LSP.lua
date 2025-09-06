@@ -35,6 +35,7 @@
 local default_options = MYFUNC.decorator_create_options_table({ noremap = true, silent = true })
 
 -- Go to
+vim.keymap.set('n', '<leader>gr', vim.lsp.buf.references, default_options('Go to LSP definition'))
 vim.keymap.set('n', '<leader>gd', vim.lsp.buf.definition, default_options('Go to LSP definition'))
 vim.keymap.set('n', '<leader>gD', vim.lsp.buf.declaration, default_options('Go to LSP declaration'))
 vim.keymap.set('n', '<leader>gi', vim.lsp.buf.implementation, default_options('Go to LSP implementation'))
