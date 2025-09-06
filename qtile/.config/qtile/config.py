@@ -279,6 +279,10 @@ keys.extend([
 
     # System management {{{
 
+    Key([SUPER], "y",
+        lazy.spawn(HOME + "/.local/dotfiles_bin/receive-clip-from-sync-folder")),
+    Key([SUPER], "p",
+        lazy.spawn(HOME + "/.local/dotfiles_bin/send-clip-to-sync-folder")),
     Key([SUPER], "Delete", lazy.spawn("xkill")),
     Key([SUPER], "z",
         lazy.spawn(HOME + "/.config/screenlocker/manager.sh toggle")),
