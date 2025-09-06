@@ -8,5 +8,10 @@
 # * bash
 # * yazi
 
+# Configure LS_COLORS on Zoxide UI
+ls_colors_script=~/.cache/antidote/trapd00r/LS_COLORS/lscolors.sh
+if [[ -f "$ls_colors_script" ]]; then
+	source "$ls_colors_script"
+fi
 
 yazi "$@"
