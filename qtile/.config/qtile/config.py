@@ -222,6 +222,8 @@ keys.extend([
     Key([SUPER], "d", lazy.spawn(HOME + "/.config/rofi/tools/chdesk.sh")),
     Key([SUPER], "a",
         lazy.spawn(HOME + "/.config/rofi/tools/applications.sh")),
+    Key([SUPER], "o",
+        lazy.spawn(HOME + "/.config/rofi/tools/org.sh")),
     Key([SUPER], "r",
         lazy.spawn(HOME + "/.local/dotfiles_bin/custom-script-popup")),
     Key([SUPER], "s", lazy.spawn(HOME + "/.config/screenshot/take.sh -c")),
