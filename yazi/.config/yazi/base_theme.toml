@@ -1,5 +1,5 @@
 [flavor]
-dark = "tokyo-night"
+dark = "flexoki-dark"
 
 # The 'LS Colors' theme will be placed bellow. You can not add it to [flavor] because Yazi does not support more than one flavor at the same
 # time
