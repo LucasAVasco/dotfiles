@@ -62,11 +62,6 @@ return {
 					return
 				end
 
-				local filename = vim.api.nvim_buf_get_name(buffer_number)
-				if string.match(filename, '^/tmp/dadbodui-') then
-					return
-				end
-
 				-- Auto-format
 				return { async = true, lsp_format = 'fallback' }
 			end,
