@@ -1,0 +1,9 @@
+#!/bin/sh
+#
+# Append file content to clipboard
+
+file_path="$1"
+clip_content=$(~/.config/clipboard/paste.sh)
+file_content=$(cat "$file_path")
+
+printf "%s\n\nFile: %s\n\`\`\`\n%s\n\`\`\`" "$clip_content" "$file_path" "$file_content" | ~/.config/clipboard/copy.sh
