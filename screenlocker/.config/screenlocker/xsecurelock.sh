@@ -21,7 +21,7 @@ is_buckle_on=$(~/.config/keyboard/sound_emulator.sh status)
 wallpapers_path="/home/shared_folder/screen_locker/wallpapers/"
 
 
-# XSecureLock configurations and run
+# XSecureLock configurations and run (See the file at '/usr/lib/xsecurelock/saver_mpv' for the full list of options)
 export XSECURELOCK_COMPOSITE_OBSCURER=0
 export XSECURELOCK_SAVER=saver_mpv
 export XSECURELOCK_IMAGE_DURATION_SECONDS=4
