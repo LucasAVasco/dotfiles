@@ -81,6 +81,19 @@ install_wget_untar_file() {
 	tar xf "$src_file" --directory="$dest_dir"
 }
 
+# Extract compressed `zip` file inside the download directory.
+#
+# $1: file name of the compressed file (inside the download directory).
+# $2: directory name of the extracted file (inside the download directory).
+install_wget_unzip_file() {
+	local src_file=$(install_wget_get_abs_path "$1")
+	local dest_dir=$(install_wget_get_abs_path "$2")
+
+	mkdir -p "$dest_dir"
+
+	unzip "$src_file" -d "$dest_dir"
+}
+
 # Copy files from the download directory to a folder or file outside it.
 #
 # $1..n-1: Files to copy (relative to the download directory).
