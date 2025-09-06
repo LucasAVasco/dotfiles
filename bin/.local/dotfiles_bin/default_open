@@ -72,6 +72,10 @@ open_path() {
 		if [[ "$1" =~ .desktop$ ]]; then
 			open_desktop "$1" "${@:2}"
 
+		# HTML files
+		elif [[ "$mime_type" == "text/html"  ]]; then
+			exec default_web_browser "$1" "${@:2}"
+
 		# Open text files with Neovim
 		elif [[ "$mime_type" =~ ^text/ ]]; then
 			exec nvim_new_win "$1" "${@:2}"
