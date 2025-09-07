@@ -8,7 +8,7 @@ linux_arch_arm64='arm64'
 
 # Return the current OS architecture.
 #
-# Return on of: 'amd64', 'arm32', 'arm64'
+# Return one of: 'amd64', 'arm32', 'arm64'
 linux_arch_get() {
 	local uname_res=$(uname -m)
 
