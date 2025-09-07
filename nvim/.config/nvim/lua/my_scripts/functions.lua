@@ -128,15 +128,20 @@ function MYFUNC.get_window_by_buffer(buffer_nr)
 end
 
 ---@class (exact) myfunc.visual_selected_area Start and end line of a visual selected area
----@field cursor_line integer Line of the cursor
----@field start_selected_line integer The visual selected area starts in this line
+---@field cursor_line integer Line of the cursor (starts in 1).
+---@field start_selected_line integer The visual selected area starts in this line (starts in 1).
 
----Return the area of the current visual selected area
+---Return the area of the current visual selected area.
+---@param window_id integer ID of the window.
 ---@return myfunc.visual_selected_area
-function MYFUNC.get_visual_selected_area()
+function MYFUNC.get_visual_selected_area(window_id)
+	if window_id == 0 then
+		window_id = vim.api.nvim_get_current_win()
+	end
+
 	return {
-		cursor_line = vim.fn.line('.'),
-		start_visual_line = vim.fn.line('v'),
+		cursor_line = vim.fn.line('.', window_id),
+		start_selected_line = vim.fn.line('v', window_id),
 	}
 end
 

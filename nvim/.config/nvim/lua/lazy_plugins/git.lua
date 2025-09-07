@@ -177,7 +177,7 @@ return {
 				if mode == 'n' then
 					gitsigns.stage_hunk()
 				elseif mode == 'v' or mode == 'V' then
-					local selected_area = MYFUNC.get_visual_selected_area()
+					local selected_area = MYFUNC.get_visual_selected_area(0)
 					gitsigns.stage_hunk({ selected_area.cursor_line, selected_area.start_selected_line })
 				end
 			end, get_opts('Stage hunk'))
@@ -188,7 +188,7 @@ return {
 				if mode == 'n' then
 					gitsigns.reset_hunk()
 				elseif mode == 'v' or mode == 'V' then
-					local selected_area = MYFUNC.get_visual_selected_area()
+					local selected_area = MYFUNC.get_visual_selected_area(0)
 					gitsigns.reset_hunk({ selected_area.cursor_line, selected_area.start_selected_line })
 				end
 			end, get_opts('Reset hunk'))
