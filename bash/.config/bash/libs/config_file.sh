@@ -4,18 +4,18 @@
 
 # Set a key in a configuration file.
 #
-# $1: key name.
+# $1?: configuration file path. Optional. If not provided (empty string), use the content of the standard input.
 # $2: separator between the key name and the key value in the configuration file.
-# $3: value to set.
-# $4?: configuration file path. Optional. If not provided, use the content of the standard input.
+# $3: key name.
+# $4: value to set.
 # stdin?: content of the configuration file. Only provided if the configuration file is not provided as an argument.
 #
 # stdout?: the content of the configuration file with the new value. Only provided if the configuration file is not provided as an argument.
-config_file_set_key() {
-	local key="$1"
+config_file_set_key_value() {
+	local config_file="$1"
 	local separator="$2"
-	local value="$3"
-	local config_file="$4"
+	local key="$3"
+	local value="$4"
 
 	# If the configuration file has the expected key
 	if [[ -n $(grep "$key *$separator.*" "$config_file") ]]; then

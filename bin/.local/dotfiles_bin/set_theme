@@ -44,7 +44,7 @@ change_file_attribute()
 	new_value="$3"
 
 	touch "$file_path"
-	config_file_set_key "$attribute" "=" "$new_value" "$file_path"
+	config_file_set_key_value "$file_path" "=" "$attribute" "$new_value"
 }
 
 
