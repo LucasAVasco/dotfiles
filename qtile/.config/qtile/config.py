@@ -88,9 +88,9 @@ except KeyError:
 if is_running_in_wayland:
     for term_nr in range(1, VIRTUAL_TERM_MAX):
         keys.extend([
-                Key([CONTROL, ALT], "F" + str(term_nr),
-                    lazy.core.change_vt(term_nr)),
-            ])
+            Key([CONTROL, ALT], "F" + str(term_nr),
+                lazy.core.change_vt(term_nr)),
+        ])
 
 
 def run_background(command: list[str]) -> None:
@@ -183,9 +183,9 @@ layouts = [
 ]
 
 floating_layout = layout.Floating(**default_layout_parameters, float_rules=[
-        *layout.Floating.default_float_rules,
-        Match(wm_class="launcher"),
-    ],
+    *layout.Floating.default_float_rules,
+    Match(wm_class="launcher"),
+],
 )
 
 # end_marker }}}
