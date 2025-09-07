@@ -39,3 +39,31 @@ config_file_set_key_value() {
 		fi
 	fi
 }
+
+# Get a key value in a configuration file.
+#
+# $1?: configuration file path. Optional. If not provided (empty string), use the content of the standard input.
+# $2: separator between the key name and the key value in the configuration file.
+# $3: key name.
+# stdin?: content of the configuration file. Only provided if the configuration file is not provided as an argument.
+#
+# stdout: the value of the key.
+config_file_get_key_value() {
+	local config_file="$1"
+	local separator="$2"
+	local key="$3"
+
+	# Default values
+	if [[ "$config_file" == '' ]]; then
+		config_file=/dev/stdin
+	fi
+
+	# Reads the configuration file
+	while IFS="$separator" read entry_name entry_value; do
+		if [[ "$entry_name" == "$key" ]]; then
+			value="$entry_value"
+		fi
+	done < "$config_file"
+
+	printf "%s" "$value"
+}
