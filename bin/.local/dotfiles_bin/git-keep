@@ -1,0 +1,7 @@
+#!/bin/bash
+#
+# Create Git keep files in the given directories.
+
+for dir in "$@"; do
+	touch "$dir/.gitkeep"
+done
