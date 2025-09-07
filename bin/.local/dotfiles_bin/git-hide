@@ -1,0 +1,86 @@
+#!/bin/bash
+#
+# Plugin to temporarily hide/un-hide files or directories (saved in stashes)
+
+set -e
+
+source ~/.config/bash/libs/help.sh
+
+help() {
+	help_msg_format '\t\t' << EOF
+		Plugin to temporarily hide/un-hide files or directories (saved in stashes)
+
+		USAGE
+			git hide [--] <paths...>
+				Hide (stash) given files and directories
+
+			git hide -u
+				Un-hide (restore) all hidden files
+EOF
+}
+
+if [[ "$1" == '-h' || "$1" == '--help' ]]; then
+	help
+	exit 0
+fi
+
+hidden_files_stash_message="__GIT-HIDE-PLUGIN__"
+
+# Get all stashes with the "$hidden_stash_name" message.
+#
+# Returns a list of stash names separated by newlines from the oldest to the newest.
+get_hidden_files_stashes() {
+	# The `git stash list` returns each stash in the following format: 'stash@{0}: WIP on main: <stash message>'
+	# The `grep` filter is used to get only the stashes with the "$hidden_stash_name" message
+	# The `cut` command is used to get only the stash name
+	# The `tac` command is used to get older stashes first (stashes with the bigger index)
+	git stash list | grep "$hidden_files_stash_message" | cut -d: -f1 | tac
+}
+
+# Stashes the given files in a new stash with the "$hidden_stash_name" message.
+#
+# $@ Path specifiers to hide.
+hide_path_specs() {
+	# The '--keep-index' flag is used to keep the changes in the index. Otherwise, the push operation would remove it when the stash is
+	# created. The '--include-untracked' flag is used to include untracked files in the stash
+	git stash push --keep-index --include-untracked --message "$hidden_files_stash_message" -- "$@" || echo "Error stashing files: $@"
+}
+
+if [[ $1 == "-u" ]]; then
+	# List of stashes to apply
+	hidden_files_stashes=$(get_hidden_files_stashes)
+	if [[ -z "$hidden_files_stashes" ]]; then
+		echo "No stashes with hidden files found"
+		exit 0
+	fi
+
+	# Apply each stash
+	for stash in $hidden_files_stashes; do
+		echo "Applying '$stash' stash..."
+
+		git stash pop --quiet "$stash" || { \
+			echo "Failed to apply '$stash' stash!" >&2
+			exit 1
+		}
+
+		echo "'$stash' stach applied"
+	done
+
+	echo "Un-hide operation completed."
+else
+	if [[ "$1" == '--' ]]; then
+		shift
+	fi
+
+	if [[ $# -eq 0 ]]; then
+		echo "No paths provided to hide." >&2
+		exit 1
+	fi
+
+	echo "Hiding path specifiers: $@"
+	echo -e "\n"
+
+	hide_path_specs "$@"
+
+	echo -e "\n\nPaths hidden. To un-hide all hidden files, use: \`git hide -u\`"
+fi
