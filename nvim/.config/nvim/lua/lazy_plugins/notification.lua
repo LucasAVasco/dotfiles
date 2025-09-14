@@ -25,7 +25,14 @@ return {
 			'NotificationsDismiss',
 		},
 
+		keys = {
+			{ '<leader>Nd', '<CMD>NotificationsDismiss<CR>', desc = 'Dismiss all notifications' },
+			{ '<leader>Nl', '<CMD>Telescope notify<CR>', desc = 'List all notifications' },
+			{ '<leader>Ns', '<CMD>Notifications<CR>', desc = 'Show all notifications' },
+		},
+
 		init = function()
+			MYPLUGFUNC.set_keymap_name('<leader>N', 'Notifications key maps')
 			MYPLUGFUNC.load_telescope_extension('notify', { 'notify' })
 		end,
 
