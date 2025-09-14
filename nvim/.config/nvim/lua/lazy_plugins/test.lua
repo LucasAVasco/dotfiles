@@ -337,7 +337,11 @@ return {
 					end)
 				end
 
-				build_func(buffer_number, scheduled_callback)
+				local _, err = build_func(buffer_number, scheduled_callback)
+				if err then
+					vim.notify('Error building coverage file for "' .. filetype .. '": ' .. err, vim.log.levels.ERROR)
+					return false
+				end
 
 				return true
 			end
