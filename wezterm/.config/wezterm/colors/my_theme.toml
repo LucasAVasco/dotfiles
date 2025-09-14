@@ -1,0 +1,44 @@
+[colors]
+background = '#000000'
+foreground = '#DBDBDB'
+ansi = [
+	'#000000',
+	'#F27375',
+	'#8EED73',
+	'#EFD378',
+	'#7B88EF',
+	'#E47CDA',
+	'#7CE4DC',
+	'#F2F2F2',
+
+]
+brights = [
+	'#555555',
+	'#FF3F3D',
+	'#5CFF64',
+	'#FCFF5C',
+	'#6673FF',
+	'#FD68FC',
+	'#61FFF2',
+	'#EFEFEF',
+
+]
+
+# Cursor
+compose_cursor = '#eeaa00'
+cursor_bg = '#dddddd'
+cursor_border = '#333333'  # Only visible on non active panes
+cursor_fg = '#444444'
+
+# Copy mode
+selection_bg = '#ddaa66'
+selection_fg = '#000000'
+
+# Others
+scrollbar_thumb = '#d1c499'
+split = '#aaaaaa'
+visual_bell = '#aa0000'
+
+[metadata]
+name = 'My Custom Theme'
+author = 'LucasAVasco'
