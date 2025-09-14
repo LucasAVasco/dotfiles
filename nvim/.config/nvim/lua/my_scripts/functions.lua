@@ -333,7 +333,7 @@ end
 
 -- #endregion
 
--- #region Runctions related to `ftplugin`
+-- #region Functions related to `ftplugin`
 
 ---You should use this function only into configurations at 'ftplugin' directory.
 ---
