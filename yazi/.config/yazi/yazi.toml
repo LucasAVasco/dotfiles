@@ -1,0 +1,13 @@
+"$schema" = "https://yazi-rs.github.io/schemas/yazi.json"
+
+# Sample configuration at https://github.com/sxyazi/yazi/blob/main/yazi-config/preset/yazi-default.toml
+
+[opener]
+open = [{ run = 'default_open "$@"', desc = "Open" }]
+
+reveal = [{ run = 'default_term', desc = "Reveal" }]
+
+play = [
+	{ run = 'vlc "$@"', desc = "Play" },
+	{ run = 'clear; ffprobe -hide_banner "$1"; read', block = true, desc = "Show media information", for = "unix" },
+]
