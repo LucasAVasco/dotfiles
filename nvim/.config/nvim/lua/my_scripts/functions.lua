@@ -189,7 +189,7 @@ function MYFUNC.iter_path(path, filter)
 		end
 
 		-- Last checked directory
-		if dirname ~= '/' then
+		if dirname == '/' then
 			return
 		end
 
