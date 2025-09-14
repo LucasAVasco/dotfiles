@@ -63,6 +63,6 @@ if [ "$ALLOW_EXTERNAL_SOFTWARE" = y ]; then
 	# If the user's default shell is Bash, enable ASDF. This allows applications that are not launched directly by an interactive bash
 	# session to use some software installed by ASDF. Requires the user's default shell to be `bash`
 	if [ "$0" = 'bash' -o "$0" = '-bash' ]; then
-		test -f ~/.asdf/asdf.sh && source ~/.asdf/asdf.sh
+		export PATH="$HOME/.asdf/shims:$PATH"
 	fi
 fi
