@@ -443,7 +443,7 @@ end
 
 --- Get the definition of a highlight group (pass through the links to the original highlight group)
 ---@param hl_group_name string Name of the highlight group
----@return vim.api.keyset.hl_info highlight_definition The highlight definition of the highlight group
+---@return vim.api.keyset.get_hl_info highlight_definition The highlight definition of the highlight group
 function MYFUNC.get_hl_definition(hl_group_name)
 	local hl_group_def = vim.api.nvim_get_hl(0, { name = hl_group_name })
 
