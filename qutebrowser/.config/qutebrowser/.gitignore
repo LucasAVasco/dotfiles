@@ -1,0 +1,11 @@
+# Cache files
+__pycache__
+
+# Automatically generated configuration
+/autoconfig.yml
+/downloads/
+
+# Private data
+/bookmarks/
+/qsettings/
+/quickmarks
