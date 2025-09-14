@@ -206,6 +206,7 @@ return {
 							['<Esc>'] = false, -- Disable <esc> because this can conflict with the normal mode
 							['<A-a>'] = tl_actions.close,
 							['<A-q>'] = tl_actions.close,
+							['<A-S-q>'] = tl_actions.close,
 							['T'] = open_with_trouble,
 							['t'] = add_to_trouble,
 							['<A-T>'] = open_with_trouble,
@@ -215,6 +216,7 @@ return {
 						i = {
 							['<A-a>'] = tl_actions.close,
 							['<A-q>'] = tl_actions.close,
+							['<A-S-q>'] = tl_actions.close,
 							['<A-T>'] = open_with_trouble,
 							['<A-t>'] = add_to_trouble,
 							['<CR>'] = edit_selected_files,
