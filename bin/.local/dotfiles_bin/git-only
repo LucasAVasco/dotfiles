@@ -1,0 +1,37 @@
+#!/bin/bash
+#
+# Command to hide all changed/untracked files except for the given patterns.
+
+source ~/.config/bash/libs/help.sh
+
+# Help message {{{
+
+help() {
+	help_msg_format '\n\n' << EOF
+		Command to hide all changed/untracked files except for the given patterns.
+
+		Usage: git-only <patterns...>
+EOF
+}
+
+if [ "$#" -lt 1 ]; then
+	help
+	exit 1
+fi
+
+if [ "$1" == '-h' ] || [ "$1" == '--help' ]; then
+	help
+	exit 0
+fi
+
+# }}}
+
+# exclude the patterns
+declare -a patterns=()
+for i in "$@"; do
+	patterns+=(":(exclude)$i")
+done
+
+# Show all files and then hides the patterns
+git hide -u
+git hide -- "${patterns[@]}"
