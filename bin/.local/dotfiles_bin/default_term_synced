@@ -8,6 +8,4 @@
 # * bash
 # * kitty
 
-
-~/.config/kitty/setup.sh
-exec kitty "$@"
+exec wezterm start --always-new-process --cwd "$PWD" -- "$@"
