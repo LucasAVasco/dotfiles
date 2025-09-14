@@ -145,6 +145,17 @@ function MYFUNC.get_visual_selected_area(window_id)
 	}
 end
 
+---Return the lines of the current visual selected area.
+---@param window_id integer ID of the window.
+---@return string[]
+function MYFUNC.get_visual_selected_lines(window_id)
+	local area = MYFUNC.get_visual_selected_area(window_id)
+
+	local buffer_nr = vim.api.nvim_win_get_buf(window_id)
+
+	return vim.api.nvim_buf_get_lines(buffer_nr, area.start_selected_line - 1, area.cursor_line, true)
+end
+
 ---Return the number of spaces used by a indentation level.
 ---@param buffer_num integer Get the indentation level of this buffer.
 ---@return integer number_of_spaces
