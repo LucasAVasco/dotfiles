@@ -1,0 +1,36 @@
+#!/bin/bash
+#
+# Simple script to convert several images from on format to another.
+#
+# Usage: img-convert <new-file-extension> [files...]
+#
+# Example: `img-convert png *.jpg # Converts all .jpg files to .png`
+#
+# Dependencies: ImageMagick
+
+set -e
+
+# Converts a video to a given format.
+#
+# $1: Source file.
+# $2: Destination format.
+convert_video_to_format() {
+	# Arguments
+	local source_file="$1"
+	local extension="$2"
+
+	# File properties
+	local stem="$(basename $source_file | cut -d '.' -f 1)" # `basename` gets only the file name. `cut` removes the extension
+	local dirname="$(dirname $source_file)"
+	local dest_file="${dirname}/${stem}.${extension}"
+
+	# Conversion
+	echo "Converting '$source_file' to '$dest_file'"
+	magick "$source_file" "$dest_file" && echo "Done!"
+}
+
+dest_extension="$1"
+
+for source_file in ${@:2}; do
+	convert_video_to_format "$source_file" "$dest_extension"
+done
