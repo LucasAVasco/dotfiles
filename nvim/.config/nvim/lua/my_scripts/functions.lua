@@ -309,15 +309,15 @@ end
 
 ---Read a file and convert its contents to Json.
 ---@param path string File path.
----@return {} content, boolean file_readable
+---@return table content, string? error
 function MYFUNC.get_json_file_content(path)
 	if not MYFUNC.file_exists(path) then
-		return {}, false
+		return {}, 'File does not exist'
 	end
 
 	local lines = vim.fn.readfile(path, 'b')
 	local content = table.concat(lines)
-	return vim.json.decode(content), true
+	return vim.json.decode(content)
 end
 
 ---Get a character in the current line. The character position is relative to the cursor column. A offset equal to 1 returns the character
