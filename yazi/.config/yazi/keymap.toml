@@ -1,0 +1,95 @@
+# Default configuration available at https://github.com/sxyazi/yazi/blob/main/yazi-config/preset/keymap-default.toml
+
+"$schema" = "https://yazi-rs.github.io/schemas/keymap.json"
+
+[mgr]
+append_keymap = [
+	{ on = [
+		"<A-d>",
+	], run = "arrow 50%", desc = "Move cursor down half page" },
+	{ on = [
+		"<A-q>",
+	], run = "close", desc = "Close the current tab" },
+	{ on = [
+		"<A-u>",
+	], run = "arrow -50%", desc = "Move cursor up half page" },
+	{ on = [
+		"<A-w>",
+	], run = "close", desc = "Close the current tab" },
+	{ on = [
+		"c",
+		"h",
+	], run = "escape --find", desc = "Cancel the current finder (highlight)" },
+	{ on = [
+		"g",
+		".",
+	], run = "hidden toggle", desc = "Show/hide hidden files" },
+	{ on = [
+		"g",
+		"M",
+	], run = "cd '/media'", desc = "Jump to media folder" },
+	{ on = [
+		"g",
+		"m",
+	], run = "cd '/run/media/$USER'", desc = "Jump to user media folder" },
+	{ on = [
+		"g",
+		"n",
+		"c",
+	], run = "shell --confirm 'NOTIFY_SEND=y nvim-proj open-config'", desc = "Open new instance at '.nvim-proj/' directory" },
+	{ on = [
+		"g",
+		"n",
+		"p",
+	], run = "shell --confirm 'NOTIFY_SEND=y nvim-proj open'", desc = "Open new instance at Neovim project directory" },
+	{ on = [
+		"c",
+		"p",
+	], run = "shell --block 'clip-paste --ask-type --ask-out-file'", desc = "Past the clipboard in a file" },
+	{ on = [
+		"g",
+		"p",
+	], run = "cd '$HOME/Pictures/'", desc = "Jump to '~/Pictures/' folder" },
+	{ on = [
+		"g",
+		"r",
+	], run = "cd '$HOME/Repositories/'", desc = "Jump to '~/Repositories' folder" },
+	{ on = [
+		"g",
+		"t",
+	], run = "cd '$HOME/Repositories/templates/templates/'", desc = "Jump to templates folder" },
+	{ on = [
+		"g",
+		"z",
+	], run = "shell 'zoxide add $0'", desc = "Add folder to Zoxide list" },
+]
+
+[confirm]
+append_keymap = [
+	{ on = [
+		"<A-q>",
+	], run = "close", desc = "Cancel the current confirm" },
+]
+
+[input]
+append_keymap = [
+	{ on = [
+		"<A-q>",
+	], run = "close", desc = "Cancel the current input" },
+
+	{ on = [
+		"<C-h>",
+	], run = "kill backward", desc = "Delete the word before the cursor" },
+	{ on = [
+		"<C-w>",
+	], run = "kill backward", desc = "Delete the word before the cursor" },
+	{ on = [
+		"<C-Backspace>",
+	], run = "kill backward", desc = "Delete the word before the cursor" },
+	{ on = [
+		"<C-Delete>",
+	], run = "kill forward", desc = "Delete the word after the cursor" },
+
+	{ on = "<C-left>", run = "backward", desc = "Go to the start of a word" },
+	{ on = "<C-right>", run = "forward", desc = "Go to the start of a word" },
+]
