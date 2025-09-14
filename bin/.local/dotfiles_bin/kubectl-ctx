@@ -1,0 +1,33 @@
+#!/bin/bash
+#
+# Change the current Kubernetes context interactively.
+
+source ~/.config/bash/libs/k8s.sh
+
+# Interactively select a context with FZF.
+select_context_interactively() {
+	# `fzf` removes the header | `cut` removes the '*' character (if any) | `awk` selects the context name
+	kubectl config get-contexts | fzf --header-lines 1 | cut -d' ' -f 2- | awk '{print$1}'
+}
+
+# Current context
+echo -n "Current context: "
+k8s_get_current_context
+
+# Next context
+if (( "$#" == 0 )); then
+	# Context not provided, interactively select with FZF
+	ctx=$(select_context_interactively)
+
+	if [[ -z "$ctx" ]]; then
+		exit 1
+	fi
+
+else
+	# Context provided
+	ctx="$1"
+fi
+
+# Switch the context
+echo 'Next context: ' "$ctx"
+k8s_use_context "$ctx"
