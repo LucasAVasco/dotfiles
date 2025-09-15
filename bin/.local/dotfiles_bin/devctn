@@ -1,0 +1,97 @@
+#!/bin/bash
+#
+# Tool to manage development containers.
+
+set -e
+
+source ~/.config/bash/libs/devcontainer.sh
+source ~/.config/bash/libs/help.sh
+
+help() {
+	help_msg_format '\t\t' << EOF
+		Tool to manage development containers.
+
+		USAGE
+		devctn <command> [options]
+
+		COMMANDS
+		zsh [ -f | --force ]
+			Connect to the running devcontainer and run ZSH shell. The '-f' flag forces the
+			reinstallation of the devcontainer.
+
+		Other commands are forwarded to 'devcontainer' and follwow the follwowing options:
+
+EOF
+	devcontainer --help
+}
+
+if [[ "$1" == '-h' || "$1" == '--help' ]]; then
+	help
+	exit 0
+fi
+
+# Functions {{{
+
+# Get devcontainer root.
+#
+# Searches for the folder with the Devcontainer configuration files from the innermost to the outermost.
+#
+# $1: folder to start the search.
+#
+# Return the devcontainer root folder.
+get_devcontainer_root() {
+	local folder="$1"
+
+	while [[ 1 ]]; do
+		test -d "$folder/.devcontainer" && break
+
+		if [[ "$folder" == '/' ]]; then
+			echo -e "Devcontainer folder not found!\n"
+			exit 1
+		fi
+
+		# Next top directory
+		folder="$(dirname "$folder")"
+	done
+
+	echo "$folder"
+}
+
+# Interactively select a devcontainer.
+#
+# Return the devcontainer ID.
+select_devcontainer_id() {
+	local devcontainer_line=$(devcontainer_list -a \
+		--filter='status=running' \
+		| fzf \
+		--header-lines 1 -n 2 --delimiter '\s+')
+
+	echo "$devcontainer_line" | cut -d' ' -f 1 # Isolate the devcontainer ID form the line
+}
+
+# }}}
+
+command="$1"
+shift
+
+# Run devcontainer
+case "$command" in
+	zsh)
+		# Devcontainer ID
+		container_id=$(select_devcontainer_id)
+
+		# Send all dotfiles to the devcontainer
+		~/.config/zsh/devcontainer/send2devcontainer.sh "$@" "$container_id" && {
+			# Runs ZSH if the installation finalizes without any error
+			docker exec -it "$container_id" zsh
+		} || {
+			# Runs the default shell otherwise
+			docker exec -it "$container_id" sh
+		}
+	;;
+
+	*)
+		devcontainer_root=$(get_devcontainer_root "$PWD")
+		devcontainer "$command" --workspace-folder="$devcontainer_root" "$@"
+	;;
+esac
