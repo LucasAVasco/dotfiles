@@ -178,6 +178,10 @@ return {
 				lazy_load_lsp_server(lsp_server_name)
 			end
 
+			for _, lsp_server_name in ipairs(require('my_configs.LSP.auto-config')) do
+				lazy_load_lsp_server(lsp_server_name)
+			end
+
 			-- Command to show configured LSP servers and its supported  file types
 			vim.api.nvim_create_user_command('LspFileTypes', function()
 				local NuiPopup = require('nui.popup')

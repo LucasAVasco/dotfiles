@@ -14,4 +14,16 @@ return {
 		-- Plugins and extension
 		'vue', -- Support Vue plugin
 	},
+	vtsls = {
+		-- Default supported files
+		'javascript',
+		'javascript.jsx',
+		'javascriptreact',
+		'typescript',
+		'typescript.tsx',
+		'typescriptreact',
+
+		-- Plugins and extension
+		'vue', -- Support Vue plugin
+	},
 }
