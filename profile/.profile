@@ -73,3 +73,6 @@ if [ "$ALLOW_EXTERNAL_SOFTWARE" = y ]; then
 		test -d ~/.local/share/mise/ && eval "$(~/.local/bin/mise activate bash)"
 	fi
 fi
+
+# VCPKG
+export VCPKG_ROOT=~/.cache/vcpkg-install
