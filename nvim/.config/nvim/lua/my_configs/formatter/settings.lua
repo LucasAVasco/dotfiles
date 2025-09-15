@@ -16,6 +16,7 @@ local Config = {
 		c = { 'clang-format' },
 		cpp = { 'clang-format' },
 		rust = { 'rustfmt' },
+		cmake = { 'cmake_format' },
 	},
 }
 
