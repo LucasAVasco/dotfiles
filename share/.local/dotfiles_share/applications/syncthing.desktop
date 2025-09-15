@@ -1,0 +1,7 @@
+[Desktop Entry]
+Type=Link
+Name=Syncthing Web Client
+Comment=Open Syncthing in the web browser
+Icon=syncthing
+URL=http://127.0.0.1:8384/
+Encoding=UTF-8
