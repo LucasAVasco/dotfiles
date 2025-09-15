@@ -1,0 +1,26 @@
+#!/bin/bash
+#
+# Override k9s binary to automatically install some skins.
+
+# Install a k9s skin from the specified URL with CURL.
+#
+# $1: URL
+ensure_skin_installed() {
+	local url="$1"
+
+	local file_name=$(basename "$url")
+
+	# Downloads the file if it doesn't exist
+	local file_path="$HOME/.config/k9s/skins/$file_name"
+	if [[ ! -f "$file_path" ]]; then
+		echo "Downloading '$file_name'"
+		mkdir -p "$(dirname "$file_path")" # Ensures the parent directory exists
+		curl -L "$url" -o "$file_path" >&2
+	fi
+}
+
+# Skins
+ensure_skin_installed https://raw.githubusercontent.com/derailed/k9s/refs/heads/master/skins/kanagawa.yaml
+
+# Forwards to k9s
+/bin/k9s "$@"
