@@ -12,6 +12,11 @@ export PATH="$HOME/.local/dotfiles_bin_override:$PATH:$HOME/.local/bin:$HOME/.lo
 export XDG_DATA_DIRS="$XDG_DATA_DIRS:/usr/share/:$HOME/.local/share/:$HOME/.local/dotfiles_share"
 
 
+# Nix configuration
+export PATH="$PATH:$HOME/.nix-profile/bin"
+export XDG_DATA_DIRS="$XDG_DATA_DIRS:$HOME/.nix-profile/share"
+
+
 # Homebrew on Linux
 test -d ~/.linuxbrew && eval $(~/.linuxbrew/bin/brew shellenv)
 test -d /home/linuxbrew/.linuxbrew && eval $(/home/linuxbrew/.linuxbrew/bin/brew shellenv)
