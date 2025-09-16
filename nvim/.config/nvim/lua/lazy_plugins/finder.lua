@@ -257,29 +257,42 @@ return {
 		end,
 	},
 	{
-		'nvim-pack/nvim-spectre',
+		'MagicDuck/grug-far.nvim',
+
+		cmd = {
+			'GrugFar',
+			'GrugFarWithin',
+		},
 
 		keys = {
 			{
-				'<leader>Sff',
+				'<leader>St',
 				function()
-					require('spectre').open_file_search()
+					require('grug-far').toggle_instance({})
 				end,
 				mode = normal_and_visual_modes,
-				desc = 'Replace on current file',
+				desc = 'Toggle `grug-far` instance',
+			},
+			{
+				'<leader>Sff',
+				function()
+					require('grug-far').open({ prefills = { paths = vim.fn.expand('%') } })
+				end,
+				mode = normal_and_visual_modes,
+				desc = 'Replace in current file',
 			},
 			{
 				'<leader>Sfw',
 				function()
-					require('spectre').open_file_search({ select_word = true })
+					require('grug-far').open({ prefills = { paths = vim.fn.expand('%'), search = vim.fn.expand('<cword>') } })
 				end,
 				mode = 'n',
-				desc = 'Replace the current word in the current file',
+				desc = 'Replace current word in the current file',
 			},
 			{
 				'<leader>Sdd',
 				function()
-					require('spectre').open_visual()
+					require('grug-far').open({ prefills = { paths = vim.fn.getcwd() } })
 				end,
 				mode = normal_and_visual_modes,
 				desc = 'Replace in the current directory',
@@ -287,32 +300,40 @@ return {
 			{
 				'<leader>Sdw',
 				function()
-					require('spectre').open_visual({ select_word = true })
+					require('grug-far').open({ prefills = { paths = vim.fn.getcwd(), search = vim.fn.expand('<cword>') } })
 				end,
 				mode = 'n',
-				desc = 'Replace the current word in the current directory',
+				desc = 'Replace current word in the current directory',
 			},
 			{
-				'<leader>St',
+				'<leader>Sss',
 				function()
-					require('spectre').toggle()
+					require('grug-far').open({ visualSelectionUsage = 'operate-within-range' })
 				end,
-				mode = normal_and_visual_modes,
-				desc = 'Toggle `spectre.nvim`',
+				mode = 'v',
+				desc = 'Replace in current selection',
+			},
+			{
+				'<leader>Ssw',
+				function()
+					require('grug-far').open({
+						visualSelectionUsage = 'operate-within-range',
+						prefills = { search = vim.fn.expand('<cword>') },
+					})
+				end,
+				mode = 'v',
+				desc = 'Replace current word in the current selection',
 			},
 		},
 
-		opts = {
-			line_sep_start = '┌───────────────────────────────',
-			result_padding = '│   ',
-			line_sep = '└───────────────────────────────',
-		},
+		opts = {},
 
 		init = function()
 			local set_keymap_name = MYPLUGFUNC.set_keymap_name
-			set_keymap_name('<Leader>S', '`spectre.nvim` maps', normal_and_visual_modes)
-			set_keymap_name('<Leader>Sf', 'Replace on the current file', normal_and_visual_modes)
-			set_keymap_name('<Leader>Sd', 'Replace on the current directory', normal_and_visual_modes)
+			set_keymap_name('<Leader>S', 'Search and replace', normal_and_visual_modes)
+			set_keymap_name('<Leader>Sf', 'Replace in the current file', normal_and_visual_modes)
+			set_keymap_name('<Leader>Sd', 'Replace in the current directory', normal_and_visual_modes)
+			set_keymap_name('<Leader>Ss', 'Replace in the current selection', 'v')
 		end,
 	},
 }
