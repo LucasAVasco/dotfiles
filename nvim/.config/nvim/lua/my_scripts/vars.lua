@@ -10,6 +10,12 @@ MYVAR.utilities_ft = {
 	'snacks_picker_input', -- 'snacks.nvim'
 	'undotree',
 
+	-- AI
+	'codecompanion',
+	'AvanteInput',
+	'Avante',
+	'AvanteSelectedFiles',
+
 	-- Neotest
 	'neotest-summary',
 	'neotest-output-panel',

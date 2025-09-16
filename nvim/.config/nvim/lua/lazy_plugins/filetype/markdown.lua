@@ -8,11 +8,12 @@ return {
 			'nvim-treesitter/nvim-treesitter',
 		},
 
-		ft = 'markdown',
+		ft = { 'markdown', 'codecompanion', 'Avante' },
 
 		---@module 'render-markdown'
 		---@type render.md.UserConfig
 		opts = {
+			file_types = { 'markdown', 'codecompanion', 'Avante' },
 			code = {
 				style = 'language', -- Only style the language indicator
 			},
