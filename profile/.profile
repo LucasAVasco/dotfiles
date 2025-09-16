@@ -69,9 +69,15 @@ if [ "$ALLOW_EXTERNAL_SOFTWARE" = y ]; then
 	# session to use some software installed by ASDF. Requires the user's default shell to be `bash`
 	if [ "$0" = 'bash' -o "$0" = '-bash' ]; then
 		export PATH="$HOME/.asdf/shims:$PATH"
-
 		test -d ~/.local/share/mise/ && eval "$(~/.local/bin/mise activate bash)"
 	fi
+
+	# Lua environment variables
+	lua -v >/dev/null 2>&1 && {
+		lua_version=$(lua -e 'print(_VERSION:match("%d+%.%d+"))')
+		export LUA_PATH="$HOME/.luarocks/share/lua/$lua_version/?.lua;;"
+		export LUA_CPATH="$HOME/.luarocks/lib/lua/$lua_version/?.so;;"
+	}
 fi
 
 # VCPKG
