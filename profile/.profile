@@ -17,11 +17,6 @@ export PATH="$PATH:$HOME/.nix-profile/bin"
 export XDG_DATA_DIRS="$XDG_DATA_DIRS:$HOME/.nix-profile/share"
 
 
-# Homebrew on Linux
-test -d ~/.linuxbrew && eval $(~/.linuxbrew/bin/brew shellenv)
-test -d /home/linuxbrew/.linuxbrew && eval $(/home/linuxbrew/.linuxbrew/bin/brew shellenv)
-
-
 # Configurations of Bspwm window manager
 if [ "$DESKTOP_SESSION" = "bspwm" ]; then
 	# Java applications that use AWT (Abstract Window Toolkit) may not work properly in Bspwm (window becomes white).
@@ -62,6 +57,10 @@ export ALLOW_EXTERNAL_SOFTWARE=$ALLOW_EXTERNAL_SOFTWARE
 export FZF_DEFAULT_OPTS_FILE=~/.fzfrc
 
 if [ "$ALLOW_EXTERNAL_SOFTWARE" = y ]; then
+	# Homebrew on Linux
+	test -d ~/.linuxbrew && eval $(~/.linuxbrew/bin/brew shellenv)
+	test -d /home/linuxbrew/.linuxbrew && eval $(/home/linuxbrew/.linuxbrew/bin/brew shellenv)
+
 	# Default shell. Some terminal emulators use this environment variable to select its shell
 	export SHELL=/bin/zsh
 
