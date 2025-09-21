@@ -283,8 +283,11 @@ keys.extend([
 
     # System management {{{
 
+    Key([SUPER, SHIFT], "y",
+        lazy.spawn(HOME + "/.config/clipboard/clear.sh")),
     Key([SUPER], "y",
-        lazy.spawn(HOME + "/.local/dotfiles_bin/receive-clip-from-sync-folder")),
+        lazy.spawn(HOME +
+        "/.local/dotfiles_bin/receive-clip-from-sync-folder")),
     Key([SUPER], "p",
         lazy.spawn(HOME + "/.local/dotfiles_bin/send-clip-to-sync-folder")),
     Key([SUPER], "Delete", lazy.spawn("xkill")),
