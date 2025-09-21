@@ -9,7 +9,13 @@ fpath=("$new_path" $fpath)
 if ! [[ -d "$new_path" ]]; then
 	mkdir -p "$new_path"
 fi
-unset new_path
 
 # Path with custom completion files (tracked by git)
-fpath=(~/.local/dotfiles_share/completions/zsh/ $fpath)
+local new_path=~/.local/dotfiles_share/completions/zsh/
+if ! [[ -d "$new_path" ]]; then
+	echo "Creating custom ZSH completions files at '$new_path'\n"
+	source ~/.local/dotfiles_share/completions/update-zsh-completions.zsh
+fi
+
+fpath=("$new_path" $fpath)
+unset new_path
