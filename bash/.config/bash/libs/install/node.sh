@@ -1,4 +1,6 @@
 #!/bin/bash
+#
+# Module to install Node packages
 
 # Install a binary from a NPM package
 #
