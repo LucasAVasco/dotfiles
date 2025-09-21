@@ -2,6 +2,9 @@
 #
 # Install themes.
 
+# Does not run this script if the user can not install external software
+[ "$ALLOW_EXTERNAL_SOFTWARE" != 'y' ] && exit
+
 set -e
 
 local_themes_folder=~/.local/share/themes/
