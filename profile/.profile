@@ -84,4 +84,7 @@ export VCPKG_ROOT=~/.cache/vcpkg-install
 if [ "$ALLOW_EXTERNAL_SOFTWARE" = y ]; then
 	# Overrides some binaries
 	export PATH="$HOME/.local/dotfiles_bin_override:$PATH"
+
+	# Fallback installers (must be the last element of the path)
+	export PATH="$PATH:$HOME/.local/dotfiles_bin_fallback/bin:$HOME/.local/dotfiles_bin_fallback/build/installers"
 fi
