@@ -5,6 +5,6 @@
 # Install a plugin.
 #
 # $1: plugin name.
-install_k8s_plugin() {
+install_k8s_install_plugin() {
 	kubectl krew install "$1"
 }
