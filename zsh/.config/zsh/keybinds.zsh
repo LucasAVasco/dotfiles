@@ -61,6 +61,21 @@ __open_cwd_default_file_manager() {
 zle -N __open_cwd_default_file_manager
 bindkey '^[m' __open_cwd_default_file_manager
 
+# Run command with 'json-tools'
+__json_tools_run() {
+	__expand_alias
+
+	# Ensures the 'j' command is the first argument
+	if [[ "${full_cmd[1]}" != 'j' ]]; then
+		LBUFFER="j ${full_cmd[@]}"
+	fi
+
+	zle accept-line # Automatically run the command
+}
+
+zle -N __json_tools_run
+bindkey '^[r' __json_tools_run
+
 # Show command help
 # This calls the current command being typed with the '--help' argument at the end. Not all commands supports it
 __show_current_command_help() {
