@@ -151,6 +151,9 @@ vim.keymap.set('n', '<A-x>', 'gv', get_default_opt('Select last visual selection
 -- Select all buffer
 vim.keymap.set('n', 'vA', 'ggVG', get_default_opt('Select all buffer'))
 
+-- Go to other end
+vim.keymap.set('v', '<BACKSPACE>', 'o', get_default_opt('Go to other end of selection'))
+
 -- Copy (e.g. Clipboard)
 vim.keymap.set('v', '<A-c>', '"+y', get_default_opt('Copy current selection to clipboard'))
 vim.keymap.set('n', '<A-c>', '<CMD>%y +<CR>', get_default_opt('Copy all buffer to clipboard'))
