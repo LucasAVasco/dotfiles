@@ -1,0 +1,4 @@
+#!/bin/bash
+
+source ~/.config/json-tools/configure.sh
+exec lua ~/.config/json-tools/build/src/only-field.luac "$@"

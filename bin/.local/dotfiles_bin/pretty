@@ -1,0 +1,4 @@
+#!/bin/bash
+
+source ~/.config/json-tools/configure.sh
+exec lua ~/.config/json-tools/build/src/pretty.luac "$@" | less --RAW-CONTROL-CHARS --quit-if-one-screen --chop-long-lines --tilde
