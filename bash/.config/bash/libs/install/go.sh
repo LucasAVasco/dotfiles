@@ -7,7 +7,7 @@ source ~/.config/bash/libs/bin.sh
 # Install a go package. Requires Go to be installed to work.
 #
 # $1: go package to install.
-install_go_package() {
+install_go_install_package() {
 	local package="$1"
 	go install "$package"
 }
