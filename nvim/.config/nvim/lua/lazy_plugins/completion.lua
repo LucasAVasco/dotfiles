@@ -313,6 +313,12 @@ return {
 								local buffer_file_type = vim.bo[buffer_nr].filetype
 								local buffer_path = vim.api.nvim_buf_get_name(buffer_nr)
 								local base_dir = vim.fn.fnamemodify(buffer_path, ':p:h') -- Current working directory
+								local text_before_cursor = cmp_data.context.cursor_before_line --[[@as string]]
+
+								-- Use the global variable
+								if vim.g.cmp_pth_cwd then
+									return vim.g.cmp_pth_cwd
+								end
 
 								---Splits the `base_dir` at the provided index an use the first division as the new `base_dir`.
 								---@param index number? Split the `base_dir` at this index. If `nil` aborts the operation.
