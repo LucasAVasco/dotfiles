@@ -2,6 +2,10 @@
 #
 # Install icon themes and cursor icon themes.
 
+# Does not run this script if the user can not install external software
+[ "$ALLOW_EXTERNAL_SOFTWARE" != 'y' ] && exit
+
+
 set -e
 
 local_icons_folder=~/.local/share/icons/
