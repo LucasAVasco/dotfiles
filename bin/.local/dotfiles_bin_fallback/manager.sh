@@ -1,0 +1,52 @@
+#!/bin/bash
+#
+# Package manager of the fallback installers.
+
+source ~/.config/bash/libs/help.sh
+
+if [[ "$1" == --help || "$1" == -h || "$1" == help ]]; then
+	help_msg_format '\t\t' << EOF
+		Package manager of the fallback installers.
+
+		USAGE:
+
+		./manager.sh install | add <package>
+			Install a package.
+
+		./manager.sh update <package>
+			Update a package.
+
+		./manager.sh uninstall | remove | rm <package>
+			Uninstall a package.
+EOF
+fi
+
+
+# Only run this script if the user is allowed to install external software
+[[ "$ALLOW_EXTERNAL_SOFTWARE" != "y" ]] && {
+	notify-send --app-name='Fallback Installer' 'Fallback Installer' 'You are not allowed to install external software.'
+}
+
+# Fallback installers library
+current_dir=$(dirname `realpath "${BASH_SOURCE[0]}"`)
+cd "$current_dir"
+source ./lib.sh
+
+# Commands
+case "$1" in
+	install | add)
+		run_package_script "$2" i
+		;;
+
+	update)
+		run_package_script "$2" u
+		;;
+
+	uninstall | remove | rm)
+		run_package_script "$2" r
+		;;
+
+	*)
+		echo "Unknown command '$1'." >&2
+		;;
+esac
