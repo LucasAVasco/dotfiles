@@ -11,7 +11,7 @@ source ~/.config/bash/libs/string.sh
 # Return the executable path or empty string if not found.
 bin_get_executable_path() {
 	local executable="$1"
-	executable_path=$(type "$executable" || echo '') # Returns something like 'bash is /usr/bin/bash'
+	local executable_path=$(type "$executable" || echo '') # Returns something like 'bash is /usr/bin/bash'
 	executable_path="${executable_path#* is }" # Removes text until 'is '
 
 	echo "$executable_path"
