@@ -278,6 +278,11 @@ local key_tables = {
 			mods = NONE,
 			action = action.CopyMode('EditPattern'),
 		},
+		{
+			key = 's',
+			mods = NONE,
+			action = action.CopyMode({ SetSelectionMode = 'SemanticZone' }),
+		},
 	},
 }
 
