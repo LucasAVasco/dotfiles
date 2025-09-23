@@ -12,6 +12,7 @@ local ALT <const> = 'ALT'
 -- local ALT_SHIFT <const> = 'ALT|SHIFT'
 local CTRL_SHIFT <const> = 'CTRL|SHIFT'
 local CTRL_ALT <const> = 'CTRL|ALT'
+local CTRL_ALT_SHIFT <const> = 'CTRL|ALT|SHIFT'
 local SHIFT <const> = 'SHIFT'
 local DEFAULT_KEY_BINDS_OPTIONS <const> = {
 	domain = 'CurrentPaneDomain',
@@ -119,6 +120,12 @@ keys = {
 		mods = CTRL_ALT,
 		action = action.ScrollByPage(0.5),
 	},
+	{ key = '{', mods = CTRL_ALT, action = action.ScrollToPrompt(-1) },
+	{ key = '}', mods = CTRL_ALT, action = action.ScrollToPrompt(1) },
+	{ key = '[', mods = CTRL_ALT_SHIFT, action = action.ScrollToPrompt(-1) }, -- Keyboards that '{' is equivalent to '<SHIFT-[>'
+	{ key = ']', mods = CTRL_ALT_SHIFT, action = action.ScrollToPrompt(1) },
+	{ key = '{', mods = CTRL_ALT_SHIFT, action = action.ScrollToPrompt(-1) }, -- Keyboards that '{' is equivalent to '<SHIFT-[>'
+	{ key = '}', mods = CTRL_ALT_SHIFT, action = action.ScrollToPrompt(1) },
 	-- Copy mode
 	{
 		key = 'v',
