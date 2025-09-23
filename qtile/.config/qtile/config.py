@@ -219,7 +219,7 @@ keys.extend([
 
     Key([SUPER], "w",
         lazy.spawn(HOME + "/.local/dotfiles_bin/default_web_browser")),
-    Key([SUPER], "d", lazy.spawn(HOME + "/.config/rofi/tools/chdesk.sh")),
+    Key([SUPER], "t", lazy.spawn(HOME + "/.config/rofi/tools/chdesk.sh")),
     Key([SUPER], "a",
         lazy.spawn(HOME + "/.config/rofi/tools/applications.sh")),
     Key([SUPER], "o",
@@ -263,6 +263,15 @@ keys.extend([
     Key([SUPER, SHIFT], "k", lazy.layout.grow_up()),
     Key([SUPER, SHIFT], "l", lazy.layout.grow_right()),
     Key([SUPER, SHIFT], "g", lazy.layout.normalize()),
+
+    # Mouse simulation {{{
+
+    Key([SUPER], "e", lazy.spawn(HOME + "/.config/mouse/scroll.sh 10")),
+    Key([SUPER], "u", lazy.spawn(HOME + "/.config/mouse/scroll.sh 10")),
+    Key([SUPER], "d", lazy.spawn(HOME + "/.config/mouse/scroll.sh -10")),
+    Key([SUPER, SHIFT], "d", lazy.spawn(HOME + "/.config/mouse/scroll.sh 0")),
+
+    # }}}
 
     # Window and nodes management {{{
 
