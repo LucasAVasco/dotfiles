@@ -1,0 +1,92 @@
+#!/bin/bash
+#
+# Run a command periodically.
+
+source ~/.config/bash/libs/help.sh
+
+help() {
+	help_msg_format '\t\t' << EOF
+		Run a command periodically.
+
+		USAGE
+		every <time> [--] <command> <arguments>
+			Runs <command> periodically, every <time>.
+
+		TIME FORMAT
+		<time> is a number followed by a optional unit. If the unit is not specified, it is interpreted as seconds.
+
+		Supported units: ns (nanoseconds), us (microseconds), ms (milliseconds),
+		s (seconds), min (minutes), h (hours), d (days).
+EOF
+}
+
+help_call_help_function help y "$@"
+
+set -e
+
+# Execute a simple python calculation.
+#
+# $1: The expression to calculate
+#
+# Returns the result formatted as a float pointer number (without scientific notation).
+calculate_float() {
+	python3 -c "print(format($1, '.18f'))"
+}
+
+
+# Time to sleep between executions
+time_to_sleep="$1"
+value=$(echo "$time_to_sleep" | sed 's/[^[:digit:][:punct:]]//g')
+unit=$(echo "$time_to_sleep" | sed 's/[[:digit:][:punct:]]//g')
+shift
+
+# Convert the time to the format used by the `sleep` command
+case "$unit" in
+	'' )
+		time_to_sleep="$value"
+		;;
+
+	'ns' | 'n')
+		time_to_sleep=$(calculate_float "$value * 10**(-9)")
+		;;
+
+	'us' | 'u')
+		time_to_sleep=$(calculate_float "$value * 10**(-6)")
+		;;
+
+	'm' | 'ms')
+		time_to_sleep=$(calculate_float "$value * 10**(-3)")
+		;;
+
+	's')
+		time_to_sleep="$value"
+		;;
+
+	'min')
+		time_to_sleep="${value}m"
+		;;
+
+	'h')
+		time_to_sleep="${value}h"
+		;;
+
+	'd')
+		time_to_sleep="${value}d"
+		;;
+
+	*)
+		echo "Unknown unit: $unit" >&2
+		exit 1
+		;;
+esac
+
+# Ignores the '--' argument
+if [[ "$1" == '--' ]]; then
+	shift
+fi
+
+# Runs the command
+while true; do
+	sleep "$time_to_sleep"
+	command "$@"
+done
