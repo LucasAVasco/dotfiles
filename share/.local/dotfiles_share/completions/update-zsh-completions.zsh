@@ -43,6 +43,7 @@ cmd_completion_mapping=(
 	[rg2nvim]='rg'
 	[trash]='rm'
 	[s-wait]='_precommand'
+	[j]='_precommand'
 )
 
 for destiny_cmd completion in "${(@kv)cmd_completion_mapping}"; do
