@@ -44,6 +44,7 @@ source ~/.config/zsh/commands.zsh
 source ~/.config/zsh/completions.zsh
 source ~/.config/zsh/aliases.zsh
 source ~/.config/zsh/prompt.zsh
+source ~/.config/zsh/semantic-prompts.zsh # Must be sourced after setting the prompt and Oh My Zsh configuration
 source ~/.config/zsh/keybinds.zsh # Must be sourced after Oh My Zsh configuration
 
 # Vi prompt shape {{{
