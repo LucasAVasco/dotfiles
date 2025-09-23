@@ -126,12 +126,13 @@ keys = {
 	{ key = ']', mods = CTRL_ALT_SHIFT, action = action.ScrollToPrompt(1) },
 	{ key = '{', mods = CTRL_ALT_SHIFT, action = action.ScrollToPrompt(-1) }, -- Keyboards that '{' is equivalent to '<SHIFT-[>'
 	{ key = '}', mods = CTRL_ALT_SHIFT, action = action.ScrollToPrompt(1) },
-	-- Copy mode
+	-- Key-binds to copy content
 	{
 		key = 'v',
 		mods = LEADER,
 		action = action.ActivateCopyMode,
 	},
+	{ key = 'y', mods = LEADER, action = wezterm.action({ EmitEvent = 'copy-last-output' }) },
 	-- Quick select
 	{
 		key = 'f',
