@@ -35,3 +35,12 @@ run_package_script() {
 	# Runs the package script
 	set -e && cd "$current_dir/packages/" && "./${package}.sh" "${@:2}" >&2
 }
+
+# List the available packages.
+#
+# Returns the names of the available packages (without extension) separated by newlines.
+list_packages() {
+	for package_file in "$current_dir"/packages/*.sh; do
+		basename "$package_file" .sh
+	done
+}

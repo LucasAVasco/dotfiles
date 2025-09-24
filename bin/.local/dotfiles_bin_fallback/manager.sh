@@ -18,6 +18,9 @@ help() {
 
 		./manager.sh uninstall | remove | rm <package>
 			Uninstall a package.
+
+		./manager.sh ls | list
+			List all packages.
 EOF
 }
 
@@ -45,6 +48,10 @@ case "$1" in
 
 	uninstall | remove | rm)
 		run_package_script "$2" r
+		;;
+
+	ls | list)
+		list_packages
 		;;
 
 	*)
