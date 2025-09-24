@@ -4,7 +4,7 @@
 
 source ~/.config/bash/libs/help.sh
 
-if [[ "$1" == --help || "$1" == -h || "$1" == help ]]; then
+help() {
 	help_msg_format '\t\t' << EOF
 		Package manager of the fallback installers.
 
@@ -19,8 +19,9 @@ if [[ "$1" == --help || "$1" == -h || "$1" == help ]]; then
 		./manager.sh uninstall | remove | rm <package>
 			Uninstall a package.
 EOF
-fi
+}
 
+help_call_help_function help y "$@"
 
 # Only run this script if the user is allowed to install external software
 [[ "$ALLOW_EXTERNAL_SOFTWARE" != "y" ]] && {
