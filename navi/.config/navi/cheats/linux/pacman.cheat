@@ -1,0 +1,28 @@
+% linux, archlinux, pacman
+
+# Search by a package
+pacman -Ss <package-name>
+
+# Install a package
+pacman -S <package-name>
+
+# Remove package
+pacman -Rsu <package-name>
+
+# Show information about a package
+pacman -Si <package-name>
+
+# Update all installed packages
+pacman -Syu
+
+# Set a installed package as dependency
+pacman -D --asdeps <package-name>
+
+# Set a installed package as explicit installed
+pacman -D --asexplicit <package-name>
+
+# Remove orphan packages
+pacman -Qdtq | pacman -Rsu -
+
+# Remove cached uninstalled packages
+pacman -Sc
