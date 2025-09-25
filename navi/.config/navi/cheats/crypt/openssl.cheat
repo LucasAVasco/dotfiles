@@ -1,0 +1,70 @@
+% openssl
+
+
+$ openssl-cipher-var: echo -e 'aes128\naes192\naes256\naria128\naria192\naria256\ncamellia128\ncamellia192\ncamellia256\ndes\ndes3\nidea'
+
+$ private-key-file-var: find . -maxdepth 3 -type f
+
+$ csr-file-var: find . -maxdepth 3 -type f
+
+$ cert-file-var: find . -maxdepth 3 -type f
+
+$ config-file-var: find . -maxdepth 3 -type f
+
+$ extfile-file-var: find . -maxdepth 3 -type f
+
+$ ca-crt-file-var: find . -maxdepth 3 -type f
+
+$ ca-private-key-file-var: find . -maxdepth 3 -type f
+
+$ csr-file-var: find . -maxdepth 3 -type f
+
+$ serial-file-var: find . -maxdepth 3 -type f -name '*.srl'
+
+# Show private key content
+openssl pkey -text -noout -in <private-key-file-var>
+
+# Show certificate request (CSR) content
+openssl req -text -noout -in <cert-file-var>
+
+# Show certificate content
+openssl storeutl -text -noout -certs <cert-file-var> | less
+
+# Generate a RSA key
+openssl genrsa -out <private-key-file> <num-bits>
+
+# Generate a RSA encrypted key
+openssl genrsa -<openssl-cipher-var> -out <private-key-file> <num-bits>
+
+# Generate ED25519 key
+openssl genpkey -algorithm Ed25519 -out <private-key-file>
+
+# Generate ED25519 encrypted key
+openssl genpkey -algorithm Ed25519 -<openssl-cipher-var> -out <private-key-file>
+
+# Encrypt a private key (add password)
+openssl pkey -in <private-key-file-var> <openssl-cipher-option> -out <encrypted-private-key-file>; \
+	chmod g=,o= <encrypted-private-key-file>
+
+# Generate public key from the private key
+openssl pkey -in <private-key-file-var> -pubout <pub-key-file>
+
+# Generate certificate request (CSR)
+openssl req -new -key <private-key-file-var> -out <csr-file>; \
+	chmod g=r,o=r <csr-file>
+
+# Generate a self-signed certificate
+openssl req -x509 -days <expiration-time> -key <private-key-file-var> -out <cert-file-path>; \
+	chmod g=r,o=r <cert-file-path>
+
+# Sign a certificate request (CSR) and generate a serial file
+openssl x509 -req -days <expiration-time> -CAkey <ca-private-key-file-var> -CA <ca-crt-file-var> -CAcreateserial \
+	-extfile <extfile-file-var> \
+	-in <csr-file-var> -out <signed-cert-file-path>; \
+	chmod g=r,o=r <signed-cert-file-path>
+
+# Sign a certificate request (CSR). Use an existing serial file
+openssl x509 -req -days <expiration-time> -CAkey <ca-private-key-file-var> -CA <ca-crt-file-var> -CAserial <serial-file-var> \
+	-extfile <extfile-file-var> \
+	-in <csr-file-var> -out <signed-cert-file-path>; \
+	chmod g=r,o=r <signed-cert-file-path>
