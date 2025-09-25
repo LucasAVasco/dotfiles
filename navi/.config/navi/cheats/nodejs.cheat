@@ -1,0 +1,24 @@
+% Node.js, npm
+
+
+# Install a package in the current directory
+npm link
+
+
+% Node.js, Yarn
+
+
+$ yarn-root-workspace-var: dirname "`yarn config get constraintsPath`"
+
+$ npm-root-workspace-var: dirname "`yarn config get constraintsPath`"
+
+# Configure project to use latest stable Yarn
+yarn set version stable
+
+# Configure project to work with Neovim and YARN (only if the project use Plug'n'Play)
+; 'typescript', 'prettier' and 'eslint' must be installed at the root package in order to 'tsserver' work with workspaces. See the
+; discussion at 'https://stackoverflow.com/questions/65328123/how-to-configure-vscode-to-run-yarn-2-with-pnp-powered-typescript'
+yarn --cwd <yarn-root-workspace-var> add --dev typescript prettier eslint && yarn dlx @yarnpkg/sdks base
+
+# Configure project to work with Neovim and YARN (only if the project use 'node_modules' directory)
+yarn --cwd <yarn-root-workspace-var> add --dev typescript prettier eslint
