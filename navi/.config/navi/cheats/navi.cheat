@@ -1,9 +1,11 @@
-% navi, setup, cheats
+% navi, cheats
 
 
 # Navi's welcome/initial window
 navi fn welcome
 
+# Edit Cheats
+cd ~/.config/navi/cheats/ && nvim .
 
 # Remove installed cheats
 trash ~/.local/share/navi/cheats
