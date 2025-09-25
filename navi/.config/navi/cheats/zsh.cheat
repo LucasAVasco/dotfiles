@@ -1,0 +1,8 @@
+% Zsh
+
+
+# List completions
+echo "${_comps}"
+
+# List command completion
+echo "${_comps[<command>]}"
