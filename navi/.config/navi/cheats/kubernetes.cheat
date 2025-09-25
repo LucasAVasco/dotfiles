@@ -1,0 +1,31 @@
+% Kubernetes, k8s
+
+
+$ kubeconfig-files-var: find -maxdepth 1 -name '*.yaml'
+
+# Show deployments
+kubectl get deployments
+
+# Show services
+kubectl get services
+
+# Show pods
+kubectl get pods -A
+
+# Show events
+kubectl get events | less
+
+# Show logs
+kubectl logs
+
+# delete service
+kubectl delete service <service-name>
+
+# Delete deployment
+kubectl delete deployment <deployment-name>
+
+# Port forward from local host to resource
+kubectl port-forward <resource> <localhost-port>:<resource-port>
+
+# Merge configuration files
+KUBECONFIG=~/.kube/config:<kubeconfig-files-var> kubectl config view --flatten | bat -l yaml
