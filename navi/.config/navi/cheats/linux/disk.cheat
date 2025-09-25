@@ -1,0 +1,7 @@
+% linux, disk
+
+
+$ directory-or-file-var: find -maxdepth 3
+
+# Disk usage of a directory
+du -h --max-depth=1 <directory-or-file-var>
