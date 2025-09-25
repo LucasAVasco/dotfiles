@@ -5,6 +5,8 @@ local Config = {
 	file_type2adapter = {
 		go = { 'delve' },
 		python = { 'debugpy' },
+		c = { 'gdb' },
+		cpp = { 'gdb' },
 	},
 }
 
