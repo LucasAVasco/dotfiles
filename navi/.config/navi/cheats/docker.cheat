@@ -1,0 +1,155 @@
+% Docker
+
+
+$ dockerfile-path-var: find . -maxdepth 3 -name 'Dockerfile*'
+
+$ dockerfile-dir-var: find . -maxdepth 3 -name 'Dockerfile*' | xargs dirname
+
+$ images-var: docker images \
+	--format='table{{printf "%-13s" .ID}} {{printf "%-30s" .Repository}} {{printf "%-20s" .Tag}} {{printf "%-8s" .Size}}'\
+'{{printf "%-20s" .Containers}} {{printf "%-20s" .CreatedAt}}' \
+	--- \
+	--header-lines 1 --column 1 --delimiter '\s+' --multi
+
+$ containers-var: docker container ls -a \
+	--format='table{{.ID}} {{printf "%-19s" .Names}} {{printf "%-20s" .Image}} {{printf "%-18s" .Command}} '\
+'{{printf "%-10s" .Networks}} {{printf "%-7s" .Ports}} {{printf "%-10s" .RunningFor}} {{printf "%-22s" .Status}}' \
+	--- \
+	--header-lines 1 --column 2 --delimiter '\s+' --multi
+
+$ running-containers-var: docker container ls -a \
+	--format='table{{.ID}} {{printf "%-19s" .Names}} {{printf "%-20s" .Image}} {{printf "%-18s" .Command}} '\
+'{{printf "%-10s" .Networks}} {{printf "%-7s" .Ports}} {{printf "%-10s" .RunningFor}} {{printf "%-22s" .Status}}' \
+	--filter='status=running' \
+	--- \
+	--header-lines 1 --column 2 --delimiter '\s+' --multi
+
+$ exited-containers-var: docker container ls -a \
+	--format='table{{.ID}} {{printf "%-19s" .Names}} {{printf "%-20s" .Image}} {{printf "%-18s" .Command}} '\
+'{{printf "%-10s" .Networks}} {{printf "%-7s" .Ports}} {{printf "%-10s" .RunningFor}} {{printf "%-22s" .Status}}' \
+	--filter='status=created' --filter='status=exited' --filter='status=dead' \
+	--- \
+	--header-lines 1 --column 2 --delimiter '\s+' --multi
+
+$ volumes-var: docker volume ls \
+	--format='table{{.Name}}' \
+	--- \
+	--header-lines 1 --column 1 --delimiter '\s+' --multi
+
+$ docker-log-formats-var: echo -e "log\njson\nmarkdown"
+
+# Create default Dockerfile file
+nvim Dockerfile
+
+# List images
+docker images
+
+# List containers
+docker ps -a
+
+# Build a tagged image in a directory
+docker buildx build -t <image-name> <dockerfile-dir-var>
+
+# Remove images
+docker rmi <images-var>
+
+# Remove dangling images
+docker image prune
+
+# Remove containers
+docker rm <containers-var>
+
+# Run a image in background
+docker run --detach --name <container-name> <images-var> <command-and-args>
+
+# Run a image interactively
+docker run -it --name <container-name> <images-var> <command-and-args>
+
+# Start a container
+docker start <exited-containers-var>
+
+# Stop a container
+docker stop <running-containers-var>
+
+# Restart a container
+docker restart <running-containers-var>
+
+# Exec a command in a container in background
+docker exec --detach <running-containers-var> <command-and-args>
+
+# Exec a command in a container interactively
+docker exec -it <running-containers-var> <command-and-args>
+
+# Connect to a container
+docker exec -it <running-containers-var> sh
+
+# Connect to a container as root
+docker exec --user root -it <running-containers-var> sh
+
+# Copy file from container
+docker cp <containers-var>:<src-file-inside-container> <dest-file-outside-container>
+
+# Copy file to container
+docker cp <src-file-outside-container> <containers-var>:<dest-file-inside-container>
+
+# Show volume size
+docker run -v '<volume-mount-point>:/mounted-volume' --rm alpine /usr/bin/du -h /mounted-volume
+
+# Run container to inspect volume
+docker run -v '<volumes-var>:/volume' --rm -it alpine sh -c 'cd /volume && sh'
+
+# Remove dangling networks
+docker network prune
+
+# Remove images cache
+docker buildx prune
+
+# Remove volumes
+docker volume prune
+
+# Prune images (build cache) and networks (remove all dangling images, networks, etc)
+docker image prune && docker buildx prune && docker network prune
+
+# Prune all
+docker system prune --all  && docker volume prune
+
+# Connect to a temporary generated image
+docker buildx build -t tmp <dockerfile-dir-var> && docker run -it tmp:latest sh
+
+# Show container log
+docker logs <containers-var> 2>&1 | bat -l <docker-log-formats-var>
+
+# Show status of a container
+docker container stats <running-containers-var>
+
+# Show status of all active containers
+docker container stats
+
+
+% Docker compose
+@ Docker
+
+
+# Create default compose file
+nvim compose.yaml
+
+# Build and UP
+docker-compose --progress plain up --build
+
+# Docker down and build
+docker-compose down && docker-compose --progress plain up --build
+
+
+% Docker, tools
+@ Docker
+
+
+# Explore Docker container layers with Dive
+dive <images-var>
+
+
+% DockerHub
+
+
+# Get the images of a repository
+http GET 'https://hub.docker.com/v2/namespaces/<namespace>/repositories/<image>/tags?page_size=2000&page=1' | jq '.results[].name'
