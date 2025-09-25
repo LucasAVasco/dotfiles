@@ -175,29 +175,36 @@ return {
 
 		-- Only enabled if editing a Lua file and the user is inside a directory owned by Neovim
 		ft = 'lua',
-		enabled = function()
-			-- Current directory. The comparison that defines whether the current directory belongs to Neovim checks whether the given
-			-- directory path is a sub-string of the current directory path. Adding a trailing slash allows the user to optionally provide a
-			-- path with a trailing slash. Do not use the `getcwd()` function because this function follows symbolic links. This may break
-			-- my configuration that manages my dot files with `stow`
-			local current_dir = vim.env.PWD .. '/'
-
-			---Check is the current directory is inside a provided folder
-			---The tilde (~) is NOT expanded to the user home directory. You need to manually do it if necessary
-			---@param top_dir string Path to the folder that may hold the current directory
-			local function current_dir_is_inside_folder(top_dir)
-				return current_dir:find(top_dir, 1, true) ~= nil
-			end
-
-			return current_dir_is_inside_folder(MYPATHS.config)
-				or current_dir_is_inside_folder(MYPATHS.data)
-				or current_dir_is_inside_folder(MYPATHS.dev)
-		end,
 
 		opts = {
 			library = {
 				{ path = 'luvit-meta/library', words = { 'vim.loop', 'vim.uv', 'uv' } },
 			},
+
+			enabled = function()
+				-- Respects the `lazydev_enabled` global variable
+				if vim.g.lazydev_enabled ~= nil then
+					return vim.g.lazydev_enabled
+				end
+
+				-- Current directory. The comparison that defines whether the current directory belongs to Neovim checks whether the given
+				-- directory path is a sub-string of the current directory path. Adding a trailing slash allows the user to optionally provide a
+				-- path with a trailing slash. Do not use the `getcwd()` function because this function follows symbolic links. This may break
+				-- my configuration that manages my dot files with `stow`
+				local current_dir = vim.env.PWD .. '/'
+
+				---Check is the current directory is inside a provided folder
+				---The tilde (~) is NOT expanded to the user home directory. You need to manually do it if necessary
+				---@param top_dir string Path to the folder that may hold the current directory
+				local function current_dir_is_inside_folder(top_dir)
+					return current_dir:find(top_dir, 1, true) ~= nil
+				end
+
+				return current_dir_is_inside_folder(MYPATHS.config)
+					or current_dir_is_inside_folder(MYPATHS.data)
+					or current_dir_is_inside_folder(MYPATHS.dev)
+					or current_dir_is_inside_folder('.nvim-proj')
+			end,
 		},
 	},
 	{

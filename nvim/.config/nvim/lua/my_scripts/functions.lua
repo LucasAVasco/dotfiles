@@ -84,10 +84,17 @@ end
 ---Checks if a array has a specific value.
 ---@param array any[] Search by the value in this array.
 ---@param value any Search by this value in the array.
+---@param comparison_func? fun(a: any, b: any): boolean Comparison function. The default is `a == b`.
 ---@return boolean if_has_value
-function MYFUNC.array_has(array, value)
+function MYFUNC.array_has(array, value, comparison_func)
+	if not comparison_func then
+		comparison_func = function(a, b)
+			return a == b
+		end
+	end
+
 	for _, array_value in ipairs(array) do
-		if array_value == value then
+		if comparison_func(array_value, value) then
 			return true
 		end
 	end

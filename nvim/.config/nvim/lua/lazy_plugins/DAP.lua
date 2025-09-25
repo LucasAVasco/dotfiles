@@ -2,14 +2,13 @@
 	====================================================================================================
 	DAP commands (Plugin)[cmd]                                                     *plugin-DAP-commands*
 
-	`DapLoadLaunchJSON`: Load the 'launch.json' file
-	`DapEditLaunchFile`: Edit the 'launch.json' file
+	`DapEditProjectConfig`: Edit the 'nvim-dap' configuration file of the current project
 
 	====================================================================================================
 	DAP information (Plugin)[info]                                                     *plugin-DAP-info*
 
 	Adapter configuration: |dap-adapter|
-	`launch.json` configuration: |dap-launch.json|
+	Configuration file: |dap-configuration|
 ]]
 
 ---@type MyFunctionKeysMappings
@@ -50,7 +49,7 @@ return {
 			'DapToggleRepl',
 
 			-- My user commands (not a `nvim-dap` default)
-			'DapEditLaunchJSON',
+			'DapEditProjectConfig',
 		},
 
 		keys = {
@@ -198,78 +197,51 @@ return {
 			dap_fkeys.shift = { dap.pause, dap.step_out, dap.step_back, dap.down, dap.disconnect }
 			dap_fkeys.normal = { dap.continue, dap.step_into, dap.step_over, dap.up, dap.restart }
 
-			-- Configure `dap.adapters` table to automatically query the adapters configuration from the 'lua/my_configs/DAP/' folders
-			-- inside any runtime directory at `vim.opt.rtp`
+			-- Configure `dap.adapters` table to automatically query the adapters configuration from the 'lua/my_configs/DAP/adapters/'
+			-- folders inside any runtime directory at `vim.opt.rtp`
 
 			setmetatable(dap.adapters, {
 				__index = function(_, adapter_type)
-					return require('my_configs.DAP.configs.' .. adapter_type)
+					return require('my_configs.DAP.configs.adapter.' .. adapter_type)
 				end,
 			})
 
-			-- Loads debug configurations from a Json file like VS Code
+			-- Configure `dap.configurations` table to automatically query the debugee configuration from the 'lua/my_configs/DAP/debugee/'
+			-- folders inside any runtime directory at `vim.opt.rtp`
 
-			local project_config_dir = require('project_runtime_dirs.api.project').get_project_configuration_directory()
+			local debugee = require('my_plugin_libs.DAP.debugee')
+			setmetatable(dap.configurations, {
+				__index = function(_, file_type)
+					return debugee.get_file_configs(file_type)
+				end,
+			})
 
-			---Custom launch file. `nil` if the configuration folder does not exist
-			---@type string?
-			local launchjs_file
-			if project_config_dir then
-				launchjs_file = project_config_dir .. '/launch.json'
-			end
-
-			local dap_settings = require('my_configs.DAP.settings')
-
-			local nc = require('noi' .. 'ce') -- Separates the module name because `typos_lsp` throws an error
-
-			-- This plugin can not execute `vim.fn.confirm()` inside a configuration function. It does not show anything. Disables this
-			-- plugin and use the default `vim.fn.confirm()` function in the configuration function
-			local deactivate_nc = true
-
-			local function load_launchjs()
-				-- The file must exist at the configuration folder
-				if not launchjs_file then
-					vim.notify('Launch file does not exist. Check the project configuration directory by it.')
+			-- User command to edit the my 'nvim-dap' configuration file
+			vim.api.nvim_create_user_command('DapEditProjectConfig', function()
+				-- Gets the configuration file
+				local config_file = debugee.get_project_config_file()
+				if not config_file then
+					vim.notify(
+						'Configuration file of current project does not exist! Maybe you are not in a project.',
+						vim.log.levels.ERROR,
+						{
+							title = 'nvim-dap',
+						}
+					)
 					return
 				end
 
-				-- Should be able to read the file
-				if vim.fn.filereadable(launchjs_file) == 0 then
-					return
+				-- Copies the default configuration file if it does not exist
+				if vim.fn.filereadable(config_file) == 0 then
+					local files = require('my_libs.fs.files')
+					files.copy_file(MYPATHS.config .. '/lua/my_configs/DAP/default_DAP.lua', config_file)
 				end
 
-				if deactivate_nc then
-					nc.deactivate()
-				end
+				-- Enables LazyDev, so the user can load use the types at '../my_configs/DAP/types.lua'
+				vim.g.lazydev_enabled = true
 
-				local data = vim.secure.read(launchjs_file)
-
-				if deactivate_nc then
-					nc.enable()
-				end
-
-				if data then
-					require('dap.ext.vscode').load_launchjs(launchjs_file, dap_settings.dap2filetype)
-				end
-			end
-
-			load_launchjs()
-			deactivate_nc = false -- Only need to deactivate in a configuration function (not required to user commands)
-
-			-- Overrides the `dap.nvim` command to load my `launch.json` file
-			vim.api.nvim_create_user_command('DapLoadLaunchJSON', function()
-				load_launchjs()
-			end, {})
-
-			-- User command to edit the my `launch.json` file
-			vim.api.nvim_create_user_command('DapEditLaunchJSON', function()
-				-- The file must exist at the configuration folder
-				if not launchjs_file then
-					vim.notify('Project configuration directory does not exist. You must create a project.')
-					return
-				end
-
-				vim.cmd.edit({ args = { launchjs_file }, magic = { file = false, bar = false } })
+				-- Edits the configuration file
+				vim.cmd.edit({ args = { config_file }, magic = { file = false, bar = false } })
 			end, {})
 
 			-- Sign column

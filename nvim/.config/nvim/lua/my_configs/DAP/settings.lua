@@ -1,7 +1,8 @@
 ---@class myconfig.DAP.settings
----@field dap2filetype table<string, string[]> Maps each DAP server to its supported filetypes.
 local Config = {
-	dap2filetype = {},
+	---Maps each file type to its default debugger adapters.
+	---@type table<string, string[]>
+	file_type2adapter = {},
 }
 
 return Config
