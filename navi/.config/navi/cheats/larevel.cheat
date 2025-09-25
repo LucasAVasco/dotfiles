@@ -1,0 +1,51 @@
+% php, Laravel
+
+
+# Overview of application's configuration
+php artisan about
+
+# Overview of a configuration file or folder
+php artisan config:show <folder>
+
+# Update the configuration files cache
+php artisan config:cache
+
+# Install sail in the current Laravel project
+php artisan sail:install --with=<dependencies>
+
+# Encryption of environment file (first time running)
+test -f '.env.encrypted' > /dev/null && php artisan env:encrypt
+
+# Encryption of environment file
+php artisan env:encrypt --key=<key>
+
+# Decryption of environment file
+php artisan env:decrypt --key=<key>
+
+# Generate keys
+php artisan key:generate
+
+# Generate a missing configuration file
+php artisan config:publish
+
+# Run test scripts
+php artisan test
+
+# List classes that the `make` command can create
+php artisan list make
+
+# Run optimization algorithm (cache files and so on)
+php artisan optimize
+
+
+% php, Laravel, Sail
+
+
+# Build a sail project
+./vendor/bin/sail build
+
+# Execute the docker container
+./vendor/bin/sail up
+
+# Migrate databases
+./vendor/bin/sail artisan migrate
