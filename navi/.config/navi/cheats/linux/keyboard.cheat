@@ -1,0 +1,5 @@
+% Linux, keyboard
+
+
+# Set keyboard layout
+setxkbmap -layout <layout>
