@@ -1,0 +1,29 @@
+% Kubernetes, K8s, Minikube
+
+
+# Start inside a docker instead a VM
+minikube start --driver=docker
+
+# Pause
+minikube pause
+
+# Unpause
+minikube unpause
+
+# Stop
+minikube stop
+
+# Delete cluster
+minikube delete
+
+# Open dashboard
+minikube dashboard
+
+# List add-on
+minikube addons list
+
+# Enable add on
+minikube addons enable <addon-name>
+
+# Disable add on
+minikube addons disable <addon-name>
