@@ -1,0 +1,5 @@
+#!/bin/bash
+#
+# Fallback installers package manager.
+
+~/.local/dotfiles_bin_fallback/manager.sh "$@"
