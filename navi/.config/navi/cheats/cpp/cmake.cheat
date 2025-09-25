@@ -1,0 +1,35 @@
+% cmake
+
+
+$ current_build_dir-var: basename $PWD
+
+$ build-type-var: echo -e 'Debug\nRelease'
+
+# Initial setup of a CMake project
+cmake -B build -S .
+
+# Remove the build directory and recreate it
+trash build && cmake -B build -S .
+
+# Initial setup of a CMake project (with build type)
+cmake -B build -S . -DCMAKE_BUILD_TYPE=<build-type-var>
+
+# Remove the build directory and recreate it (with build type)
+trash build && cmake -B build -S . -DCMAKE_BUILD_TYPE=<build-type-var>
+
+# Build a CMake project
+cmake --build build
+
+
+% cmake, preset
+@ cmake
+
+
+# Initial setup of a CMake project with preset
+cmake -B build -S . --preset default
+
+# Initial setup of a CMake project (with preset and build type)
+cmake -B build -S . -DCMAKE_BUILD_TYPE=<build-type-var> --preset default
+
+# Remove the build directory and recreate it (with build type)
+trash build && cmake -B build -S . -DCMAKE_BUILD_TYPE=<build-type-var> --preset default
