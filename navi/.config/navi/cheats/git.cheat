@@ -1,9 +1,34 @@
+% git
+
+
+# Show untracked files at the current directory
+gst . --untracked-files
+
+# Show diff to be applied in the current commit
+git diff --cached
+
+# Apply a stash
+git stash apply <stash>
+
+# Apply and remove (pop) a stash
+git stash pop <stash>
+
+# List stashes
+git stash list
+
+# Prune old objects (clean up)
+git gc
+
+# Expire unreachable objects and clean up. DO NOT RUN THIS COMMAND IF ANOTHER PROCESS IS WRITING TO THE REPOSITORY
+git reflog expire --expire=now --all
+git gc --prune=now --aggressive
+
+
 % git, lfs
 
 
 # Fetch all git LFS objects from the repository
 git lfs fetch --all
-
 
 # Replace the LFS file by its original content
 git lfs checkout
