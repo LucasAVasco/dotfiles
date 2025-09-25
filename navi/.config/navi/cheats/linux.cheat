@@ -1,0 +1,15 @@
+% Linux, commands
+
+
+$ commands-var: compgen -c
+
+$ commands-and-aliases-var: compgen -ca
+
+# Show online description of a command
+whatis <commands-and-aliases-var>
+
+# Find source and manual of a command
+whereis <commands-var>
+
+# Search a command by its description
+apropos <command-or-description> | less
