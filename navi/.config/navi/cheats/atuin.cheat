@@ -1,0 +1,7 @@
+% Atuin
+
+
+$ user-shell-var: echo "${SHELL##*/}"
+
+# Import existing history from shell files
+atuin import <user-shell-var>
