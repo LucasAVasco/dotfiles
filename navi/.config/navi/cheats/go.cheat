@@ -1,0 +1,40 @@
+% go
+
+
+$ folders-in-the-current-dir-var: ls -1 -d */ --- --multi
+
+# Starts dependency tracking
+go mod init <module>
+
+# Compile and run the program
+go run <path>
+
+# Automatically add and remove modules based in the source code
+go mod tidy
+
+# Replace a modules and paths
+go mod edit -replace <old>=<new> && go mod tidy
+
+# Run tests
+go test ./... -v
+
+# Build the executable
+go build
+
+# Install the executable in the go install path
+go install && asdf reshim
+
+# Change to the directory with the installed packages
+cd "$GOBIN" && pwd
+
+# Add dependency to project
+go get <dependency>
+
+# Create a workspace with the provided modules
+go work init <folders-in-the-current-dir-var>
+
+# Add directories recursively to a go workspace
+go work use -r <folders-in-the-current-dir-var>
+
+# Add a directory to a go workspace
+go work use <folders-in-the-current-dir-var>
