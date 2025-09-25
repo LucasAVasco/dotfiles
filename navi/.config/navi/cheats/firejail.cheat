@@ -1,0 +1,8 @@
+% firejail
+
+
+# Firejail with private home
+firejail --private <app-name>
+
+# Firejail with private home, but white lists the ~/Downloads/ directory
+firejail --whitelist=~/Downloads <app-name>
