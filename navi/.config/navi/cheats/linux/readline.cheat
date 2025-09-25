@@ -1,0 +1,5 @@
+% linux, readline
+
+
+# Run `rlwrap` with multi-line support
+rlwrap -m
