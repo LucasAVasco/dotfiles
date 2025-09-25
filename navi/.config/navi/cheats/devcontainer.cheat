@@ -1,0 +1,35 @@
+% devcontainer
+
+
+$ devcontainers-var: docker container ls -a \
+	--format='table{{.ID}} {{printf "%-19s" .Names}} {{printf "%-20s" .Image}} {{printf "%-18s" .Command}} '\
+'{{printf "%-10s" .Networks}} {{printf "%-7s" .Ports}} {{printf "%-10s" .RunningFor}} {{printf "%-22s" .Status}}' \
+	--filter='name=devcontainer' \
+	--- \
+	--header-lines 1 --column 2 --delimiter '\s+' --multi
+
+$ running-devcontainers-var: docker container ls -a \
+	--format='table{{.ID}} {{printf "%-19s" .Names}} {{printf "%-20s" .Image}} {{printf "%-18s" .Command}} '\
+'{{printf "%-10s" .Networks}} {{printf "%-7s" .Ports}} {{printf "%-10s" .RunningFor}} {{printf "%-22s" .Status}}' \
+	--filter='status=running' \
+	--filter='name=devcontainer' \
+	--- \
+	--header-lines 1 --column 2 --delimiter '\s+' --multi
+
+# Create configuration file
+mkdir -p .devcontainer/ && nvim .devcontainer/devcontainer.json
+
+# Up devcontainer
+devcontainer up --workspace-folder=.
+
+# Stop devcontainer
+devcontainer stop --workspace-folder=.
+
+# Down devcontainer
+devcontainer down --workspace-folder=.
+
+# Connect to a devcontainer
+docker exec -it <running-devcontainers-var> bash
+
+# Connect to a devcontainer as root
+docker exec --user root -it <running-devcontainers-var> bash
