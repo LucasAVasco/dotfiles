@@ -1,0 +1,15 @@
+% PDF
+
+
+$ pdf-files-var: find . -name '*.pdf' \
+	--- \
+	--multi
+
+# Show JavaScript in PDF
+pdfinfo -js '<pdf-files-var>'
+
+# Extract pages from PDF
+pdftk '<pdf-files-var>' cat <page-ranges> output '<output-pdf>'
+
+# Concatenate PDF files
+pdftk <pdf-files-var> cat output <output-pdf>
