@@ -1,0 +1,205 @@
+% Podman
+
+
+$ dockerfile-path-var: find . -maxdepth 3 -name 'Dockerfile*'
+
+$ dockerfile-dir-var: find . -maxdepth 3 -name 'Dockerfile*' | xargs dirname
+
+$ containerfile-path-var: find . -maxdepth 3 -name 'Containerfile*'
+
+$ containerfile-dir-var: find . -maxdepth 3 -name 'Containerfile*' | xargs dirname
+
+$ docker-or-containerfile-path-var: find . -maxdepth 3 -name 'Dockerfile*' -o -name 'Containerfile*'
+
+$ docker-or-containerfile-dir-var: find . -maxdepth 3 -name 'Dockerfile*' -o -name 'Containerfile*' | xargs dirname
+
+$ images-id-var: podman images \
+	--format '{{.ID}} {{.Repository}} {{.Tag}} Size: {{.Size}} Created at: {{.CreatedAt}}' \
+	--- \
+	--column 1 --delimiter '\s+' --multi
+
+$ images-repository-var: podman images \
+	--format '{{.ID}} {{.Repository}} {{.Tag}} Size: {{.Size}} Created at: {{.CreatedAt}}' \
+	--- \
+	--column 2 --delimiter '\s+' --multi
+
+$ images-repository-name-var: echo "<images-repository-var>" | cut --delimiter='/' --fields=2
+
+$ containers-var: podman container ls -a \
+	--format='table{{.ID}} {{.Names}} Image: {{.Image}} Command: {{.Command}} Networks: {{.Networks}} Ports: {{.Ports}} \
+Running for: {{.RunningFor}} Status: {{.Status}}' \
+	--- \
+	--column 2 --delimiter '\s+' --multi
+
+$ running-containers-var: podman container ls -a \
+	--format='table{{.ID}} {{.Names}} Image: {{.Image}} Command: {{.Command}} Networks: {{.Networks}} Ports: {{.Ports}} \
+Running for: {{.RunningFor}} Status: {{.Status}}' \
+	--filter='status=running' \
+	--- \
+	--column 2 --delimiter '\s+' --multi
+
+$ exited-containers-var: podman container ls -a \
+	--format='table{{.ID}} {{.Names}} Image: {{.Image}} Command: {{.Command}} Networks: {{.Networks}} Ports: {{.Ports}} \
+Running for: {{.RunningFor}} Status: {{.Status}}' \
+	--filter='status=created' --filter='status=exited' \
+	--- \
+	--column 2 --delimiter '\s+' --multi
+
+$ pods-var: podman pod ps \
+	--format='table{{.ID}} {{.Name}} Containers: [{{range .Containers}} (Names: {{.Names}} ) {{end}}] \
+Networks: {{.Networks}} Status: {{.Status}}' \
+	--- \
+	--column 2 --delimiter '\s+' --multi
+
+$ running-pods-var: podman pod ps \
+	--format='table{{.ID}} {{.Name}} Containers: [{{range .Containers}} (Names: {{.Names}} ) {{end}}] \
+Networks: {{.Networks}} Status: {{.Status}}' \
+	--filter='status=running' \
+	--- \
+	--column 2 --delimiter '\s+' --multi
+
+$ exited-pods-var: podman pod ps \
+	--format='table{{.ID}} {{.Name}} Containers: [{{range .Containers}} (Names: {{.Names}} ) {{end}}] \
+Networks: {{.Networks}} Status: {{.Status}}' \
+	--filter='status=created' --filter='status=exited' \
+	--- \
+	--column 2 --delimiter '\s+' --multi
+
+$ volumes-var: podman volume ls \
+	--format='table{{.Name}}' \
+	--- \
+	--column 1 --delimiter '\s+' --multi
+
+$ podman-log-formats-var: echo -e "log\njson\nmarkdown"
+
+# Create default Dockerfile file
+nvim Dockerfile
+
+# Create default Containerfile file
+nvim Containerfile
+
+# List images
+podman images
+
+# List containers
+podman ps -a
+
+# Build a tagged image in a directory
+podman build -t <image-name> <docker-or-containerfile-dir-var>
+
+# Remove images
+podman rmi <images-id-var>
+
+# Remove dangling images
+podman image prune
+
+# Remove containers
+podman rm <containers-var>
+
+# Run a image in background
+podman run --detach --name <container-name> <images-id-var> <command-and-args>
+
+# Run a image in background and remove after it
+podman run --detach --rm <images-id-var> <command-and-args>
+
+# Run a image interactively
+podman run -it --name <container-name> <images-id-var> <command-and-args>
+
+# Run a image interactively and remove after ti
+podman run -it --rm <images-id-var> <command-and-args>
+
+# Start a container
+podman start <exited-containers-var>
+
+# Stop a container
+podman stop <running-containers-var>
+
+# Restart a container
+podman restart <running-containers-var>
+
+# Exec a command in a container in background
+podman exec --detach <running-containers-var> <command-and-args>
+
+# Exec a command in a container interactively
+podman exec -it <running-containers-var> <command-and-args>
+
+# Connect to a container
+podman exec -it <running-containers-var> sh
+
+# Connect to a container as root
+podman exec --user root -it <running-containers-var> sh
+
+# Copy file from container
+podman cp <containers-var>:<src-file-inside-container> <dest-file-outside-container>
+
+# Copy file to container
+podman cp <src-file-outside-container> <containers-var>:<dest-file-inside-container>
+
+# Show volume size
+podman run -v '<volume-mount-point>:/mounted-volume' --rm alpine /usr/bin/du -h /mounted-volume
+
+# Run container to inspect volume
+podman run -v '<volumes-var>:/volume' --rm -it alpine sh -c 'cd /volume && sh'
+
+# Push image to register
+podman image push <images-repository-var>:<tag> <register>/<images-repository-name-var>:<tag>
+
+# Push image to local register (without TLS verification)
+podman image push <images-repository-var>:<tag> localhost:<register-port>/<images-repository-name-var>:<tag> --tls-verify=false
+
+# Remove dangling networks
+podman network prune
+
+# Remove volumes
+podman volume prune
+
+# Prune images (build cache) and networks (remove all dangling images, networks, etc)
+podman image prune && podman buildx prune && podman network prune
+
+# Prune all
+podman system prune --all && podman volume prune
+
+# Connect to a temporary generated image
+podman build -t tmp <docker-or-containerfile-dir-var> && podman run -it tmp:latest sh
+
+# Show container log
+podman logs <containers-var> 2>&1 | bat -l <podman-log-formats-var>
+
+# Show status of a container
+podman container stats <running-containers-var>
+
+# Show status of all active containers
+podman container stats
+
+
+% Podman compose
+@ Podman
+
+
+# Create default compose file
+nvim compose.yaml
+
+# Build for specific platform
+podman-compose --podman-build-arg='--platform=linux/<arch>' build
+
+# Build
+podman-compose down && podman-compose up --build
+
+# Build without a pod
+podman-compose down && podman-compose --in-pod false up --build
+
+
+% Podman, Kubernetes
+@ Podman
+
+
+$ k8s-kind-type-var: echo -e "pod\ndeployment\njob\ndaemonset"
+
+# Export a kubernetes configuration of a pod
+podman kube generate <pods-var> --type <k8s-kind-type-var>
+
+# Export a kubernetes configuration of a running pod
+podman kube generate <running-pods-var> --type <k8s-kind-type-var>
+
+# Export a kubernetes configuration of a exited pod
+podman kube generate <exited-pods-var> --type <k8s-kind-type-var>
