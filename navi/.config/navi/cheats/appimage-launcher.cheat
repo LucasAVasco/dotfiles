@@ -1,0 +1,15 @@
+% appimage, appimage-launcher
+
+
+$ appimage-file-var: find . -iname '*.appimage'
+
+$ installed-appimage-file-var: find ~/.local/share/appimage-launcher/appimages/ -iname '*.appimage'
+
+# Install a app image
+appimagelauncher-lite cli integrate <appimage-file-var>
+
+# Update a app image (if supported)
+appimagelauncher-lite update <installed-appimage-file-var>
+
+# Uninstall a app image
+appimagelauncher-lite remove <installed-appimage-file-var>
