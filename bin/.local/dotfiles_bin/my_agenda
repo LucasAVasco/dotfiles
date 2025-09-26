@@ -5,4 +5,4 @@
 # I use the Neovim Orgmode plugin (https://github.com/nvim-orgmode/orgmode) to manage my agenda
 
 
-cd ~/Org/agenda && nvim main.org
+cd ~/Org/agenda && nvim -c 'Org agenda a' -c 'Schedule only' main.org
