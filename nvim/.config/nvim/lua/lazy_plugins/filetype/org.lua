@@ -3,6 +3,8 @@ return {
 		'nvim-orgmode/orgmode',
 		ft = { 'org' },
 
+		cmd = 'Org',
+
 		-- Not all key maps are register here. Only the ones I may use outside a '*.org' file
 		keys = {
 			{ '<leader>oa' }, -- Open agenda
