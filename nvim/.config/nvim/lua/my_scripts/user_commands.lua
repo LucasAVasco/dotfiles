@@ -40,3 +40,17 @@ end, {
 	desc = 'Write the directory of the current file',
 	nargs = '?',
 })
+
+vim.api.nvim_create_user_command('Schedule', function(arguments)
+	local command = arguments.fargs[1]
+
+	local args = vim.tbl_deep_extend('force', {}, arguments.fargs) -- Copies the arguments
+	table.remove(args, 1)
+
+	vim.schedule(function()
+		vim.cmd({ cmd = command, args = args })
+	end)
+end, {
+	nargs = '+',
+	desc = 'Runs a command in the next event loop',
+})
