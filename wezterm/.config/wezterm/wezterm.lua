@@ -23,15 +23,17 @@ config.inactive_pane_hsb = {
 
 config.font_size = 12.0
 config.use_cap_height_to_scale_fallback_fonts = true
-config.font = wezterm.font_with_fallback({
-	{
-		family = 'JetBrainsMono Nerd Font Mono',
-	},
-	{
-		family = 'Noto Color Emoji',
-		assume_emoji_presentation = true,
-	},
-})
+if os.getenv('ALLOW_EXTERNAL_SOFTWARE') == 'y' then
+	config.font = wezterm.font_with_fallback({
+		{
+			family = 'JetBrainsMono Nerd Font Mono',
+		},
+		{
+			family = 'Noto Color Emoji',
+			assume_emoji_presentation = true,
+		},
+	})
+end
 
 -- Environment variables
 
