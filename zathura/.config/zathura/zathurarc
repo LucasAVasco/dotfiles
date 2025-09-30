@@ -3,4 +3,5 @@ set selection-clipboard clipboard
 map <A-k> scroll half-up
 map <A-j> scroll half-down
 map <A-u> scroll half-up
+map <A-e> scroll half-up
 map <A-d> scroll half-down
