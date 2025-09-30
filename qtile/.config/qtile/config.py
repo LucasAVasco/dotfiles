@@ -283,6 +283,7 @@ keys.extend([
     Key([SUPER, SHIFT], "m", lazy.prev_layout()),
     Key([SUPER], "m", lazy.next_layout()),
     Key([SUPER], "n", lazy.spawn(HOME + "/.config/dunst/context-menu.sh")),
+    Key([SUPER, SHIFT], "n", lazy.spawn(HOME + "/.config/dunst/dismiss.sh")),
 
     Key([SUPER], "bracketleft", lazy.screen.prev_group()),
     Key([SUPER], "bracketright", lazy.screen.next_group()),
