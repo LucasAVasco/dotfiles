@@ -18,11 +18,13 @@
 # - slurp (Wayland, interactive screenshot)
 # - My 'clipboard/.config/clipboard/copy.sh' script (copy to clipboard)
 
+source ~/.config/bash/libs/linux/session.sh
+
+set -e
 
 output_file=''
 interactive='n'
 save2clipboard='n'
-
 
 while [[ $# -gt 0 ]]; do
 	case "$1" in
@@ -48,43 +50,43 @@ while [[ $# -gt 0 ]]; do
 	shift
 done
 
-
 # Default values
 if [[ -z "$output_file" ]]; then
 	output_file="$HOME/Pictures/$(date '+%F_%Hh%Mmin%S').png"
 fi
 
+# Command to take a screenshot
+screenshot_cmd=()
 
-set -e
-
-# Xorg
-if [[ -z "$WAYLAND_DISPLAY" ]]; then
-	area=()
-	if [[ $interactive == 'y' ]]; then
-		area=(-g "$(slop)")
-	fi
-
-	if [[ $save2clipboard == 'y' ]]; then
-		maim ${area[@]} | tee "$output_file" | ~/.config/clipboard/copy.sh --stdin -t image/png
-	else
-		maim ${area[@]} "$output_file"
-	fi
-
-# Wayland
-else
-	call_grim() {
+case $(linux_session_get_type) in
+	xorg)
+		screenshot_cmd=(maim)
 		if [[ $interactive == 'y' ]]; then
-			grim -g "$(slurp)" "$@"
-		else
-			grim "$@"
+			screenshot_cmd+=(-g "$(slop)")
 		fi
-	}
 
-	if [[ $save2clipboard == 'y' ]]; then
-		call_grim - | tee "$output_file" | ~/.config/clipboard/copy.sh --stdin
-	else
-		call_grim "$output_file"
-	fi
+		;;
+
+	wayland)
+		screenshot_cmd=(grim)
+		if [[ $interactive == 'y' ]]; then
+			screenshot_cmd+=(-g "$(slurp)" -)
+		else
+			screenshot_cmd+=(-)
+		fi
+		;;
+
+	*)
+		echo "Unknown session type: '$(linux_session_get_type)'" >&2
+		exit 1
+esac
+
+# Takes the screenshot
+if [[ $save2clipboard == 'y' ]]; then
+	"${screenshot_cmd[@]}" | tee "$output_file" | ~/.config/clipboard/copy.sh --stdin -t image/png
+else
+	"${screenshot_cmd[@]}" > "$output_file"
 fi
 
+# Notifies
 notify-send "Screenshot take!" "Output file: '$output_file'"
