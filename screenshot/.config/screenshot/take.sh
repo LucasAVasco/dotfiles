@@ -52,7 +52,9 @@ done
 
 # Default values
 if [[ -z "$output_file" ]]; then
-	output_file="$HOME/Pictures/$(date '+%F_%Hh%Mmin%S').png"
+	folder="$HOME/Pictures/screenshots"
+	mkdir -p "$folder"
+	output_file="$folder/$(date '+%F_%Hh%Mmin%S').png"
 fi
 
 # Command to take a screenshot
