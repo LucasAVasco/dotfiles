@@ -10,6 +10,9 @@ help() {
 
 		USAGE:
 
+		./manager.sh has <package>
+			Check if a package exists (may not be installed). Returns 'y' or 'n'
+
 		./manager.sh install | add <package>
 			Install a package.
 
@@ -38,6 +41,10 @@ source ./lib.sh
 
 # Commands
 case "$1" in
+	has )
+		test -f "$current_dir/packages/${2}.sh" && echo -n 'y' || echo -n 'n'
+		;;
+
 	install | add)
 		run_package_script "$2" i
 		;;
