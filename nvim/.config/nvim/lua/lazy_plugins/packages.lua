@@ -51,6 +51,14 @@ function MYPLUGFUNC.ensure_mason_package_installed(package_name, callbacks)
 	end
 end
 
+---Ensure that a list of `mason.nvim` packages are installed.
+---@param packages string[] List of package names.
+function MYPLUGFUNC.ensure_mason_packages_are_installed(packages)
+	for _, package in pairs(packages) do
+		MYPLUGFUNC.ensure_mason_package_installed(package)
+	end
+end
+
 -- #endregion
 
 return {
