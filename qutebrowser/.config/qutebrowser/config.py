@@ -2,7 +2,7 @@
 
 import typing
 
-from libs import quickmark
+from libs import dark_mode, quickmark
 from themes import catppuccin
 
 if "config" not in globals():
@@ -39,6 +39,12 @@ config.bind("'", "cmd-set-text -s :quickmark-load")
 
 # config.bind("<Shift-Tab>", "cmd-set-text -s :set-mark")
 # config.bind("<Tab>", "cmd-set-text -s :jump-mark")
+
+# Dark mode
+
+dark_mode.config(c)
+dark_mode.set_dark_mode(enabled=True)
+dark_mode.create_commands()
 
 # Default quick marks
 
