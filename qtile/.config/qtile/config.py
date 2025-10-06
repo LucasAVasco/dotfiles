@@ -157,11 +157,16 @@ screens = [
         right=bar.Gap(SCREEN_GAPS),
         left=bar.Gap(SCREEN_GAPS),
         bottom=bar.Gap(SCREEN_GAPS),
-
-        wallpaper=HOME+"/.cache/custom_desktop/wallpaper.jpg",
+        wallpaper=HOME + "/.local/share/wallpaper/wallpaper.jpg",
         wallpaper_mode="stretch",
     ),
 ]
+
+# Command to update the wallpaper
+os.environ["CUSTOM_DESKTOP_SET_WALLPAPAER_COMMAND"] = (
+    "qtile cmd-obj -o screen -f set_wallpaper "
+    "-a ~/.local/share/wallpaper/wallpaper.jpg stretch"
+)
 
 # end_marker }}}
 
