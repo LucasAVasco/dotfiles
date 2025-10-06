@@ -66,10 +66,6 @@ return {
 				automatic_enable = false,
 
 				automatic_installation = true,
-
-				ensure_installed = {
-					'yamlls',
-				},
 			})
 
 			---Return if the LSP server configuration should be aborted (E.g. The user disabled the server)
