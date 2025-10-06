@@ -68,7 +68,6 @@ return {
 				automatic_installation = true,
 
 				ensure_installed = {
-					'lua_ls', -- Used to check Neovim configuration
 					'jsonls', -- Used by `neoconf.nvim`
 					'yamlls',
 				},
