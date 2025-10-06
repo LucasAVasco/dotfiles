@@ -1,7 +1,8 @@
 """Main Qutebrowser configuration file."""
 
 import typing
-import themes.catppuccin as catppuccin
+
+from themes import catppuccin
 
 if "config" not in globals():
     config: typing.Any = {}
@@ -40,5 +41,5 @@ config.bind("'", "cmd-set-text -s :quickmark-load")
 
 # Theme settings
 
-catppuccin.set_config(c, config)
+catppuccin.set_config(c, config.configdir)
 catppuccin.enable_theme("macchiato")
