@@ -1,0 +1,5 @@
+#!/bin/bash
+#
+# Set the current wallpaper.
+
+~/.config/wallpaper/set.sh "$@"
