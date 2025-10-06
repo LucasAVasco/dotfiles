@@ -4,6 +4,8 @@
 #
 # NOTE: You must run Lazygit with `snacks.nvim` at least one time in order to generate its theme configuration files.
 
+source ~/.config/bash/libs/bin_overrides.sh
+
 # Configuration file
 config_files="$HOME/.config/lazygit/config.yml"
 
@@ -13,4 +15,4 @@ if [[ -f "$snacks_theme_file" ]]; then
 	config_files="$config_files,$snacks_theme_file"
 fi
 
-/usr/bin/lazygit -ucf "$config_files" "$@"
+bin_overrides_call_without_override lazygit -ucf "$config_files" "$@"
