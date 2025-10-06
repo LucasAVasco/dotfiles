@@ -10,16 +10,9 @@ eval "$(direnv hook zsh)"
 source <(fzf --zsh 2> /dev/null)
 
 # Navi
-if [[ -f ~/.cargo/bin/navi ]]; then
-	PATH="$PATH:$HOME/.cargo/bin"
-fi
 eval "$(navi widget zsh)"
 
 # Atuin
-if [[ ! -f ~/.cargo/bin/atuin && ! -f ~/.atuin/bin/atuin ]]; then
-	mise use rust
-	cargo install atuin
-fi
 eval "$(atuin init zsh --disable-ctrl-r --disable-up-arrow)"
 bindkey '^[h' atuin-up-search
 
