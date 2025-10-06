@@ -52,10 +52,13 @@ import sticky
 
 if TYPE_CHECKING:
     from libqtile.core.manager import Layout
-from libqtile.core.manager import Qtile
+
+if TYPE_CHECKING:
+    from libqtile.core.manager import Qtile
+
 from libqtile.lazy import lazy
 
-qtile: Qtile = cast(Qtile, __qtile_indefined)
+qtile: Qtile = cast("Qtile", __qtile_indefined)
 
 
 GROUPS_NAMES = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"]
@@ -85,10 +88,11 @@ if os.environ.get("WAYLAND_DISPLAY") is not None:
 # and kill 'Qtile'
 if is_running_in_wayland:
     for term_nr in range(1, VIRTUAL_TERM_MAX):
-        keys.extend([
-            Key([CONTROL, ALT], "F" + str(term_nr),
-                lazy.core.change_vt(term_nr)),
-        ])
+        keys.extend(
+            [
+                Key([CONTROL, ALT], "F" + str(term_nr), lazy.core.change_vt(term_nr)),
+            ],
+        )
 
 
 def run_background(command: list[str]) -> None:
@@ -102,6 +106,7 @@ def run_background(command: list[str]) -> None:
 
     """
     subprocess.run(command, check=True)  # noqa: S603
+
 
 # Input devices {{{
 
@@ -132,15 +137,19 @@ if not is_running_in_wayland:
 
 for group_name, group_key in zip(GROUPS_NAMES, GROUPS_KEYS):
     groups.append(Group(group_name))
-    keys.extend([
-        # Focus to group
-        Key([SUPER], group_key, lazy.group[group_name].toscreen()),
-
-        # Move window to group
-        Key([SUPER, SHIFT], group_key, lazy.window.togroup(group_name)),
-        Key([SUPER, ALT], group_key, lazy.window.togroup(
-            group_name, switch_group=True)),
-    ])
+    keys.extend(
+        [
+            # Focus to group
+            Key([SUPER], group_key, lazy.group[group_name].toscreen()),
+            # Move window to group
+            Key([SUPER, SHIFT], group_key, lazy.window.togroup(group_name)),
+            Key(
+                [SUPER, ALT],
+                group_key,
+                lazy.window.togroup(group_name, switch_group=True),
+            ),
+        ],
+    )
 
 screens = [
     Screen(
@@ -180,10 +189,12 @@ layouts = [
     layout.Stack(**default_layout_parameters, num_stacks=3),
 ]
 
-floating_layout = layout.Floating(**default_layout_parameters, float_rules=[
-    *layout.Floating.default_float_rules,
-    Match(wm_class="launcher"),
-],
+floating_layout = layout.Floating(
+    **default_layout_parameters,
+    float_rules=[
+        *layout.Floating.default_float_rules,
+        Match(wm_class="launcher"),
+    ],
 )
 
 # end_marker }}}
@@ -209,128 +220,118 @@ def reset_window_state(qtile: Qtile) -> None:
 
 # List of all keybinds:
 # https://github.com/qtile/qtile/blob/master/libqtile/backend/x11/xkeysyms.py
-keys.extend([
-    # Applications {{{
-
-    Key([SUPER], "Return", lazy.spawn("default_term")),
-    Key([SUPER], "f", lazy.spawn("default_file_manager")),
-
-    Key([SUPER], "w",
-        lazy.spawn(HOME + "/.local/dotfiles_bin/default_web_browser")),
-    Key([SUPER], "t", lazy.spawn(HOME + "/.config/rofi/tools/chdesk.sh")),
-    Key([SUPER], "a",
-        lazy.spawn(HOME + "/.config/rofi/tools/applications.sh")),
-    Key([SUPER], "o",
-        lazy.spawn(HOME + "/.config/rofi/tools/org.sh")),
-    Key([SUPER], "r",
-        lazy.spawn(HOME + "/.local/dotfiles_bin/custom-script-popup")),
-    Key([SUPER, SHIFT], "p",
-        lazy.spawn(HOME + "/.config/rofi/tools/pass.sh")),
-    Key([SUPER], "s", lazy.spawn(HOME + "/.config/screenshot/take.sh -c")),
-    Key([SUPER, SHIFT], "s",
-        lazy.spawn(HOME + "/.config/screenshot/take.sh -i -c")),
-    Key([SUPER, SHIFT], "Escape", lazy.spawn(
-        HOME + "/.config/rofi/tools/session_manager.sh")),
-
-    # end_marker }}}
-
-    Key([SUPER], "c", lazy.window.kill()),
-    Key([SUPER, CONTROL, SHIFT], "q", lazy.shutdown()),
-    Key([SUPER, SHIFT], "x", lazy.reload_config()),
-
-    Key([SUPER], "h", lazy.layout.left()),
-    Key([SUPER], "j", lazy.layout.down()),
-    Key([SUPER], "k", lazy.layout.up()),
-    Key([SUPER], "l", lazy.layout.right()),
-    Key([SUPER], "g", lazy.layout.next()),
-
-    Key([SUPER, ALT], "h", lazy.layout.shuffle_left()),
-    Key([SUPER, ALT], "j", lazy.layout.shuffle_down()),
-    Key([SUPER, ALT], "k", lazy.layout.shuffle_up()),
-    Key([SUPER, ALT], "l", lazy.layout.shuffle_right()),
-    Key([SUPER, ALT], "g", lazy.layout.toggle_split()),
-
-    Key([SUPER, CONTROL], "j", lazy.layout.flip_down()),
-    Key([SUPER, CONTROL], "k", lazy.layout.flip_up()),
-    Key([SUPER, CONTROL], "h", lazy.layout.flip_left()),
-    Key([SUPER, CONTROL], "l", lazy.layout.flip_right()),
-    Key([SUPER, CONTROL], "g", lazy.layout.flip()),
-
-    Key([SUPER, SHIFT], "h", lazy.layout.grow_left()),
-    Key([SUPER, SHIFT], "j", lazy.layout.grow_down()),
-    Key([SUPER, SHIFT], "k", lazy.layout.grow_up()),
-    Key([SUPER, SHIFT], "l", lazy.layout.grow_right()),
-    Key([SUPER, SHIFT], "g", lazy.layout.normalize()),
-
-    # Mouse simulation {{{
-
-    Key([SUPER], "e", lazy.spawn(HOME + "/.config/mouse/scroll.sh 10")),
-    Key([SUPER], "u", lazy.spawn(HOME + "/.config/mouse/scroll.sh 10")),
-    Key([SUPER], "d", lazy.spawn(HOME + "/.config/mouse/scroll.sh -10")),
-    Key([SUPER, SHIFT], "d", lazy.spawn(HOME + "/.config/mouse/scroll.sh 0")),
-
-    # }}}
-
-    # Window and nodes management {{{
-
-    Key([SUPER], "0", reset_window_state()),
-    Key([SUPER], "9", lazy.window.toggle_floating()),
-    Key([SUPER], "8", lazy.window.toggle_fullscreen()),
-    Key([SUPER], "7", sticky.MyLazy.current_window_toggle_sticky()),
-
-    Key([SUPER, SHIFT], "m", lazy.prev_layout()),
-    Key([SUPER], "m", lazy.next_layout()),
-    Key([SUPER], "n", lazy.spawn(HOME + "/.config/dunst/context-menu.sh")),
-    Key([SUPER, SHIFT], "n", lazy.spawn(HOME + "/.config/dunst/dismiss.sh")),
-
-    Key([SUPER], "bracketleft", lazy.screen.prev_group()),
-    Key([SUPER], "bracketright", lazy.screen.next_group()),
-    Key([SUPER], "Backspace", lazy.screen.toggle_group()),
-
-    # end_marker }}}
-
-    # System management {{{
-
-    Key([SUPER, SHIFT], "y",
-        lazy.spawn(HOME + "/.config/clipboard/clear.sh")),
-    Key([SUPER], "y",
-        lazy.spawn(HOME +
-        "/.local/dotfiles_bin/receive-clip-from-sync-folder")),
-    Key([SUPER], "p",
-        lazy.spawn(HOME + "/.local/dotfiles_bin/send-clip-to-sync-folder")),
-    Key([SUPER], "Delete", lazy.spawn("xkill")),
-    Key([SUPER], "z",
-        lazy.spawn(HOME + "/.config/screenlocker/manager.sh toggle")),
-    Key([SUPER, ALT, SHIFT], "m", margin.MyLazy.remove_margin()),
-    Key([SUPER, ALT], "m", margin.MyLazy.add_margin()),
-    Key([CONTROL, ALT], "l", lazy.spawn(
-        HOME + "/.config/screenlocker/manager.sh run")),
-
-    # end_marker }}}
-
-    # Back light {{{
-
-    Key([SUPER], "F6", lazy.spawn("brightnessctl set 5%-")),
-
-    Key([SUPER], "F7", lazy.spawn("brightnessctl set 15%")),
-
-    Key([SUPER], "F8", lazy.spawn("brightnessctl set +5%")),
-
-    # }}}
-
-    # Sound and volume {{{
-
-    Key([SUPER], "F9", lazy.spawn(
-        "pactl set-sink-mute @DEFAULT_SINK@ toggle")),
-    Key([SUPER], "F10", lazy.spawn(
-        "pactl set-sink-volume @DEFAULT_SINK@ -5%")),
-    Key([SUPER], "F11", lazy.spawn(
-        "pactl set-sink-volume @DEFAULT_SINK@ +5%")),
-    Key([SUPER], "b", lazy.spawn(
-        HOME + "/.config/keyboard/sound_emulator.sh toggle")),
-
-    # end_marker }}}
-])
+keys.extend(
+    [
+        # Applications {{{
+        Key([SUPER], "Return", lazy.spawn("default_term")),
+        Key([SUPER], "f", lazy.spawn("default_file_manager")),
+        Key(
+            [SUPER],
+            "w",
+            lazy.spawn(HOME + "/.local/dotfiles_bin/default_web_browser"),
+        ),
+        Key([SUPER], "t", lazy.spawn(HOME + "/.config/rofi/tools/chdesk.sh")),
+        Key([SUPER], "a", lazy.spawn(HOME + "/.config/rofi/tools/applications.sh")),
+        Key([SUPER], "o", lazy.spawn(HOME + "/.config/rofi/tools/org.sh")),
+        Key(
+            [SUPER],
+            "r",
+            lazy.spawn(HOME + "/.local/dotfiles_bin/custom-script-popup"),
+        ),
+        Key([SUPER, SHIFT], "p", lazy.spawn(HOME + "/.config/rofi/tools/pass.sh")),
+        Key([SUPER], "s", lazy.spawn(HOME + "/.config/screenshot/take.sh -c")),
+        Key(
+            [SUPER, SHIFT],
+            "s",
+            lazy.spawn(HOME + "/.config/screenshot/take.sh -i -c"),
+        ),
+        Key(
+            [SUPER, SHIFT],
+            "Escape",
+            lazy.spawn(HOME + "/.config/rofi/tools/session_manager.sh"),
+        ),
+        # end_marker }}}
+        Key([SUPER], "c", lazy.window.kill()),
+        Key([SUPER, CONTROL, SHIFT], "q", lazy.shutdown()),
+        Key([SUPER, SHIFT], "x", lazy.reload_config()),
+        Key([SUPER], "h", lazy.layout.left()),
+        Key([SUPER], "j", lazy.layout.down()),
+        Key([SUPER], "k", lazy.layout.up()),
+        Key([SUPER], "l", lazy.layout.right()),
+        Key([SUPER], "g", lazy.layout.next()),
+        Key([SUPER, ALT], "h", lazy.layout.shuffle_left()),
+        Key([SUPER, ALT], "j", lazy.layout.shuffle_down()),
+        Key([SUPER, ALT], "k", lazy.layout.shuffle_up()),
+        Key([SUPER, ALT], "l", lazy.layout.shuffle_right()),
+        Key([SUPER, ALT], "g", lazy.layout.toggle_split()),
+        Key([SUPER, CONTROL], "j", lazy.layout.flip_down()),
+        Key([SUPER, CONTROL], "k", lazy.layout.flip_up()),
+        Key([SUPER, CONTROL], "h", lazy.layout.flip_left()),
+        Key([SUPER, CONTROL], "l", lazy.layout.flip_right()),
+        Key([SUPER, CONTROL], "g", lazy.layout.flip()),
+        Key([SUPER, SHIFT], "h", lazy.layout.grow_left()),
+        Key([SUPER, SHIFT], "j", lazy.layout.grow_down()),
+        Key([SUPER, SHIFT], "k", lazy.layout.grow_up()),
+        Key([SUPER, SHIFT], "l", lazy.layout.grow_right()),
+        Key([SUPER, SHIFT], "g", lazy.layout.normalize()),
+        # Mouse simulation {{{
+        Key([SUPER], "e", lazy.spawn(HOME + "/.config/mouse/scroll.sh 10")),
+        Key([SUPER], "u", lazy.spawn(HOME + "/.config/mouse/scroll.sh 10")),
+        Key([SUPER], "d", lazy.spawn(HOME + "/.config/mouse/scroll.sh -10")),
+        Key([SUPER, SHIFT], "d", lazy.spawn(HOME + "/.config/mouse/scroll.sh 0")),
+        # end_marker }}}
+        # Window and nodes management {{{
+        Key([SUPER], "0", reset_window_state()),
+        Key([SUPER], "9", lazy.window.toggle_floating()),
+        Key([SUPER], "8", lazy.window.toggle_fullscreen()),
+        Key([SUPER], "7", sticky.MyLazy.current_window_toggle_sticky()),
+        Key([SUPER, SHIFT], "m", lazy.prev_layout()),
+        Key([SUPER], "m", lazy.next_layout()),
+        Key([SUPER], "n", lazy.spawn(HOME + "/.config/dunst/context-menu.sh")),
+        Key([SUPER, SHIFT], "n", lazy.spawn(HOME + "/.config/dunst/dismiss.sh")),
+        Key([SUPER], "bracketleft", lazy.screen.prev_group()),
+        Key([SUPER], "bracketright", lazy.screen.next_group()),
+        Key([SUPER], "Backspace", lazy.screen.toggle_group()),
+        # end_marker }}}
+        # System management {{{
+        Key([SUPER, SHIFT], "y", lazy.spawn(HOME + "/.config/clipboard/clear.sh")),
+        Key(
+            [SUPER],
+            "y",
+            lazy.spawn(HOME + "/.local/dotfiles_bin/receive-clip-from-sync-folder"),
+        ),
+        Key(
+            [SUPER],
+            "p",
+            lazy.spawn(HOME + "/.local/dotfiles_bin/send-clip-to-sync-folder"),
+        ),
+        Key([SUPER], "Delete", lazy.spawn("xkill")),
+        Key([SUPER], "z", lazy.spawn(HOME + "/.config/screenlocker/manager.sh toggle")),
+        Key([SUPER, ALT, SHIFT], "m", margin.MyLazy.remove_margin()),
+        Key([SUPER, ALT], "m", margin.MyLazy.add_margin()),
+        Key(
+            [CONTROL, ALT],
+            "l",
+            lazy.spawn(HOME + "/.config/screenlocker/manager.sh run"),
+        ),
+        # end_marker }}}
+        # Back light {{{
+        Key([SUPER], "F6", lazy.spawn("brightnessctl set 5%-")),
+        Key([SUPER], "F7", lazy.spawn("brightnessctl set 15%")),
+        Key([SUPER], "F8", lazy.spawn("brightnessctl set +5%")),
+        # end_marker }}}
+        # Sound and volume {{{
+        Key([SUPER], "F9", lazy.spawn("pactl set-sink-mute @DEFAULT_SINK@ toggle")),
+        Key([SUPER], "F10", lazy.spawn("pactl set-sink-volume @DEFAULT_SINK@ -5%")),
+        Key([SUPER], "F11", lazy.spawn("pactl set-sink-volume @DEFAULT_SINK@ +5%")),
+        Key(
+            [SUPER],
+            "b",
+            lazy.spawn(HOME + "/.config/keyboard/sound_emulator.sh toggle"),
+        ),
+        # end_marker }}}
+    ],
+)
 
 # end_marker }}}
 
@@ -341,22 +342,31 @@ MOUSE_CENTER = "Button2"
 MOUSE_RIGHT = "Button3"
 
 mouse = [
-    Drag([SUPER], MOUSE_LEFT, lazy.window.set_position(),
-         start=lazy.window.get_position()),
+    Drag(
+        [SUPER],
+        MOUSE_LEFT,
+        lazy.window.set_position(),
+        start=lazy.window.get_position(),
+    ),
     Click([SUPER], MOUSE_LEFT, lazy.window.disable_floating()),
-
     # Use the right button to grow the layouts
     Click([SUPER], MOUSE_RIGHT, mouse_grow.MyLazy.reset_delta()),
     Drag([SUPER], MOUSE_RIGHT, mouse_grow.MyLazy.resize_current_window()),
-
     # Floating motions
     Click([SUPER, ALT], MOUSE_LEFT, lazy.window.bring_to_front()),
-
-    Drag([SUPER, ALT], MOUSE_LEFT, lazy.window.set_position_floating(),
-         start=lazy.window.get_position()),
-
-    Drag([SUPER, ALT], MOUSE_RIGHT, lazy.window.set_size_floating(),
-         start=lazy.window.get_size(), warp_pointer=True),
+    Drag(
+        [SUPER, ALT],
+        MOUSE_LEFT,
+        lazy.window.set_position_floating(),
+        start=lazy.window.get_position(),
+    ),
+    Drag(
+        [SUPER, ALT],
+        MOUSE_RIGHT,
+        lazy.window.set_size_floating(),
+        start=lazy.window.get_size(),
+        warp_pointer=True,
+    ),
 ]
 
 # end_marker }}}
@@ -366,11 +376,11 @@ run_background([HOME + "/.config/qtile/init.sh"])
 
 
 if not is_running_in_wayland:
+
     @hook.subscribe.layout_change
     def _update_layout_polybar(layout: Layout, _group: Group) -> None:
         """Send the current layout to Polybar."""
-        run_background([
-            "polybar-msg", "action", "qtile-layout", "send", layout.name])
+        run_background(["polybar-msg", "action", "qtile-layout", "send", layout.name])
 
     @hook.subscribe.setgroup
     def _update_backlight_filter() -> None:

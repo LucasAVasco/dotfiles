@@ -48,7 +48,6 @@ operation due to mouse position difference. The grow speed is inversely proporti
 the delta parameter.
 """
 
-
 from libqtile.core.manager import Qtile
 from libqtile.lazy import lazy
 
@@ -112,8 +111,7 @@ class MyLazy:
         delta_before_grow: tuple[int, int] = fallback_delta
 
         layout_name = qtile.current_layout.name
-        if isinstance(layout_name,
-                      str) and qtile.current_layout.name in layout_deltas:
+        if isinstance(layout_name, str) and qtile.current_layout.name in layout_deltas:
             delta_before_grow = layout_deltas[layout_name]
 
         # Checks the X axes. It it exceeds the maximum delta, makes a growth operation

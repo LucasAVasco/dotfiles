@@ -6,7 +6,7 @@ from libqtile import qtile as __qtile_indefined
 from libqtile.core.manager import Qtile
 from libqtile.lazy import lazy
 
-qtile: Qtile = cast(Qtile, __qtile_indefined)
+qtile: Qtile = cast("Qtile", __qtile_indefined)
 
 
 LAYOUTS_MARGIN_DIFF = 10
@@ -49,7 +49,7 @@ def add_layout_margin(size_diff: int) -> None:
 
     """
     layout = qtile.current_layout
-    set_layout_margin(max(0, layout.margin+size_diff))
+    set_layout_margin(max(0, layout.margin + size_diff))
 
 
 class MyLazy:
@@ -63,7 +63,6 @@ class MyLazy:
         Only applies to the current layout of the current group.
         """
         add_layout_margin(LAYOUTS_MARGIN_DIFF)
-
 
     @lazy.function
     @staticmethod
