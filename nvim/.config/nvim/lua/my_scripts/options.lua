@@ -67,7 +67,7 @@ local function update_listchars(buffer_nr, all_windows)
 	-- Spaces after any text
 	local multispace_char = ''
 	for _, index_char in ipairs(superscript_numbers) do
-		multispace_char = multispace_char .. '𝅙⋅𝅙' .. index_char
+		multispace_char = multispace_char .. '⋅' .. index_char
 	end
 
 	-- Spaces before any text
@@ -77,24 +77,24 @@ local function update_listchars(buffer_nr, all_windows)
 		---Character to be placed between each indentation level
 		---@type string
 		local indent_separator_char = ''
-		-- Alternative characters that you may want to use: 󰇝┆┃󱋱╎⎜┇¦╏┇┋┆┆┊󰇙⍿⟊¦‖⎸⋅⋯﴾﴿
+		-- Alternative characters that you may want to use: 󰇝┆┃󱋱╎⎜┇¦╏┇┋┆┆┊󰇙⍿⟊¦‖⎸⋅⋯
 
-		local spaces_before_index = string.rep('𝅙', indent_size_is_even and indent_size_half - 1 or indent_size_half)
-		local spaces_after_index = string.rep('𝅙', indent_size_half - 1)
+		local spaces_before_index = string.rep('', indent_size_is_even and indent_size_half - 1 or indent_size_half)
+		local spaces_after_index = string.rep('', indent_size_half - 1)
 
 		-- Creates the components of the 'listchars' option that have index numbers
 		for _, index_char in ipairs(superscript_numbers) do
 			lead_multispace_char = lead_multispace_char .. spaces_before_index .. index_char .. spaces_after_index .. indent_separator_char
 		end
 	else
-		local spaces_before_index = string.rep('𝅙', indent_size == 2 and 1 or 0)
+		local spaces_before_index = string.rep('', indent_size == 2 and 1 or 0)
 
 		for _, index_char in ipairs(superscript_numbers) do
 			lead_multispace_char = lead_multispace_char .. spaces_before_index .. index_char
 		end
 	end
 
-	window_opts.listchars = 'tab:𝅙𝅙,leadmultispace:' .. lead_multispace_char .. ',multispace:' .. multispace_char
+	window_opts.listchars = 'tab:,leadmultispace:' .. lead_multispace_char .. ',multispace:' .. multispace_char
 end
 
 -- Initial 'listchars' setup
