@@ -1,3 +1,10 @@
+# Key bindings
+--bind 'alt-d:half-page-down'
+--bind 'ctrl-d:half-page-down'
+--bind 'alt-u:half-page-up'
+--bind 'ctrl-u:half-page-up'
+
+# Style
 --reverse
 
 --color=fg:#d9d9d9,hl:#95c7db
@@ -17,3 +24,5 @@
 
 --color=preview-bg:#222222
 --color=preview-fg:#cccccc
+
+# vi: ft=conf
