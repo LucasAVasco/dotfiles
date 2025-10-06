@@ -13,6 +13,11 @@ local mason_packages_to_install = {}
 
 local mason_configured = false
 
+---@class lazy_plugins.packages.mason_install_callbacks
+---@field on_success? fun(receipt: InstallReceipt) Called when the package is successfully installed
+---@field on_failure? fun(error: any) Called when the package fails to install
+---@field on_after? fun() Called whether the package is installed or not (after the `on_success` or `on_failure` callbacks)
+
 ---Set a package to be installed after `mason.nvim` configuration
 ---
 ---If called before `mason.nvim` setup, save the package name. The `mason.nvim` configuration will install all pending packages. After this,
@@ -22,11 +27,24 @@ local mason_configured = false
 ---You can use this function inside the `init` or `config` function in your `lazy.nvim` configuration. Using it outside of these functions
 ---may result in it being called before `ensure_mason_package_installed()` is loaded.
 ---@param package_name string Package name. The same shown with the ':Mason' command
-function MYPLUGFUNC.ensure_mason_package_installed(package_name)
+---@param callbacks? lazy_plugins.packages.mason_install_callbacks Callbacks.
+function MYPLUGFUNC.ensure_mason_package_installed(package_name, callbacks)
+	callbacks = callbacks or {}
+	callbacks.on_success = callbacks.on_success or function() end
+	callbacks.on_failure = callbacks.on_failure or function() end
+	callbacks.on_after = callbacks.on_after or function() end
+
 	if mason_configured then
 		local package = require('mason-registry').get_package(package_name)
 		if not package:is_installed() then
-			package:install()
+			package:install({}, function(success, receipt)
+				if success then
+					callbacks.on_success(receipt)
+				else
+					callbacks.on_failure(receipt)
+				end
+				callbacks.on_after()
+			end)
 		end
 	else
 		table.insert(mason_packages_to_install, package_name)
