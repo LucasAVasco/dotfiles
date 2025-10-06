@@ -68,7 +68,6 @@ return {
 				automatic_installation = true,
 
 				ensure_installed = {
-					'jsonls', -- Used by `neoconf.nvim`
 					'yamlls',
 				},
 			})
