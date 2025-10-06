@@ -44,3 +44,30 @@ list_packages() {
 		basename "$package_file" .sh
 	done
 }
+
+# Check if a package is installed.
+#
+# $1: Name of the package (same as the package script, but without extensions).
+is_installed() {
+	local package="$1"
+
+	local bin_overrides=$(realpath ~/.local/dotfiles_bin_override/"$package")
+	local fallback_installer=$(realpath "$DOTFILES_FALLBACK_SCRIPTS/$package")
+
+	local executable=''
+	for executable in $(whereis -b "$package" | cut -d: -f 2 ); do
+		executable=$(realpath "$executable") # Normalizes the path
+
+		if [[ "$executable" == "$bin_overrides" ]]; then
+			continue # Does not count as installed
+
+		elif [[ "$executable" == "$fallback_installer" ]]; then
+			echo -n 'n' # Found the fallback installer (not installed)
+			return
+
+		else
+			echo -n 'y' # Found a executable (installed)
+			return
+		fi
+	done
+}

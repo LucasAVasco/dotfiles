@@ -13,6 +13,9 @@ help() {
 		./manager.sh has <package>
 			Check if a package exists (may not be installed). Returns 'y' or 'n'
 
+		./manager.sh is-installed <package>
+			Check if a package is installed. Returns 'y' or 'n'
+
 		./manager.sh install | add <package>
 			Install a package.
 
@@ -43,6 +46,10 @@ source ./lib.sh
 case "$1" in
 	has )
 		test -f "$current_dir/packages/${2}.sh" && echo -n 'y' || echo -n 'n'
+		;;
+
+	is-installed )
+		is_installed "$2"
 		;;
 
 	install | add)
