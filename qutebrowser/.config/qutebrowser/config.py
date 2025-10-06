@@ -2,6 +2,7 @@
 
 import typing
 
+from libs import quickmark
 from themes import catppuccin
 
 if "config" not in globals():
@@ -38,6 +39,15 @@ config.bind("'", "cmd-set-text -s :quickmark-load")
 
 # config.bind("<Shift-Tab>", "cmd-set-text -s :set-mark")
 # config.bind("<Tab>", "cmd-set-text -s :jump-mark")
+
+# Default quick marks
+
+quickmark.set_initial_quickmarks(
+    {
+        ":g": "https://www.google.com/",
+        ":t": "https://translate.google.com/?sl=auto&tl=en&op=translate",
+    },
+)
 
 # Theme settings
 
