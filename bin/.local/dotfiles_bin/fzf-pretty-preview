@@ -1,0 +1,42 @@
+#!/bin/bash
+#
+# Auxiliary command to preview files in fzf.
+
+# If it is a directory
+if [[ -d "$1" ]]; then
+	# '--git' shows the git status
+	eza -A --icons=always --color=always --git
+	exit 0
+fi
+
+# If the file is not a image (like a text file)
+if ! file --mime-type "$1" | grep -q image/; then
+	bat --color=always "$1"
+	exit 0
+fi
+
+# If the file is an image {{{
+
+# Gets image dimensions
+width=${FZF_PREVIEW_COLUMNS:-$(tput cols)}
+height=${FZF_PREVIEW_LINES:-$(tput lines)}
+left=${FZF_PREVIEW_LEFT:-0}
+top=${FZF_PREVIEW_TOP:-0}
+
+# Kitty terminal emulator
+if [[ -n "$KITTY_PID" ]]; then
+	# '--clear' removes the other images
+	# '--transfer-mode=stream' sends the image directly to the terminal
+	# '--stdin=no' prevents the image path from being copied from the input (the '--place' option only works with one image)
+	# '--place' puts the image in the correct position
+	# NOTE(): `chafa` can not be used because it does not support the '--clear' option
+	kitty icat --clear --transfer-mode=stream --stdin=no --place=${width}x${height}@${left}x${top} "$1"
+fi
+
+# WezTerm terminal emulator
+if [[ -n "$WEZTERM_UNIX_SOCKET" ]]; then
+	# NOTE(): I could not find a way to use `wezterm imgcat`, so I used `chafa`
+	chafa -f iterm -s "$width"x"$height" "$1"
+fi
+
+# }}}
