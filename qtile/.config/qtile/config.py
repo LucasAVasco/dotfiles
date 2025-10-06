@@ -74,12 +74,10 @@ ALT = "mod1"
 groups = []
 keys = []
 
+# If is running a Wayland session
 is_running_in_wayland = False
-try:
-    os.environ["WAYLAND_DISPLAY"]
+if os.environ.get("WAYLAND_DISPLAY") is not None:
     is_running_in_wayland = True
-except KeyError:
-    pass
 
 # Enables CONTROL + ALT + 1..`VIRTUAL_TERM_MAX` to change to TTY. Place this
 # in the beginning of the configuration file. So, if occurred an error in
@@ -124,7 +122,7 @@ else:
 # set this environment variable: `XKB_DEFAULT_LAYOUT="br"`.
 # This can be done in the "/etc/environment" file
 if not is_running_in_wayland:
-    keyboard_layout = os.environ["XKB_DEFAULT_LAYOUT"]
+    keyboard_layout = os.environ.get("XKB_DEFAULT_LAYOUT")
     if keyboard_layout is not None:
         run_background(["/bin/setxkbmap", "-layout", keyboard_layout])
 
