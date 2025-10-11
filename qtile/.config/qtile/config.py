@@ -259,47 +259,57 @@ keys.extend(
         Key([SUPER], "c", lazy.window.kill()),
         Key([SUPER, CONTROL, SHIFT], "q", lazy.shutdown()),
         Key([SUPER, SHIFT], "x", lazy.reload_config()),
+        # Movement {{{
+        # Focus to direction
         Key([SUPER], "h", lazy.layout.left()),
         Key([SUPER], "j", lazy.layout.down()),
         Key([SUPER], "k", lazy.layout.up()),
         Key([SUPER], "l", lazy.layout.right()),
         Key([SUPER], "g", lazy.layout.next()),
+        # Focus to group
+        Key([SUPER], "bracketleft", lazy.screen.prev_group()),
+        Key([SUPER], "bracketright", lazy.screen.next_group()),
+        Key([SUPER], "Backspace", lazy.screen.toggle_group()),
+        # Move window to direction
         Key([SUPER, ALT], "h", lazy.layout.shuffle_left()),
         Key([SUPER, ALT], "j", lazy.layout.shuffle_down()),
         Key([SUPER, ALT], "k", lazy.layout.shuffle_up()),
         Key([SUPER, ALT], "l", lazy.layout.shuffle_right()),
         Key([SUPER, ALT], "g", lazy.layout.toggle_split()),
+        # Flip to direction
         Key([SUPER, CONTROL], "j", lazy.layout.flip_down()),
         Key([SUPER, CONTROL], "k", lazy.layout.flip_up()),
         Key([SUPER, CONTROL], "h", lazy.layout.flip_left()),
         Key([SUPER, CONTROL], "l", lazy.layout.flip_right()),
         Key([SUPER, CONTROL], "g", lazy.layout.flip()),
+        # Resizes in direction
         Key([SUPER, SHIFT], "h", lazy.layout.grow_left()),
         Key([SUPER, SHIFT], "j", lazy.layout.grow_down()),
         Key([SUPER, SHIFT], "k", lazy.layout.grow_up()),
         Key([SUPER, SHIFT], "l", lazy.layout.grow_right()),
         Key([SUPER, SHIFT], "g", lazy.layout.normalize()),
+        # end_marker }}}
         # Mouse simulation {{{
         Key([SUPER], "e", lazy.spawn(HOME + "/.config/mouse/scroll.sh 10")),
         Key([SUPER], "u", lazy.spawn(HOME + "/.config/mouse/scroll.sh 10")),
         Key([SUPER], "d", lazy.spawn(HOME + "/.config/mouse/scroll.sh -10")),
         Key([SUPER, SHIFT], "d", lazy.spawn(HOME + "/.config/mouse/scroll.sh 0")),
         # end_marker }}}
-        # Window and nodes management {{{
+        # Node management {{{
         Key([SUPER], "0", reset_window_state()),
         Key([SUPER], "9", lazy.window.toggle_floating()),
         Key([SUPER], "8", lazy.window.toggle_fullscreen()),
         Key([SUPER], "7", sticky.MyLazy.current_window_toggle_sticky()),
+        # end_marker }}}
+        # Layout {{{
         Key([SUPER, SHIFT], "m", lazy.prev_layout()),
         Key([SUPER], "m", lazy.next_layout()),
+        # end_marker }}}
+        # Notifications {{{
         Key([SUPER], "n", lazy.spawn(HOME + "/.config/dunst/context-menu.sh")),
         Key([SUPER, SHIFT], "n", lazy.spawn(HOME + "/.config/dunst/dismiss.sh")),
-        Key([SUPER], "bracketleft", lazy.screen.prev_group()),
-        Key([SUPER], "bracketright", lazy.screen.next_group()),
-        Key([SUPER], "Backspace", lazy.screen.toggle_group()),
         # end_marker }}}
         # System management {{{
-        Key([SUPER, SHIFT], "y", lazy.spawn(HOME + "/.config/clipboard/clear.sh")),
         Key(
             [SUPER],
             "y",
@@ -310,15 +320,18 @@ keys.extend(
             "p",
             lazy.spawn(HOME + "/.local/dotfiles_bin/send-clip-to-sync-folder"),
         ),
+        Key([SUPER, SHIFT], "y", lazy.spawn(HOME + "/.config/clipboard/clear.sh")),
         Key([SUPER], "Delete", lazy.spawn("xkill")),
         Key([SUPER], "z", lazy.spawn(HOME + "/.config/screenlocker/manager.sh toggle")),
-        Key([SUPER, ALT, SHIFT], "m", margin.MyLazy.remove_margin()),
-        Key([SUPER, ALT], "m", margin.MyLazy.add_margin()),
         Key(
             [CONTROL, ALT],
             "l",
             lazy.spawn(HOME + "/.config/screenlocker/manager.sh run"),
         ),
+        # end_marker }}}
+        # Margin {{{
+        Key([SUPER, ALT, SHIFT], "m", margin.MyLazy.remove_margin()),
+        Key([SUPER, ALT], "m", margin.MyLazy.add_margin()),
         # end_marker }}}
         # Back light {{{
         Key([SUPER], "F6", lazy.spawn("brightnessctl set 5%-")),
