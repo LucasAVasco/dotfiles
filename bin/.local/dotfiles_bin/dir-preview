@@ -1,0 +1,97 @@
+#!/bin/bash
+#
+# Show a short preview of a directory:
+#
+# * Absolute path
+# * First N files of the directory
+
+set -e
+
+source ~/.config/bash/libs/help.sh
+
+# Help message {{{
+
+help() {
+	help_msg_format '\t\t' << EOF
+		Shows short preview of a directory
+
+		USAGE:
+
+		dir-preview [directory] [n_files]
+		Shows the preview of the directory [directory] with [n_files] maximum files
+EOF
+}
+
+help_call_help_function help n "$@"
+
+# }}}
+
+dir="${1:-.}"
+n_files="${2:-5}"
+
+if [[ "$ALLOW_EXTERNAL_SOFTWARE" == 'y' ]]; then
+	# Show a file or directory with `ls`.
+	#
+	# Has a default appearance configuration for files and directories. Does not places a new line at the end.
+	#
+	# $@: arguments to pass to `ls`.
+	pretty_print_path() {
+		echo -n "  "
+
+		# '-d' is used to treat directories as files
+		# The `tr` command removes the new line at the end
+		/bin/ls -d --color=always --hyperlink "$@" | tr -d '\n'
+	}
+else
+	# Show a file or directory with `eza`.
+	#
+	# Has a default appearance configuration for files and directories. Does not places a new line at the end.
+	#
+	# $@: arguments to pass to `eza`.
+	pretty_print_path() {
+		echo -n "  "
+
+		# '-d' is used to treat directories as files
+		# '-X' is used dereference symlinks
+		# The `tr` command removes the new line at the end
+		eza -d -X --icons=always --color=always --hyperlink "$@" | tr -d '\n'
+	}
+fi
+
+# Interface colors
+text_color="\033[38;5;245m"
+clear_color="\033[0m"
+
+# Executes all commands in the directory
+cd "$dir"
+
+# Absolute path
+echo -en "${text_color}Absolute path:${clear_color}"
+pretty_print_path "$(realpath .)"
+
+# Folder contents
+echo -en "\n${text_color}Contents:${clear_color}"
+declare -i n_files_to_list=$n_files
+
+shopt -s nullglob # Without this, the next for loop will raise an error if the directory is empty
+for file in *; do
+	# Last file to show
+	if [ $n_files_to_list -eq 0 ]; then
+		echo -en "  ${text_color}...(and more)${clear_color}"
+		break
+	fi
+
+	# Show the file (does not show the new line at the end)
+	pretty_print_path "$file"
+
+	# Next file
+	n_files_to_list=$n_files_to_list-1
+done
+
+# If the folder is empty
+if [[ "$n_files_to_list" == "$n_files" ]]; then
+	echo -en "  ${text_color}...(empty)${clear_color}"
+fi
+
+# Ends with a newline
+echo
