@@ -3,7 +3,9 @@ return {
 		'mistweaverco/kulala.nvim',
 		ft = 'http',
 
-		opts = {},
+		opts = {
+			display_mode = 'float',
+		},
 
 		init = function()
 			vim.filetype.add({
