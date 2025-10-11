@@ -14,14 +14,14 @@ shift
 
 
 if [[ -n "$WAYLAND_DISPLAY" ]]; then
-	echo "$log_prefix Wrong Backend. This scripts onluy works with Xorg, but you are using Wayland"
+	echo "$log_prefix Wrong Backend. This scripts only works with Xorg, but you are using Wayland"
 	exit 1
 fi
 
 show_help() {
 	cat << EOF
 Usage:
-	this-script.sh Command [options...]
+	xorg.sh Command [options...]
 
 Commands:
 	enable: Automatically run the screen-locker after a predefined time interval
