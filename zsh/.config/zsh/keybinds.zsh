@@ -115,6 +115,8 @@ if [[ "$ALLOW_EXTERNAL_SOFTWARE" == 'y' ]]; then
 		zle reset-prompt
 	}
 	zle -N __fzf_custom_file_widget
-	bindkey '^[f' __fzf_custom_file_widget
+	bindkey '^[v' __fzf_custom_file_widget
+
+	# Atuin
 	bindkey '^[h' atuin-up-search
 fi
