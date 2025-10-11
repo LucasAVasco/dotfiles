@@ -106,7 +106,7 @@ if [[ "$ALLOW_EXTERNAL_SOFTWARE" == 'y' ]]; then
 	# Navi pop-up
 	bindkey '^[n' _navi_widget
 
-    # Fzf file widget
+	# Fzf file widget
 	__fzf_custom_file_widget() {
 		# The `--scheme=history` option makes the `fzf` prefer select top directories instead of the bottom most
 		files=$(fd-by-depth --color=always | fzf --ansi --scheme=history --multi)
