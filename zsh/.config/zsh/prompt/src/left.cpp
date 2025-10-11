@@ -113,7 +113,8 @@ int main(int argc, char *argv[]) {
     // First prompt line (right aligned) {{{
 
     // Date and time
-    auto now = std::chrono::system_clock::now();
+    auto now = std::chrono::zoned_time{std::chrono::current_zone(),
+                                       std::chrono::system_clock::now()};
     auto now_str = std::format("{0:%F} {0:%R}", now);
 
     text::right_cout << term::ansi::colors::EscapeColor(
