@@ -37,6 +37,15 @@ bindkey -v
 bindkey '^H' backward-delete-word
 bindkey '^W' backward-delete-word
 
+# Insert a new line at the current position without accepting the current line
+function __insert_new_line_in_command() {
+	LBUFFER+=$'\n'
+	zle redisplay
+}
+
+zle -N __insert_new_line_in_command
+bindkey '^[[13;2u' __insert_new_line_in_command # Binds <SHIFT+Enter>
+
 # Copy the current prompt command to the clipboard
 __copy_current_cmd_to_clipboard() {
 	~/.config/clipboard/copy.sh "$BUFFER"
