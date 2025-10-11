@@ -62,6 +62,14 @@ open_new_terminal() {
 zle -N open_new_terminal
 bindkey '^[t' open_new_terminal
 
+# Open terminal file manager in new window
+__open_cwd_default_file_manager() {
+	default_term default_term_file_manager
+}
+
+zle -N __open_cwd_default_file_manager
+bindkey '^[f' __open_cwd_default_file_manager
+
 # Open terminal file manager and change to directory with it
 __open_cwd_default_file_manager_cd() {
 	default_term_file_manager_cd
