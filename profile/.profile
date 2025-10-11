@@ -82,6 +82,9 @@ fi
 export VCPKG_ROOT=~/.cache/vcpkg-install
 
 if [ "$ALLOW_EXTERNAL_SOFTWARE" = y ]; then
+	# Local docker configuration
+	export DOCKER_HOST=unix://$XDG_RUNTIME_DIR/docker.sock
+
 	# Overrides some binaries
 	export PATH="$HOME/.local/dotfiles_bin_override:$PATH"
 
