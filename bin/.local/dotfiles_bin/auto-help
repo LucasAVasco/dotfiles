@@ -2,6 +2,15 @@
 #
 # Automatically show the help message of a command.
 
+# Remove all commands before the last one. Example: `command1 ; command2 && command3` will become `command3`
+for ((i = $#; i > 0; i--)); do
+	current_cmd="${@:i:1}"
+	first_char="${current_cmd:0:1}"
+	if [[ "$first_char" == ";" || "$first_char" == "&" || "$first_char" == "|" ]]; then
+		shift $((i))
+		break
+	fi
+done
 
 # Remove all environment variables before the command. Example: `VAR1=value1 V2=value2 command arg1` will become `command arg1`
 while [[ "$1" =~ .*=.* ]]; do
