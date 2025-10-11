@@ -51,7 +51,8 @@ case $selected_command in
 
 	# Switch-user
 	'Logout' )
-		pgrep bspwm && bspc quit
-		pgrep qtile && qtile cmd-obj -o root -f shutdown
+		if [[ -n "$CUSTOM_DESKTOP_LOGOUT_COMMAND" ]]; then
+			bash -c "$CUSTOM_DESKTOP_LOGOUT_COMMAND"
+		fi
 	;;
 esac
