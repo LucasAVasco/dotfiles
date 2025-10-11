@@ -12,6 +12,7 @@ alias custom-script-cd='cd "$(custom-script get-root-dir)"'
 alias v='nvim'
 alias c='code'
 alias k='kubectl'
+alias y='default_term_file_manager_cd'
 
 # Overwrite default command line applications
 alias mv='mv -i'
