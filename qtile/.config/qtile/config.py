@@ -392,6 +392,8 @@ mouse = [
 # Initialization script
 run_background([HOME + "/.config/qtile/init.sh"])
 
+# Custom desktop environment variables
+os.environ["CUSTOM_DESKTOP_LOGOUT_COMMAND"] = "qtile cmd-obj -o root -f shutdown"
 
 if not is_running_in_wayland:
 
