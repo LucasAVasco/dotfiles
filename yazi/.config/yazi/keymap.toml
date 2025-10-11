@@ -62,6 +62,17 @@ append_keymap = [
 		"g",
 		"z",
 	], run = "shell 'zoxide add $0'", desc = "Add folder to Zoxide list" },
+
+	# Also change the tab with <A-1> to <A-9>
+	{ on = "<A-1>", run = "tab_switch 0" },
+	{ on = "<A-2>", run = "tab_switch 1" },
+	{ on = "<A-3>", run = "tab_switch 2" },
+	{ on = "<A-4>", run = "tab_switch 3" },
+	{ on = "<A-5>", run = "tab_switch 4" },
+	{ on = "<A-6>", run = "tab_switch 5" },
+	{ on = "<A-7>", run = "tab_switch 6" },
+	{ on = "<A-8>", run = "tab_switch 7" },
+	{ on = "<A-9>", run = "tab_switch 8" },
 ]
 
 [confirm]
