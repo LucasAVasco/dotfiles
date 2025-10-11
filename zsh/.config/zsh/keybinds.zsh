@@ -62,13 +62,14 @@ open_new_terminal() {
 zle -N open_new_terminal
 bindkey '^[t' open_new_terminal
 
-# Open terminal file manager
-__open_cwd_default_file_manager() {
-	default_term_file_manager
+# Open terminal file manager and change to directory with it
+__open_cwd_default_file_manager_cd() {
+	default_term_file_manager_cd
+	zle reset-prompt
 }
 
-zle -N __open_cwd_default_file_manager
-bindkey '^[m' __open_cwd_default_file_manager
+zle -N __open_cwd_default_file_manager_cd
+bindkey '^[m' __open_cwd_default_file_manager_cd
 
 # Run command with 'json-tools'
 __json_tools_run() {

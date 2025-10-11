@@ -39,6 +39,7 @@ source ~/.config/zsh/plugins.zsh
 source ~/.config/zsh/apps/asdf.zsh
 source ~/.config/zsh/apps/mise.zsh
 source ~/.config/zsh/apps/k8s.zsh
+source ~/.config/zsh/apps/file-manager.sh
 source ~/.config/zsh/apps/other.zsh
 source ~/.config/zsh/commands.zsh
 source ~/.config/zsh/completions.zsh
