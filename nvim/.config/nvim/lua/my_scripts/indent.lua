@@ -66,13 +66,8 @@ local function apply_matches(indent_groups, indent_size, repeats, window_id)
 		for _, group_name in ipairs(indent_groups) do
 			-- Applies the match to space indentation (soft tabs)
 			local start_column = (indent_index - 1) * indent_size + 1 -- Start column of the current indentation (not used by hard tabs)
-			local match = vim.fn.matchadd(
-				group_name,
-				string.format([[^\s*\zs\%%%sc%s]], start_column, string.rep(' ', indent_size)),
-				priority,
-				-1,
-				match_config
-			)
+			local match =
+				vim.fn.matchadd(group_name, string.format([[^\s*\zs\%%%sc \{1,%d}]], start_column, indent_size), priority, -1, match_config)
 			table.insert(matches, match)
 
 			-- Applies the match to tab indentation (hard tabs)
