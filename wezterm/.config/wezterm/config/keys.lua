@@ -22,7 +22,53 @@ local DIRECTIONS <const> = { 'Left', 'Down', 'Up', 'Right' }
 -- local DIRECTIONS_ARROWS <const> = { 'LeftArrow', 'DownArrow', 'UpArrow', 'RightArrow' }
 local DIRECTIONS_HJKL <const> = { 'h', 'j', 'k', 'l' }
 
+-- -- Map modifiers to numeric XTERM codes (source at https://gist.github.com/justinmk/a5102f9a0c1810437885a04a07ef0a91). The keys names (ALT,
+-- -- CTRL, META and SHIFT) of each key-modifier ('ALT|SHIFT', by example) are organized alphabetically
+-- local XTERM_EXTENSIONS_KEY_MODIFIERS_CODE = {
+--		[''] = 1,
+--		['SHIFT'] = 2,
+--		['ALT'] = 3,
+--		['ALT|SHIFT'] = 4,
+--		['CTRL'] = 5,
+--		['CTRL|SHIFT'] = 6,
+--		['ALT|CTRL'] = 7,
+--		['ALT|CTRL|SHIFT'] = 8,
+--		['META'] = 9,
+--		['META|SHIFT'] = 10,
+--		['ALT|META'] = 11,
+--		['ALT|META|SHIFT'] = 12,
+--		['CTRL|META'] = 13,
+--		['CTRL|META|SHIFT'] = 14,
+--		['ALT|CTRL|META'] = 15,
+--		['ALT|CTRL|META|SHIFT'] = 16,
+-- }
+
+---Numeric value of each modifier according to the kitty keyboard protocol
+---See the documentation at: https://sw.kovidgoyal.net/kitty/keyboard-protocol/
+local KITTY_KEYBOADR_PROTOCOL_MODIFIERS_CODES = {
+	SHIFT = 1,
+	ALT = 2,
+	CTRL = 4,
+	SUPER = 8,
+	HYPER = 16,
+	META = 32,
+	CAPS_LOCK = 64,
+	NUM_LOCK = 128,
+}
+
 -- }}}
+
+---Get a numeric modifier code for a list of modifiers according to the kitty keyboard protocol.
+---See the documentation at: https://sw.kovidgoyal.net/kitty/keyboard-protocol/
+---@param modifiers string[] List of modifiers. Available: 'SHIFT', 'ALT', 'CTRL', 'SUPER', 'HYPER', 'META', 'CAPS_LOCK', 'NUM_LOCK'
+---@return integer
+local function get_kitty_keyboard_protocol_modifier_code(modifiers)
+	local res = 1 -- No modifiers
+	for _, mod in ipairs(modifiers) do
+		res = res + KITTY_KEYBOADR_PROTOCOL_MODIFIERS_CODES[mod]
+	end
+	return res
+end
 
 ---Get a action that jumps to the specified direction and activates the 'jump_pane' key table.
 ---@param direction direction Direction of the initial jump.
@@ -232,6 +278,29 @@ keys = {
 		action = action.DisableDefaultAssignment,
 	},
 }
+
+-- Some modified 'Enter' key maps are treated as a plain 'Enter' (example: 'CTRL+Enter' is treated as Enter). Add key maps to fix it, so ZSH
+-- and other programs can receive the correct key
+
+local cr_modifiers_to_bypass = {
+	-- 'ALT', -- Already handled by default
+	{ 'SHIFT' },
+	{ 'ALT', 'SHIFT' },
+	{ 'CTRL' },
+	{ 'CTRL', 'SHIFT' },
+	{ 'ALT', 'CTRL' },
+	{ 'ALT', 'CTRL', 'SHIFT' },
+}
+
+for _, mods in ipairs(cr_modifiers_to_bypass) do
+	local modifier = get_kitty_keyboard_protocol_modifier_code(mods)
+
+	table.insert(keys, {
+		key = 'Enter',
+		mods = table.concat(mods, '|'),
+		action = action.SendString(string.format('\x1b[13;%du', modifier)), -- Uses kitty keyboard protocol. 13 = Enter
+	})
+end
 
 -- Activate tabs
 local tab_indexes = { '1', '2', '3', '4', '5', 'F1', 'F2', 'F3', 'F4', 'F5' }
