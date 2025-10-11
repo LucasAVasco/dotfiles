@@ -1,3 +1,5 @@
+require('debug') -- Must be first, so debug functions are available in all scripts
+
 local wezterm = require('wezterm')
 local colors = require('wez-colors')
 local config = wezterm.config_builder()
