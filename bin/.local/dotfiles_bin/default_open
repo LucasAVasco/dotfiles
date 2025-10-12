@@ -29,76 +29,263 @@
 # * `file` command (to query the file mime type)
 # * The `nvim_new_win` and `default_file_manager` scripts
 
-
 set -e
 
+# URI related function {{{
+
+# Get the schema of the URI.
+#
+# $1: URI to get the schema.
+#
+# Return: The schema of the URI.
+get_schema() {
+	local uri="$1"
+
+	if [[ "$uri" =~ ^[a-zA-Z]+:// ]]; then
+		# `sed` removes anything after the first '://'. `tr` converts the schema to lowercase
+		echo "$uri" | sed 's/:\/\/.*//' | tr '[:upper:]' '[:lower:]'
+	fi
+}
+
+# Remove the schema of the URI (only left the path).
+#
+# Example: 'file://path/to/file.txt' will become 'path/to/file.txt'
+#
+# $1: URI to remove the schema.
+#
+# Return: The URI without the schema.
+remove_schema() {
+	local uri="$1"
+
+	if [[ "$uri" =~ ^[a-zA-Z]+:// ]]; then
+		# `sed` removes the schema
+		echo "$uri" | sed 's/^[^:]*:\/\///'
+	else
+		echo "$uri"
+	fi
+}
+
+# Check if the URI is of a specific schema.
+#
+# $1: URI to check.
+# $2: Schema to check.
+uri_is_of_schema() {
+	local uri="$1"
+	local schema="$2"
+
+	[[ "$(get_schema "$uri")" == "$schema" ]] && echo y || echo n
+}
+
+# }}}
+
+# Open remote files and URIs {{{
+
+# Open a file or URI with the default web browser.
+#
+# $1: Path of the file or URI to open.
+# $2..n: Arguments passed to the application that will open the file.
+open_web_browser() {
+	default_web_browser "$@"
+}
+
+# }}}
+
+# Open local files {{{
+
+# Open a file with the default file editor.
+#
+# $1: Path of the file to open (does not support URIs).
+# $2: Line number to open.
+# $3..n: Arguments passed to the application that will open the file.
+open_file_editor() {
+	local file="$1"
+	local line_number="$2"
+	local args=("${@:3}")
+
+	if [[ -n "$line_number" ]]; then
+		nvim_new_win "+$line_number" "$file" "${args[@]}"
+	else
+		nvim_new_win "$file" "${args[@]}"
+	fi
+}
 
 # Open a desktop file
-open_desktop() {
+#
+# $1: Path of the desktop file.
+# $2..n: Arguments passed to the application that will open the file.
+open_desktop_file() {
+	local file="$1"
+	local args=("${@:2}")
+
 	# Content of the desktop file
-	declare -A desktop_content
+	local -A desktop_content
 
 	while IFS=$' =' read entry_name entry_value; do
 		if [[ -n "$entry_value" ]]; then
 			desktop_content["$entry_name"]="$entry_value"
 		fi
-	done < "$1"
+	done < "$file"
 
 	# Action based in the desktop file type
 	case "${desktop_content[Type]}" in
 		Link)
-			exec xdg-open "${desktop_content['URL']}"
+			open_web_browser "${desktop_content['URL']}"
 			;;
 		*)
-			exec notify-send "Unsupported desktop type: ${desktop_content[Type]}"
+			notify-send "Unsupported desktop type: ${desktop_content[Type]}"
 			;;
 	esac
 }
 
-
-# Open a generic path (file or folder)
+# Open a local file.
 #
-# Open files in Neovim. Open folders with the default file manager. Always open in a new window
-#
-# $1: Path of the file or folder to open
-# $2..n: Arguments passed to the application that will open the file or folder
-open_path() {
-	# File
-	if [[ -f "$1" ]]; then
-		file_cmd_response=($(file --mime-type "$1"))
-		mime_type="${file_cmd_response[1]}"
+# $1: Path of the file to open (does not support URIs).
+# $2: Line number to open.
+# $4..n: Arguments passed to the application that will open the file.
+open_local_file() {
+	local file="$1"
+	local line_number="$2"
+	local args=("${@:3}")
 
-		# Desktop entries
-		if [[ "$1" =~ .desktop$ ]]; then
-			open_desktop "$1" "${@:2}"
+	# Information about the file
+	local file_cmd_response=($(file --mime-type "$file"))
+	local mime_type="${file_cmd_response[@]: -1}" # Mime type is the last item of the array
 
-		# HTML files
-		elif [[ "$mime_type" == "text/html"  ]]; then
-			exec default_web_browser "$1" "${@:2}"
+	# Desktop entries
+	if [[ "$file" =~ .desktop$ ]]; then
+		open_desktop_file "$file" "${args[@]}"
 
-		# Open text files with Neovim
-		elif [[ "$mime_type" =~ ^text/ ]]; then
-			exec nvim_new_win "$1" "${@:2}"
-		fi
+	# HTML files
+	elif [[ "$mime_type" == "text/html"  ]]; then
+		open_web_browser "$file" "${args[@]}"
 
-		# Fallback
-		exec xdg-open "$1" "${@:2}"
+	# Open text files with Neovim
+	elif [[ "$mime_type" =~ ^text/ ]]; then
+		open_file_editor "$file" "$line_number" "${args[@]}"
 
-	# Directory
-	elif [[ -d "$1" ]]; then
-		exec default_file_manager "$1" "${@:2}"
-
+	# Fallback
 	else
-		notify-send "The provided file or folder does not exist: '$2'"
+		xdg-open "$file" "${args[@]}"
 	fi
 }
 
+# Manually expand the tilde to the user home.
+#
+# replaces the '~' by the user home if it is the first character of the path.
+#
+# $1: File path or folder path to expand.
+#
+# Return: The expanded file path or folder path.
+expand_tilde() {
+	local file="$1"
 
+	# Expand the provided file or folder path (replaces the '~' by the user home if it is the first character of the path)
+	if [[ "${file:0:1}" == '~' ]]; then
+		file="$HOME${file:1}"
+	fi
+
+	echo -n "$file"
+}
+
+# Extract the local path from a file URI
+#
+# $1: File URI. If the user provided a file path, it will be returned.
+#
+# Return: The local path of the file and the line number to start the application (if provided) separated by a '\t'.
+extract_local_file_path() {
+	local uri="$1"
+
+	# Extracted file
+	local file="$uri"
+
+	# If the path is a file URI
+	if [[ $(uri_is_of_schema "$uri" "file") == y ]]; then
+		# Remove the schema of the file URI
+		file="$(remove_schema "$uri")"
+
+		# Removes the name of the current host, if added to the path
+		local current_hostname=$(uname -n)
+		local file_hostname="${file%%/*}"
+		if [[ "$file_hostname" == "$current_hostname" ]]; then
+			file="${file#${current_hostname}}"
+		fi
+	fi
+
+	# Removes an empty line number indicator.
+	# Example: 'file-path:' will become 'file-path'
+	# The last ':' does not point to a file line, so it must be removed from the file path
+	if [[ "$file" =~ \#$ ]]; then
+		file="${file%%#}"
+
+	elif [[ "$file" =~ \:$ ]]; then
+		file="${file%%:}"
+	fi
+
+	# Expand the provided file or folder path
+	file="$(expand_tilde "$file")"
+
+	# Line number indicator. Some applications can output the file URI as file://<path>#<line number> or file://<path>:<line number> to mark a
+	# specific line position. Need to get the line number and remove it from the file path. The line number needs to be prefixed by a '+'
+	# character to be used with Neovim
+	local line_number=''
+
+	if [[ "$1" =~ \#[0-9]+ ]]; then   # Line number is after a '#'
+		line_number="${file##*#}"
+		file="${file%#*}" # Removes the line number
+
+	elif [[ "$1" =~ \:[0-9]+ ]]; then # Line number is after a ':'
+		line_number="${file##*:}"
+		file="${file%:*}" # Removes the line number
+	fi
+
+	echo -en "$file\t$line_number"
+}
+
+# Check if a local file path or URI exists.
+#
+# $1: File path or URI to check.
+#
+# Return: 'y' if the file exists, 'n' otherwise
+local_uri_exist() {
+	local uri="$1"
+
+	IFS=$'\t' read file _ <<< "$(extract_local_file_path "$uri")"
+
+	[[ -e "$file" ]] && echo y || echo n
+}
+
+# Open a generic local path (file or folder)
+#
+# Open files in Neovim. Open folders with the default file manager. Always open in a new window
+#
+# $1: Path of the file or folder to open (supports URIs).
+# $2..n: Arguments passed to the application that will open the file or folder
+open_local_path() {
+	local file="$1"
+
+	IFS=$'\t' read file line_number <<< "$(extract_local_file_path "$file")"
+
+	# File
+	if [[ -f "$file" ]]; then
+		open_local_file "$file" "$line_number" "${@:2}"
+
+	# Directory
+	elif [[ -d "$file" ]]; then
+		default_file_manager "$file" "${@:2}"
+
+	else
+		notify-send "The provided file or folder does not exist: '$file'"
+	fi
+}
+
+# }}}
+
+# Open URIs related to Git {{{
 
 # Open a URI related to git
 #
 # This is not a standard URI. I created it to use with my scripts. This function can open a 'git://' URI in a predefined application
-# (usually the web-browser) with `xdg-open`
+# (usually the web-browser) with `open_web_browser`.
 #
 # This 'git' URI support some sub-protocols (can be extended):
 #
@@ -111,7 +298,6 @@ open_path() {
 # $1: URI following the previous formats
 # $2..n: Arguments passed to the application that will open the URI
 open_git() {
-
 	# Get the information related to git
 	IFS=$'/'
 	uri=(${1#git://})
@@ -119,18 +305,20 @@ open_git() {
 
 	case "${uri[0]}" in
 		commit)
-			remote_name="${uri[1]}"
-			commit="${uri[2]}"
+			local remote_name="${uri[1]}"
+			local commit="${uri[2]}"
+			local repo_url=''
 
 			# Path to the repository
 			IFS=$'#'
-			repo_dir=($1)
+			local repo_dir=($1)
 			unset IFS
 			repo_dir="${repo_dir[1]}"
 
 			# Complete the missing information
 			if [[ -n "$repo_dir" ]]; then  # Repository path (local machine) is provided
-				git_dir_arg="--git-dir=$repo_dir/.git"
+				repo_dir="$(expand_tilde "$repo_dir")"
+				local git_dir_arg="--git-dir=$repo_dir/.git"
 				repo_url=$(git "$git_dir_arg" remote get-url "$remote_name")
 				commit=$(git "$git_dir_arg" rev-parse "$commit")  # Full version of the commit
 
@@ -140,8 +328,8 @@ open_git() {
 			fi
 
 			# If it is a GitHub repository
-			if [[ "$repo_url" =~ github ]]; then
-				exec xdg-open "$repo_url/commit/$commit" "${@:2}"
+			if [[ "$repo_url" =~ github\.com ]]; then
+				open_web_browser "$repo_url/commit/$commit" "${@:2}"
 			fi
 			;;
 
@@ -152,66 +340,40 @@ open_git() {
 	esac
 }
 
-# Removes the 'file://' URI prefix in the provided file path
-file_path="${1#file://}"
+# }}}
 
+# Open a path (supports URI)
+#
+# $1: Path or URI to open.
+# $2..n: Arguments passed to the application that will open the file or URI.
+open() {
+	local uri="$1"
 
-# Removes an empty line number indicator.
-# Example: 'file-path:' will become 'file-path'
-# The last ':' does not point to a file line, so it must be removed from the file path
-if [[ "$file_path" =~ \#$ ]]; then
-	file_path="${file_path%%#}"
+	local handler=''
+	local schema="$(get_schema "$1")"
 
-elif [[ "$file_path" =~ \:$ ]]; then
-	file_path="${file_path%%:}"
-fi
+	# Get the handler from the schema
+	if [[ -n "$schema" ]]; then
+		local -A protocol_handlers=(
+			['file']=open_local_path
+			['http']=open_web_browser
+			['https']=open_web_browser
+			['git']=open_git
+		)
 
+		handler="${protocol_handlers[$schema]}"
 
-# Removes the name of the current host, if added to the path
-current_hostname=$(uname -n)
-file_hostname="${file_path%%/*}"
-[[ "$file_hostname" == '' ]] && file_hostname="$current_hostname"  # The file is in the local host If no host name is provided
-file_path="${file_path#${current_hostname}}"
+	# Local file or folder
+	elif [[ $(local_uri_exist "$uri") == y ]]; then
+		handler='open_local_path'
 
-
-# Expand the provided file or folder path (replaces the '~' by the user home if it is the first character of the path)
-if [[ "${file_path:0:1}" == '~' ]]; then
-	file_path="$HOME${1:1}"
-fi
-
-
-# Line number indicator. Some applications can output the file URI as file://<path>#<line number> or file://<path>:<line number> to mark a
-# specific line position. Need to get the line number and remove it from the file path. The line number needs to be prefixed by a '+'
-# character to be used with Neovim
-line_number=''
-
-if [[ "$1" =~ \#[0-9]+ ]]; then   # Line number is after a '#'
-	line_number="+${file_path##*#}"
-	file_path="${file_path%#*}"
-
-elif [[ "$1" =~ \:[0-9]+ ]]; then # Line number is after a ':'
-	line_number="+${file_path##*:}"
-	file_path="${file_path%:*}"
-fi
-
-
-# Define how to process the provided file or folder
-if [[ "$1" =~ ^file:// ]]; then
-	if [[ "$file_hostname" == "$current_hostname" ]]; then
-		open_path "$file_path" $line_number "${@:2}"
-
-	else
-		# TODO(LucasAVasco): Implement the access to remote files
-		notify-send 'The access to remote files is not implemented yet'
+	# Default handler
+	elif [[ -z "$handler" ]]; then
+		handler='xdg-open'
 	fi
 
-elif [[ "$1" =~ ^git:// ]]; then
-	open_git "$@" "${@:2}"
+	# Executes the handler
+	"$handler" "$@"
+}
 
-elif [[ -f "$file_path" ]] || [[ -d "$file_path" ]]; then
-	open_path "$file_path" $line_number "${@:2}"
-fi
-
-
-# Fallback option
-exec xdg-open "$@"
+open "$@"
