@@ -1,0 +1,19 @@
+#!/bin/bash
+#
+# Delta with support for showing directories.
+#
+# $1: file1 to compare.
+# $2: file2 to compare.
+
+file1="$1"
+file2="$2"
+
+if [[ -f "$file1" && -f "$file2" ]]; then
+	delta "$file1" "$file2"
+else
+	echo -e "---"
+	pretty-preview "$file1"
+
+	echo -e "\n---"
+	pretty-preview "$file2"
+fi
