@@ -54,7 +54,7 @@ if [[ "$1" == '-i' || "$1" == '--interactive' ]]; then
 	next_wallpaper_path=$(cd /home/shared_folder/wallpapers/ && \
 		find -type f -name "*.jpg" | \
 		fzf --header="Select wallpaper" \
-		--preview "$current_dir/set.sh '/home/shared_folder/wallpapers/{}' && fzf-pretty-preview '/home/shared_folder/wallpapers/{}'")
+		--preview "$current_dir/set.sh '/home/shared_folder/wallpapers/{}' && pretty-preview '/home/shared_folder/wallpapers/{}'")
 
 	if [[ "$next_wallpaper_path" == '' ]]; then # User aborted
 		echo 'Aborted.' >&2

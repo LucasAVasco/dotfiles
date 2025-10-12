@@ -1,6 +1,10 @@
 #!/bin/bash
 #
-# Auxiliary command to preview files in fzf.
+# Command to preview files (supports images) and folders.
+#
+# Has integration with Kitty and WezTerm to show images.
+#
+# Can be used as a preview script for fzf (also support previewing images in fzf).
 #
 # $1: file to preview.
 
