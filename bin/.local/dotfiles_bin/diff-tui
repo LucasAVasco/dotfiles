@@ -1,0 +1,42 @@
+#!/bin/bash
+#
+# Show the differences between to directories.
+
+source ~/.config/bash/libs/help.sh
+
+hewlp() {
+	help_msg_format '\t\t' <<EOF
+	Show the differences between two directories
+
+	USAGE
+	diff-tui -h | --help
+		Show this message
+
+	diff-tui [--] <dir1> <dir2>
+		Show the differences between <dir1> and <dir2>
+EOF
+}
+
+help_call_help_function help y "$@"
+
+# Ignore the first '--' arguments
+if [[ "$1" == '--' ]]; then
+	shift
+fi
+
+# Directories
+dir1="$1"
+dir2="$2"
+
+# Shows the differences and opens the selected file in Neovim
+while true; do
+	selected_file=$(diff-dir -- "$dir1" "$dir2" | \
+		fzf --header='select the files to open' --preview "delta-dir '$dir1/{}' '$dir2/{}'")
+
+	if [ -z "$selected_file" ]; then
+		break # Exits if the user pressed 'ESC'
+
+	else
+		nvim -d "$dir1/$selected_file" "$dir2/$selected_file"
+	fi
+done
