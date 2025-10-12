@@ -1,0 +1,64 @@
+#!/bin/lua
+
+local help_message = [[
+Extract Lua patterns from the standard input
+
+USAGE
+
+pattern-extract [--debug | -d] [--] '<patterns...>'
+	Extract Lua patterns from the standard input and outputs its matches to the standard output. Each match is printed in a new line.
+	The '--debug' option will show relevant debug information (pattern, full input, etc.)
+]]
+
+-- Help message
+if arg[1] == nil or arg[1] == "-h" or arg[1] == "--help" then
+	print(help_message)
+
+	os.exit(arg[1] == nil and 1 or 0)
+end
+
+-- Command line arguments
+local debug = false
+if arg[1] == "-d" or arg[1] == "--debug" then
+	debug = true
+	table.remove(arg, 1)
+end
+
+-- Removes the '--' argument
+if arg[1] == "--" then
+	table.remove(arg, 1)
+end
+
+-- Pattern to match
+local patterns = arg
+
+-- Read the entire input from the standard input
+local input = io.read("*a")
+
+if debug then
+	print("Input: " .. input)
+end
+
+-- Iterate over the patterns and print the matches
+for _, pattern in ipairs(patterns) do
+	if debug then
+		print("Current pattern: " .. pattern)
+	end
+
+	-- Iterate over the matches of the current pattern
+	local matches_iter = string.gmatch(input, pattern)
+
+	while true do
+		local matches = { matches_iter() }
+
+		-- No more matches
+		if #matches == 0 then
+			break
+		end
+
+		-- Print the matches
+		for _, match in ipairs(matches) do
+			print(match)
+		end
+	end
+end
