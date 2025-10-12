@@ -104,7 +104,7 @@
 				"language": [
 					"desktop"
 				],
-				"path": "./desktop.json"
+				"path": "./desktop/link.json"
 			},
 			{
 				"language": [
