@@ -100,9 +100,13 @@ int main(int argc, char *argv[]) {
 
         num_balls_to_fill -= elapsed_time_str.length() + 5 + 5;
 
-        // Fills with balls
-        for (uint32_t count = num_balls_to_fill; count != 0; --count) {
-            std::cout << "";
+        // Fills with balls. If an negative overflow happens with
+        // `num_balls_to_fill`, it will be bigger than `args.columns`. So we
+        // should not print anything
+        if (num_balls_to_fill < args.columns) {
+            for (uint32_t count = num_balls_to_fill; count != 0; --count) {
+                std::cout << "";
+            }
         }
 
         std::cout << CLOSE_ESCAPE << std::endl;

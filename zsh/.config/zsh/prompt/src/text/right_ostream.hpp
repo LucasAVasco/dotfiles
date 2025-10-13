@@ -37,7 +37,11 @@ class RightCout {
     }
 
     inline RightCout &operator<<(std::ostream &(*endl)(std::ostream &)) {
-        insert_spaces(cli::args.columns - _num_chars);
+        // If the number of chars is greater than the number of columns, there
+        // is no space to add the spaces (right align the text)
+        if (_num_chars < cli::args.columns) {
+            insert_spaces(cli::args.columns - _num_chars);
+        }
 
         for (auto &text : this->_texts) {
             _os << text;
