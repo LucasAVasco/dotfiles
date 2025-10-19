@@ -14,7 +14,10 @@ help() {
 		Set the current session wallpaper.
 
 		USAGE
-		set.sh <wallpaper.jpg>
+		set.sh [-i|--interactive] [-l|--screen-locker] [--] <wallpaper.jpg>
+			Sets the wallpaper. The '-i' or '--interactive' flag allows you to select the wallpaper interactively (you do not need to
+			provide the path to the wallpaper as an argument). The '-l' or '--screen-locker' flag sets the wallpaper for the screen locker
+			instead of the normal wallpaper.
 
 		NOTES
 		You can set a command to be executed after the wallpaper is set with the \$CUSTOM_DESKTOP_SET_WALLPAPAER_COMMAND variable.
@@ -27,23 +30,57 @@ help_call_help_function help y "$@"
 
 current_dir=$(dirname `realpath "${BASH_SOURCE[0]}"`)
 wallpaper_dir="$HOME/.local/share/custom_desktop/wallpaper"
-wallpaper_path="$wallpaper_dir/normal.jpg"
 
-if [[ -f "$wallpaper_path" ]]; then
-	current_wallpaper_path=$(readlink -f "$wallpaper_path")
+# Parses the arguments
+interactive=n
+screen_locker=n
+
+while [[ "$#" -gt 0 ]]; do
+	case "$1" in
+		-i|--interactive)
+			interactive=y
+			;;
+
+		-l|--screen-locker)
+			screen_locker=y
+			;;
+
+		--)
+			shift
+			break
+			;;
+
+		*)
+			break
+			;;
+	esac
+
+	shift
+done
+
+# Path to the wallpaper to change
+if [[ $screen_locker == y ]]; then
+	wallpaper_path="$wallpaper_dir/lock.jpg"
 else
-	current_wallpaper_path=''
+	wallpaper_path="$wallpaper_dir/normal.jpg"
 fi
 
-# Restore the original wallpaper if the user does not set the `$must_restore_wallpaper` variable to 'n' {{{
+# Gets the current wallpaper
+if [[ -f "$wallpaper_path" ]]; then
+	current_normal_wallpaper_path=$(readlink -f "$wallpaper_dir/normal.jpg")
+else
+	current_normal_wallpaper_path=''
+fi
 
-must_restore_wallpaper=y
-trap restore_wallpaper EXIT
+# Restores the normal wallpaper if the user does not set the `$must_restore_normal_wallpaper` variable to 'n' {{{
+
+must_restore_normal_wallpaper=y
+trap restore_normal_wallpaper EXIT
 
 # Restore the original wallpaper.
-restore_wallpaper() {
-	if [[ "$must_restore_wallpaper" == 'y' ]]; then
-		"$current_dir/set.sh" "$current_wallpaper_path"
+restore_normal_wallpaper() {
+	if [[ "$must_restore_normal_wallpaper" == 'y' ]]; then
+		"$current_dir/set.sh" -- "$current_normal_wallpaper_path"
 	fi
 }
 
@@ -52,14 +89,12 @@ restore_wallpaper() {
 # Next wallpaper to set
 next_wallpaper_path=''
 
-if [[ "$1" == '-i' || "$1" == '--interactive' ]]; then
+if [[ $interactive == y ]]; then
 	# The user want to interactively select the wallpaper from the wallpaper folder
-	shift
-
 	next_wallpaper_path=$(cd /home/shared_folder/wallpapers/ && \
 		find -type f -name "*.jpg" | \
 		fzf --header="Select wallpaper" \
-		--preview "$current_dir/set.sh '/home/shared_folder/wallpapers/{}' >/dev/null 2>&1 && pretty-preview '/home/shared_folder/wallpapers/{}'")
+		--preview "$current_dir/set.sh -- '/home/shared_folder/wallpapers/{}' >/dev/null 2>&1 && pretty-preview '/home/shared_folder/wallpapers/{}'")
 
 	if [[ "$next_wallpaper_path" == '' ]]; then # User aborted
 		echo 'Aborted.' >&2
@@ -69,10 +104,6 @@ if [[ "$1" == '-i' || "$1" == '--interactive' ]]; then
 	next_wallpaper_path="/home/shared_folder/wallpapers/$next_wallpaper_path"
 else
 	# The user provided a path to the wallpaper as an argument
-	if [[ "$1" == '--' ]]; then
-		shift
-	fi
-
 	next_wallpaper_path="$1"
 
 	if [[ -z "$next_wallpaper_path" ]]; then
@@ -87,8 +118,15 @@ if [[ ! -f "$next_wallpaper_path" ]]; then
 	exit 1
 fi
 
+# Disables restoring the normal wallpaper
+must_restore_normal_wallpaper=n
+if [[ $screen_locker == y ]]; then
+	# In interactive mode, we replace the normal wallpaper as a visual feedback of the change. We always need to restore the normal
+	# wallpaper to its original state after it
+	must_restore_normal_wallpaper=y
+fi
+
 # Changing to the next wallpaper
-must_restore_wallpaper=n
 mkdir -p "$wallpaper_dir"
 ln -sf "$next_wallpaper_path" "$wallpaper_path"
 
