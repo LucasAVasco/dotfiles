@@ -26,9 +26,14 @@ help_call_help_function help y "$@"
 # }}}
 
 current_dir=$(dirname `realpath "${BASH_SOURCE[0]}"`)
-current_wallpaper_path=$(readlink -f "$wallpaper_path")
 wallpaper_dir="$HOME/.local/share/custom_desktop/wallpaper"
 wallpaper_path="$wallpaper_dir/normal.jpg"
+
+if [[ -f "$wallpaper_path" ]]; then
+	current_wallpaper_path=$(readlink -f "$wallpaper_path")
+else
+	current_wallpaper_path=''
+fi
 
 # Restore the original wallpaper if the user does not set the `$must_restore_wallpaper` variable to 'n' {{{
 
