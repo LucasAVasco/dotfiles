@@ -1,0 +1,17 @@
+" Movement
+bind <A-[> tabprev
+bind <A-]> tabnext
+bind <A-d> scrollpage 0.5
+bind <A-u> scrollpage -0.5
+" Alternate buffer
+bind <A-Bs> tab #
+
+" Search mode
+bind / fillcmdline find
+bind ch nohlsearch
+
+" Window management
+bind <A-w> tabclose
+bind O fillcmdline tabopen
+
+" vi: ft=vim
