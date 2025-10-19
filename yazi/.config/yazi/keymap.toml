@@ -63,6 +63,9 @@ append_keymap = [
 		"z",
 	], run = "shell 'zoxide add $0'", desc = "Add folder to Zoxide list" },
 
+	{ on = "<A-t>", run = "shell default_term", desc = "Open a new terminal in the current folder" },
+	{ on = "<A-f>", run = "shell default_file_manager", desc = "Open a new file manager in the current folder" },
+
 	# Also change the tab with <A-1> to <A-9>
 	{ on = "<A-1>", run = "tab_switch 0" },
 	{ on = "<A-2>", run = "tab_switch 1" },
