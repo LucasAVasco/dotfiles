@@ -12,7 +12,7 @@ case "$1" in
 		curl https://mise.run | sh
 
 		# Completions
-		mise completion zsh > "$completions_file"
+		~/.local/bin/mise completion zsh > "$completions_file"
 		;;
 
 	r)
