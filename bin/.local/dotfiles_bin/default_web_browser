@@ -7,14 +7,7 @@
 # Dependencies:
 # * bash
 # * firefox
-# * qutebrowser
 
+web_browser_cmd=('firefox')
 
-web_browser_cmd='firefox'
-
-if [[ "$ALLOW_EXTERNAL_SOFTWARE" == 'y' ]]; then
-	web_browser_cmd='qutebrowser'
-fi
-
-
-nohup "$web_browser_cmd" "$@" > /dev/null 2>&1 &
+nohup "${web_browser_cmd[@]}" "$@" > /dev/null 2>&1 &
