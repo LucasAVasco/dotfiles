@@ -155,6 +155,11 @@ keys = {
 		mods = LEADER,
 		action = action.ActivateTabRelativeNoWrap(1),
 	},
+	{
+		key = 'Backspace',
+		mods = LEADER,
+		action = action.ActivateLastTab,
+	},
 	-- Scroll
 	{
 		key = '[',
