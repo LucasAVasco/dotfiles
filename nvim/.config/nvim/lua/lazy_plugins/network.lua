@@ -1,7 +1,7 @@
 return {
 	{
 		'mistweaverco/kulala.nvim',
-		ft = 'http',
+		ft = { 'http', 'rest' },
 
 		opts = {
 			display_mode = 'float',
@@ -11,6 +11,7 @@ return {
 			vim.filetype.add({
 				extension = {
 					['http'] = 'http',
+					['rest'] = 'rest',
 				},
 			})
 		end,
