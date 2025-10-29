@@ -28,6 +28,8 @@ return {
 		},
 
 		opts = {
+			filter_kind = false, -- Show all symbols
+
 			keymaps = {
 				['<tab>'] = 'actions.jump',
 			},
