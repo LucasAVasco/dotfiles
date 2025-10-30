@@ -16,5 +16,5 @@ log_prefix='[screenlocker/manager.sh]'
 if [[ -z "$WAYLAND_DISPLAY" ]]; then
 	exec "$current_dir/xorg.sh" "$@"
 else
-	echo "$log_prefix TODO(LucasAVasco): wayland backend"
+	exec "$current_dir/wayland.sh" "$@"
 fi
