@@ -6,6 +6,11 @@ local config = wezterm.config_builder()
 
 require('events.all')
 
+-- Wezterm does not work well with Hyprland. Use XWayland instead
+if os.getenv('HYPRLAND_INSTANCE_SIGNATURE') ~= nil then
+	config.enable_wayland = false
+end
+
 -- Appearance
 
 config.color_scheme = 'My Custom Theme'
