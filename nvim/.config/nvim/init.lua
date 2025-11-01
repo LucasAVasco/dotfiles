@@ -73,6 +73,6 @@ if vim.env.ALLOW_EXTERNAL_SOFTWARE == 'y' then
 			enabled = false,
 		},
 	})
-
-	load_script('colorscheme')
 end
+
+load_script('colorscheme')
