@@ -31,12 +31,14 @@ load_script('open')
 load_script('file_types')
 load_script('translate')
 load_script('user_commands')
-load_script('auto_install')
 
 -- Development options
 local lazy_dev = false -- Use the 'lazy.nvim' repository in the development folder
 
 if vim.env.ALLOW_EXTERNAL_SOFTWARE == 'y' then
+	-- Enables my auto install scripts
+	load_script('auto_install')
+
 	-- Lazy.nvim (plugin manager) configuration
 	local lazy_path = MYPATHS.lazy_nvim
 	if lazy_dev then -- If the 'dev' option to lazy.nvim is enabled, change the path to the development folder
