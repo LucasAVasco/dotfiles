@@ -2,4 +2,4 @@
 #
 # Receive clipboard from sync folder.
 
-default_term bash -c "make -C '$HOME/.local/custom_scripts' WORKING_DIR='$HOME' SCRIPT='sync_folder/clipboard/receive.sh'; read"
+make -C ~/.local/custom_scripts WORKING_DIR=~ SCRIPT='sync_folder/clipboard/receive.sh'
