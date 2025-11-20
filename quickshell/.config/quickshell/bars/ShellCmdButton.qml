@@ -34,7 +34,7 @@ Text {
         anchors.fill: parent
         cursorShape: Qt.PointingHandCursor
         onClicked: () => {
-            proc.running = true;
+            proc.startDetached();
         }
     }
 }
