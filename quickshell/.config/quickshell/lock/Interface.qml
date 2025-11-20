@@ -4,6 +4,8 @@ import QtQuick
 import QtQuick.Controls
 import Quickshell.Services.Pam
 
+import "./keyboard"
+
 Rectangle {
     id: root
     anchors.fill: parent
@@ -53,6 +55,15 @@ Rectangle {
         id: wallpaper
     }
 
+    CapsLockStatusPreview {
+        anchors.top: parent.top
+        anchors.right: parent.right
+        anchors.margins: 10
+
+        height: parent.height * 0.1
+        width: parent.width * 0.2
+    }
+
     PasswordPrompt {
         id: passwordPrompt
 
@@ -89,7 +100,7 @@ Rectangle {
     // // WARNING(LucasAVasco): This button is a security risk. Do not use in production
     // Button {
     //     text: "Bypass lock"
-    //     anchors.top: parent.top
+    //     anchors.bottom: parent.bottom
     //     anchors.right: parent.right
 
     //     width: parent.width * 0.2
