@@ -57,6 +57,7 @@ end, default_options('Toggle LSP inlay hints visualization'))
 -- Manage the code
 vim.keymap.set('n', '<leader>Lr', vim.lsp.buf.rename, default_options('Code rename with LSP'))
 vim.keymap.set('n', '<leader>La', vim.lsp.buf.code_action, default_options('LSP code action'))
+vim.keymap.set('n', '<leader>Ll', vim.lsp.codelens.run, default_options('LSP code lens'))
 vim.keymap.set('n', '<leader>Lf', vim.lsp.buf.format, default_options('Code format with LSP'))
 
 -- Workspaces
