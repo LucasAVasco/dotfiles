@@ -13,6 +13,7 @@ alias v='nvim'
 alias c='code'
 alias k='kubectl'
 alias y='default_term_file_manager_cd'
+alias p='run-performance'
 
 # Overwrite default command line applications
 alias mv='mv -i'
