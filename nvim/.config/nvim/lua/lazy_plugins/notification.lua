@@ -26,6 +26,7 @@ return {
 		},
 
 		keys = {
+			{ '<leader>Nc', '<CMD>NotificationsDismiss<CR>', desc = 'Dismiss all notifications' },
 			{ '<leader>Nd', '<CMD>NotificationsDismiss<CR>', desc = 'Dismiss all notifications' },
 			{ '<leader>Nl', '<CMD>Telescope notify<CR>', desc = 'List all notifications' },
 			{ '<leader>Ns', '<CMD>Notifications<CR>', desc = 'Show all notifications' },
