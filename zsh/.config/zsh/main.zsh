@@ -51,31 +51,29 @@ source ~/.config/zsh/keybinds.zsh # Must be sourced after Oh My Zsh configuratio
 
 # Vi prompt shape {{{
 
-if [[ "$ALLOW_EXTERNAL_SOFTWARE" == 'y' ]]; then
-	# Updates the cursor after enter or exit insert mode (only for VI key binds)
-	# This function is terminal specific, so you may need to adjust it to work in your terminal emulator.
-	# Tested terminal emulators: Alacritty, Alacritty with Tmux, Kitty, Kitty with Tmux, Wezterm
-	# '\e[1 q': Code to block (blinking)
-	# '\e[2 q': Code to block (without blinking)
-	# '\e[3 q': Code to underscore (blinking)
-	# '\e[4 q': Code to underscore (without blinking)
-	# '\e[5 q': Code to vertical bar (blinking)
-	# '\e[6 q': Code to vertical bar (without blinking)
-	_update_vi_cursor_shape() {
-		case $KEYMAP in
-			main)  # If going to insert mode
-				echo -ne '\e[6 q';;
+# Updates the cursor after enter or exit insert mode (only for VI key binds)
+# This function is terminal specific, so you may need to adjust it to work in your terminal emulator.
+# Tested terminal emulators: Alacritty, Alacritty with Tmux, Kitty, Kitty with Tmux, Wezterm
+# '\e[1 q': Code to block (blinking)
+# '\e[2 q': Code to block (without blinking)
+# '\e[3 q': Code to underscore (blinking)
+# '\e[4 q': Code to underscore (without blinking)
+# '\e[5 q': Code to vertical bar (blinking)
+# '\e[6 q': Code to vertical bar (without blinking)
+_update_vi_cursor_shape() {
+	case $KEYMAP in
+		main)  # If going to insert mode
+			echo -ne '\e[6 q';;
 
-			vicmd)  # If going to normal mode
-				echo -ne '\e[2 q';;
-		esac
-	}
+		vicmd)  # If going to normal mode
+			echo -ne '\e[2 q';;
+	esac
+}
 
-	autoload -Uz add-zle-hook-widget
-	add-zle-hook-widget zle-line-init _update_vi_cursor_shape
-	add-zle-hook-widget zle-keymap-select _update_vi_cursor_shape
-	add-zle-hook-widget zle-line-finish _update_vi_cursor_shape
-fi
+autoload -Uz add-zle-hook-widget
+add-zle-hook-widget zle-line-init _update_vi_cursor_shape
+add-zle-hook-widget zle-keymap-select _update_vi_cursor_shape
+add-zle-hook-widget zle-line-finish _update_vi_cursor_shape
 
 # }}}
 
