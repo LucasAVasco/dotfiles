@@ -137,6 +137,11 @@ keys = {
 		mods = LEADER,
 		action = action.TogglePaneZoomState,
 	},
+	{
+		key = '0',
+		mods = LEADER,
+		action = wezterm.action.ResetFontAndWindowSize,
+	},
 	-- Tab, window and, pane selection
 	{
 		key = 'Space',
