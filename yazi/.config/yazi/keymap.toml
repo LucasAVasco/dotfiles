@@ -76,6 +76,15 @@ append_keymap = [
 	{ on = "<A-7>", run = "tab_switch 6" },
 	{ on = "<A-8>", run = "tab_switch 7" },
 	{ on = "<A-9>", run = "tab_switch 8" },
+
+	# Open file
+	{ on = [
+		"<A-o>",
+	], run = "shell 'default_open \"$@\"'", desc = "Open file" },
+
+	{ on = [
+		"<A-Enter>",
+	], run = "shell 'default_open \"$@\"'", desc = "Open file" },
 ]
 
 [confirm]
