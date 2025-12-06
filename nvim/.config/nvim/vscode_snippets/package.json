@@ -108,6 +108,12 @@
 			},
 			{
 				"language": [
+					"desktop"
+				],
+				"path": "./desktop/app.json"
+			},
+			{
+				"language": [
 					"plantuml"
 				],
 				"path": "./plantuml/note.json"

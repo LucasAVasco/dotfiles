@@ -1,0 +1,31 @@
+{
+	"Template to a Link desktop file": {
+		"prefix": "app-template",
+		"description": "Create a Application desktop entry",
+		"body": [
+			"# Full documentation at: https://specifications.freedesktop.org/desktop-entry/latest/",
+			"[Desktop Entry]",
+			"Type=Application",
+			"Version=1.5",
+			"Name=$1",
+			"GenericName=$2",
+			"Icon=$3",
+			"Comment=$4",
+			"MimeType=$5",
+			"Categories=$6",
+			"Keywords=$7",
+			"Exec=$8",
+			"# TryExec=",
+			"# Path=",
+			"DBusActivatable=false",
+			"StartupNotify=false",
+			"NoDisplay=false",
+			"Terminal=false",
+			"# StartupWMClass=",
+			"# PrefersNonDefaultGPU=",
+			"# SingleMainWindow=",
+			"# Actions=",
+			"# Implements="
+		]
+	}
+}
