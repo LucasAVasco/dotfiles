@@ -24,7 +24,8 @@ warm="${WARM_TEMPERATURE:-3000}"
 # Reset GammaStep and the screen temperature.
 reset_gammastep() {
 	pkill-wait -u "$USER" -f '^gammastep ' || true # Must not start a new instance if already running
-	gammastep -O 6500 & # Reset
+	gammastep -x & # Reset
+	sleep 0.1
 	pkill-wait -u "$USER" -f '^gammastep ' || true
 }
 
