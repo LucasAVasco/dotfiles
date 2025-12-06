@@ -111,6 +111,9 @@ PanelWindow {
                         anchors.fill: parent
 
                         // Appearance
+                        background: Rectangle {
+                            color: "transparent"
+                        }
                         color: "white"
                         placeholderText: "Insert your message here"
                         placeholderTextColor: "#aaaaaa"

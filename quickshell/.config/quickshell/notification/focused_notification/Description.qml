@@ -70,6 +70,9 @@ Rectangle {
                 anchors.fill: parent
 
                 // Appearance
+                background: Rectangle {
+                    color: "transparent"
+                }
                 color: "#ffffff"
             }
         }
