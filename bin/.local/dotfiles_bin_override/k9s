@@ -2,6 +2,8 @@
 #
 # Override k9s binary to automatically install some skins.
 
+source ~/.config/bash/libs/bin_overrides.sh
+
 # Install a k9s skin from the specified URL with CURL.
 #
 # $1: URL
@@ -23,4 +25,4 @@ ensure_skin_installed() {
 ensure_skin_installed https://raw.githubusercontent.com/derailed/k9s/refs/heads/master/skins/kanagawa.yaml
 
 # Forwards to k9s
-/bin/k9s "$@"
+bin_overrides_call_without_override k9s "$@"
