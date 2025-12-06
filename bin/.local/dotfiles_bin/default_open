@@ -163,6 +163,9 @@ open_local_file() {
 	elif [[ "$mime_type" =~ ^text/ ]]; then
 		open_file_editor "$file" "$line_number" "${args[@]}"
 
+	elif [[ "$mime_type" == "application/javascript" ]]; then
+		open_file_editor "$file" "$line_number" "${args[@]}"
+
 	# Fallback
 	else
 		xdg-open "$file" "${args[@]}"
