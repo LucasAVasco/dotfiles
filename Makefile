@@ -360,6 +360,29 @@ create-package: FORCE
 	$(call create_script_folder, ${PACKAGE}, after_disable)
 
 
+# Update the dot files
+#
+# The dot files will be updated from the default remote repository
+update: FORCE
+	@echo 'Fetching updates'
+	git fetch
+
+	@echo 'Merging updates'
+	git pull --ff-only origin main
+
+	@echo 'Submodules'
+	git submodule update --init
+
+	@echo 'Fetching LFS objects'
+	git lfs fetch
+
+	@echo 'Checking out LFS objects'
+	git lfs checkout
+
+	@echo 'Re-enabling packages'
+	make enable
+
+
 # Shows the base dot files directory
 #
 # May be used in automation scripts
