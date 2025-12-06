@@ -10,4 +10,4 @@
 # * A script called `nvim_new_win_synced` that opens the Neovim in a new window of the default terminal emulator
 
 
-nohup nvim_new_win_synced "$@" > /dev/null 2>&1 &
+run-detached nvim_new_win_synced "$@"

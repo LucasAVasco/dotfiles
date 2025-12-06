@@ -10,4 +10,4 @@
 # * A script called `default_term_synced` that opens the default terminal emulator in the current terminal instance
 
 
-nohup default_term_synced "$@" > /dev/null 2>&1 &
+run-detached default_term_synced "$@"

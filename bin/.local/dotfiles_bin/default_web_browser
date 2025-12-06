@@ -10,4 +10,4 @@
 
 web_browser_cmd=('firefox')
 
-nohup "${web_browser_cmd[@]}" "$@" > /dev/null 2>&1 &
+run-detached "${web_browser_cmd[@]}" "$@"

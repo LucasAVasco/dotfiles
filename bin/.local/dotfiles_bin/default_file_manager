@@ -10,4 +10,4 @@
 # * A script called `default_file_manager_synced` that opens the default file manager in the current terminal instance
 
 
-nohup default_file_manager_synced "$@" > /dev/null 2>&1 &
+run-detached default_file_manager_synced "$@"
