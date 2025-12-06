@@ -54,3 +54,12 @@ end, {
 	nargs = '+',
 	desc = 'Runs a command in the next event loop',
 })
+
+vim.api.nvim_create_user_command('Code', function(args)
+	local files = args.fargs
+	if #files == 0 then
+		files = { vim.api.nvim_buf_get_name(0) }
+	end
+
+	vim.system({ 'code', unpack(files) })
+end, { desc = 'Open files in VS Code', nargs = '*', complete = 'file' })

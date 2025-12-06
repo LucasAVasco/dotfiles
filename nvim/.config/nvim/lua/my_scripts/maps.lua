@@ -258,3 +258,8 @@ vim.keymap.set('i', '<C-DEL>', delete_next_word, get_default_opt('Delete the nex
 vim.keymap.set('i', '<A-DEL>', function()
 	run_with_simplified_keyword(delete_next_word)
 end, get_default_opt('Delete the next simplified word'))
+
+-- Visual Studio Code
+vim.keymap.set('n', '<leader>gc', function()
+	vim.cmd.Code()
+end, get_default_opt('Open current file in VS Code'))
