@@ -49,23 +49,40 @@ touch ./.qmlls.ini || true # If '.qmlls.ini' is broken, `touch` will fail. The `
 main_command="$1"
 shift
 
+# Check if the QuickShell process is running.
+#
+# Returns 'y' if running, 'n' if not.
+quickshell_is_running() {
+	pgrep -u "$USER" "^quickshell$" >/dev/null && echo -n y || echo -n n
+}
+
 # Start the QuickShell process in the background.
 start_quickshell() {
-	pgrep -u "$USER" -f "^quickshell$" >/dev/null && return
+	if [[ $(quickshell_is_running) == y ]]; then
+		return
+	fi
 
-	nohup quickshell >/dev/null 2>&1 &
+	nohup quickshell > /dev/null 2>&1 &
 }
 
 # Wait for the QuickShell process to start
 wait_quickshell_start() {
 	while [[ true ]]; do
 		quickshell ipc show >/dev/null 2>&1 && break
+		sleep 0.5
 	done
+}
+
+# Stop the QuickShell process.
+#
+# This will wait for the QuickShell process to stop.
+stop_quickshell() {
+	pkill-wait -u "$USER" "^quickshell$"
 }
 
 case "$main_command" in
 	is-active)
-		pgrep -u "$USER" -f "^quickshell$" >/dev/null && echo -n y || echo -n n
+		quickshell_is_running
 		;;
 
 	start)
@@ -73,11 +90,11 @@ case "$main_command" in
 		;;
 
 	stop)
-		pkill -u "$USER" -f "^quickshell$"
+		stop_quickshell
 		;;
 
 	restart)
-		pkill-wait -u "$USER" -f "^quickshell$" || true
+		stop_quickshell
 		start_quickshell
 		;;
 
