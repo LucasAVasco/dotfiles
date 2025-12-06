@@ -12,6 +12,8 @@ import "./workspaces"
 PanelWindow {
     id: root
 
+    focusable: true // Required by system tray widget to get keyboard modifiers
+
     // Layout
     implicitHeight: 30
     anchors {
@@ -71,6 +73,14 @@ PanelWindow {
         // Widgets at the right
         RowLayout {
             anchors.right: parent.right
+
+            TrayArea {
+                menuParentWindow: root
+
+                // Layout
+                implicitHeight: parent.height
+                implicitWidth: root.width / 10
+            }
 
             Clock {}
 

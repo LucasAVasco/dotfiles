@@ -1,3 +1,6 @@
+//@ pragma UseQApplication
+// The line above is required by the system tray to display a platform menu
+
 import QtQuick
 import Quickshell
 
