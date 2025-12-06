@@ -21,3 +21,9 @@ alias rm='rm -i'
 alias cp='cp -i'
 alias less='/bin/less --RAW-CONTROL-CHARS --clear-screen --quit-if-one-screen --chop-long-lines'
 alias rlwrap='rlwrap --complete-filenames --case-insensitive'
+
+# Git aliases
+
+# This alias is created by 'Oh My Zsh', but I also want it outside of the plugin (make it available to users that can not install external
+# software)
+alias gloga='git log --oneline --graph --all'
