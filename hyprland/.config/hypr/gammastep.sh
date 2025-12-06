@@ -17,7 +17,7 @@ socat -u UNIX-CONNECT:$XDG_RUNTIME_DIR/hypr/$HYPRLAND_INSTANCE_SIGNATURE/.socket
 			~/.config/monitor/update-workspace-screen-temp.sh "$workspace"
 
 		# When the user changes to another virtual terminal (tty), it raises a 'activelayout' event
-		elif [[ "${line:0:12}" == "activelayout" ]]; then
+		elif [[ "${line:0:23}" == "activelayout>>video-bus" ]]; then
 			current_workspace=$(hyprctl activeworkspace -j | jq '.id')
 			~/.config/monitor/update-workspace-screen-temp.sh -r "$current_workspace"
 		fi
