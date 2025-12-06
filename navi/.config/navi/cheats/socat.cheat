@@ -1,0 +1,5 @@
+% Socat
+
+
+# Redirect port
+socat TCP-LISTEN:<dest-port>,fork TCP:<source-address>:<source-port>
