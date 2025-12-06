@@ -33,6 +33,10 @@ __expand_alias() {
 # Enable VI key binds. Need to be executed after Oh My Zsh and before setting the other key binds
 bindkey -v
 
+# Move to previous/next word
+bindkey "^[[1;5D" backward-word
+bindkey "^[[1;5C" forward-word
+
 # Delete the last word with CTRL-BACKSPACE. Some terminal emulators interpret CTRL-BACKSPACE as '^H' or '^W'
 bindkey '^H' backward-delete-word
 bindkey '^W' backward-delete-word
