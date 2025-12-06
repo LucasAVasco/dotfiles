@@ -4,6 +4,10 @@
 
 set -e
 
+# Initial status
+~/.config/monitor/update-workspace-screen-temp.sh -r 1
+
+# Listen to Hyprland events
 socat -u UNIX-CONNECT:$XDG_RUNTIME_DIR/hypr/$HYPRLAND_INSTANCE_SIGNATURE/.socket2.sock - | \
 	while read -r line; do
 		# The line with a work-space change specification has the following format: 'workspacev2>>${workspace_id},${workspace_name}'
