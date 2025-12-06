@@ -1,0 +1,9 @@
+#!/bin/bash
+#
+# Run a command in a detached session.
+#
+# $1: the command to run.
+# $2..n: the arguments to pass to the command.
+
+
+setsid --fork "$@" & disown
