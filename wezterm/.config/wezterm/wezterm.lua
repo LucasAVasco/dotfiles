@@ -41,6 +41,7 @@ if os.getenv('ALLOW_EXTERNAL_SOFTWARE') == 'y' then
 		},
 	})
 end
+config.warn_about_missing_glyphs = false
 
 -- Environment variables
 
