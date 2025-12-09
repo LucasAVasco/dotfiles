@@ -260,7 +260,7 @@ endef
 
 
 # List all the packages in the dot files directory. List one file per line
-ls:
+ls: FORCE
 	@find . -maxdepth 1 -type d -regex './\w*' -printf '%f\n'
 
 
@@ -386,14 +386,14 @@ update: FORCE
 # Shows the base dot files directory
 #
 # May be used in automation scripts
-get-root-dir:
+get-root-dir: FORCE
 	@pwd
 
 
 # Run a new instance of the specified shell in the dot files directory
 #
 # The user can change the shell by setting the 'CD_SHELL' variable
-cd:
+cd: FORCE
 	@cd $(shell pwd) && ${CD_SHELL}
 
 
