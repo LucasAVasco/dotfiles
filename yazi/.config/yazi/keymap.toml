@@ -3,6 +3,11 @@
 "$schema" = "https://yazi-rs.github.io/schemas/keymap.json"
 
 [mgr]
+prepend_keymap = [
+	# Overrides the default 'D' key-map to not remove permanently
+	{ on = "D", run = "remove", desc = "Trash selected files" },
+]
+
 append_keymap = [
 	{ on = [
 		"<A-d>",
