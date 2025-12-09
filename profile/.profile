@@ -75,6 +75,7 @@ if [ "$ALLOW_EXTERNAL_SOFTWARE" = y ]; then
 		lua_version=$(lua -e 'print(_VERSION:match("%d+%.%d+"))')
 		export LUA_PATH="$HOME/.luarocks/share/lua/$lua_version/?.lua;;"
 		export LUA_CPATH="$HOME/.luarocks/lib/lua/$lua_version/?.so;;"
+		export PATH="$PATH:$HOME/.luarocks/bin"
 	}
 fi
 
