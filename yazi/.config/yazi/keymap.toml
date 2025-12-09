@@ -90,6 +90,15 @@ append_keymap = [
 	{ on = [
 		"<A-Enter>",
 	], run = "shell 'default_open \"$@\"'", desc = "Open file" },
+
+	# Configure permissions
+	{ on = [
+		"<A-x>",
+	], run = "shell 'chmod u+x \"$@\"'", desc = "Make executable" },
+
+	{ on = [
+		"<A-S-x>",
+	], run = "shell 'chmod u-x \"$@\"'", desc = "Make not executable" },
 ]
 
 [confirm]
