@@ -14,4 +14,4 @@ if [[ -f "$ls_colors_script" ]]; then
 	source "$ls_colors_script"
 fi
 
-yazi "$@"
+vifm "$@"
