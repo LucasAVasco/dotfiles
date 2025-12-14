@@ -1,0 +1,117 @@
+#!/bin/bash
+#
+# Interactively select a file or folder with fzf.
+
+set -e
+
+source ~/.config/bash/libs/help.sh
+
+help_handle n "$@" << EOF
+	Interactively select a file or folder with fzf.
+
+	Navigates to the file or folder with 'Tab'. Use 'Shift-Tab' to navigate up a directory. Press 'Enter' to accept the selection and return
+	the path.
+
+	USAGE
+
+	file-chooser [--pwd-on-abort] [--] [starting_directory]
+		Run the script with the optional 'starting_directory' as the starting directory. The '--pwd-on-abort' option will print the current
+		directory on abort.
+
+	file-chooser [--echo-on-abort <text>] [--] [starting_directory]
+		Run the script with the optional 'starting_directory' as the starting directory. The '--echo-on-abort' option will print the <text>
+		if the user aborts.
+EOF
+
+# Command line arguments
+pwd_on_abort=n
+echo_on_abort=''
+only_dirs=n
+while [[ "$#" -gt 0 ]]; do
+	case "$1" in
+		--echo-on-abort)
+			echo_on_abort="$2"
+			shift 2
+			;;
+
+		--pwd-on-abort)
+			pwd_on_abort=y
+			shift
+			;;
+
+		--only-dirs)
+			only_dirs=y
+			shift
+			;;
+
+		--)
+			shift
+			break
+			;;
+
+		*)
+			break
+			;;
+	esac
+done
+
+# Default starting directory
+if [[ -n "$1" ]]; then
+	cd "$1"
+fi
+
+# List the current directory contents with colors.
+#
+# $1: If only directories should be listed. Accepts 'y' or 'n'.
+list_files_current_dir() {
+	if [[ "$1" == y ]]; then
+		ls --color=always -A -1 -d .*/ */ 2>/dev/null
+	else
+		ls --color=always -A -1 -d .* * 2>/dev/null
+	fi
+}
+
+# Select a file
+while true; do
+	# When selecting a file, fzf will return '-\n<selected-file>'. The first line will be a minus ('-') indicating that the user selected a
+	# file/folder and the second line will be the selected file/folder.
+	# `Tab` to enter into current directory, `Shift-Tab` to navigate up a directory.
+	# `Enter` to select the file or folder (this script will return it).
+	# `Alt-Enter` to select the current folder (this script will return the current directory).
+	file=$(list_files_current_dir "$only_dirs" \
+		| fzf --ansi --header "Current directory: $(pwd)" \
+		--bind tab:accept-or-print-query --bind 'btab:become(echo -n ..)' \
+		--bind 'enter:print(-)+accept-or-print-query' \
+		--bind 'alt-enter:+become(echo -ne "-\n.")') \
+		|| break
+
+	# Pressed enter. The user selected the final file or directory
+	if [[ $(echo "$file" | wc -l) -gt 1 ]]; then
+		file="$(echo -n "$file" | sed -n 2p)" # Gets the second line
+
+		if [[ "$file" == '.' ]]; then
+			echo "$PWD"
+		elif [[ "$file" == '..' ]]; then
+			echo $(dirname "$PWD")
+		else
+			echo "$PWD/$file"
+		fi
+		exit 0
+
+	# Pressed tab or shift-tab. The user selected a file or directory
+	elif [[ -d "$file" ]]; then
+		cd "$file"
+	fi
+done
+
+# Aborted
+if [[ "$pwd_on_abort" == y ]]; then
+	printf '%s' "$PWD"
+	exit 0
+
+elif [[ -n "$echo_on_abort" ]]; then
+	printf '%s' "$echo_on_abort"
+	exit 0
+fi
+
+exit 1
