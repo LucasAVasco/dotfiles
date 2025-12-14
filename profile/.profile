@@ -52,6 +52,9 @@ export ALLOW_EXTERNAL_SOFTWARE=$ALLOW_EXTERNAL_SOFTWARE
 export FZF_DEFAULT_OPTS_FILE=~/.fzfrc
 
 if [ "$ALLOW_EXTERNAL_SOFTWARE" = y ]; then
+	# Mason binaries
+	export PATH="$PATH:$HOME/.local/share/nvim/mason/bin/"
+
 	# Homebrew on Linux
 	test -d ~/.linuxbrew && eval $(~/.linuxbrew/bin/brew shellenv)
 	test -d /home/linuxbrew/.linuxbrew && eval $(/home/linuxbrew/.linuxbrew/bin/brew shellenv)
