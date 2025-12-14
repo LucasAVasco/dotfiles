@@ -9,6 +9,9 @@
 
 [pager]
 	blame = delta
+	diff = delta
+	reflog = delta
+	show  = delta
 
 [diff]
 	colorMoved = default
