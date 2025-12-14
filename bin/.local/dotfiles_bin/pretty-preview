@@ -19,7 +19,7 @@ fi
 # If it is a directory
 if [[ -d "$file" ]]; then
 	# '--git' shows the git status
-	eza -A --icons=always --color=always --git
+	eza -A --icons=always --color=always --git --group-directories-first "$file"
 	exit 0
 fi
 
