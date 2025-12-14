@@ -6,4 +6,4 @@
 # $2..n: the arguments to pass to the command.
 
 
-setsid --fork "$@" & disown
+setsid --fork "$@" > /dev/null 2>&1 & disown
