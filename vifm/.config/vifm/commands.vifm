@@ -1,0 +1,18 @@
+" Create (touch) files and directories
+command! t : !t %a
+
+" Open files with its default application
+command! defaultopen : if system($HOME . '/.config/vifm/internal/scripts/try-open-file.sh %"f') == 'edit-in-vifm' | edit %"f | endif
+
+" Select a directory interactively and `cd` to it
+" The 'echo' is used to reset the cursor shape. Otherwise, it will be a block after this command.
+command! filechooser : execute 'cd' fnameescape(system('file-chooser --only-dirs --echo-on-abort %"d'))
+	\| !echo -ne ""
+
+" Change to directory with Zoxide.
+" The 'echo' is used to reset the cursor shape. Otherwise, it will be a block after this command.
+command! zoxide : execute 'cd' fnameescape(system('zoxide-chooser --echo-on-abort %"d'))
+	\| !echo -ne ""
+
+" Extract selected archives
+command! extract : !archive unpack %"f 2>/dev/null &

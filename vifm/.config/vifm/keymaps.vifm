@@ -1,0 +1,81 @@
+" Command macros documentation: https://vifm.info/manual.shtml#Command%20macros
+
+" Toggle selection and move down
+noremap <Space> t;j
+
+" Movement
+nnoremap <A-d> <C-d>
+nnoremap <A-u> <C-u>
+nnoremap g<Space> :filechooser<CR>
+nnoremap gzz :zoxide<CR>
+noremap gza :!zoxide add %f<CR>
+
+" Open folders
+nnoremap gM :cd /media/<CR>
+nnoremap gm :cd /run/media/$USER<CR>
+nnoremap gp :cd $HOME/Pictures/<CR>
+nnoremap gr :cd $HOME/Repositories/<CR>
+nnoremap gd :cd $HOME/Downloads/<CR>
+nnoremap gH :cd $HOME<CR>
+nnoremap gS :cd /home/shared_folder/<CR>
+nnoremap gnc :!NOTIFY_SEND=y nvim-proj open-config<CR>
+nnoremap gnp :!NOTIFY_SEND=y nvim-proj open<CR>
+
+" Tabs
+nnoremap <A-A> :tabnew<CR>
+nnoremap <esc>] :tabnext<CR>
+nnoremap <esc>[ :tabprev<CR>
+nnoremap <A-1> 1gt
+nnoremap <A-2> 2gt
+nnoremap <A-3> 3gt
+nnoremap <A-4> 4gt
+nnoremap <A-5> 5gt
+nnoremap <A-6> 6gt
+nnoremap <A-7> 7gt
+nnoremap <A-8> 8gt
+nnoremap <A-9> 9gt
+nnoremap <A-w> :quit<CR>
+
+" I do not like to open the file with 'l' and 'right'
+nnoremap l :if filetype('.', 1) == "dir" | cd %c | endif<CR>
+nnoremap <right> :if filetype('.', 1) == "dir" | cd %c | endif<CR>
+
+" Search
+nnoremap ch :nohlsearch<CR>
+
+" Hidden files
+nnoremap g. za
+
+" Clipboard
+nnoremap <A-p> :!clip-paste --ask-type --ask-out-file<CR>
+noremap yd :!clip-copy %d:p<CR>
+noremap yf :!clip-copy %f:p<CR>
+
+" Open apps
+nnoremap <A-t> :!default_term<CR>
+nnoremap <A-f> :!default_file_manager<CR>
+nnoremap <CR> :defaultopen<CR>
+
+" Permissions
+noremap <A-x> :!chmod u+x %f<CR>
+noremap <A-S-x> :!chmod u-x %f<CR>
+
+" Create files and directories
+nnoremap O :t<Space>
+nnoremap o :t<Space>
+
+" Visual mode
+nnoremap v av
+
+" Command mode {{{
+
+" Go to beginning of the previous word with CTRL+LEFT
+cnoremap <esc>[1;5D <A-b>
+
+" Go to en of the next word with CTRL+RIGHT
+cnoremap <esc>[1;5C <A-f>
+
+" Delete the next word with CTRL+DELETE
+cnoremap <esc>[3;5~ <A-d>
+
+" }}}

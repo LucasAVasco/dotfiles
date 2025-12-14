@@ -1,0 +1,22 @@
+if $ALLOW_EXTERNAL_SOFTWARE == 'y'
+	source $HOME/.config/vifm/plugins/setup.vifm
+end
+
+" Must be configured before the default configuration
+source $HOME/.config/vifm/pre-default.vifm
+
+if $ALLOW_EXTERNAL_SOFTWARE == 'y'
+	source $HOME/.config/vifm/plugins/pre-default.vifm
+end
+
+" Default configurations
+source /usr/share/vifm/vifmrc
+
+" Must be configured after the default configuration
+if $ALLOW_EXTERNAL_SOFTWARE == 'y'
+	source $HOME/.config/vifm/plugins/post-default.vifm
+end
+
+source $HOME/.config/vifm/post-default.vifm
+
+" vi: ft=vim

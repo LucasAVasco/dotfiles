@@ -1,0 +1,9 @@
+if $ALLOW_EXTERNAL_SOFTWARE != 'y'
+	!echo "External software is not allowed, but you are trying to enable it anyway"
+	!read
+	exit
+end
+
+if !filereadable($HOME . "/.config/vifm/plugins/repos/.installed")
+	echo system($HOME . '/.config/vifm/plugins/plugins.sh')
+endif

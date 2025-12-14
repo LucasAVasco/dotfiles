@@ -1,0 +1,8 @@
+if $ALLOW_EXTERNAL_SOFTWARE != 'y'
+	!echo "External software is not allowed, but you are trying to enable it anyway"
+	!read
+	exit
+end
+
+" Devicon support
+source $HOME/.config/vifm/plugins/repos/vifm_devicons/favicons.vifm

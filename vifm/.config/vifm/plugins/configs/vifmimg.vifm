@@ -1,0 +1,39 @@
+" Copied from the official vifmimg documentation at https://github.com/thimc/vifmimg and adapted for my needs
+" License of the copied code: GNU General Public License v3.0. Available at 'https://github.com/thimc/vifmimg/blob/master/LICENSE
+
+if $VIFMIMG_LOADED == 'y'
+	fileviewer *.pdf
+		\ vifmimg pdf %px %py %pw %ph %c
+		\ %pc
+		\ vifmimg clear
+
+	fileviewer *.djvu
+		\ vifmimg djvu %px %py %pw %ph %c
+		\ %pc
+		\ vifmimg clear
+
+	fileviewer *.epub
+		\ vifmimg epub %px %py %pw %ph %c
+		\ %pc
+		\ vifmimg clear
+
+	fileviewer <video/*>
+		\ vifmimg video %px %py %pw %ph %c
+		\ %pc
+		\ vifmimg clear
+
+	fileviewer <image/*>
+		\ vifmimg draw %px %py %pw %ph %c
+		\ %pc
+		\ vifmimg clear
+
+	fileviewer <audio/*>
+		\ vifmimg audio %px %py %pw %ph %c
+		\ %pc
+		\ vifmimg clear
+
+	fileviewer <font/*>
+		\ vifmimg font %px %py %pw %ph %c
+		\ %pc
+		\ vifmimg clear
+endif

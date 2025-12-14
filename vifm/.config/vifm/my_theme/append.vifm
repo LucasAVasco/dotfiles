@@ -1,0 +1,26 @@
+" Theme based on the original vifm colorscheme (generated during install)
+
+" File types
+highlight HardLink cterm=none ctermfg=222 ctermbg=default
+highlight Selected cterm=bold ctermfg=143 ctermbg=94
+
+" Interface
+highlight Win cterm=none ctermfg=Grey54 ctermbg=default
+highlight OddLine cterm=none ctermfg=Grey74 ctermbg=default
+highlight TopLine cterm=none ctermfg=white ctermbg=default
+highlight TopLineSel cterm=bold ctermfg=white ctermbg=default
+highlight StatusLine cterm=bold ctermfg=Grey54 ctermbg=default
+highlight WildMenu cterm=underline,reverse ctermfg=default ctermbg=white
+highlight CmdLine cterm=none ctermfg=white ctermbg=default
+highlight Border cterm=none ctermfg=Grey23 ctermbg=default
+highlight JobLine cterm=bold,reverse ctermfg=white ctermbg=default
+highlight CmpMismatch cterm=bold ctermfg=white ctermbg=red
+highlight CmpUnmatched cterm=bold ctermfg=white ctermbg=green
+highlight TabLine cterm=none ctermfg=Grey23 ctermbg=default
+highlight TabLineSel cterm=none ctermfg=Grey54 ctermbg=default
+
+" User colors
+highlight User20 cterm=reverse
+
+" Default file color (used as fallback)
+highlight /^.*$/I ctermfg=white ctermbg=default

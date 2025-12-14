@@ -1,0 +1,51 @@
+" Fallback opener
+filetype *
+	\ {Open with default application}
+	\ default_open %"f
+
+" Fallback previewer
+fileviewer * bat --color always --style plain %c
+fileviewer <application/*> bat --color always --style plain %c
+
+" Color scheme
+if !filereadable($HOME . "/.config/vifm/colors/mytheme.vifm")
+	call system($HOME . "/.config/vifm/my_theme/generate.sh")
+endif
+
+colorscheme mytheme
+
+" Editor
+let &vicmd = $EDITOR
+
+" Commands
+source $HOME/.config/vifm/commands.vifm
+
+" Key-maps
+" NOTE(LucasAVasco): must be sourced after the commands because some key-maps use my custom commands
+source $HOME/.config/vifm/keymaps.vifm
+
+" Delete files with `trash` instead of permanently deleting
+set deleteprg=trash
+
+" Do not show '.' and '..' directories
+set dotdirs=
+
+" Do not save the last directory (always start in the current directory), user interface, tabs, directory history, and state (including
+" filters)
+set vifminfo-=savedirs,tui,tabs,dhistory,state
+
+" Start with quickview enabled
+set quickview
+
+" Fill borders with lines
+set fillchars='hborder:─,millersep:,vborder:│'
+
+" Time format (<year>/<month>/<day> <hour>h<minute>)
+set timefmt='%Y/%m/%d %Hh%M'
+
+" Status line. Inspired by the example at the official documentation (https://vifm.info/manual.shtml) about the 'statusline' 'stl' option
+set statusline=' %f %[ %T %]   %=   󰒃 %A (%o)    %u:%g    %E   󰃭 %d    %{&sort} '
+
+" Tab line
+set tabprefix=' %20* %N '
+set tabsuffix=' %* '
