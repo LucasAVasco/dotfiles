@@ -22,9 +22,21 @@
 			},
 			{
 				"language": [
+					"sh"
+				],
+				"path": "./shell/external-software.json"
+			},
+			{
+				"language": [
 					"zsh"
 				],
 				"path": "./zsh/paths.json"
+			},
+			{
+				"language": [
+					"zsh"
+				],
+				"path": "./zsh/external-software.json"
 			},
 			{
 				"language": [

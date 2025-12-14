@@ -1,0 +1,7 @@
+{
+	"Abort if can not install external software": {
+		"prefix": "abort_if_can_not_install_external_software",
+		"description": "Abort if can not install external software",
+		"body": ["[ \"\\$ALLOW_EXTERNAL_SOFTWARE\" != 'y' ] && exit"]
+	}
+}
