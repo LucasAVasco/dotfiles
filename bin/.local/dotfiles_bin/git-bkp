@@ -6,7 +6,7 @@ set -e
 
 source ~/.config/bash/libs/help.sh
 
-help_handle y "$@" << EOF
+help_handle n "$@" << EOF
 	Creates/deletes a backup commit with all unstaged changes
 
 	USAGE
