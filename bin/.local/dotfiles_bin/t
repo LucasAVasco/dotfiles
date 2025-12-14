@@ -1,0 +1,15 @@
+#!/bin/bash
+#
+# Touch files or and create directories.
+#
+# $1...: Files or directories to touch
+
+for i in "$@"; do
+	if [[ "$i" == */ ]]; then
+		mkdir -p "$i"
+	else
+		parent_dir="$(dirname "$i")"
+		mkdir -p "$parent_dir"
+		touch "$i"
+	fi
+done
