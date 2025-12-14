@@ -50,6 +50,15 @@ function __insert_new_line_in_command() {
 zle -N __insert_new_line_in_command
 bindkey '^[[13;2u' __insert_new_line_in_command # Binds <SHIFT+Enter>
 
+# Clear screen and scroll-back
+function __clear_screen_and_scroll_back() {
+	clear
+	zle reset-prompt
+}
+
+zle -N __clear_screen_and_scroll_back
+bindkey '^L' __clear_screen_and_scroll_back
+
 # Copy the current prompt command to the clipboard
 __copy_current_cmd_to_clipboard() {
 	~/.config/clipboard/copy.sh "$BUFFER"
