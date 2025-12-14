@@ -9,6 +9,8 @@ import Quickshell.Services.Notifications
 PanelWindow {
     id: root
 
+    focusable: true
+
     signal done
     signal inlineReply(Notification notification)
 
