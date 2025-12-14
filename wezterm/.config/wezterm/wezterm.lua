@@ -60,6 +60,7 @@ config.key_tables = key_binds.key_tables
 -- Tab-bar
 
 config.hide_tab_bar_if_only_one_tab = true
+config.status_update_interval = 1000 -- update sticky bar delay (milliseconds)
 config.tab_max_width = 20
 config.use_fancy_tab_bar = false
 config.tab_bar_style = require('config.new-tab-button')
