@@ -6,6 +6,9 @@
 --bind 'tab:toggle' --bind 'tab:+down' # Just move down in non-multi-select mode. Toggle and move down in multi
 --bind 'btab:toggle' --bind 'btab:+up' # Just move up in non-multi-select mode. Toggle and move up in multi
 
+# Behavior
+--cycle
+
 # Style
 --reverse
 
