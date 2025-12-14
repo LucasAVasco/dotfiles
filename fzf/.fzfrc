@@ -3,6 +3,8 @@
 --bind 'ctrl-d:half-page-down'
 --bind 'alt-u:half-page-up'
 --bind 'ctrl-u:half-page-up'
+--bind 'tab:toggle' --bind 'tab:+down' # Just move down in non-multi-select mode. Toggle and move down in multi
+--bind 'btab:toggle' --bind 'btab:+up' # Just move up in non-multi-select mode. Toggle and move up in multi
 
 # Style
 --reverse
