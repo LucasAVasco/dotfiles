@@ -244,11 +244,15 @@ keys.extend(
             lazy.spawn(HOME + "/.local/dotfiles_bin/custom-script-popup"),
         ),
         Key([SUPER, SHIFT], "p", lazy.spawn(HOME + "/.config/rofi/tools/pass.sh")),
-        Key([SUPER], "s", lazy.spawn(HOME + "/.config/screenshot/take.sh -c")),
+        Key(
+            [SUPER],
+            "s",
+            lazy.spawn(HOME + "/.config/screenshot/take.sh -o /dev/null -c"),
+        ),
         Key(
             [SUPER, SHIFT],
             "s",
-            lazy.spawn(HOME + "/.config/screenshot/take.sh -i -c"),
+            lazy.spawn(HOME + "/.config/screenshot/take.sh -o /dev/null -i -c"),
         ),
         Key(
             [SUPER, SHIFT],
