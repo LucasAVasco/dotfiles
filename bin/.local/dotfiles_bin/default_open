@@ -92,6 +92,13 @@ open_web_browser() {
 
 # Open local files {{{
 
+# Open a file with `xdg-open`.
+#
+# $1..n: Arguments passed to `xdg-open`
+open_with_xdg() {
+	run-detached xdg-open "$@"
+}
+
 # Open a file with the default file editor.
 #
 # $1: Path of the file to open (does not support URIs).
@@ -168,7 +175,7 @@ open_local_file() {
 
 	# Fallback
 	else
-		xdg-open "$file" "${args[@]}"
+		open_with_xdg "$file" "${args[@]}"
 	fi
 }
 
@@ -374,7 +381,7 @@ open() {
 
 	# Default handler
 	elif [[ -z "$handler" ]]; then
-		handler='xdg-open'
+		handler='open_with_xdg'
 	fi
 
 	# Executes the handler
