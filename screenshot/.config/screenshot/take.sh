@@ -91,4 +91,8 @@ else
 fi
 
 # Notifies
-notify-send "Screenshot take!" "Output file: '$output_file'"
+if [[ "$output_file" == /dev/null ]]; then
+	notify-send "Screenshot take!" "Only copied to clipboard"
+else
+	notify-send "Screenshot take!" "Output file: '$output_file'"
+fi
