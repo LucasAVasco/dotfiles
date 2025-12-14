@@ -1,0 +1,62 @@
+#!/bin/bash
+#
+# Overrides 'vifm' to support 'vifmimg' (https://github.com/thimc/vifmimg) plugin
+
+set -e
+
+source ~/.config/bash/libs/bin_overrides.sh
+
+# If the user can not install external software, run 'vifm' without 'vifmimg'
+if [[ "$ALLOW_EXTERNAL_SOFTWARE" != 'y' ]]; then
+	bin_overrides_call_without_override vifm "$@"
+	exit 0
+fi
+
+# Job that continuously checks if ueberzug is running and starts it if not
+ensure_ueberzug_running() {
+	while true; do
+		# Start ueberzug if not already running
+		if [[ -e "$FIFO_UEBERZUG" ]]; then
+			# If ueberzug is not running, there will be only one process accessing the fifo (vifm). So `lsof` will return only 2 lines
+			# (header + process row)
+			if [[ "$(lsof "$FIFO_UEBERZUG" 2>/dev/null | wc -l)" -le 2 ]]; then
+				ueberzug layer -s -p json <"$FIFO_UEBERZUG"
+			fi
+		fi
+
+		sleep 0.1
+	done
+}
+
+# Number of times 'vifm' has been started and this script has been called
+export VIFM_OVERRIDE_LEVEL=$((VIFM_OVERRIDE_LEVEL + 1))
+
+# If the user started a 'vifm' instance from another 'vifm' instance, the 'VIFM_OVERRIDE_LEVEL' will be greater than 2. Need to reset all
+# environment variables (fresh start)
+if [[ "$VIFM_OVERRIDE_LEVEL" -gt 2 ]]; then
+	unset FIFO_UEBERZUG
+	unset VIFM_OVERRIDE_LEVEL
+	unset VIFMIMG_LOADED
+fi
+
+# Running for the first time
+if [[ "$VIFM_OVERRIDE_LEVEL" == 1 ]]; then
+	# Installs 'vifmimg' plugin
+	if [[ ! -d ~/.config/vifm/plugins/repos/ ]]; then
+		~/.config/vifm/plugins/plugins.sh
+	fi
+
+	# Configures 'vifmimg'
+	export PATH="$PATH:$HOME/.config/vifm/scripts/plugins/vifmimg/"
+	export VIFMIMG_LOADED=y
+
+	# Runs 'vifm' with 'vifmimg' support
+	exec vifmrun "$@"
+
+# Vifmrun will call 'vifm' after setup 'ueberzug'. The 'VIFM_OVERRIDE_LEVEL' will be 2. Must not configure 'vifmimg' more than once
+elif [[ "$VIFM_OVERRIDE_LEVEL" == 2 ]]; then
+	ensure_ueberzug_running &
+	bin_overrides_call_without_override vifm "$@"
+	kill $(jobs -p) # Kill ueberzug job
+	exit 0
+fi
