@@ -16,7 +16,7 @@ local Config = {
 		{ Text = "+" },
 		{ Foreground = { Color = new_tab_bg } },
 		{ Background = { Color = tab_bar_bg } },
-		{ Text = "" },
+		{ Text = " " },
 	}),
 	new_tab_hover = wezterm.format({
 		{ Foreground = { Color = new_tab_hover_bg } },
@@ -27,7 +27,7 @@ local Config = {
 		{ Text = "+" },
 		{ Foreground = { Color = new_tab_hover_bg } },
 		{ Background = { Color = tab_bar_bg } },
-		{ Text = "" },
+		{ Text = " " },
 	}),
 }
 
