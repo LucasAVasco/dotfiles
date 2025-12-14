@@ -1,0 +1,37 @@
+#!/bin/bash
+#
+# Choose a directory using zoxide.
+
+set -e
+
+source ~/.config/bash/libs/help.sh
+
+help_handle n "$@" << EOF
+	Choose a directory using zoxide.
+
+	USAGE
+	zoxide-chooser [--echo-on-abort <string>]
+		Interactively choose a directory using zoxide. The '--echo-on-abort' option sets the string to echo if the user aborts the
+		selection.
+EOF
+
+# Command line options
+echo_on_abort_enabled=n
+echo_on_abort=''
+if [[ "$1" == '--echo-on-abort' ]]; then
+	echo_on_abort_enabled=y
+	echo_on_abort="$2"
+	shift 2
+fi
+
+# FZF options (inspired by the default `zoxide query --interactive` options, but with my customizations)
+export _ZO_FZF_OPTS='--height 100% --no-sort --preview="pretty-preview {2..}" --preview-window=down,33%'
+
+# Runs
+zoxide query --interactive || {
+	if [[ "$echo_on_abort_enabled" == 'y' ]]; then
+		echo "$echo_on_abort"
+	else
+		exit 1
+	fi
+}
