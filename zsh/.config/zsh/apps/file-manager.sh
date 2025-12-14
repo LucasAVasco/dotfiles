@@ -1,20 +1,17 @@
 # Opens the default file manager in the current directory. After closing it, it changes to the last directory visited by the file manager.
 #
-# Based in the official documentation at https://yazi-rs.github.io/docs/quick-start
+# Based in the official documentation at https://wiki.vifm.info/index.php/How_to_set_shell_working_directory_after_leaving_Vifm
 #
 # $@: Arguments to pass to file manager.
 default_term_file_manager_cd() {
-	# New temporary file with the contents of the current directory
-	local cwd_file=$(mktemp -t "$USER"-yazi_cwd.XXXXXXXXX)
-
-	yazi --cwd-file="$cwd_file" "$@"
-
-	# Changes the current directory to the last one visited by Yazi
-	new_cwd=$(/bin/cat -- "$cwd_file")
-	if [[ -n "$new_cwd" ]]; then
-		cd -- "$new_cwd"
+	local chosen="$(command vifm --choose-dir - "$@")"
+	if [[ -z "$chosen" ]]; then
+		echo "Chosen directory empty" >&2
+		return 1
+	elif [[ ! -d "$chosen" ]]; then
+		echo "$chosen is not a directory" >&2
+		return 1
 	fi
 
-	# Removes the temporary file
-	rm -f -- "$cwd_file"
+	cd "$chosen"
 }

@@ -85,7 +85,7 @@ bindkey '^[f' __open_cwd_default_file_manager
 
 # Open terminal file manager and change to directory with it
 __open_cwd_default_file_manager_cd() {
-	default_term_file_manager_cd
+	default_term_file_manager_cd < /dev/tty
 	zle reset-prompt
 }
 
