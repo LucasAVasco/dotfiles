@@ -3,6 +3,9 @@
 	pager = delta
 	autocrlf = input ; Convert CRLF to LF when adding a file
 
+[commit]
+	verbose = true
+
 [init]
 	templateDir = ~/.config/git/template
 	defaultBranch = main
