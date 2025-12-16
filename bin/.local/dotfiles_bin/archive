@@ -1,0 +1,41 @@
+#!/bin/bash
+#
+# File management script.
+
+source ~/.config/bash/libs/help.sh
+
+help_handle y "$@" << EOF
+	File management script.
+
+	USAGE
+		archive unpack <file...>
+			Unpacks the archive
+
+		archive pack -F <format> <file...>
+			Packs the files into an archive
+
+		archive ls <file>
+			Lists the contents of the archive
+EOF
+
+# Main command
+main_command="$1"
+shift
+
+case "$main_command" in
+	unpack)
+		aunpack -e "$@"
+		;;
+
+	pack)
+		apack -e "$@"
+		;;
+
+	ls)
+		als -e "$@"
+		;;
+
+	*)
+		echo "Unknown command: $main_command" >&2
+		;;
+esac
