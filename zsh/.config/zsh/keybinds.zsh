@@ -92,6 +92,18 @@ __open_cwd_default_file_manager_cd() {
 zle -N __open_cwd_default_file_manager_cd
 bindkey '^[m' __open_cwd_default_file_manager_cd
 
+# Change to directory selected with `file-chooser`
+__cd_to_file_chooser_result() {
+	local cd_to_dir=$(file-chooser --only-dirs)
+	if [[ -n "$cd_to_dir" ]]; then
+		cd "$cd_to_dir"
+	fi
+	zle reset-prompt
+}
+
+zle -N __cd_to_file_chooser_result
+bindkey '^[d' __cd_to_file_chooser_result
+
 # Run command with 'json-tools'
 __json_tools_run() {
 	__expand_alias
