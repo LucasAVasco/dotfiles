@@ -92,6 +92,18 @@ __open_cwd_default_file_manager_cd() {
 zle -N __open_cwd_default_file_manager_cd
 bindkey '^[m' __open_cwd_default_file_manager_cd
 
+# Change to directory selected with `zoxide-chooser`
+__cd_to_zoxide_chooser_result() {
+	local cd_to_dir=$(zoxide-chooser)
+	if [[ -n "$cd_to_dir" ]]; then
+		cd "$cd_to_dir"
+	fi
+	zle reset-prompt
+}
+
+zle -N __cd_to_zoxide_chooser_result
+bindkey '^[z' __cd_to_zoxide_chooser_result
+
 # Change to directory selected with `file-chooser`
 __cd_to_file_chooser_result() {
 	local cd_to_dir=$(file-chooser --only-dirs)
