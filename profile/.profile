@@ -29,6 +29,10 @@ export PODMAN_COMPOSE_PROVIDER=podman-compose
 export LESSUTFCHARDEF=E000-F8FF:p,F0000-FFFFD:p,100000-10FFFD:p
 
 
+# Texlive configuration
+export TEXMFHOME=~/.texmf
+
+
 # This variable defines if the user can install external software, like extensions or plugins
 ALLOW_EXTERNAL_SOFTWARE=y
 
