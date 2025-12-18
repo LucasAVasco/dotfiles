@@ -31,6 +31,45 @@
 
 set -e
 
+source ~/.config/bash/libs/help.sh
+
+help_handle y "$@" << EOF
+	Open a file or URI with the default application.
+
+	USAGE
+
+	default_open [--] <file-path-or-uri> [arguments...]
+		Opens the file or URI with the default application.
+
+	default_open --get-cmd [--] <file-path-or-uri> [arguments...]
+		Returns the command that will open the file or URI instead of executing it.
+EOF
+
+# Command line arguments
+get_cmd=n
+if [[ "$1" == '--get-cmd' ]]; then
+	get_cmd=y
+	shift
+fi
+
+if [[ "$1" == '--' ]]; then
+	shift
+fi
+
+# Run the application that will open the file.
+#
+# If the user only requested the command, then echo the command instead of running it.
+#
+# $1: Application to open the file.
+# $2..n: Arguments passed to the application.
+run_application() {
+	if [[ "$get_cmd" == y ]]; then
+		echo "$@"
+	else
+		command "$@"
+	fi
+}
+
 # URI related function {{{
 
 # Get the schema of the URI.
@@ -85,7 +124,7 @@ uri_is_of_schema() {
 # $1: Path of the file or URI to open.
 # $2..n: Arguments passed to the application that will open the file.
 open_web_browser() {
-	default_web_browser "$@"
+	run_application default_web_browser "$@"
 }
 
 # }}}
@@ -96,7 +135,7 @@ open_web_browser() {
 #
 # $1..n: Arguments passed to `xdg-open`
 open_with_xdg() {
-	run-detached xdg-open "$@"
+	run_application run-detached xdg-open "$@"
 }
 
 # Open a file with the default file editor.
@@ -110,10 +149,17 @@ open_file_editor() {
 	local args=("${@:3}")
 
 	if [[ -n "$line_number" ]]; then
-		nvim_new_win "+$line_number" "$file" "${args[@]}"
+		run_application nvim_new_win "+$line_number" "$file" "${args[@]}"
 	else
-		nvim_new_win "$file" "${args[@]}"
+		run_application nvim_new_win "$file" "${args[@]}"
 	fi
+}
+
+# Open a directory with the default file manager.
+#
+# $1..n: Arguments passed to the file manager.
+open_file_manager() {
+	run_application default_file_manager "$@"
 }
 
 # Open a desktop file
@@ -281,7 +327,7 @@ open_local_path() {
 
 	# Directory
 	elif [[ -d "$file" ]]; then
-		default_file_manager "$file" "${@:2}"
+		open_file_manager "$file" "${@:2}"
 
 	else
 		notify-send "The provided file or folder does not exist: '$file'"
@@ -341,7 +387,7 @@ open_git() {
 			if [[ "$repo_url" =~ github\.com ]]; then # If it is a GitHub repository
 				open_web_browser "$repo_url/commit/$commit" "${@:2}"
 			else # Fallback
-				git_show_new_term "$commit"
+				run_application git_show_new_term "$commit"
 			fi
 			;;
 
