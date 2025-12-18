@@ -6,4 +6,4 @@
 
 set -e
 
-"$@" || echo "Command failed with exit code $?"
+"$@" || echo -e "\n\u001b[1;31mCommand failed with exit code\u001b[0m: $?"
