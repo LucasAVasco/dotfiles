@@ -69,7 +69,7 @@ SD ?= ${HOME}
 
 # Number of recursive directories to search when using the 'add' command. 1 will only search the current directory, 2 will
 # search the current and the first sub directory and so on
-SEARCH_DEPTH ?= 10
+SEARCH_DEPTH ?= 1
 
 # Shell to be used with the 'cd' command
 CD_SHELL ?= /bin/bash
