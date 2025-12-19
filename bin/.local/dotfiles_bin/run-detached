@@ -5,5 +5,8 @@
 # $1: the command to run.
 # $2..n: the arguments to pass to the command.
 
+# The command is run in a detached session, so it's not interactive
+export INTERACTIVE_SHELL=''
 
+# Runs the command
 setsid --fork "$@" > /dev/null 2>&1 & disown
