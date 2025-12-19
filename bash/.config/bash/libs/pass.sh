@@ -4,7 +4,12 @@
 
 source ~/.config/bash/libs/linux/keyboard/sound_emulator.sh
 
-_pass_password_dir=$(pass git rev-parse --show-toplevel)
+_pass_password_dir=$(pass git rev-parse --show-toplevel || echo "$HOME/.password-store")
+
+# Get the directory of the password files.
+pass_get_password_dir() {
+	echo -n "$_pass_password_dir"
+}
 
 # Get all password files.
 #
