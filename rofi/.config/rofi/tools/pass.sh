@@ -96,6 +96,11 @@ copy_or_type_text_with_rofi() {
 	fi
 }
 
+# Creates the password store if it doesn't exist
+if [[ ! -d "$(pass_get_password_dir)" ]]; then
+	~/.config/secrets/setup-pass.sh
+fi
+
 # Gets the password content
 password_name=$(select_password_name_with_rofi)
 password_content=$(pass_get_password_content "$password_name")
