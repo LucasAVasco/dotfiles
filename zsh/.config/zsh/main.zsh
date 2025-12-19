@@ -10,6 +10,9 @@ else
 	export RUNNING_INSIDE_CONTAINER=n
 fi
 
+# Macro to indicate that the shell is interactive
+export INTERACTIVE_SHELL=y
+
 # ZSH debug mode
 # DEBUG_ZSH_STARTUP=1
 [[ "$DEBUG_ZSH_STARTUP" == 1 ]] && zmodload zsh/zprof
