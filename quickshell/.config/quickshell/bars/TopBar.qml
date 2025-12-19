@@ -12,7 +12,7 @@ import "./workspaces"
 PanelWindow {
     id: root
 
-    focusable: true // Required by system tray widget to get keyboard modifiers
+    // focusable: true // Required by system tray widget to get keyboard modifiers
 
     // Layout
     implicitHeight: 30
