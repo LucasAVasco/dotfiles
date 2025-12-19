@@ -1,0 +1,11 @@
+\ProvidesPackage{input-csv}[Simple input csv]
+
+\usepackage{csvsimple-l3}
+
+% Input CSV
+%
+% #1: path to the CSV file. 'csvsimple' can not import all CSV files. We recommend to format it with the
+% '../../scripts/format_csv_to_csvsimple.py' script first.
+\newcommand{\inputcsv}[1]{
+    \makebox[\textwidth]{\csvautotabular[respect percent=true]{#1}}
+}
