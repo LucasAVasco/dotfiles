@@ -1,0 +1,23 @@
+\ProvidesPackage{input-img}[Simple input images]
+
+\usepackage{svg}
+\usepackage{graphicx}
+
+\graphicspath{{img/}}
+\svgpath{{img/}}
+
+% Input raw image
+\newcommand{\inputimg}[2][1]{
+    \begin{center}
+        \includegraphics[width=#1\textwidth]{#2}
+    \end{center}
+}
+
+% Input SVG
+\newcommand{\inputsvg}[2][1]{
+    \hfill \break % Adds a line break
+    \begin{center}
+        \includesvg[inkscapelatex=false,width=#1\columnwidth]{#2}
+    \end{center}
+    \hfill \break
+}
