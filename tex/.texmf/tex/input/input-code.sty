@@ -1,0 +1,31 @@
+\ProvidesPackage{input-code}[Simple input code]
+
+\usepackage{verbatimbox} % Required by the 'verbbox' environment
+
+% Theme
+\usepackage[latte]{catppuccinpalette}
+
+% Minted configurations
+\usepackage{minted}
+\definecolor{MintedBg}{gray}{0.95}
+\usemintedstyle{catppuccin-latte}
+
+% Input code.
+%
+% #1: language name. Same as used in minted.
+% #2: file path.
+\newcommand{\inputcode}[2]{
+    \textbf{'#2':}
+    \inputminted[bgcolor=MintedBg,breaklines]{#1}{#2}
+}
+
+% Box with the output of scripts, commands, etc.
+\newenvironment{outputbox}
+{\verbbox[\hspace{1ex}]}
+{
+    \endverbbox
+    % TODO(LucasAVasco): Move the box to the inside of the margin
+    \colorbox{MintedBg}{
+        \parbox{\textwidth}{\theverbbox}
+    }
+}
