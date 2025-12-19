@@ -1,6 +1,7 @@
 ---Table with the server to override and the new file types values
 ---@type table<string, string[]|string> Relates the LSP server identifier (used by lspconfig) to its override file types
 return {
+	bashls = { 'sh', 'bash', 'zsh' },
 	clangd = { 'c', 'cpp', 'objc', 'objcpp', 'cuda' },
 	ts_ls = {
 		-- Default supported files
