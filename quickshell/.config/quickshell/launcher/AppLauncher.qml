@@ -16,7 +16,9 @@ PanelWindow {
         // Launches
         Quickshell.execDetached({
             command: cmd,
-            workingDirectory: entry.workingDirectory
+
+            // Uses the user home directory as fallback
+            workingDirectory: entry.workingDirectory || Quickshell.env("HOME")
         });
 
         // Signal
