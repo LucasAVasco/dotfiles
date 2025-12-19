@@ -1,0 +1,10 @@
+\ProvidesPackage{math-error}[Mathematical error commands]
+
+% Calculate the percentage error between two values and show it in a mathematical way
+%
+% #1: theoretical value.
+% #2: experimental value.
+\newcommand{\matherrorpercent}[2]{
+    $$E_\%={ { \left| {(#1) - (#2)}  \over #1 \right| } \cdot 100\% } =
+    \mathrm{\input{|python -c 'print(abs(((#1)-(#2))*100/#1))'}} \%$$
+}
