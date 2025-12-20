@@ -12,7 +12,7 @@ dialog_rofi_ask_boolean() {
 	local question="$1"
 	local default="$2"
 
-	local choice=$(echo -e "Yes\nNo" | rofi -dmenu -i -p "$message")
+	local choice=$(echo -e "Yes\nNo" | rofi -dmenu -i -p "$question")
 
 	if [[ "$choice" == "Yes" ]]; then
 		echo -n "y"
