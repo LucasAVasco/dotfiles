@@ -1,0 +1,17 @@
+configuration {
+	show-icons: false;
+}
+
+@theme "my-theme"
+
+#inputbar {
+	margin: 0%;
+}
+
+#listview {
+	margin: 0%;
+	lines: 0;
+	columns: 0;
+}
+
+/* vim: set ft=css: */
