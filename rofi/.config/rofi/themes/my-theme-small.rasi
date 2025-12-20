@@ -1,0 +1,23 @@
+@theme "my-theme"
+
+#window {
+	/* Dimensions */
+	width: 30%;
+	padding: 2%;
+
+	/* Appearance */
+	border-radius: 2em;
+}
+
+#inputbar {
+	/* Dimensions */
+	margin: 0% 2% 0 2%;
+}
+
+#listview {
+	/* Dimensions */
+	margin: 2% 0 0 0;
+	lines: 4;
+}
+
+/* vim: set ft=css: */

@@ -1,133 +1,20 @@
 configuration {
-	columns: 4;
-	font: "NotoSans Nerd Font 15";
-
 	window-format: "{w} - {c}: {t}";
 	display-window: "Window:";
 
 	show-icons: true;
 }
 
-* {
-	background-color: rgba(0, 0, 0, 0%);
-	text-color: rgb(200, 200, 200);
-}
-
-#window {
-	background-color: rgba(0, 0, 0, 60%);
-
-	border-radius: 20;
-
-	height: 80%;
-	width: 80%;
-	location: center;
-	anchor: center;
-	x-offset: 0;
-	y-offset: 0;
-}
-
-#inputbar {
-	background-color: rgba(0, 0, 0, 30%);
-
-	border-radius: 15 15 0 0;
-
-	margin: 0;
-	padding: 5% 20% 5% 20%;
-	border: 7;
-}
-
-#prompt {
-	background-color: rgb(255, 200, 111);
-	text-color: rgb(0, 0, 0);
-
-	border-radius: 10;
-
-	padding: 10 20;
-}
-
-#entry {
-	background-color: rgba(100, 100, 100, 80%);
-	placeholder: "Window name...";
-
-	border-radius: 10;
-	padding: 10 2 10 15;
-	margin: 2 5 0 5;
-}
-
-#case-indicator {
-	enabled: false;
-}
+@theme "my-theme-dense"
 
 #listview {
 	lines: 4;
-	columns: 4;
-	fixed-columns: true;
-
-	margin: 10 10;
-	padding: 50;
-	spacing: 20;
+	columns: 3;
 	scrollbar: false;
 }
 
 #element {
-	background-color: rgb(30, 30, 30);
-	border-color: rgb(255, 200, 111);
-
-	border-radius: 20;
-
-	padding: 10 5 10 5;
-}
-
-#element-icon {
-	/* icon size = width size - 2*inputbar margin, border and padding - listview margin and padding */
-	/* There are 4 elements per column. So, divide by 4. This is the element size */
-	/* Divide by 2 because there are the element-text */
-	size: calc((80% - 2*(0 - 40 - 14) - 20 - 100)/8 /2);
-
-	border-radius: 10;
-	border: 0 0 2 2;
-
-	padding: 10;
-}
-
-#element-icon.selected.normal {
-}
-
-#element-text {
-	horizontal-align: 0.5;
-	vertical-align: 0.5;
-	text-color: rgb(255,255,255);
-
-	font: "NotoSans Nerd Font 15";
-
-	border-radius: 5;
-
-	padding: 4;
-	margin: 0 10;
-}
-
-
-#element.selected {
-	background-color: rgb(50, 50, 50);
-	border-color: rgb(255, 200, 111);
-	border: 0 0 2 2;
-}
-
-#element.selected.active {
-	border: 5;
-}
-
-#element.normal.active {
-	border: 5;
-}
-
-#element.normal.urgent {
-	background-color: rgba(255,100,100, 80%);
-}
-
-#element.selected.urgent {
-	background-color: rgba(255, 100, 100, 80%);
-	border-color: rgb(255, 0, 0);
+	orientation: horizontal;
 }
 
 /* vim: set ft=css: */

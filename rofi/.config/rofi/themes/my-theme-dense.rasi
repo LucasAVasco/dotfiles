@@ -1,0 +1,33 @@
+@theme "my-theme"
+
+#window {
+	height: 80%;
+	width: 80%;
+}
+
+#listview {
+	/* Dimensions */
+	lines: 4;
+	columns: 8;
+	fixed-columns: true;
+
+	/* Appearance */
+	scrollbar: false;
+}
+
+#element {
+	orientation: vertical;
+	border-radius: 1em;
+}
+
+#element-icon {
+	size: 2em;
+}
+
+#element-text {
+	horizontal-align: 0.5;
+	vertical-align: 0.5;
+	font: "NotoSans Nerd Font 12";
+}
+
+/* vim: set ft=css: */

@@ -1,72 +1,11 @@
 configuration {
-	columns: 1;
-	font: "NotoSans Nerd Font 15";
 	show-icons: true;
 }
 
-* {
-	background-color: rgba(0, 0, 0, 0%);
-	text-color: rgb(200, 200, 200);
-}
-
-#window {
-	background-color: rgba(0, 0, 0, 80%);
-
-	border: 5;
-	border-radius: 30;
-	border-color: rgba(255, 200, 100, 60%);
-
-	height: 430;
-	width: 250;
-	location: north east;
-	anchor: north east;
-	x-offset: -30;
-	y-offset: 40;
-}
-
-#inputbar {
-	enabled: false;
-}
+@theme "my-theme-small"
 
 #listview {
-	spacing: 10;
-	scrollbar: false;
-
-	padding: 20;
-	margin: 10;
-}
-
-#element {
-	border-color: rgba(0, 0, 0, 0%);
-	background-color: rgb(20, 20, 20);
-
-	padding: 10 20 10 20;
-	border-radius: 20;
-}
-
-#element-icon {
-	size: 30;
-}
-
-#element-text {
-	horizontal-align: 0.5;
-	margin: 5 0 0 0;
-}
-
-#element.selected.normal {
-	border-color: rgb(255, 200, 111);
-	background-color: rgb(50, 50, 50);
-
-	border: 0 0 3 3;
-}
-
-#element.normal.urgent {
-	background-color: rgba(255,100,100, 80%);
-}
-
-#element.selected.urgent {
-	background-color: rgba(255, 100, 100, 80%);
-	border-color: rgb(255, 0, 0);
+	lines: 6;
 }
 
 /* vim: set ft=css: */
