@@ -1,0 +1,92 @@
+configuration {
+	font: "NotoSans Nerd Font 15";
+}
+
+* {
+	background-color: rgba(0, 0, 0, 0%);
+	text-color: rgb(200, 200, 200);
+}
+
+#window {
+	/* Dimensions */
+	width: 60%;
+	padding: 5%;
+
+	/* Appearance */
+	background-color: rgba(0, 0, 0, 100%);
+	border: 1px;
+	border-radius: 3em;
+	border-color: rgba(100, 100, 100, 100%);
+}
+
+#inputbar {
+	/* Centralizes the input bar (margin at left and right) */
+	margin: 0% 10%;
+}
+
+#prompt {
+	/* Dimensions */
+	padding: 0.3em 0.5em 0.3em 0.5em;
+	margin: 0 0.5em 0 0;
+
+	/* Appearance */
+	background-color: rgb(255, 200, 111);
+	text-color: rgb(0, 0, 0);
+	border-radius: 100%;
+}
+
+#entry {
+	/* Dimensions */
+	padding: 0.3em 1.5em 0.3em 1.5em;
+
+	/* Appearance */
+	background-color: rgb(50, 50, 50);
+	border-radius: 100%;
+	placeholder: "...";
+	placeholder-color: rgb(100, 100, 100);
+}
+
+#case-indicator {
+	enabled: false;
+}
+
+#listview {
+	/* Dimensions */
+	margin: 5% 0 0 0;
+	spacing: 0.5em;
+	lines: 10;
+}
+
+#element {
+	/* Dimensions */
+	padding: 0.5em;
+
+	/* Appearance */
+	border-color: rgba(0, 0, 0, 0%);
+	background-color: rgb(30, 30, 30);
+	border-radius: 100%;
+}
+
+#element-text {
+	horizontal-align: 0.5;
+}
+
+#element.selected.normal {
+	background-color: rgb(255, 200, 111);
+}
+
+#element-text.selected.normal {
+	text-color: rgb(0, 0, 0);
+}
+
+#element.normal.urgent {
+	background-color: rgba(255, 100, 100, 50%);
+}
+
+#element.selected.urgent {
+	background-color: rgba(255, 100, 100, 100%);
+	border-color: rgb(255, 0, 0);
+	border: 1;
+}
+
+/* vim: set ft=css: */
