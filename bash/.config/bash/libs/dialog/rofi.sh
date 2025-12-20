@@ -12,15 +12,7 @@ dialog_rofi_ask_boolean() {
 	local question="$1"
 	local default="$2"
 
-	local choice=$(echo -e "Yes\nNo" | rofi -dmenu -i -p "$question")
-
-	if [[ "$choice" == "Yes" ]]; then
-		echo -n "y"
-	elif [[ "$choice" == "No" ]]; then
-		echo -n "n"
-	else
-		echo -n "$default"
-	fi
+	~/.config/rofi/tools/dialog/confrim.sh "$question" "$default"
 }
 
 # Ask a question to the user.
@@ -31,7 +23,5 @@ dialog_rofi_ask_boolean() {
 dialog_rofi_ask_input() {
 	local question="$1"
 
-	local response=$(rofi -dmenu -i -p "$question")
-
-	printf '%s' "$response"
+	~/.config/rofi/tools/dialog/input.sh "$question"
 }
