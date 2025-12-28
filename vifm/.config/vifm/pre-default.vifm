@@ -1,5 +1,6 @@
 " Directory previewer
 fileviewer */ eza --color=always --icons=always --group-directories-first %c
+fileviewer .*/ eza --color=always --icons=always --group-directories-first %c
 
 " Text file previewer
 fileviewer <text/*> bat --color always --style plain %c
