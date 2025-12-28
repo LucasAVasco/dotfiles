@@ -16,3 +16,6 @@ command! zoxide : execute 'cd' fnameescape(system('zoxide-chooser --echo-on-abor
 
 " Extract selected archives
 command! extract : !archive unpack %"f 2>/dev/null &
+
+" Compact selected files in a single archive. You must provide the output format and the output file (the extension is automatically added).
+command! compact : !archive pack -F %a %"f 2>/dev/null &
