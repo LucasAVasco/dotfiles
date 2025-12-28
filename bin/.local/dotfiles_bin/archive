@@ -11,8 +11,8 @@ help_handle y "$@" << EOF
 		archive unpack <file...>
 			Unpacks the archive
 
-		archive pack -F <format> <file...>
-			Packs the files into an archive
+		archive pack -F <format> <output-file> <file...>
+			Packs the files into an archive. The format extension is automatically added to the output file
 
 		archive ls <file>
 			Lists the contents of the archive
@@ -28,7 +28,7 @@ case "$main_command" in
 		;;
 
 	pack)
-		apack -e "$@"
+		apack "$@"
 		;;
 
 	ls)
