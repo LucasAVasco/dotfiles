@@ -35,7 +35,7 @@ export VIFM_OVERRIDE_LEVEL=$((VIFM_OVERRIDE_LEVEL + 1))
 # environment variables (fresh start)
 if [[ "$VIFM_OVERRIDE_LEVEL" -gt 2 ]]; then
 	unset FIFO_UEBERZUG
-	unset VIFM_OVERRIDE_LEVEL
+	export VIFM_OVERRIDE_LEVEL=1
 	unset VIFMIMG_LOADED
 fi
 
