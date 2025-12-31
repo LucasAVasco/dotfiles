@@ -16,6 +16,7 @@ nnoremap gm :cd /run/media/$USER<CR>
 nnoremap gp :cd $HOME/Pictures/<CR>
 nnoremap gr :cd $HOME/Repositories/<CR>
 nnoremap gd :cd $HOME/Downloads/<CR>
+nnoremap gD :cd $HOME/.local/share/vifm/Trash/<CR>
 nnoremap gH :cd $HOME<CR>
 nnoremap gS :cd /home/shared_folder/<CR>
 nnoremap gnc :!NOTIFY_SEND=y nvim-proj open-config<CR>
