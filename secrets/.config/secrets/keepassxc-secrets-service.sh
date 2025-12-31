@@ -17,5 +17,10 @@ if [[ ! -f "$HOME/.secrets/keepassxc/secret-service.kdbx" ]]; then
 	./keepasscx-service-password-creator.sh
 fi
 
+# Waits until a system tray is available
+while ! busctl --user --list | grep StatusNotifierHost >/dev/null; do
+	sleep 0.5
+done
+
 # Launches KeePassXC
 exec keepassxc --minimized ~/.secrets/keepassxc/secret-service.kdbx
