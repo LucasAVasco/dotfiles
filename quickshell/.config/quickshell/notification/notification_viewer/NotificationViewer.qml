@@ -35,6 +35,11 @@ PanelWindow {
         notifications.insert(0, {
             data: item
         });
+
+        // Maximum number of notifications
+        if (notifications.count > 20) {
+            notifications.remove(notifications.count - 1);
+        }
     }
 
     function dismissAll() {
