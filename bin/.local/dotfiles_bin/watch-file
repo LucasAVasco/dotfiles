@@ -1,0 +1,8 @@
+#!/bin/bash
+#
+# Run a command when a file changes
+#
+# stdin: File(s) to watch separated by newlines
+# $@: Command to run and arguments. Uses `entr` as backend, so it supports its arguments, including the '/_'
+
+entr run-pretty "$@"
