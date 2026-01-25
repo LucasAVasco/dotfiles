@@ -1,0 +1,59 @@
+#!/bin/bash
+
+set -e
+
+source ~/.config/bash/libs/help.sh
+
+help_handle n "$@" <<EOF
+	Edit the standard input with the default file manager and paste the content to stdout. Based in the original 'vipe' tool from the
+	'moreutils' package.
+
+	USAGE
+	vipe
+	vipe [--tty] [extension]
+	vipe [--tty] [--suffix extension]
+		Edit the standard input before pasting the content to stdout. If no extension is provided, the default is 'txt'. The '--suffix' is
+		optional and only exists for compatibility with the original 'vipe' tool. If the '--tty' option is provided, the editor will be
+		opened in the same terminal as the 'vipe' command.
+EOF
+
+# Parses the arguments
+enable_tty=n
+extension=txt
+
+while [[ "$#" -gt 0 ]]; do
+	case "$1" in
+		--tty)
+			enable_tty=y
+			;;
+
+		--suffix)
+			extension=$1
+			shift
+			;;
+		*)
+			command ...
+			;;
+	esac
+
+	shift
+done
+
+if [[ "$#" -gt 0 ]]; then
+	extension=$1
+fi
+
+# Creates a temporary file
+tmp_file=$(mktemp "/tmp/vipe-${USER}-XXXXXX.${extension}")
+trap "rm ${tmp_file}" EXIT
+
+# Copies the content of stdin to the temporary file
+cat > "${tmp_file}"
+
+# Edits the temporary file and pastes the content to stdout after closing
+if [[ "${enable_tty}" == 'y' ]]; then
+	default_term_text_editor "${tmp_file}" < /dev/tty > /dev/tty
+else
+	default_text_editor_synced "${tmp_file}" > /dev/null 2>&1
+fi
+cat "${tmp_file}"
