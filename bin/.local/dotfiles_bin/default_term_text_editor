@@ -1,0 +1,7 @@
+#!/bin/bash
+#
+# Open the default terminal text editor in the current terminal instance.
+#
+# This is not a Linux standard functionality. I just use it in my scripts.
+
+exec "$EDITOR" "$@"
