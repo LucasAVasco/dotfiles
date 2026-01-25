@@ -29,8 +29,9 @@ export PODMAN_COMPOSE_PROVIDER=podman-compose
 export LESSUTFCHARDEF=E000-F8FF:p,F0000-FFFFD:p,100000-10FFFD:p
 
 
-# Texlive configuration
-export TEXMFHOME=~/.texmf
+# Save packages in other folders
+export TEXMFHOME=$HOME/.texmf # TeX packages
+export GOPATH="$HOME/.local/share/go" # Go packages
 
 
 # `d-log` configuration
