@@ -1,0 +1,47 @@
+#!/bin/bash
+#
+# Log a message to the debug log. These logs are only for debugging purposes (identify bugs), not for end users.
+#
+# You can group logs to a specific file by setting the environment variable `D_LOG_GROUP`.
+#
+# All the log message are both written to the log file and printed to stdout, so you can use this command in a pipeline.
+#
+# Usage: d-log [NAME] [LEVEL] [MESSAGE]
+# The input is read from stdin if no message is provided.
+
+name="${1:-none}"
+level="${2:-INFO}"
+message="$3"
+
+# Gets the current log id
+id_file="/run/user/$(id -u)/log-current-id.txt"
+if [[ ! -f "$id_file" ]]; then
+	echo "0" > "$id_file"
+fi
+id=$(($(cat "$id_file") + 1))
+echo "$id" > "$id_file"
+
+# Log file
+log_file=$(singleton-tmp-dir "log/${D_LOG_GROUP:-default}.log")
+mkdir -p "$(dirname "$log_file")"
+
+# Write a log to its log file
+#
+# $1: log message
+write_log() {
+	local message="$1"
+
+	# Uses the 'syslog_log' format (date in 'RFC3339' format)
+	echo "$(date --rfc-3339=ns) $name $level [$id]: $message" >> "$log_file"
+}
+
+if [[ -n "$message" ]]; then
+	printf "%s\n" "$message"
+	write_log "$message"
+else
+	# Reads from stdin
+	while read -r line; do
+		printf "%s\n" "$line"
+		write_log "$line"
+	done
+fi
