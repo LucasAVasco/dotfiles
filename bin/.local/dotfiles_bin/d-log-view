@@ -1,0 +1,16 @@
+#!/bin/bash
+#
+# Open the debug logs in `lnav`. If the user does not specify a log group, then it will open all the logs
+#
+# Usage: d-log-view [group]
+
+log_group="$1"
+if [[ -n "$log_group" ]]; then
+	log_file_name="${log_group}.log"
+fi
+
+# Log file
+log_file=$(singleton-tmp-dir "log/${log_file_name}")
+mkdir -p "$(dirname "$log_file")"
+
+lnav "$log_file"
