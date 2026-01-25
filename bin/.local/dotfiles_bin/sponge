@@ -1,0 +1,43 @@
+#!/bin/bash
+
+set -e
+
+source ~/.config/bash/libs/help.sh
+
+help_handle n "$@" <<EOF
+	Copies the contents of stdin to a file. Based in the original 'sponge' command from the 'moreutils' package.
+
+	USAGE
+
+	sponge [-t] <file>
+		Copies the contents of stdin to <file>. The '-t' executes a 'tee' (shows the contents of stdin and saves them to the file)
+EOF
+
+# Parses the arguments
+use_tee=n
+if [[ "$1" == '-t' ]]; then
+	use_tee=y
+	shift
+fi
+
+if [[ "$1" == '--' ]]; then
+	shift
+fi
+
+dest_file="$1"
+
+# Creates a temporary file to save the stdin
+tmp_file=$(mktemp /tmp/sponge.XXXXXX)
+remove_tmp_file=y
+trap '[[ $remove_tmp_file == y ]] && rm $tmp_file' EXIT
+
+# Copies the stdin to a temporary file
+if [[ "$use_tee" == 'y' ]]; then
+	tee "$tmp_file"
+else
+	cat > "$tmp_file"
+fi
+
+# Moves the contents of the temporary file to the destination
+mv "$tmp_file" "$dest_file"
+remove_tmp_file=n
