@@ -1,0 +1,55 @@
+#!/bin/bash
+#
+# Creates a temporary directory that is unique to the user (similar to `mktemp -d`), but always returns the same directory for the same user
+# and session. The directory is lost when the host is restarted.
+
+set -e
+
+source ~/.config/bash/libs/help.sh
+
+help_handle n "$@" <<EOF
+	Creates a temporary directory that is unique to the user (similar to 'mktemp -d'), but always returns the same directory for the same
+	user and session. The directory is lost when the host is restarted.
+
+	Usage: get-singleton-tmp-folder [file path to append]
+EOF
+
+tmp_folder_file="/run/user/$(id -u)/singleton-tmp-dir.txt"
+if [[ -f "$tmp_folder_file" ]]; then
+	tmp_folder=$(cat "$tmp_folder_file")
+else
+	tmp_folder="$(mktemp -d "/tmp/singleton-tmp-dir.XXXXXX")"
+	echo "$tmp_folder" > "$tmp_folder_file"
+fi
+
+# Checks if is directory
+if [[ ! -d "$tmp_folder" ]]; then
+	echo "$tmp_folder is not a directory" >&2
+	exit 1
+fi
+
+# Checks owner
+if [[ $(stat -c "%u" "$tmp_folder") != "$(id -u)" ]]; then
+	echo "$tmp_folder is not owned by user '$USER'" >&2
+	exit 1
+fi
+
+# Checks group
+if [[ $(stat -c "%g" "$tmp_folder") != "$(id -g)" ]]; then
+	echo "$tmp_folder is not owned by group '$USER'" >&2
+	exit 1
+fi
+
+# Checks permissions (must be 700)
+permissions=$(stat -c "%a" "$tmp_folder")
+if [[ "$permissions" != "700" ]]; then
+	echo "$tmp_folder with permissions: $permissions" >&2
+	exit 1
+fi
+
+# Returns the directory
+if [[ "$1" != "" ]]; then
+	echo -n "$tmp_folder/$1"
+else
+	echo -n "$tmp_folder"
+fi
