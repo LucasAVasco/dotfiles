@@ -1,0 +1,7 @@
+#!/bin/bash
+#
+# Open the default text editor in a new window of the default terminal emulator. Do not create a new process in the background
+#
+# This is not a Linux standard functionality. I just use it in my scripts
+
+nvim_new_win_synced "$@"
