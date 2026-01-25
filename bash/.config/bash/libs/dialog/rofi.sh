@@ -25,3 +25,13 @@ dialog_rofi_ask_input() {
 
 	~/.config/rofi/tools/dialog/input.sh "$question"
 }
+
+# Ask a selection question to the user.
+#
+# $1: The question to ask.
+# $2..n: The options to choose.
+#
+# Return the user response or an empty string if no option is selected.
+dialog_rofi_ask_selection() {
+	~/.config/rofi/tools/dialog/select.sh "$@"
+}
