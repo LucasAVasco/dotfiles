@@ -67,3 +67,52 @@ dialog_tui_ask_input() {
 		printf '%s' "$user_response"
 	fi
 }
+
+# Ask a selection question to the user.
+#
+# $1: The question to ask.
+# $2..n: The options to choose.
+#
+# Return the user response or an empty string if no option is selected.
+dialog_tui_ask_selection() {
+	local question="$1"
+
+	if [[ $security_external_software_allowed == y ]]; then
+		gum choose --header="$question" "${@:2}" || return 0
+	else
+		local -a options=("${@:2}")
+
+		# Asks the question to the user
+		echo -en "\n$question:\n" >&2
+
+		for ((i=0; i<${#options[@]}; i++)); do
+			printf "[%s] %s\n" "$((i+1))" "${options[$i]}" 1>&2
+		done
+
+		# Reads the user response
+		read -r user_response
+
+		# If the user response is empty, the operation is aborted, but does not return an error
+		if [[ -z "$user_response" ]]; then
+			return 0
+		fi
+
+		# Validates the user response (only numbers are allowed)
+		if [[ ! $user_response =~ ^[0-9]+$ ]]; then
+			echo -ne "\nInvalid answer '$user_response'.!" 1>&2
+			return 1
+		fi
+
+		local response="${options[$((user_response-1))]}"
+
+		# Checks if the user selected a valid option.
+		# NOTE(LucasAVasco): if the index is '0', it returns the last element, even if '0' is not a valid option. We need to check if the
+		# response is '0'
+		if [[ -z "$response" || "$user_response" == 0 ]]; then
+			echo -ne "\nThere is no option '$user_response'." 1>&2
+			return 1
+		fi
+
+		printf '%s' "$response"
+	fi
+}
