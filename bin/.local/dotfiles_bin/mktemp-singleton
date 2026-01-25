@@ -1,0 +1,20 @@
+#!/bin/bash
+#
+# Command equivalent to `mktemp` but uses the singleton temporary folder.
+#
+# You can use the same options as `mktemp`, except the '--tmpdir' and '-p' options. They are reserved by this script
+
+if [[ "$1" == '--h' || "$1" == '--help' ]]; then
+	cat <<-EOF
+		Usage: mktemp-singleton [options]
+		You can use the same options as 'mktemp', except the '--tmpdir' and '-p' options. They are reserved by this script.
+
+		'mktemp' help:
+
+	EOF
+
+	mktemp --help
+	exit 0
+fi
+
+mktemp --tmpdir="$(singleton-tmp-dir)" "$@"
