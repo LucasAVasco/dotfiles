@@ -42,3 +42,17 @@ dialog_ask_input() {
 		dialog_rofi_ask_input "$@"
 	fi
 }
+
+# Ask a selection question to the user.
+#
+# $1: The question to ask.
+# $2..n: The options to choose.
+#
+# Return the user response or an empty string if no option is selected.
+dialog_ask_selection() {
+	if [[ $__dialog_is_in_tty == 'y' ]]; then
+		dialog_tui_ask_selection "$@"
+	else
+		dialog_rofi_ask_selection "$@"
+	fi
+}
