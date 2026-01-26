@@ -3,6 +3,8 @@ return {
 		'rachartier/tiny-inline-diagnostic.nvim',
 		event = 'DiagnosticChanged',
 
+		cond = MYVAR.not_in_vscode,
+
 		opts = {
 			preset = 'modern',
 

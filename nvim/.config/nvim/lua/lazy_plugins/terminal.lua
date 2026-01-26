@@ -3,6 +3,8 @@ return {
 		'akinsho/toggleterm.nvim',
 		version = '*',
 
+		cond = MYVAR.not_in_vscode,
+
 		cmd = {
 			'ToggleTerm',
 			'ToggleTermSendCurrentLine',

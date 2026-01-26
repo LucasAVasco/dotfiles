@@ -2,6 +2,8 @@ return {
 	{
 		'mbbill/undotree',
 
+		cond = MYVAR.not_in_vscode,
+
 		keys = {
 			{
 				'<leader>U',

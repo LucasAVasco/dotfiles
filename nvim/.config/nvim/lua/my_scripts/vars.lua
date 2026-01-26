@@ -1,6 +1,9 @@
 _G.MYVAR = {}
 _G.MYPLUGVAR = {}
 
+MYVAR.in_vscode = vim.g.vscode
+MYVAR.not_in_vscode = not MYVAR.in_vscode
+
 MYVAR.utilities_ft = {
 	'NvimTree',
 	'calendar',

@@ -311,8 +311,9 @@ return {
 	},
 	{
 		'lukas-reineke/headlines.nvim',
-
 		dependencies = 'nvim-treesitter/nvim-treesitter',
+
+		cond = MYVAR.not_in_vscode,
 
 		ft = { 'norg', 'org' },
 

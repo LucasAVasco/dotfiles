@@ -12,6 +12,8 @@ return {
 			'nvim-lua/plenary.nvim',
 		},
 
+		cond = MYVAR.not_in_vscode,
+
 		event = 'InsertEnter',
 		cmd = 'Codeium',
 
@@ -35,10 +37,13 @@ return {
 	},
 	{
 		'ravitemer/mcphub.nvim',
+
 		dependencies = {
 			'nvim-lua/plenary.nvim',
 		},
 		build = 'npm install -g mcp-hub@latest',
+
+		cond = MYVAR.not_in_vscode,
 
 		cmd = 'MCPHub',
 
@@ -60,6 +65,8 @@ return {
 			-- MCPHub
 			'ravitemer/mcphub.nvim',
 		},
+
+		cond = MYVAR.not_in_vscode,
 
 		cmd = {
 			'CodeCompanion',
@@ -161,6 +168,8 @@ return {
 		},
 
 		build = 'make',
+
+		cond = MYVAR.not_in_vscode,
 
 		keys = {
 			{ '<leader>a' },

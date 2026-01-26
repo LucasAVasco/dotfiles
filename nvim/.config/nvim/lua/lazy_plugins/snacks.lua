@@ -12,15 +12,14 @@ return {
 		---@type snacks.Config
 		opts = {
 			image = {
-				enabled = true,
+				enabled = MYVAR.not_in_vscode,
 				doc = {
 					inline = false,
 				},
 			},
 			quickfile = { enabled = true },
 			bigfile = { enabled = true },
-			lazygit = { enabled = true },
-			terminal = {},
+			lazygit = { enabled = MYVAR.not_in_vscode },
 			dashboard = require('lazy_plugins.snacks.dashboard'),
 			scratch = {},
 			picker = {
@@ -43,9 +42,11 @@ return {
 			end, {})
 
 			-- LazyGit
-			vim.api.nvim_create_user_command('Lazygit', function()
-				snacks.lazygit.open()
-			end, {})
+			if MYVAR.not_in_vscode then
+				vim.api.nvim_create_user_command('Lazygit', function()
+					snacks.lazygit.open()
+				end, {})
+			end
 
 			-- Scratch
 			vim.api.nvim_create_user_command('Scratch', function()

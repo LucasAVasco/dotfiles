@@ -4,6 +4,8 @@
 ---@module 'snacks'
 ---@type snacks.dashboard.Config|{}
 return {
+	enabled = MYVAR.not_in_vscode,
+
 	sections = {
 		{ section = 'header' },
 		{

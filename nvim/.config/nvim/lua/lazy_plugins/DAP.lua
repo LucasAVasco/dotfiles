@@ -33,6 +33,8 @@ return {
 	{
 		'mfussenegger/nvim-dap',
 
+		cond = MYVAR.not_in_vscode,
+
 		cmd = {
 			'DapStepInto',
 			'DapShowLog',
@@ -283,6 +285,7 @@ return {
 			'nvim-treesitter/nvim-treesitter',
 		},
 
+		cond = MYVAR.not_in_vscode,
 		lazy = true,
 
 		---@module 'nvim-dap-virtual-text'
@@ -330,6 +333,8 @@ return {
 			'mfussenegger/nvim-dap',
 			'nvim-neotest/nvim-nio',
 		},
+
+		cond = MYVAR.not_in_vscode,
 
 		cmd = { 'DapOpenUi', 'DapCloseUi', 'DapToggleUi' },
 

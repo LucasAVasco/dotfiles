@@ -6,11 +6,14 @@
 return {
 	{
 		'folke/noice.nvim',
-		event = 'VeryLazy',
 
 		dependencies = {
 			'MunifTanjim/nui.nvim',
 		},
+
+		cond = MYVAR.not_in_vscode,
+
+		event = 'VeryLazy',
 
 		---@module "noice.config.init"
 		---@type NoiceConfig

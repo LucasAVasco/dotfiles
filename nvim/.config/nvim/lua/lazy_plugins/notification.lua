@@ -1,6 +1,8 @@
 return {
 	{
 		'rcarriga/nvim-notify',
+
+		cond = MYVAR.not_in_vscode,
 		lazy = true,
 		priority = 9500, -- Notification system
 

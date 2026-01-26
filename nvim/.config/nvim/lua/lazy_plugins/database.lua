@@ -38,12 +38,18 @@ end
 return {
 	{
 		'tpope/vim-dadbod',
+
+		cond = MYVAR.not_in_vscode,
+
 		cmd = {
 			'DB',
 		},
 	},
 	{
 		'kristijanhusak/vim-dadbod-completion',
+
+		cond = MYVAR.not_in_vscode,
+
 		ft = { 'sql', 'mysql', 'plsql' },
 	},
 	{
@@ -52,6 +58,8 @@ return {
 		dependencies = {
 			'tpope/vim-dadbod',
 		},
+
+		cond = MYVAR.not_in_vscode,
 
 		keys = {
 			{ '<leader>MU', '<CMD>DBUIToggle<CR>', desc = 'Toggle database User interface' },

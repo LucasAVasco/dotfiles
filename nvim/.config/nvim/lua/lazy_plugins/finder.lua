@@ -95,6 +95,7 @@ return {
 			'nvim-lua/plenary.nvim',
 		},
 
+		cond = MYVAR.not_in_vscode,
 		lazy = true,
 
 		cmd = 'Telescope',

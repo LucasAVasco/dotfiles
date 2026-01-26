@@ -69,6 +69,8 @@ return {
 			'kevinhwang91/promise-async',
 		},
 
+		cond = MYVAR.not_in_vscode,
+
 		config = function()
 			vim.o.foldenable = true
 			vim.o.foldmethod = 'manual'

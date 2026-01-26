@@ -3,7 +3,14 @@ MYPLUGVAR.lspFileTypes = {}
 
 return {
 	{
+		'hrsh7th/cmp-nvim-lsp',
+		lazy = true,
+		cond = MYVAR.not_in_vscode,
+	},
+	{
 		'neovim/nvim-lspconfig',
+
+		cond = MYVAR.not_in_vscode,
 
 		dependencies = {
 			'williamboman/mason.nvim',
@@ -135,7 +142,9 @@ return {
 						end
 					end
 
-					vim.cmd.LspStart({ args = { server_name } })
+					if MYVAR.not_in_vscode then
+						vim.cmd.LspStart({ args = { server_name } })
+					end
 				end)
 			end
 
@@ -216,7 +225,10 @@ return {
 	},
 	{
 		'ray-x/lsp_signature.nvim',
+
+		cond = MYVAR.not_in_vscode,
 		event = 'InsertEnter',
+
 		opts = {
 			floating_window = false, -- Only use virtual text
 
@@ -228,6 +240,8 @@ return {
 	},
 	{
 		'kosayoda/nvim-lightbulb',
+
+		cond = MYVAR.not_in_vscode,
 		event = 'LspAttach',
 
 		opts = {
@@ -257,6 +271,7 @@ return {
 			'nvim-tree/nvim-web-devicons',
 		},
 
+		cond = MYVAR.not_in_vscode,
 		cmd = 'Lspsaga',
 
 		opts = {

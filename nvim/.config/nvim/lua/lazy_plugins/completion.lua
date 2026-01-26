@@ -33,6 +33,8 @@ return {
 
 		build = 'make install_jsregexp', -- Required to use variable/placeholder transformations in the snippets
 
+		cond = MYVAR.not_in_vscode,
+
 		cmd = {
 			'LuaSnipEditFiles',
 			'LuaSnipListAvailable',
@@ -108,11 +110,14 @@ return {
 	},
 	{
 		'windwp/nvim-autopairs',
-		event = 'InsertEnter',
 
 		dependencies = {
 			'hrsh7th/nvim-cmp',
 		},
+
+		cond = MYVAR.not_in_vscode, -- Already provided by VSCode
+
+		event = 'InsertEnter',
 
 		opts = {
 			disable_filetype = { 'TelescopePrompt', 'NvimTree' },
@@ -173,6 +178,8 @@ return {
 			'Bilal2453/luvit-meta', -- Support to 'vim.loop'
 		},
 
+		cond = MYVAR.not_in_vscode,
+
 		-- Only enabled if editing a Lua file and the user is inside a directory owned by Neovim
 		ft = 'lua',
 
@@ -209,6 +216,8 @@ return {
 	},
 	{
 		'hrsh7th/nvim-cmp',
+
+		cond = MYVAR.not_in_vscode,
 
 		event = { 'InsertEnter', 'CmdlineEnter' },
 

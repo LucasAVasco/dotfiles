@@ -165,6 +165,8 @@ return {
 			{ 'fredrikaverpil/neotest-golang', version = '*' },
 		},
 
+		cond = MYVAR.not_in_vscode,
+
 		cmd = 'Test',
 
 		keys = {
@@ -282,6 +284,8 @@ return {
 	{
 		'andythigpen/nvim-coverage',
 		version = '*',
+
+		cond = MYVAR.not_in_vscode,
 
 		keys = { { '<leader>Tc', '<CMD>CoverageAuto<CR>', desc = 'Toggle coverage test visualization' } },
 

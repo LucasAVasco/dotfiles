@@ -17,6 +17,8 @@ return {
 			'nvim-tree/nvim-web-devicons',
 		},
 
+		cond = MYVAR.not_in_vscode,
+
 		opts = {
 			options = {
 				-- The default commands forces the buffer deletion (lose the unwritten changes). I do not like it, so I am changing these
@@ -222,17 +224,22 @@ return {
 	},
 	{
 		'Bekaboo/dropbar.nvim',
-
 		dependencies = {
 			'nvim-tree/nvim-web-devicons',
 		},
 
+		cond = MYVAR.not_in_vscode,
+
 		event = 'VeryLazy',
+
 		opts = {},
 	},
 	{
 		'nvim-treesitter/nvim-treesitter-context',
+		cond = MYVAR.not_in_vscode,
+
 		event = 'VeryLazy',
+
 		opts = {
 			max_lines = 4,
 			min_window_height = 30,
@@ -241,10 +248,11 @@ return {
 	},
 	{
 		'nvim-lualine/lualine.nvim',
-
 		dependencies = {
 			'nvim-tree/nvim-web-devicons',
 		},
+
+		cond = MYVAR.not_in_vscode,
 
 		event = 'User MyEventOpenEditableFile',
 

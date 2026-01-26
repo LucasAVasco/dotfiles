@@ -2,6 +2,8 @@ return {
 	{
 		'preservim/vim-pencil',
 
+		cond = MYVAR.not_in_vscode,
+
 		cmd = {
 			'HardPencil',
 			'NoPencil',

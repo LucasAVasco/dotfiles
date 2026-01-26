@@ -9,12 +9,13 @@ return {
 	{
 		'mfussenegger/nvim-lint',
 
-		event = 'BufWrite',
-
 		init = function()
 			MYPLUGFUNC.set_keymap_name('<leader>C', 'Checkers (linters and testers)')
 		end,
 
+		cond = MYVAR.not_in_vscode, -- VSCode does not shows Neovim diagnostics
+
+		event = 'BufWrite',
 		cmd = {
 			'Lint',
 		},

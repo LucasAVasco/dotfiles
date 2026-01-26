@@ -7,6 +7,8 @@ return {
 			'nvim-tree/nvim-web-devicons',
 		},
 
+		cond = MYVAR.not_in_vscode,
+
 		cmd = {
 			'AerialClose',
 			'AerialCloseAll',

@@ -35,6 +35,8 @@ return {
 			'nvim-tree/nvim-web-devicons',
 		},
 
+		cond = MYVAR.not_in_vscode,
+
 		cmd = 'Oil',
 
 		opts = {
@@ -99,6 +101,8 @@ return {
 		dependencies = {
 			'nvim-tree/nvim-web-devicons',
 		},
+
+		cond = MYVAR.not_in_vscode,
 
 		cmd = {
 			'NvimTreeOpen',

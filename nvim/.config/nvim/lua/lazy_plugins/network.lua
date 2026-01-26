@@ -1,11 +1,14 @@
 return {
 	{
 		'mistweaverco/kulala.nvim',
-		ft = { 'http', 'rest' },
 
 		opts = {
 			display_mode = 'float',
 		},
+
+		cond = MYVAR.not_in_vscode,
+
+		ft = { 'http', 'rest' },
 
 		init = function()
 			vim.filetype.add({

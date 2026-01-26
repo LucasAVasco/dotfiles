@@ -40,6 +40,8 @@ return {
 		'folke/trouble.nvim',
 		dependencies = { 'nvim-tree/nvim-web-devicons' },
 
+		cond = MYVAR.not_in_vscode,
+
 		keys = {
 			{ '<leader>Qd', '<CMD>Trouble diagnostics toggle<CR>', desc = 'Open the diagnostics' },
 			{ '<leader>Ql', '<CMD>lclose<CR><CMD>Trouble loclist<CR>', desc = 'Open the loclist in Trouble' },

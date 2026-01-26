@@ -41,6 +41,8 @@ return {
 	{
 		'tpope/vim-fugitive',
 
+		cond = MYVAR.not_in_vscode,
+
 		cmd = {
 			'G',
 			'Git',
@@ -72,6 +74,8 @@ return {
 	},
 	{
 		'sindrets/diffview.nvim',
+
+		cond = MYVAR.not_in_vscode,
 
 		cmd = {
 			'DiffviewClose',

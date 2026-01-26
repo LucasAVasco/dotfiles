@@ -9,11 +9,13 @@ end
 return {
 	{
 		'folke/which-key.nvim',
-		event = 'VeryLazy',
-
 		dependencies = {
 			'echasnovski/mini.icons',
 		},
+
+		cond = MYVAR.not_in_vscode,
+
+		event = 'VeryLazy',
 
 		opts = {
 			delay = function(context)
