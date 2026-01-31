@@ -81,3 +81,14 @@ paths_is_directory() {
 	# Any other file
 	echo -n n
 }
+
+# Check if the provided path is absolute.
+#
+# $1: path.
+paths_is_abs() {
+	if [[ "$1" == /* ]]; then
+		echo -n y
+	else
+		echo -n n
+	fi
+}
