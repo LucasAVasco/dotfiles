@@ -51,3 +51,33 @@ paths_ensure_trailing_slash_on_directories() {
 		echo "$src"
 	fi
 }
+
+# Check if the provided path is a directory.
+#
+# $1: path.
+#
+# Return 'y' or 'n'.
+paths_is_directory() {
+	local src="$1"
+
+	# Current folder
+	if [[ "$src" == . || "$src" == */. ]]; then
+		echo -n y
+		return
+	fi
+
+	# Parent folder
+	if [[ "$src" == .. || "$src" == */.. ]]; then
+		echo -n y
+		return
+	fi
+
+	# Any other folder
+	if [[ "$src" == */ ]]; then
+		echo -n y
+		return
+	fi
+
+	# Any other file
+	echo -n n
+}
