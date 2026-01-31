@@ -62,6 +62,7 @@ config_file_get_key_value() {
 	while IFS="$separator" read entry_name entry_value; do
 		if [[ "$entry_name" == "$key" ]]; then
 			value="$entry_value"
+			break
 		fi
 	done < "$config_file"
 
