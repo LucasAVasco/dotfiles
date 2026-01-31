@@ -1,3 +1,6 @@
 {
-  "firewall-backend": "nftables"
+  "firewall-backend": "nftables",
+  "features": {
+    "containerd-snapshotter": true
+  }
 }
