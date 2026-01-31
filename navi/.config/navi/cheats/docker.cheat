@@ -153,3 +153,13 @@ dive <images-var>
 
 # Get the images of a repository
 http GET 'https://hub.docker.com/v2/namespaces/<namespace>/repositories/<image>/tags?page_size=2000&page=1' | jq '.results[].name'
+
+
+% Docker configuration
+
+
+$ ca-cert-file-var: find . -maxdepth 3 -name '*.crt'
+
+
+# Set host CA certificate
+mkdir -p ~/.config/docker/certs.d/<host>:<port> && cp <ca-cert-file-var> ~/.config/docker/certs.d/<host>:<port>/ca.crt
