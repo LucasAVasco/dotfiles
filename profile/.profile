@@ -22,6 +22,7 @@ fi
 
 # Apps environment variables
 export PODMAN_COMPOSE_PROVIDER=podman-compose
+export BUILDKIT_PROGRESS=plain
 
 
 # Defines UTF8 characters that LESS should print the icons instead of its numeric value
