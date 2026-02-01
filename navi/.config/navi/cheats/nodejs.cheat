@@ -22,3 +22,13 @@ yarn --cwd <yarn-root-workspace-var> add --dev typescript prettier eslint && yar
 
 # Configure project to work with Neovim and YARN (only if the project use 'node_modules' directory)
 yarn --cwd <yarn-root-workspace-var> add --dev typescript prettier eslint
+
+
+% Node.js, Pnpm
+
+
+# Make the current directory available as a package
+pnpm link
+
+# Remove the current package from the registry
+pnpm remove "$(cat package.json | jq -r .name)" -g
