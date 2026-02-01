@@ -32,7 +32,9 @@ return {
 
 		keys = {
 			{ '<leader>t', desc = 'Table mode mappings' },
+			{ '<leader>tm', desc = 'Toggle table mode' },
 			{ '<leader>tA', "ggVG:'<,'>Tableize<CR>", desc = 'Tableize all file' },
+			{ mode = { 'n', 'v' }, '<leader>tt', desc = 'Tableize line or selection' },
 		},
 	},
 }
