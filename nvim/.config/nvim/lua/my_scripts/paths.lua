@@ -1,11 +1,11 @@
 local data = vim.fn.stdpath('data') --[[@as string]]
 
+---@type string
 local home = vim.env.HOME
 local config = home .. '/.config/nvim/'
 local config_lua = config .. '/lua/'
 local mason = data .. '/mason/'
 
----@type table<string, string>
 MYPATHS = {
 	home = home,
 	config = config,
