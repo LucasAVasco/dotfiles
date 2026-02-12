@@ -32,9 +32,140 @@
 	* https://tree-sitter.github.io/tree-sitter/syntax-highlighting#language-injection
 ]]
 
+--- Returns `true` if the buffer has a tree-sitter parser
+---@param buffer integer
+---@return boolean
+local function buffer_has_parser(buffer)
+	local lang = vim.treesitter.language.get_lang(vim.bo[buffer].filetype)
+	return require('nvim-treesitter.parsers')[lang] ~= nil
+end
+
+--- Starts the tree-sitter parser in the buffer. Does nothing if the parser is already running or if the buffer does not have a available
+--- parser
+---@param buffer integer
+local function enable_highlighting(buffer)
+	if not buffer_has_parser(buffer) then
+		return
+	end
+
+	if vim.treesitter.highlighter.active[buffer] then
+		return
+	end
+
+	vim.treesitter.start(buffer)
+end
+
+--- Stops the tree-sitter parser in the buffer. Does nothing if the parser is not running
+---@param buffer integer
+local function disable_highlighting(buffer)
+	if vim.treesitter.highlighter.active[buffer] then
+		vim.treesitter.stop(buffer)
+	end
+end
+
+--- List of languages already installed (do not install them again)
+---@type { [string]: boolean }
+local already_installed = {}
+
+--- Returns the languages that are not installed
+---@param langs string[]
+---@return string[]
+local function filter_non_installed_langs(langs)
+	local installed = {}
+	for _, lang in pairs(langs) do
+		if not already_installed[lang] then
+			table.insert(installed, lang)
+		end
+	end
+	return installed
+end
+
+--- Mark the languages as already installed
+---@param langs any
+local function mark_langs_as_installed(langs)
+	for _, lang in pairs(langs) do
+		already_installed[lang] = true
+	end
+end
+
+--- Return the treesitter languages that are inside the current buffer. Example: current language + injected languages
+---
+--- ***NOTE***: automatically starts the tree-sitter parser in the buffer if it is not running
+---@param buffer integer
+---@return string[]
+local function get_buffer_languages(buffer)
+	-- Current parser
+	local parser, err = vim.treesitter.get_parser(buffer, nil, {
+		error = false,
+	})
+	if err then
+		vim.notify('error getting parser: ' .. err, vim.log.levels.ERROR)
+		return {}
+	end
+
+	if parser == nil then
+		return {}
+	end
+
+	-- Languages in the current parser
+	local inner_langs = {}
+	parser:for_each_tree(function(_, ltree)
+		local lang = ltree:lang()
+		table.insert(inner_langs, lang)
+	end)
+
+	return inner_langs
+end
+
+--- Install the parsers for the given languages and starts tree-sitter in the provided buffer
+---@param langs? string[]
+---@param buffer integer
+local function setup_parsers(buffer, langs)
+	if not buffer_has_parser(buffer) then
+		return
+	end
+
+	-- Default language
+	if langs == nil then
+		langs = {
+			vim.treesitter.language.get_lang(vim.bo[buffer].filetype),
+		}
+	end
+
+	--- List languages to install
+	---@type string[]
+	local langs_to_install = filter_non_installed_langs(langs)
+
+	-- Only install once. All languages even if they does not have a parser are marked as installed to avoid running this function again
+	mark_langs_as_installed(langs)
+
+	-- No parser to install, just start tree-sitter
+	if #langs_to_install == 0 then
+		enable_highlighting(buffer)
+		return
+	end
+
+	--- Installs the parsers
+	local task = require('nvim-treesitter').install(langs_to_install)
+
+	-- Wait for the languages to be installed before installing its inner languages
+	task:await(function(err)
+		if err then
+			vim.notify('error installing parsers: ' .. vim.inspect(err), vim.log.levels.ERROR)
+			return
+		end
+
+		-- Install inner languages
+		local all_langs = get_buffer_languages(buffer)
+		disable_highlighting(buffer) -- Disable highlighting to ensure that the new parsers are loaded by the next setup function
+		setup_parsers(buffer, all_langs)
+	end)
+end
+
 return {
 	{
 		'nvim-treesitter/nvim-treesitter',
+		branch = 'main',
 
 		dependencies = {
 			'LucasAVasco/project_runtime_dirs.nvim', -- Used by `TSEditQueryRtd`
@@ -48,182 +179,21 @@ return {
 		opts = {
 			-- 'markdown_inline' is required by `trouble.nvim`. `regex` is required by `noicenvim`
 			ensure_installed = { 'lua', 'vim', 'vimdoc', 'markdown_inline', 'regex' },
-			sync_install = false,
-			auto_install = false, -- I use a custom 'auto_install' auto command
-
-			highlight = { enable = true },
-			incremental_selection = { enable = true },
-			matchup = { enable = true },
-			indent = {
-				enable = true,
-				disable = { 'markdown' },
-			},
-
-			-- Text object key maps (used by 'nvim-treesitter-textobjects' plugin) {{{
-
-			-- Configuration based on the official documentation at: https://github.com/nvim-treesitter/nvim-treesitter-textobjects
-			-- And on the following video: https://www.youtube.com/watch?v=CEMPq_r8UYQ
-
-			textobjects = {
-				select = {
-					enable = true,
-					lookahead = true,
-
-					keymaps = {
-						['i='] = { query = '@assignment.inner', desc = 'Inner assignment' },
-						['a='] = { query = '@assignment.outer', desc = 'Outer assignment' },
-						['l='] = { query = '@assignment.lhs', desc = 'Left part of assignment' },
-						['r='] = { query = '@assignment.rhs', desc = 'Right part of assignment' },
-						['ih'] = { query = '@attribute.inner', desc = 'Inner attribute' },
-						['ah'] = { query = '@attribute.outer', desc = 'Outer attribute' },
-						['ik'] = { query = '@block.inner', desc = 'Inner part of a block' },
-						['ak'] = { query = '@block.outer', desc = 'Outer part of a block' },
-						['if'] = { query = '@call.inner', desc = 'Inner part of a call' },
-						['af'] = { query = '@call.outer', desc = 'Outer part of a call' },
-						['i]'] = { query = '@class.inner', desc = 'Inner part of a class' },
-						['a]'] = { query = '@class.outer', desc = 'Outer part of a class' },
-						['ig'] = { query = '@comment.inner', desc = 'Inner part of comment' },
-						['ag'] = { query = '@comment.outer', desc = 'Outer part of a comment' },
-						['ii'] = { query = '@conditional.inner', desc = 'Inner part of conditional' },
-						['ai'] = { query = '@conditional.outer', desc = 'Outer part of a conditional' },
-						['ie'] = { query = '@frame.inner', desc = 'Inner part of a frame' },
-						['ae'] = { query = '@frame.outer', desc = 'Outer part of a frame' },
-						['im'] = { query = '@function.inner', desc = 'Inner part of a method/function' },
-						['am'] = { query = '@function.outer', desc = 'Outer part of a method/function' },
-						['io'] = { query = '@loop.inner', desc = 'Inner part of a loop' },
-						['ao'] = { query = '@loop.outer', desc = 'Outer part of a loop' },
-						['in'] = { query = '@number.inner', desc = 'Inner part of a number' },
-						['iv'] = { query = '@parameter.inner', desc = 'Inner part of a parameter' },
-						['av'] = { query = '@parameter.outer', desc = 'Outer part of a parameter' },
-						['ix'] = { query = '@regex.inner', desc = 'Inner part of a regex' },
-						['ax'] = { query = '@regex.outer', desc = 'Outer part of a regex' },
-						['ir'] = { query = '@return.inner', desc = 'Inner part of a return' },
-						['ar'] = { query = '@return.outer', desc = 'Outer part of a return' },
-						['ij'] = { query = '@scopename.inner', desc = 'Inner part of a scope name' },
-						['aj'] = { query = '@statement.outer', desc = 'Outer part of a statement' },
-					},
-				},
-
-				swap = {
-					enable = true,
-
-					swap_previous = {
-						['<A-N>'] = '@parameter.inner',
-					},
-
-					swap_next = {
-						['<A-n>'] = '@parameter.inner',
-					},
-				},
-
-				move = {
-					enable = true,
-					set_jumps = true,
-
-					goto_next_start = {
-						[']='] = { query = '@assignment.outer', desc = 'Outer assignment' },
-						[']h'] = { query = '@attribute.outer', desc = 'Outer attribute' },
-						[']k'] = { query = '@block.outer', desc = 'Outer part of a block' },
-						[']f'] = { query = '@call.outer', desc = 'Outer part of a call' },
-						[']]'] = { query = '@class.outer', desc = 'Outer part of a class' },
-						[']g'] = { query = '@comment.outer', desc = 'Outer part of a comment' },
-						[']i'] = { query = '@conditional.outer', desc = 'Outer part of a conditional' },
-						[']e'] = { query = '@frame.outer', desc = 'Outer part of a frame' },
-						[']m'] = { query = '@function.outer', desc = 'Outer part of a method/function' },
-						[']o'] = { query = '@loop.outer', desc = 'Outer part of a loop' },
-						[']n'] = { query = '@number.inner', desc = 'Inner part of a number' },
-						[']v'] = { query = '@parameter.outer', desc = 'Outer part of a parameter' },
-						[']x'] = { query = '@regex.outer', desc = 'Outer part of a regex' },
-						[']r'] = { query = '@return.outer', desc = 'Outer part of a return' },
-						[']j'] = { query = '@statement.outer', desc = 'Outer part of a statement' },
-					},
-
-					goto_next_end = {
-						[']+'] = { query = '@assignment.outer', desc = 'Outer assignment' },
-						[']H'] = { query = '@attribute.outer', desc = 'Outer attribute' },
-						[']K'] = { query = '@block.outer', desc = 'Outer part of a block' },
-						[']F'] = { query = '@call.outer', desc = 'Outer part of a call' },
-						[']['] = { query = '@class.outer', desc = 'Outer part of a class' },
-						[']G'] = { query = '@comment.outer', desc = 'Outer part of a comment' },
-						[']I'] = { query = '@conditional.outer', desc = 'Outer part of a conditional' },
-						[']E'] = { query = '@frame.outer', desc = 'Outer part of a frame' },
-						[']M'] = { query = '@function.outer', desc = 'Outer part of a method/function' },
-						[']O'] = { query = '@loop.outer', desc = 'Outer part of a loop' },
-						[']V'] = { query = '@parameter.outer', desc = 'Outer part of a parameter' },
-						[']X'] = { query = '@regex.outer', desc = 'Outer part of a regex' },
-						[']R'] = { query = '@return.outer', desc = 'Outer part of a return' },
-						[']J'] = { query = '@statement.outer', desc = 'Outer part of a statement' },
-					},
-
-					goto_previous_start = {
-						['[='] = { query = '@assignment.outer', desc = 'Outer assignment' },
-						['[h'] = { query = '@attribute.outer', desc = 'Outer attribute' },
-						['[k'] = { query = '@block.outer', desc = 'Outer part of a block' },
-						['[f'] = { query = '@call.outer', desc = 'Outer part of a call' },
-						['[]'] = { query = '@class.outer', desc = 'Outer part of a class' },
-						['[g'] = { query = '@comment.outer', desc = 'Outer part of a comment' },
-						['[i'] = { query = '@conditional.outer', desc = 'Outer part of a conditional' },
-						['[e'] = { query = '@frame.outer', desc = 'Outer part of a frame' },
-						['[m'] = { query = '@function.outer', desc = 'Outer part of a method/function' },
-						['[o'] = { query = '@loop.outer', desc = 'Outer part of a loop' },
-						['[n'] = { query = '@number.inner', desc = 'Inner part of a number' },
-						['[v'] = { query = '@parameter.outer', desc = 'Outer part of a parameter' },
-						['[x'] = { query = '@regex.outer', desc = 'Outer part of a regex' },
-						['[r'] = { query = '@return.outer', desc = 'Outer part of a return' },
-						['[j'] = { query = '@statement.outer', desc = 'Outer part of a statement' },
-					},
-
-					goto_previous_end = {
-						['[+'] = { query = '@assignment.outer', desc = 'Outer assignment' },
-						['[H'] = { query = '@attribute.outer', desc = 'Outer attribute' },
-						['[K'] = { query = '@block.outer', desc = 'Outer part of a block' },
-						['[F'] = { query = '@call.outer', desc = 'Outer part of a call' },
-						['[['] = { query = '@class.outer', desc = 'Outer part of a class' },
-						['[G'] = { query = '@comment.outer', desc = 'Outer part of a comment' },
-						['[I'] = { query = '@conditional.outer', desc = 'Outer part of a conditional' },
-						['[E'] = { query = '@frame.outer', desc = 'Outer part of a frame' },
-						['[M'] = { query = '@function.outer', desc = 'Outer part of a method/function' },
-						['[O'] = { query = '@loop.outer', desc = 'Outer part of a loop' },
-						['[V'] = { query = '@parameter.outer', desc = 'Outer part of a parameter' },
-						['[X'] = { query = '@regex.outer', desc = 'Outer part of a regex' },
-						['[R'] = { query = '@return.outer', desc = 'Outer part of a return' },
-						['[J'] = { query = '@statement.outer', desc = 'Outer part of a statement' },
-					},
-				},
-			},
-
-			-- }}}
 		},
 
 		config = function(_, opts)
 			require('mason') -- Configured in another file
+			local treesitter = require('nvim-treesitter')
+			treesitter.setup(opts)
+
 			MYPLUGFUNC.ensure_mason_package_installed('tree-sitter-cli') -- Required to use `:TSInstallFromGrammar`
+			treesitter.install(opts.ensure_installed)
 
-			require('nvim-treesitter.configs').setup(opts)
-
-			-- Auto command to automatically install a 'treesitter' parser for the current file type
-
-			---Languages of the automatically installed parsers
-			---@type table<string, boolean>
-			local instaled_langs = {}
+			-- Auto command to automatically enable tree-sitter syntax highlighting to all buffers with an available parser. Automatically
+			-- detect and install the parser if needed
 			vim.api.nvim_create_autocmd('FileType', {
 				callback = function(args)
-					local parsers = require('nvim-treesitter.parsers')
-					local lang = parsers.get_buf_lang(args.buf)
-
-					-- Only installs the parser once
-					if instaled_langs[lang] then
-						return
-					end
-
-					instaled_langs[lang] = true
-
-					-- Checks if there is a configured parser to the language
-					if not parsers.get_parser_configs()[lang] then
-						return
-					end
-
-					require('nvim-treesitter.install').ensure_installed(lang)
+					setup_parsers(args.buf)
 				end,
 			})
 
