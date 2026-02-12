@@ -103,6 +103,7 @@ return {
 		keys = {
 			{ '<leader>gb', '<CMD>Telescope buffers<CR>', desc = 'Select a buffer with Telescope and go to it' },
 			{ '<leader>gff', '<CMD>Telescope find_files<CR>', desc = 'Select files with Telescope and open them' },
+			{ '<leader>gfs', '<CMD>Telescope live_grep<CR>', desc = 'Search in files with Telescope' },
 		},
 
 		config = function()
