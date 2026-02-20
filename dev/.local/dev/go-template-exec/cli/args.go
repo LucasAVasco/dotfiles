@@ -11,10 +11,10 @@ import (
 
 // Args contains the command line arguments. Can be parsed with kong
 type Args struct {
-	Template      string `type:"path" help:"Template content"`
+	Template      string `type:"string" help:"Template content"`
 	TemplateFile  string `arg:"" type:"path" help:"Template path"`
 	TemplateStdin bool   `type:"bool" help:"Read template from stdin" default:"false"`
-	Data          string `type:"path" help:"Data content"`
+	Data          string `type:"string" help:"Data content"`
 	DataFile      string `type:"path" help:"Data path"`
 	DataStdin     bool   `type:"bool" help:"Read data from stdin" default:"false"`
 	DataFormat    string `type:"string" help:"Data format" default:"json"`
