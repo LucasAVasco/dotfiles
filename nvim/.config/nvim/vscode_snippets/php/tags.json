@@ -1,0 +1,13 @@
+{
+	"Ignore LSP error": {
+		"prefix": ["disregard", "ignore-lsp-error"],
+		"description": "Ignore LSP error",
+		"body": ["@disregard ${1:Code}"]
+	},
+
+	"Ignore unused symbol error": {
+		"prefix": ["disregard-unused", "ignore-unused-symbol-error"],
+		"description": "Ignore unused symbol error",
+		"body": ["@disregard P1003"]
+	}
+}

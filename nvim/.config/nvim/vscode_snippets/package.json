@@ -65,6 +65,12 @@
 			},
 			{
 				"language": [
+					"php"
+				],
+				"path": "./php/tags.json"
+			},
+			{
+				"language": [
 					"typescript",
 					"javascript"
 				],
