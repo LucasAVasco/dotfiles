@@ -38,7 +38,7 @@ Rectangle {
 
         // Appearance
         radius: height / 2
-        color: "#444444"
+        color: "transparent"
 
         IconImage {
             source: LibIcon.getIconPath(root.notification?.appIcon)

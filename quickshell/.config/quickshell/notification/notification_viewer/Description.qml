@@ -14,7 +14,7 @@ Rectangle {
     required property date receivedAt
 
     // Appearance
-    color: "#444444"
+    color: "transparent"
     radius: height / 4
 
     ColumnLayout {
@@ -31,7 +31,7 @@ Rectangle {
             Layout.margins: height / 10
 
             // Appearance
-            color: "#444444"
+            color: "transparent"
 
             ColumnLayout {
                 id: description

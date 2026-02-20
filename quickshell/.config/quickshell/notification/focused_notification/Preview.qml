@@ -39,7 +39,7 @@ Rectangle {
             implicitHeight: root.height
 
             // Appearance
-            color: "#444444"
+            color: "transparent"
         }
     }
 }

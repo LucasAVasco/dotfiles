@@ -8,7 +8,7 @@ Rectangle {
     required property Notification notification
 
     // Appearance
-    color: "#444444"
+    color: "transparent"
     radius: height / 6
 
     ScrollView {
