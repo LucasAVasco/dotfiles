@@ -1,1 +1,1 @@
-MYPLUGFUNC.ensure_mason_package_installed('clang-format')
+MYPLUGFUNC.ensure_mason_packages_are_installed({ 'clang-format', 'codelldb' })
