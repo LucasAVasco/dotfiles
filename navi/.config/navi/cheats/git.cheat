@@ -23,6 +23,9 @@ git gc
 git reflog expire --expire=now --all
 git gc --prune=now --aggressive
 
+# Run a command with 'file' protocol enabled
+git -c protocol.file.allow=always
+
 
 % git, lfs
 
