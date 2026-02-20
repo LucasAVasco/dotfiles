@@ -1,0 +1,73 @@
+#!/bin/bash
+#
+# Run a command for each line of stdin
+
+set -e
+
+source ~/.config/bash/libs/help.sh
+
+help_handle y "$@" <<EOF
+	Run a command for each line of the received standard input. Replaces all '/_' arguments in the command by the current line
+
+	Usage: foreach-line [-d] [-s] -- <command>
+
+	Flags:
+		-d, --debug     Enable debug mode
+		-s, --shell     Run the command in a subshell
+EOF
+
+# Command line options
+debug=n
+run_in_shell=n
+while [[ $# -gt 0 ]]; do
+	case "$1" in
+		-d | --debug)
+			debug=y
+			;;
+
+		-s | --shell)
+			run_in_shell=y
+			;;
+
+		--)
+			shift
+			break
+			;;
+
+		*)
+			break
+			;;
+	esac
+
+	# Next argument
+	shift
+done
+
+# Main loop
+while IFS=$'\n' read -r line; do
+	cmd=("$@")
+
+	# Replaces all '/_' in the command by the current line
+	for ((i = 0; i < ${#cmd[@]}; i++)); do
+		if [[ "${cmd[$i]}" == '/_' ]]; then
+			cmd[$i]="${line}"
+		fi
+	done
+
+	# Debug info
+	if [[ "$debug" == 'y' ]]; then
+		echo '---'
+		printf '\e[0;34mInput:\e[0m %s\n' "${line}"
+		printf '\e[0;34mRunning:\e[0m %s\n' "${cmd[*]}"
+	fi
+
+	# Runs the command in a subshell to avoid polluting the environment
+	(
+		if [[ "$run_in_shell" == 'y' ]]; then
+			shell="${SHELL-bash}"
+			"$shell" -c "${cmd[*]}"
+		else
+			command "${cmd[@]}"
+		fi
+	)
+done
