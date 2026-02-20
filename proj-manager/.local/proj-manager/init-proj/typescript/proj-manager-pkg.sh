@@ -28,6 +28,9 @@ pkg_manager_node_install_packages_as_dev . @types/node typescript npm-run-all
 package_log "Generating sample 'tsconfig.json'..."
 pkg_manager_node_exec . tsc --init
 
+package_log 'Creating .gitignore...'
+echo '/node_modules/' >> .gitignore
+
 package_log "Adding 'package.json' scripts..."
 cat package.json \
 	| jq '.scripts.clean = "node -e \"fs.rmSync('\''./dist'\'', { recursive: true, force: true })\""'\
