@@ -20,8 +20,38 @@ type Args struct {
 	DataFormat    string `type:"string" help:"Data format" default:"json"`
 }
 
+// validateCommon validates common arguments (between template data and template content)
+func (a *Args) validateCommon() error {
+	if a.TemplateStdin && a.DataStdin {
+		return fmt.Errorf("template and data cannot be read from stdin at the same time")
+	}
+
+	return nil
+}
+
 // ReadTemplateContent reads the template content, Does not execute it
 func (a *Args) ReadTemplateContent() (string, error) {
+	// Validation
+	if err := a.validateCommon(); err != nil {
+		return "", fmt.Errorf("invalid arguments: %w", err)
+	}
+
+	templateSources := 0
+	if a.Template != "" {
+		templateSources++
+	}
+	if a.TemplateFile != "" {
+		templateSources++
+	}
+	if a.TemplateStdin {
+		templateSources++
+	}
+
+	if templateSources > 1 {
+		return "", fmt.Errorf("template can not be provided by more than one source")
+	}
+
+	// Template not parsed
 	var template string
 
 	if a.Template != "" {
@@ -33,7 +63,7 @@ func (a *Args) ReadTemplateContent() (string, error) {
 		}
 
 		template = string(templateBytes)
-	} else if a.TemplateFile != "" || a.TemplateStdin {
+	} else if a.TemplateFile != "" {
 		templateContent, err := os.ReadFile(a.TemplateFile)
 		if err != nil {
 			return "", fmt.Errorf("failed to read file: %w", err)
@@ -41,7 +71,7 @@ func (a *Args) ReadTemplateContent() (string, error) {
 
 		template = string(templateContent)
 	} else {
-		return "", fmt.Errorf("template path is required if template content is not provided")
+		return "", fmt.Errorf("no template source provided")
 	}
 
 	return template, nil
@@ -49,6 +79,26 @@ func (a *Args) ReadTemplateContent() (string, error) {
 
 // ReadTemplateData reads the template data. Parses it (json or yaml) and returns the result
 func (a *Args) ReadTemplateData() (any, error) {
+	// Validation
+	if err := a.validateCommon(); err != nil {
+		return "", fmt.Errorf("invalid arguments: %w", err)
+	}
+
+	dataSources := 0
+	if a.Data != "" {
+		dataSources++
+	}
+	if a.DataFile != "" {
+		dataSources++
+	}
+	if a.DataStdin {
+		dataSources++
+	}
+
+	if dataSources > 1 {
+		return nil, fmt.Errorf("data can not be provided by more than one source")
+	}
+
 	// Reader for template data
 	var reader io.Reader
 
@@ -57,7 +107,7 @@ func (a *Args) ReadTemplateData() (any, error) {
 	} else if a.DataFile != "" {
 		file, err := os.Open(a.DataFile)
 		if err != nil {
-			return "", fmt.Errorf("failed to open data file: %w", err)
+			return nil, fmt.Errorf("failed to open data file: %w", err)
 		}
 
 		defer file.Close()
@@ -75,7 +125,7 @@ func (a *Args) ReadTemplateData() (any, error) {
 		var err error
 		data, err = parser.ReadData(reader, a.DataFormat)
 		if err != nil {
-			return "", fmt.Errorf("failed to read stdin: %w", err)
+			return nil, fmt.Errorf("failed to read stdin: %w", err)
 		}
 	}
 
