@@ -1,0 +1,142 @@
+#!/bin/env lua
+
+local help = [[
+	Replaces parameters in a text. Each parameter placeholder in the text (%1, %2, %3, ...) is replaced by its corresponding parameter from
+	the command line (<param1>, <param2>, <param3>, ...).
+
+	Usage: paramsubst [-p placeholder] -- [text] <param1> <param2> ...
+
+	Arguments:
+		<text> Text to substitute. If there is a redirect (pipe) to the standard input, the text is read from it and this parameter does not
+			exists (you should provide the arguments after the '--')
+
+	Flags:
+		-p override the default placeholder prefix (default: %)
+]]
+
+if #arg == 0 or arg[1] == "--help" or arg[1] == "-h" then
+	-- Prints the help without the first tab of each line
+	help = help:gsub("^%s+", ""):gsub("\n\t", "\n")
+	io.write(help)
+
+	-- Exits
+	os.exit(#arg ~= 0 and 0 or 1)
+
+	return
+end
+
+-- Parses command line arguments
+local prefix = "%"
+if arg[1] == "-p" then
+	prefix = arg[2]
+	table.remove(arg, 1)
+	table.remove(arg, 1)
+end
+
+if arg[1] == "--" then
+	table.remove(arg, 1)
+end
+
+-- Gets the text. Reads from standard input if there is a redirect (pipe) to it. Otherwise, takes the first argument
+local text = ""
+if os.execute("test -t 0") then
+	text = arg[1]
+	table.remove(arg, 1)
+else
+	text = io.stdin:read("*a")
+end
+
+--- Current position in the text
+local current_position = 0
+
+--- Gets the index of the parameter.
+---@return integer
+function get_parameter_index()
+	local current_char = string.sub(text, current_position, current_position)
+
+	-- If the index is inside braces. Example: %{1}
+	local inside_brace = false
+	if current_char == "{" then
+		inside_brace = true
+		current_position = current_position + 1
+		current_char = string.sub(text, current_position, current_position)
+	end
+
+	-- Tries cot convert the character to a number
+	if not tonumber(current_char) then
+		io.stderr:write(
+			("invalid parameter index at position %d, must be a number or open brace '{' but got: %s\n"):format(
+				current_position,
+				current_char
+			)
+		)
+		os.exit(1)
+	end
+
+	-- Converts the index to a number
+
+	local index_str = string.gmatch(text, "(%d+)", current_position)()
+
+	local index = tonumber(index_str)
+
+	if not index then
+		io.stderr:write(("invalid parameter index at position %d: %s\n"):format(current_position, index_str))
+		os.exit(1)
+	end
+
+	if index > #arg then
+		io.stderr:write(
+			("parameter index (%d) at position %d out of max range (%d)\n"):format(index, current_position, #arg)
+		)
+		os.exit(1)
+	end
+
+	-- Updates the current position
+
+	current_position = current_position + string.len(index_str)
+
+	if inside_brace then
+		if string.sub(text, current_position, current_position) ~= "}" then
+			io.stderr:write(
+				("invalid character at position %d, must be a close brace '}' but got: %s\n"):format(
+					current_position,
+					string.sub(text, current_position, current_position)
+				)
+			)
+			os.exit(1)
+		end
+
+		current_position = current_position + 1
+	end
+
+	return index
+end
+
+-- Substitution
+while true do
+	local position = string.find(text, prefix, current_position, true)
+
+	-- Last line of the text. Just print the rest
+	if not position then
+		io.write(text:sub(current_position, -1))
+		break
+	end
+
+	-- Prints the text before the current prefix
+	io.write(text:sub(current_position, position - 1))
+
+	-- Updates the position
+	current_position = position + 1
+
+	-- Current character
+	local current_char = string.sub(text, current_position, current_position)
+
+	if current_char == prefix then
+		-- Ignore double prefix. Just print the prefix
+		io.write(prefix)
+		current_position = position + 2
+	else
+		local index = get_parameter_index()
+		io.write(arg[index])
+	end
+end
