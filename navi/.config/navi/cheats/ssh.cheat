@@ -1,0 +1,8 @@
+% SSH
+
+; List all known hosts (from ~/.ssh/known_hosts and ~/.ssh/config)
+$ var-ssh-hosts: printf "%s\n%s" "$(cat ~/.ssh/known_hosts | cut -d ' ' -f1)" "$(cat .ssh/config | grep '^Host' | cut -d' ' -f2)" | \
+	sort | uniq
+
+# Open an interactive shell on the remote host with ZSH
+ssh <var-ssh-hosts> -t 'sh -l -c zsh'
