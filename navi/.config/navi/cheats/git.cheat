@@ -27,6 +27,19 @@ git gc --prune=now --aggressive
 git -c protocol.file.allow=always
 
 
+% git, submodules
+
+
+# Initialize and update submodules
+git submodule update --init
+
+# Run submodule command with 'file' protocol enabled
+git -c protocol.file.allow=always submodule
+
+# Initialize and update submodules (with 'file' protocol enabled)
+git -c protocol.file.allow=always submodule update --init
+
+
 % git, lfs
 
 
