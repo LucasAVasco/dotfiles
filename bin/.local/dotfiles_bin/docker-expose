@@ -1,0 +1,36 @@
+#!/bin/bash
+#
+# Exposes a container port on the host
+
+source ~/.config/bash/libs/help.sh
+
+help_handle y "$@" <<EOF
+	Exposes a container port on the host. Do not require to stop or create the container to work. You can expose a port of an already
+	running container
+
+	Usage: docker-expose <container_id> <host_port>:<container_port>
+
+	Arguments:
+		<container_id>   The id of the container to connect to (can be the name)
+		<host_port>      The port on the host to connect to
+		<container_port> The port on the container to connect to
+
+EOF
+
+source ~/.config/bash/libs/docker.sh
+
+# Received arguments
+container_id="$1"
+host_port="${2%%:*}"
+container_port="${2#*:}"
+
+# Get container info
+container_network=$(docker_get_container_networks "$container_id" | sed -n 1p)
+container_ip=$(docker_get_container_ips "$container_id" | sed -n 1p)
+
+# Expose
+docker run --rm \
+	--network="$container_network" \
+	-p "$host_port:8080" \
+	alpine/socat \
+	TCP-LISTEN:8080,fork,reuseaddr TCP:"$container_ip":"$container_port"
