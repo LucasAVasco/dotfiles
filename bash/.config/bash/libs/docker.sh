@@ -41,3 +41,29 @@ docker_send_file_to_container() {
 
 	docker cp "$src_file" "$container:$dest_file"
 }
+
+# Replaces files in a container by files in the host machine.
+docker_replace_files_in_container() {
+	local container="$1"
+	local src_file="$2"
+	local dest_file="$3"
+
+	docker_execute_command_in_container "$container" 'root' rm -rf "$dest_file"
+	docker cp "$src_file" "$container:$dest_file"
+}
+
+# Get the container network names separated by new lines.
+#
+# $1: container ID.
+docker_get_container_networks() {
+	local container="$1"
+	docker inspect --format '{{range $net,$v := .NetworkSettings.Networks}}{{printf "%s\n" $net}}{{end}}' "$container"
+}
+
+# Get the container IPs separated by new lines.
+#
+# $1: container ID.
+docker_get_container_ips() {
+	local container="$1"
+	docker inspect --format '{{range .NetworkSettings.Networks}}{{printf "%s\n" .IPAddress}}{{end}}' "$container"
+}
