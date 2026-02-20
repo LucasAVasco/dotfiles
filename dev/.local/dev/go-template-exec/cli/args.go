@@ -29,6 +29,15 @@ func (a *Args) validateCommon() error {
 	return nil
 }
 
+// StdinIsRedirected checks if standard input is being redirected (pipe)
+func StdinIsRedirected() (bool, error) {
+	if info, err := os.Stdin.Stat(); err != nil {
+		return false, fmt.Errorf("failed to get standard input status: %w", err)
+	} else {
+		return info.Mode()&os.ModeNamedPipe != 0, nil
+	}
+}
+
 // ReadTemplateContent reads the template content, Does not execute it
 func (a *Args) ReadTemplateContent() (string, error) {
 	// Validation
@@ -114,6 +123,14 @@ func (a *Args) ReadTemplateData() (any, error) {
 		reader = file
 	} else if a.DataStdin {
 		reader = os.Stdin
+	} else if !a.TemplateStdin { // If no data is provided, try to read from stdin
+		isRedirected, err := StdinIsRedirected()
+		if err != nil {
+			return nil, fmt.Errorf("failed to check if stdin is redirected: %w", err)
+		}
+		if isRedirected {
+			reader = os.Stdin
+		}
 	} else {
 		return nil, nil
 	}
