@@ -165,6 +165,7 @@ vim.keymap.set({ 'n', 'v' }, vim.g.secondleader .. 'C', '"_C', get_default_opt('
 
 -- Normal in other modes
 vim.keymap.set('t', '<Esc>', '<C-\\><C-n>', get_default_opt('Normal mode into terminal')) -- In terminal
+vim.keymap.set('t', '<A-Esc>', '<Esc>', get_default_opt('Send <ESC> to terminal')) -- In terminal
 vim.keymap.set({ 'n', 's' }, '<A-;>', ':<C-f>', get_default_opt('Open command-line window')) -- The <C-f> need to be override if your 'cedit' is not 'CTRL-F'
 
 -- Movement with arrow keys in insert mode
