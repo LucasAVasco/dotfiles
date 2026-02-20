@@ -7,7 +7,7 @@ set -e
 source ../lib/wget.sh
 source ../lib/bin.sh
 
-version="0.13.2"
+version="0.14.0-beta2"
 
 case "$1" in
 	i | u)
