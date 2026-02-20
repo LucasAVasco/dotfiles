@@ -19,6 +19,7 @@ containers_num=$(echo "$containers_ids" | wc -w)
 if [[ $containers_num -gt 0 ]]; then
 	response=$(notify-send --urgency=critical \
 		--category='presence.online' \
+		--expire-time=60000 \
 		--action='stop=Stop all docker containers' \
 		'Docker' "Active containers number: $containers_num")
 
