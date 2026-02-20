@@ -1,0 +1,37 @@
+{
+	"Sample name Label": {
+		"prefix": "name-label",
+		"description": "'name' label recommend by kubernetes",
+		"body": "app.kubernetes.io/name: ${1:Name}"
+	},
+
+	"Sample instance Label": {
+		"prefix": "instance-label",
+		"description": "'instance' label recommend by kubernetes",
+		"body": "app.kubernetes.io/instance: ${1:Instance}"
+	},
+
+	"Sample version Label": {
+		"prefix": "version-label",
+		"description": "'version' label recommend by kubernetes",
+		"body": "app.kubernetes.io/version: ${1:Version}"
+	},
+
+	"Sample component Label": {
+		"prefix": "component-label",
+		"description": "'component' label recommend by kubernetes",
+		"body": "app.kubernetes.io/component: ${1:Component}"
+	},
+
+	"Sample part-of Label": {
+		"prefix": "part-of-label",
+		"description": "'part-of' label recommend by kubernetes",
+		"body": "app.kubernetes.io/part-of: ${1:Part-of}"
+	},
+
+	"Sample managed-by Label": {
+		"prefix": "managed-by-label",
+		"description": "'managed-by' label recommend by kubernetes",
+		"body": "app.kubernetes.io/managed-by: ${1:Managed-by}"
+	}
+}
