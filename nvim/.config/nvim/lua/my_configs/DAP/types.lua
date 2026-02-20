@@ -9,5 +9,6 @@
 ---@field type string Name of the debugger adapter.
 ---@field request? 'attach' | 'launch' Default to 'launch'
 ---@field program? string The program to debug. Default is '${file}'
+---@field args? string[] Arguments to pass to the program.
 
 ---@alias my_config.DAP.debugee_file table<string, my_config.DAP.debugee[]> Maps each file type to its debugee configuration.
