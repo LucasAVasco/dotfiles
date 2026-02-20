@@ -21,6 +21,7 @@ nnoremap gH :cd $HOME<CR>
 nnoremap gS :cd /home/shared_folder/<CR>
 nnoremap gnc :!NOTIFY_SEND=y nvim-proj open-config<CR>
 nnoremap gnp :!NOTIFY_SEND=y nvim-proj open<CR>
+nnoremap gnr :cd $HOME/Repositories/neovim_repos/<CR>
 
 " Tabs
 nnoremap <A-A> :tabnew<CR>
