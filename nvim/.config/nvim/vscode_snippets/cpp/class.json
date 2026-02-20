@@ -1,0 +1,30 @@
+{
+	"Non-copyable class methods": {
+		"prefix": ["non-copyable-class-methods", "deleted-copy-methods"],
+		"description": "Adds the methods that make the class non-copyable",
+		"body": [
+			"${1:ClassName}(const ${1:ClassName} &reg) = delete;",
+			"${1:ClassName} &operator=(const ${1:ClassName} &reg) = delete;"
+		]
+	},
+
+	"Non-moveable class methods": {
+		"prefix": ["non-moveable-class-methods", "deleted-move-methods"],
+		"description": "Adds the methods that make the class non-moveable",
+		"body": [
+			"${1:ClassName}(${1:ClassName} &&reg) = delete;",
+			"${1:ClassName} &operator=(${1:ClassName} &&reg) = delete;"
+		]
+	},
+
+	"Default copy and move methods": {
+		"prefix": ["default-copy-and-move-methods", "default-methods"],
+		"description": "Adds the default copy and move methods",
+		"body": [
+			"${1:ClassName}(const ${1:ClassName} &reg) = default;",
+			"${1:ClassName} &operator=(const ${1:ClassName} &reg) = default;",
+			"${1:ClassName}(${1:ClassName} &&reg) = default;",
+			"${1:ClassName} &operator=(${1:ClassName} &&reg) = default;"
+		]
+	}
+}

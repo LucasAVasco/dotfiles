@@ -67,6 +67,13 @@
 					"cpp",
 					"c"
 				],
+				"path": "./cpp/class.json"
+			},
+			{
+				"language": [
+					"cpp",
+					"c"
+				],
 				"path": "./cpp/headers.json"
 			},
 			{
