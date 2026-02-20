@@ -15,7 +15,7 @@ wget_export_files_to_bin() {
 	local -a abs_files
 
 	for file_path in "$@"; do
-		abs_files+="$(install_wget_get_abs_path "$file_path")"
+		abs_files+=("$(install_wget_get_abs_path "$file_path")")
 	done
 
 	bin_copy_files "${abs_files[@]}"
