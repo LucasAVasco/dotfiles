@@ -19,6 +19,10 @@ if [ "$DESKTOP_SESSION" = "bspwm" ]; then
 	export _JAVA_AWT_WM_NONREPARENTING=1
 fi
 
+# Ensures some default environment variables exist
+if [ -z "$XDG_RUNTIME_DIR" ]; then
+	export XDG_RUNTIME_DIR="/var/run/user/$(id -u)"
+fi
 
 # Apps environment variables
 export PODMAN_COMPOSE_PROVIDER=podman-compose
