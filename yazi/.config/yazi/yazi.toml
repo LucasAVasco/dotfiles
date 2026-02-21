@@ -1,18 +1,16 @@
-"$schema" = "https://yazi-rs.github.io/schemas/yazi.json"
+#:schema https://yazi-rs.github.io/schemas/yazi.json
 
 # Sample configuration at https://github.com/sxyazi/yazi/blob/main/yazi-config/preset/yazi-default.toml
 
 [opener]
 open = [{ run = 'default_open "$@"', desc = "Open" }]
 open_detach = [
-	{ run = 'default_open "$@"', orphan = true, desc = "Open detached" },
+  { run = 'default_open "$@"', orphan = true, desc = "Open detached" },
 ]
-
-reveal = [{ run = 'default_term', desc = "Reveal" }]
-
+reveal = [{ run = "default_term", desc = "Reveal" }]
 play = [
-	{ run = 'vlc "$@"', desc = "Play" },
-	{ run = 'clear; ffprobe -hide_banner "$1"; read', block = true, desc = "Show media information", for = "unix" },
+  { run = 'vlc "$@"', desc = "Play" },
+  { run = 'clear; ffprobe -hide_banner "$1"; read', block = true, desc = "Show media information", for = "unix" },
 ]
 
 [open]
