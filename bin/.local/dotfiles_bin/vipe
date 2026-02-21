@@ -47,8 +47,12 @@ fi
 tmp_file=$(mktemp "/tmp/vipe-${USER}-XXXXXX.${extension}")
 trap "rm ${tmp_file}" EXIT
 
-# Copies the content of stdin to the temporary file
-cat > "${tmp_file}"
+# Copies the standard input to the temporary file. If there is no standard input, creates an empty file
+if [[ -t 0 ]]; then
+	touch "${tmp_file}"
+else
+	cat > "${tmp_file}"
+fi
 
 # Edits the temporary file and pastes the content to stdout after closing
 if [[ "${enable_tty}" == 'y' ]]; then
