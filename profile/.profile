@@ -104,9 +104,6 @@ if [ "$ALLOW_EXTERNAL_SOFTWARE" = y ]; then
 	# CMake defaults
 	export CMAKE_EXPORT_COMPILE_COMMANDS=1
 
-	# Local docker configuration
-	export DOCKER_HOST=unix://$XDG_RUNTIME_DIR/docker.sock
-
 	# Overrides some binaries
 	export PATH="$HOME/.local/dotfiles_bin_override:$PATH"
 
