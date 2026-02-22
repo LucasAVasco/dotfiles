@@ -44,7 +44,7 @@ Rectangle {
             source: LibIcon.getIconPath(root.notification?.appIcon)
 
             anchors.centerIn: parent
-            implicitSize: parent.height * 0.7
+            implicitSize: parent.height
         }
     }
 
