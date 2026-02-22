@@ -353,7 +353,9 @@ return {
 								end
 
 								-- Use the git repository root directory when editing the '.git/COMMIT_EDITMSG' file
-								if buffer_file_type == 'gitcommit' then
+								if vim.env.EDITING_COMMAND_LINE then
+									return vim.env.PWD
+								elseif buffer_file_type == 'gitcommit' then
 									base_dir = vim.fn.fnamemodify(base_dir, ':h')
 								elseif buffer_file_type == 'yaml' then
 									-- Use the root directory of the GitHub workflow
