@@ -19,9 +19,9 @@ EOF
 
 
 if [[ "$1" == '' ]]; then
-	make -C ~/.local/custom_scripts WORKING_DIR="$PWD" SCRIPT='git/backup.sh'
+	custom-script run './scripts/git/backup.sh'
 elif [[ "$1" == '-u' ]]; then
-	make -C ~/.local/custom_scripts WORKING_DIR="$PWD" SCRIPT='git/delete_backup.sh'
+	custom-script run './scripts/git/delete_backup.sh'
 else
 	echo "Unknown argument: $1" >&2
 fi

@@ -1,5 +1,5 @@
 #!/bin/bash
 #
-# Opens the 'custom-scripts' tool in the default terminal emulator.
+# Opens the 'custom-script' tool in the default terminal emulator.
 
-default_term bash -c 'make --quiet -C ~/.local/custom_scripts WORKING_DIR=$(pwd); read -n 1'
+default_term bash -c 'custom-script; read -n 1'
