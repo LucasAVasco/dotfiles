@@ -1,0 +1,16 @@
+#!/bin/bash
+#
+# Checks if a process is running by the current effective user. Supports all arguments of `pgrep` except '-u' because it is implicit
+
+if [[ "$1" == '-h' || "$1" == '--help' ]]; then
+	cat <<-EOF
+	Checks if a process is running by the current effective user. Supports all arguments of 'pgrep' except '-u' because it is implicit
+
+	pgrep help:
+EOF
+	pgrep -h
+
+	exit
+fi
+
+exec pgrep -u $(whoami) "$@" > /dev/null 2>&1
