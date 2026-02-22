@@ -1,0 +1,5 @@
+#!/bin/bash
+#
+# Run custom scripts at ~/.local/custom_scripts/scripts/
+
+CUSTOM_SCRIPT_MANAGER_EXECUTABLE='custom-script' exec ~/.local/custom_scripts/manager.sh "$@"
