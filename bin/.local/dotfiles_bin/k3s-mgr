@@ -1,0 +1,5 @@
+#!/bin/bash
+#
+# Tool to manage K3S clusters
+
+exec ~/.local/dev/k3s-mgr/manager.sh "$@"
