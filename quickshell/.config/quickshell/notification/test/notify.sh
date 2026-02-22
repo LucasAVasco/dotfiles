@@ -6,7 +6,7 @@ notify-send -u critical -A action=response Summaty "<h1>Header</h1>" &
 sleep 0.5
 
 # Multiple actions, long summary and body
-notify-send -u low -i btop \
+notify-send -u low -i btop -n kitty \
 	-A action0=response0 \
 	-A action1=response1 \
 	-A action2=response2 \
