@@ -177,8 +177,8 @@ return {
 		---@type TSConfig
 		---@diagnostic disable-next-line: missing-fields
 		opts = {
-			-- 'markdown_inline' is required by `trouble.nvim`. `regex` is required by `noicenvim`
-			ensure_installed = { 'lua', 'vim', 'vimdoc', 'markdown_inline', 'regex' },
+			-- 'markdown_inline' is required by `trouble.nvim`. `regex` is required by `noicenvim`, 'diff' is required by 'gitcommit'
+			ensure_installed = { 'lua', 'vim', 'vimdoc', 'markdown_inline', 'regex', 'diff' },
 		},
 
 		config = function(_, opts)
