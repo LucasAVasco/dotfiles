@@ -145,7 +145,14 @@ bindkey '^[e' __show_current_command_help
 # Open command in $EDITOR
 autoload -z edit-command-line
 zle -N edit-command-line
-bindkey "^e" edit-command-line
+
+__edit_comamnd_line() {
+	export EDITING_COMMAND_LINE=y
+	zle edit-command-line
+	unset EDITING_COMMAND_LINE
+}
+zle -N __edit_comamnd_line
+bindkey "^e" __edit_comamnd_line
 
 # External applications widgets
 if [[ "$ALLOW_EXTERNAL_SOFTWARE" == 'y' ]]; then
