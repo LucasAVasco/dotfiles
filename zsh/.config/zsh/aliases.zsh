@@ -5,7 +5,6 @@ alias clear_history='echo "" > "$HISTFILE" && history -p'
 # Alias to manage the dot files and custom scripts
 alias dotfiles='make --quiet -C ~/.local/dotfiles SD=$(pwd) CD_SHELL=/bin/zsh'
 alias dotfiles-cd='cd "$(dotfiles get-root-dir)"'
-alias custom-script='make --quiet -C ~/.local/custom_scripts WORKING_DIR=$(pwd) CD_SHELL=/bin/zsh'
 alias custom-script-cd='cd "$(custom-script get-root-dir)"'
 
 # Applications
