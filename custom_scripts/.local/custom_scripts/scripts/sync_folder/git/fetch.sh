@@ -18,5 +18,5 @@ fi
 # Uses the current repository
 cd "$WORKING_DIR"
 
-sync_folder_git_set_remote_current_repo "$user_to_copy"
-git fetch "$sync_folder_git_remote_name"
+remote=$(sync_folder_git_set_remote_current_repo "$user_to_copy")
+git fetch "$remote"
