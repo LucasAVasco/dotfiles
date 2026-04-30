@@ -28,8 +28,7 @@ dest_file="$1"
 
 # Creates a temporary file to save the stdin
 tmp_file=$(mktemp /tmp/sponge.XXXXXX)
-remove_tmp_file=y
-trap '[[ $remove_tmp_file == y ]] && rm $tmp_file' EXIT
+trap 'rm $tmp_file' EXIT
 
 # Copies the stdin to a temporary file
 if [[ "$use_tee" == 'y' ]]; then
@@ -38,6 +37,5 @@ else
 	cat > "$tmp_file"
 fi
 
-# Moves the contents of the temporary file to the destination
-mv "$tmp_file" "$dest_file"
-remove_tmp_file=n
+# Copies the contents of the temporary file to the destination (doesn't move because it changes the permissions)
+cat "$tmp_file" > "$dest_file"
