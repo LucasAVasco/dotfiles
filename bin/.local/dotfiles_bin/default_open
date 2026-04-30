@@ -64,7 +64,10 @@ fi
 # $2..n: Arguments passed to the application.
 run_application() {
 	if [[ "$get_cmd" == y ]]; then
-		echo "$@"
+		# Print the command separated by '\n'
+		for cmd in "$@"; do
+			printf '%s\n' "$cmd"
+		done
 	else
 		command "$@"
 	fi
