@@ -11,6 +11,8 @@ return {
 
 		init = function()
 			MYPLUGFUNC.set_keymap_name('<leader>C', 'Checkers (linters and testers)')
+
+			MYPLUGFUNC.ensure_mason_packages_are_installed({ 'cspell' })
 		end,
 
 		cond = MYVAR.not_in_vscode, -- VSCode does not shows Neovim diagnostics
