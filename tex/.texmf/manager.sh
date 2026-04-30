@@ -19,6 +19,10 @@ case "$command" in
 		cp -i ./template/conf.sh "$proj_dir"
 		cp -i ./template/tex-fmt.toml "$proj_dir"
 		cp -i ./template/.editorconfig "$proj_dir"
+
+		if [[ ! -f "$proj_dir/main.tex" ]]; then
+			cp -i ./template/main.tex "$proj_dir"
+		fi
 		;;
 
 	update)
