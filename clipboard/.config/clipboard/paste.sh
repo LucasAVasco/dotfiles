@@ -4,6 +4,7 @@
 
 set -e
 
+source ~/.config/bash/libs/dialog/dialog.sh
 source ~/.config/bash/libs/linux/session.sh
 source ~/.config/bash/libs/help.sh
 
@@ -156,9 +157,7 @@ fi
 
 # Interactively selects the file to paste
 if [[ -z "$output_file" && $ask_file == y ]]; then
-	tput clear
-	echo -n 'Insert the file path to paste the clipboard into: '
-	read output_file
+	output_file=$(dialog_ask_input 'Insert the file path to paste the clipboard into')
 fi
 
 # Pastes the content
