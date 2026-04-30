@@ -1,7 +1,12 @@
 vim.filetype.add({
+	filename = {
+		['user-data'] = 'yaml',
+	},
+
 	pattern = {
 		['.env.*'] = 'sh',
 	},
+
 	extension = {
 		['cheat'] = 'cfg',
 		['vifm'] = 'vim',
