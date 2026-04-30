@@ -6,7 +6,7 @@ set -e
 
 source ../lib/wget.sh
 
-version=v5.8.1
+version=v5.8.3
 
 completion_file="$HOME/.local/share/zsh_completions/_k3d"
 
