@@ -12,7 +12,7 @@ return {
 		init = function()
 			MYPLUGFUNC.set_keymap_name('<leader>C', 'Checkers (linters and testers)')
 
-			MYPLUGFUNC.ensure_mason_packages_are_installed({ 'cspell' })
+			MYPLUGFUNC.ensure_mason_packages_are_installed({ 'cspell', 'gitleaks' })
 		end,
 
 		cond = MYVAR.not_in_vscode, -- VSCode does not shows Neovim diagnostics
@@ -26,7 +26,7 @@ return {
 			local nvim_lint = require('lint')
 
 			nvim_lint.linters_by_ft = {
-				['*'] = { 'cspell' },
+				['*'] = { 'cspell', 'gitleaks', 'detect-secrets' },
 				-- lua = { 'luacheck' },
 			}
 
