@@ -2,8 +2,15 @@
 #
 # Library to manage K3S clusters
 
-# Version of K3S to install
+source ~/.config/bash/libs/log.sh
+
+# Version of K3S to install. You can use `curl https://update.k3s.io/v1-release/channels/stable` to get the latest version
 k3s_version=v1.34.6+k3s1
+
+# Path of the K3S binary
+k3s_bin_path=~/.local/share/k3s/bin/k3s
+
+
 
 # Get the path of a cluster. Does not check if the cluster exists
 #
@@ -130,14 +137,22 @@ k3s_add_cluster_to_kubeconfig() {
 
 # Install K3S binary. Use the version defined in the `k3s_version` variable
 __k3s_install() {
-	mkdir -p ~/.local/share/k3s/bin
-	curl -Lo ~/.local/share/k3s/bin/k3s "https://github.com/k3s-io/k3s/releases/download/$k3s_version/k3s"
-	chmod +x ~/.local/share/k3s/bin/k3s
+	mkdir -p $(dirname "$k3s_bin_path")
+	curl -Lo "$k3s_bin_path" "https://github.com/k3s-io/k3s/releases/download/$k3s_version/k3s"
+	chmod +x "$k3s_bin_path"
 }
 
 # Install K3S if it is not installed
 __k3s_ensure_installed() {
+	# Check if K3S is installed
 	if [ ! -f ~/.local/share/k3s/bin/k3s ]; then
+		log_info "K3S is not installed. Installing..."
+		__k3s_install
+	fi
+
+	# Check if the version is correct
+	if [[ $("$k3s_bin_path" --version) != *"$k3s_version"* ]]; then
+		log_info "K3S version is not correct. Updating..."
 		__k3s_install
 	fi
 }
@@ -203,7 +218,7 @@ k3s_start_cluster() {
 	# Starts k3s
 	local cluster_path=$(__k3s_get_cluster_path "$cluster")
 	systemd-run --user -p Delegate=yes --tty \
-		~/.local/share/k3s/bin/k3s \
+		"$k3s_bin_path" \
 		server --rootless --snapshotter=fuse-overlayfs --prefer-bundled-bin \
 		-d "$cluster_path/data" --private-registry "$cluster_path/registries.yaml" \
 		--write-kubeconfig "$cluster_path/kubeconfig.yaml"
