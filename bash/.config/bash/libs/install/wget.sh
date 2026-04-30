@@ -27,6 +27,13 @@ install_wget_get_abs_path() {
 	echo -n "$__wget_download_dir/$@"
 }
 
+# Change the current directory to the download directory
+#
+# $1: subdirectory to change.
+install_wget_cd() {
+	cd "$__wget_download_dir/$1"
+}
+
 # List the files of a subdirectory of the download directory.
 #
 # $1: subdirectory path (relative to the download directory).
