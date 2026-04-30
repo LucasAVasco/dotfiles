@@ -1,8 +1,8 @@
 % Socat
 
 
-# Redirect port
-socat TCP-LISTEN:<dest-port>,fork TCP:<source-address>:<source-port>
+# Redirect port to another address
+socat TCP-LISTEN:<listen-port>,fork TCP:<dest-address>:<dest-port>
 
 # Show all incoming data from specific port to stdout
 socat TCP4-LISTEN:<listen-port>,fork STDOUT
