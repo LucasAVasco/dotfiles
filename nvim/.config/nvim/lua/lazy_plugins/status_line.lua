@@ -267,7 +267,7 @@ return {
 			sections = {
 				-- At left
 				lualine_a = {
-					{ 'mode', separator = { left = ' ' } },
+					{ 'mode', separator = { left = ' ', right = '' } },
 					-- Show the register used to save the current typing macro
 					{
 						function()
@@ -290,7 +290,7 @@ return {
 				},
 
 				lualine_z = {
-					{ 'location', separator = { right = ' ' } },
+					{ 'location', separator = { left = '', right = ' ' } },
 				},
 			},
 		},
