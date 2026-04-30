@@ -6,3 +6,6 @@ socat TCP-LISTEN:<listen-port>,fork TCP:<dest-address>:<dest-port>
 
 # Show all incoming data from specific port to stdout
 socat TCP4-LISTEN:<listen-port>,fork STDOUT
+
+# Show all incoming data from specific port to stdout (bind to external IP)
+socat TCP4-LISTEN:<listen-port>,bind=0.0.0.0,fork,reuseaddr STDOUT
