@@ -3,7 +3,7 @@
 # Library to manage K3S clusters
 
 # Version of K3S to install
-k3s_version=v1.33.5+k3s1
+k3s_version=v1.34.6+k3s1
 
 # Get the path of a cluster. Does not check if the cluster exists
 #
