@@ -215,6 +215,11 @@ k3s_start_cluster() {
 
 	__k3s_ensure_installed
 
+	# Changes the kubectl context to the cluster context
+	local context_name=$(k3s_get_context_name "$cluster")
+	kubectl config set-context "$context_name"
+	kubectl config use-context "$context_name"
+
 	# Starts k3s
 	local cluster_path=$(__k3s_get_cluster_path "$cluster")
 	systemd-run --user -p Delegate=yes --tty \
