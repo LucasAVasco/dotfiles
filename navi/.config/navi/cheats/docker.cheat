@@ -139,6 +139,9 @@ docker-compose --progress plain up --build
 # Docker down and build
 docker-compose down && docker-compose --progress plain up --build
 
+# Docker build and run
+docker compose run --build
+
 
 % Docker, tools
 @ Docker
