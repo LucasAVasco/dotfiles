@@ -186,6 +186,7 @@ return {
 		opts = {
 			library = {
 				{ path = 'luvit-meta/library', words = { 'vim.loop', 'vim.uv', 'uv' } },
+				{ path = MYPATHS.config },
 			},
 
 			enabled = function()
