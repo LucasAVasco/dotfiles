@@ -93,6 +93,13 @@ k3s_cluster_use_private_registry() {
 	yq -i ".configs.\"$register_mirror\".tls.insecure_skip_verify = true" "$cluster/registries.yaml"
 }
 
+# Get the name of the cluster context
+#
+# $1: cluster name
+k3s_get_context_name() {
+	local cluster="$1"
+	echo -n "k3s-mgr-$cluster"
+}
 
 # Add the cluster context to kubeconfig
 #
@@ -105,7 +112,7 @@ k3s_add_cluster_to_kubeconfig() {
 		cd ~/.kube
 
 		local k3s_config_file="$(__k3s_get_cluster_path "$cluster")/kubeconfig.yaml"
-		export NAME="k3s-mgr-$cluster"
+		export NAME=$(k3s_get_context_name "$cluster")
 
 		# Deletes old configuration
 		__k3s_remove_cluster_context "$cluster"
