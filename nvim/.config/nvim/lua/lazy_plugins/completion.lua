@@ -199,6 +199,7 @@ return {
 				-- directory path is a sub-string of the current directory path. Adding a trailing slash allows the user to optionally provide a
 				-- path with a trailing slash. Do not use the `getcwd()` function because this function follows symbolic links. This may break
 				-- my configuration that manages my dot files with `stow`
+				---@type string
 				local current_dir = vim.env.PWD .. '/'
 
 				---Check is the current directory is inside a provided folder
