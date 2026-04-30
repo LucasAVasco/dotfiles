@@ -1,7 +1,7 @@
 % PDF
 
 
-$ pdf-files-var: find . -name '*.pdf' \
+$ pdf-files-var: find . -maxdepth 1 -name '*.pdf' \
 	--- \
 	--multi
 
