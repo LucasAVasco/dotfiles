@@ -15,4 +15,8 @@ bind ch nohlsearch
 bind <A-w> tabclose
 bind O fillcmdline tabopen
 
+" Editor
+bind --mode=insert <C-e> editor
+set editorcmd default_text_editor_synced
+
 " vi: ft=vim
