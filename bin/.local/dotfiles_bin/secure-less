@@ -1,0 +1,9 @@
+#!/bin/bash
+#
+# Run 'less' with less-secure configuration
+
+export LESSSECURE=1
+unset LESSOPEN
+unset LESSPIPE
+
+less --clear-screen --quit-if-one-screen --chop-long-lines "$@"
