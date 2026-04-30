@@ -41,3 +41,25 @@ if [[ $current_branch =~ $tmp_branch_regex ]] && [[ $first_line_has_title == fal
 fi
 
 # #endregion
+
+# Replace a range of lines in a file
+#
+# $1: Path to file
+# $2: Start pattern
+# $3: End pattern
+# $4: Replacement
+replace_ranged_pattern() {
+	local file_path="$1"
+	local start_pattern="$2"
+	local end_pattern="$3"
+	local replacement="$4"
+
+	sed -z -i "s/$start_pattern.*$end_pattern/$replacement/" "$file_path"
+}
+
+# Removes the 'Changes not staged for commit' and 'Untracked files' sections. The section must ends with the 'end_pattern'
+end_pattern='# -* >8 -*'
+end_line=$(sed "/$end_pattern/!d" $1)
+end_line="\n$end_line" # Add a new line before the end line to ensure it is not concatenated to the previous line
+replace_ranged_pattern "$1" '\n# Changes not staged for commit:\n' "$end_pattern" "$end_line"
+replace_ranged_pattern "$1" '\n# Untracked files:\n' "$end_pattern" "$end_line"
