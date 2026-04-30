@@ -27,6 +27,8 @@ nnoremap gnr :cd $HOME/Repositories/neovim_repos/<CR>
 nnoremap <A-A> :tabnew<CR>
 nnoremap <esc>] :tabnext<CR>
 nnoremap <esc>[ :tabprev<CR>
+nnoremap <esc>} :execute 'tabmove' tabpagenr()+1<CR>
+nnoremap <esc>{ :execute 'tabmove' tabpagenr()-2<CR>
 nnoremap <A-1> 1gt
 nnoremap <A-2> 2gt
 nnoremap <A-3> 3gt
