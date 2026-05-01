@@ -2,20 +2,40 @@
 #
 # Simple script to convert several images from on format to another.
 #
-# Usage: img-convert <new-file-extension> [files...]
-#
-# Example: `img-convert png *.jpg # Converts all .jpg files to .png`
-#
 # Dependencies: ImageMagick
 
 set -e
+
+source ~/.config/bash/libs/help.sh
+
+help_handle y "$@" <<EOF
+	Converts several images from one format to another. The formats must be supported by ImageMagick
+
+	Usage:
+		img-convert -f <new-format> [files...]
+
+	Flags:
+	-f, --format   <new-format> The new format. Must be the same name of the extension of the new format (example: png, jpg, etc.)
+
+	Examples:
+		img-convert -f png *.jpg # Converts all .jpg files to .png
+EOF
+
+# Parses arguments
+if [[ "$1" != "-f" && "$1" != "--format" ]]; then
+	echo "Usage: img-convert [-f|--format] <format> [files...]"
+	exit 1
+fi
+
+shift
+format="$1"
+shift
 
 # Converts a video to a given format.
 #
 # $1: Source file.
 # $2: Destination format.
 convert_video_to_format() {
-	# Arguments
 	local source_file="$1"
 	local extension="$2"
 
@@ -29,8 +49,7 @@ convert_video_to_format() {
 	magick "$source_file" "$dest_file" && echo "Done!"
 }
 
-dest_extension="$1"
 
-for source_file in ${@:2}; do
-	convert_video_to_format "$source_file" "$dest_extension"
+for source_file in "$@"; do
+	convert_video_to_format "$source_file" "$format"
 done
