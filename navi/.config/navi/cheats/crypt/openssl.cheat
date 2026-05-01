@@ -47,7 +47,7 @@ openssl pkey -in <private-key-file-var> <openssl-cipher-option> -out <encrypted-
 	chmod g=,o= <encrypted-private-key-file>
 
 # Generate public key from the private key
-openssl pkey -in <private-key-file-var> -pubout <pub-key-file>
+openssl pkey -in <private-key-file-var> -pubout -out <pub-key-file>
 
 # Generate certificate request (CSR)
 openssl req -new -key <private-key-file-var> -out <csr-file>; \
