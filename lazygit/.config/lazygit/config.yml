@@ -6,9 +6,9 @@ customCommands:
     context: commits
 
 git:
-  paging:
-    colorArg: always
-    pager: delta --paging=never
-    useConfig: false
+  pagers:
+    - colorArg: always
+      pager: delta --paging=never
+
 gui:
   nerdFontsVersion: "3"
