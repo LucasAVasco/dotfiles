@@ -1,3 +1,10 @@
+customCommands:
+  - key: I
+    command: git_show_new_term {{.SelectedLocalCommit.Hash}}
+    description: Show commit in new terminal
+    output: none
+    context: commits
+
 git:
   paging:
     colorArg: always
