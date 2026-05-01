@@ -51,7 +51,7 @@ nnoremap ch :nohlsearch<CR>
 nnoremap g. za
 
 " Clipboard
-nnoremap <A-p> :!clip-paste --ask-type --ask-out-file<CR>
+nnoremap <A-p> :!clear && INTERACTIVE_SHELL=y clip-paste --ask-type --ask-out-file<CR>
 noremap yd :!clip-copy %d:p<CR>
 noremap yf :!clip-copy %f:p<CR>
 
