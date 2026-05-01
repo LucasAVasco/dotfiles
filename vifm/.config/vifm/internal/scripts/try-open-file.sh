@@ -14,7 +14,8 @@ fi
 #
 # $1: File path
 open_path() {
-	local full=($(default_open --get-cmd -- "$@"))
+	local full=()
+	readarray -t full < <(default_open --get-cmd -- "$*")
 	local command="${full[0]}"
 
 	if [[ "$command" == 'nvim_new_win' || "$command" == 'default_file_manager' ]]; then
