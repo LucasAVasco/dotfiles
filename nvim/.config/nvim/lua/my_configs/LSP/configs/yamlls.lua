@@ -1,6 +1,10 @@
 local schemastore = require('schemastore')
 local schemas = schemastore.yaml.schemas()
+
+-- Configure the patterns for kubernetes files
+
 schemas.kubernetes = {
+	'templates/**', -- Helm templates
 	'k8s/*.yaml',
 	'k8s-*.yaml',
 	'k3s/*.yaml',
@@ -9,6 +13,8 @@ schemas.kubernetes = {
 	'k8s-*.yml',
 	'k3s/*.yml',
 	'k3s-*.yml',
+
+	-- Editing an existing instance with `kubectl edit`
 	'kubectl-edit-*.yaml',
 	'kubectl-edit-*.yml',
 }
