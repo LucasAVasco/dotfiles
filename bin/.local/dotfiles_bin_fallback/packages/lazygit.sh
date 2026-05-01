@@ -6,7 +6,7 @@ set -e
 
 source ../lib/wget.sh
 
-version=0.55.1
+version=0.61.1
 
 case "$1" in
 	i | u)
