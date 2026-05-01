@@ -40,3 +40,12 @@ MYVAR.utilities_ft = {
 ---`lspconfig` configuration
 ---@type string[]
 MYVAR.lsp_servers_to_disable = {}
+
+MYVAR.snippets = {
+	helm = {
+		helper = {
+			part_of = 'part-of',
+			name = 'helper',
+		},
+	},
+}

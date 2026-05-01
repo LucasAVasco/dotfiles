@@ -22,9 +22,11 @@ local function replace_helper_callback(_, _, user_args)
 
 	--- Output arguments
 	local output = {}
-	local helper = vim.env.HELM_HELPER or 'helm' -- Default to `helm`
+	local helper = MYVAR.snippets.helm.helper.name or 'helm' -- Default to `helm`
+	local part_of = MYVAR.snippets.helm.helper.part_of or 'part-of' -- Default to `part-of`
 	for _, line in pairs(input) do
 		line = line:gsub('HELM_HELPER', helper)
+		line = line:gsub('HELM_PART_OF', part_of)
 		table.insert(output, line)
 	end
 
@@ -60,8 +62,7 @@ return {
 		t('\tapp.kubernetes.io/component: '),
 		i(2, 'component-in-this-chart'),
 		nl(),
-		t('\tapp.kubernetes.io/part-of: '),
-		i(3, 'higher-level-component'),
+		replace_helper('\tapp.kubernetes.io/part-of: HELM_PART_OF'),
 	}),
 	s({
 		trig = 'selector-content',
