@@ -19,6 +19,7 @@ return {
 
 		cond = MYVAR.not_in_vscode,
 
+		---@type bufferline.UserConfig
 		opts = {
 			options = {
 				-- The default commands forces the buffer deletion (lose the unwritten changes). I do not like it, so I am changing these
