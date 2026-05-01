@@ -48,6 +48,10 @@ help_handle y "$@" <<EOF
 
 		k3s-mgr kubeconfig merge <cluster>
 			Merge the kubeconfig of the given cluster into the current kubeconfig
+
+		k3s-mgr redirect-ingress
+			Rootless K3S redirects ingress traffic to ports 10080 (HTTP) and 10443 (HTTPs). This command redirect this traffic to ports 8080
+			(HTTP) and 8443 (HTTPs)
 EOF
 
 # All operations are relative to the current directory
@@ -62,8 +66,10 @@ source ./libs/k3s.sh
 main_command="$1"
 shift
 
-sub_command="$1"
-shift
+if [[ -n "$1" ]]; then
+	sub_command="$1"
+	shift
+fi
 
 # Executes the main command
 case "$main_command" in
@@ -154,6 +160,16 @@ case "$main_command" in
 				exit 1
 				;;
 		esac
+		;;
+
+	redirect-ingress)
+		# INFO(LucasAVasco): Rootless K3S redirects system ports (1-1024) to a high port by adding an offset of 10000 to the port number.
+		# This means that the ingress port are 10080 and 10443. Add a command to redirect ingress related ports (80 and 443) to its
+		# alternatives ports (8080 and 8443)
+
+		socat TCP-LISTEN:8080,fork TCP:localhost:10080 &
+		socat TCP-LISTEN:8443,fork TCP:localhost:10443 &
+		wait -n
 		;;
 
 	*)
