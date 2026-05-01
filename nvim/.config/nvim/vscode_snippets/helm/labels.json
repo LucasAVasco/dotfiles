@@ -2,7 +2,7 @@
 	"Full name of the app": {
 		"prefix": "name",
 		"description": "Full name of the app",
-		"body": "name: {{ .Release.Name }}-{{ .Chart.Name }}$0"
+		"body": "{{ .Release.Name }}-{{ .Chart.Name }}$0"
 	},
 
 	"Sample labels": {

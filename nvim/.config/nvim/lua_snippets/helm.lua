@@ -44,7 +44,7 @@ return {
 		name = 'Full name of the app with helper',
 		desc = 'Full name of the app with helper',
 	}, {
-		replace_helper('name: {{ include "HELM_HELPER.fullname" . }}'),
+		replace_helper('{{ include "HELM_HELPER.fullname" . }}'),
 	}),
 	s({
 		trig = 'labels',
