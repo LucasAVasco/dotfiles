@@ -26,11 +26,9 @@ return {
 		event = 'User MyEventOpenEditableFile',
 
 		cmd = {
+			-- Commands deprecated by 'nvim-lspconfig', but that are re-implemented here
 			'LspInfo',
 			'LspLog',
-			'LspRestart',
-			'LspStart',
-			'LspStop',
 
 			-- My commands
 			'LspFileTypes',
@@ -59,6 +57,9 @@ return {
 					})
 				end,
 			})
+
+			-- Enable codelens
+			vim.lsp.codelens.enable(true)
 
 			-- Query the selected LSP servers from `neoconf`. The user can not provide the 'enabled' and 'disable' fields at the same time.
 			-- So this variable will have at least one empty list
@@ -184,6 +185,10 @@ return {
 			for _, lsp_server_name in ipairs(require('my_configs.LSP.auto-config')) do
 				lazy_load_lsp_server(lsp_server_name)
 			end
+
+			-- Re-implements some 'nvim-lspconfig' commands
+			vim.api.nvim_create_user_command('LspInfo', 'checkhealth vim.lsp', {})
+			vim.api.nvim_create_user_command('LspLog', 'edit ~/.local/state/nvim/lsp.log', {})
 
 			-- Command to show configured LSP servers and its supported  file types
 			vim.api.nvim_create_user_command('LspFileTypes', function()

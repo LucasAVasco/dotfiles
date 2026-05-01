@@ -8,7 +8,7 @@ local Config = {
 		vim.defer_fn(function()
 			vim.schedule(function()
 				vim.notify('Restarting qmlls', vim.log.levels.INFO, { title = 'LSP' })
-				vim.cmd.LspStart({ args = { 'qmlls' } })
+				vim.cmd.lsp({ args = { 'enable', 'qmlls' } })
 			end)
 		end, 500)
 	end,
