@@ -1,0 +1,77 @@
+#!/bin/bash
+
+set -e
+
+source ~/.config/bash/libs/help.sh
+
+help_handle y "$@" <<EOF
+	Conditionally run a command until it succeeds or the maximum number of tries is reached.
+
+	Usage:
+		run-with-retry [--tries <tries>] [--delay <delay>] [--multiplier <multiplier>] [--] <command>
+
+	Flags:
+		--tries <tries>                  Number of times to retry the command (default: infinity)
+		--delay <delay>                  Delay between retries (default: 0.5)
+		-m, --multiplier <multiplier>    Multiplier for the delay. Each time the command fails, the delay is multiplied by this number (default: 1)
+EOF
+
+# Parse command-line options
+num_tries=-
+delay=0.5
+multiplier=1
+while [[ $# -gt 0 ]]; do
+	case "$1" in
+		--tries)
+			num_tries="$2"
+			if [[ "$num_tries" == 'infinity' ]]; then
+				num_tries=-
+			fi
+
+			shift
+			;;
+
+		--delay)
+			delay="$2"
+			shift
+			;;
+
+		-m | --multiplier)
+			multiplier="$2"
+			shift
+			;;
+
+		--)
+			shift
+			break
+			;;
+
+		*)
+			break
+			;;
+	esac
+
+	shift
+done
+
+# Run the command
+while ! command "$@"; do
+	sleep "$delay"
+
+	# Increase the delay
+	if [[ "$multiplier" != 1 ]]; then
+	delay=$(python3 -c "print($delay * $multiplier)")
+	fi
+
+	# Update the number of tries
+	if [[ "$num_tries" == '-' ]]; then
+		continue
+	fi
+
+	num_tries=$((num_tries - 1))
+	if [[ $num_tries -eq 0 ]]; then
+		echo "Command failed, maximum number of tries reached" >&2
+		exit 1
+	fi
+
+done
