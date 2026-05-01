@@ -1,11 +1,18 @@
 \ProvidesPackage{input-csv}[Simple input csv]
 
 \usepackage{csvsimple-l3}
+\usepackage{adjustbox}
 
-% Input CSV
+% Input CSV. The table will be centered and will be resized to fit
+% the page if bigger than the page.
 %
-% #1: path to the CSV file. 'csvsimple' can not import all CSV files. We recommend to format it with the
+% #1: path to the CSV file. 'csvsimple' can not import all CSV files.
+% We recommend to format it with the
 % '../../scripts/format_csv_to_csvsimple.py' script first.
 \newcommand{\inputcsv}[1]{
-    \makebox[\textwidth]{\csvautotabular[respect percent=true]{#1}}
+  \begin{center}
+    \begin{adjustbox}{max width=\textwidth}
+      \csvautotabular[respect percent=true]{#1}
+    \end{adjustbox}
+  \end{center}
 }
