@@ -19,6 +19,12 @@ schemas.kubernetes = {
 	'kubectl-edit-*.yml',
 }
 
+-- Support to 'helmfile.yml.gotmpl' and 'helmfile.yaml.gotmpl'
+
+local helmfile_schema = schemas['https://www.schemastore.org/helmfile.json']
+table.insert(helmfile_schema, 'helmfile.yml.gotmpl')
+table.insert(helmfile_schema, 'helmfile.yaml.gotmpl')
+
 ---@module "my_configs.LSP.types"
 ---@type my_configs.LSP.LspServerConfig
 ---@diagnostic disable-next-line: missing-fields
