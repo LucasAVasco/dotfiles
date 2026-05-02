@@ -4,6 +4,11 @@ local s = ls.snippet
 local i = ls.insert_node
 local t = ls.text_node
 
+-- Disable the snippets if the helper is not enabled
+if not MYVAR.snippets.helm.helper.enabled then
+	return {}
+end
+
 local nl = function()
 	return t({ '', '' })
 end

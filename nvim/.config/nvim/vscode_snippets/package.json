@@ -58,12 +58,6 @@
 			},
 			{
 				"language": [
-					"helm"
-				],
-				"path": "./helm/labels.json"
-			},
-			{
-				"language": [
 					"cpp",
 					"c"
 				],
