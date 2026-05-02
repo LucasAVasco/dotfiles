@@ -169,6 +169,16 @@ if [[ "$ALLOW_EXTERNAL_SOFTWARE" == 'y' ]]; then
 	zle -N __fzf_custom_file_widget
 	bindkey '^[v' __fzf_custom_file_widget
 
+	# FZF RG widget
+	__fzf_custom_rg_widget() {
+		# The `--scheme=history` option makes the `fzf` prefer select top directories instead of the bottom most
+		files=$(rg-fzf --fzf-args '--scheme=history --multi')
+		LBUFFER=$(echo "$LBUFFER$files" | tr '\n' ' ')
+		zle reset-prompt
+	}
+	zle -N __fzf_custom_rg_widget
+	bindkey '^[s' __fzf_custom_rg_widget
+
 	# Atuin
 	bindkey '^[h' atuin-up-search
 fi
