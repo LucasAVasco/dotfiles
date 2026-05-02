@@ -28,6 +28,7 @@ fi
 export PODMAN_COMPOSE_PROVIDER=podman-compose
 export BUILDKIT_PROGRESS=plain
 export ROOTLESSKIT_STATE_DIR="${XDG_RUNTIME_DIR}/dockerd-rootless"
+export LIBVIRT_DEFAULT_URI="qemu:///session?socket=/run/user/$(id -u)/libvirt/libvirt-sock"
 
 
 # Defines UTF8 characters that LESS should print the icons instead of its numeric value
