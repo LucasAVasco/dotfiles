@@ -54,7 +54,7 @@ MYVAR.snippets = {
 			part_of = 'part-of',
 
 			-- Value of the helper library
-			name = 'helper',
+			name = 'helm',
 		},
 	},
 }
