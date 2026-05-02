@@ -5,8 +5,96 @@
 # Has integration with Kitty and WezTerm to show images.
 #
 # Can be used as a preview script for fzf (also support previewing images in fzf).
-#
-# $1: file to preview.
+
+source ~/.config/bash/libs/help.sh
+
+help_handle y "$@" <<EOF
+	Preview files (supports images) and folders.
+
+	Usage:
+		pretty-preview [--eza-args EZA_ARGS] [--bat-args BAT_ARGS] [--chafa-args CHAFA_ARGS] [--kitty-icat-args KITTY_ICAT_ARGS] [--mult] <files...>
+
+	Flags:
+		--eza-args EZA_ARGS                  Additional arguments to pass to eza.
+		--bat-args BAT_ARGS                  Additional arguments to pass to bat.
+		--chafa-args CHAFA_ARGS              Additional arguments to pass to chafa.
+		--kitty-icat-args KITTY_ICAT_ARGS    Additional arguments to pass to kitty-icat.
+		--each                               Show each file individually if multiple files are passed
+EOF
+
+# Parse arguments
+eza_args=""
+bat_args=""
+chafa_args=""
+kitty_icat_args=""
+each=n
+while [[ "$#" -gt 0 ]]; do
+	case "$1" in
+		--eza-args)
+			eza_args="$2"
+			shift 2
+			;;
+
+		--bat-args)
+			bat_args="$2"
+			shift 2
+			;;
+
+		--chafa-args)
+			chafa_args="$2"
+			shift 2
+			;;
+
+		--kitty-icat-args)
+			kitty_icat_args="$2"
+			shift 2
+			;;
+
+		--each)
+			each=y
+			shift
+			;;
+
+		--)
+			shift
+			break
+			;;
+
+		*)
+			break
+			;;
+	esac
+done
+
+# '--git' shows the git status
+eza_args="-A --icons=always --color=always --hyperlink --git --group-directories-first $eza_args"
+bat_args="--color=always $bat_args"
+
+# handle multiple files
+if [[ "$#" -gt 1 ]]; then
+	if [[ "$each" == n ]]; then
+		eza $eza_args "$@"
+		exit
+	fi
+
+	for file in "$@"; do
+		echo -n "* "
+		# '-d' is used to treat directories as files
+		# '-X' is used dereference symlinks
+		eza -d -X $eza_args "$file"
+
+		echo ""
+		pretty-preview \
+			--eza-args "$eza_args" \
+			--bat-args "$bat_args" \
+			--chafa-args "$chafa_args" \
+			--kitty-icat-args "$kitty_icat_args" \
+			"$file"
+		echo ""
+	done
+
+	exit
+fi
 
 file="$1"
 
@@ -18,14 +106,13 @@ fi
 
 # If it is a directory
 if [[ -d "$file" ]]; then
-	# '--git' shows the git status
-	eza -A --icons=always --color=always --git --group-directories-first "$file"
+	eza $eza_args "$file"
 	exit 0
 fi
 
 # If the file is not a image (like a text file)
 if ! file --mime-type "$file" | grep -q image/; then
-	bat --color=always "$file"
+	bat $bat_args "$file"
 	exit 0
 fi
 
@@ -44,13 +131,13 @@ if [[ -n "$KITTY_PID" ]]; then
 	# '--stdin=no' prevents the image path from being copied from the input (the '--place' option only works with one image)
 	# '--place' puts the image in the correct position
 	# NOTE(): `chafa` can not be used because it does not support the '--clear' option
-	kitty icat --clear --transfer-mode=stream --stdin=no --place=${width}x${height}@${left}x${top} "$file"
+	kitty icat --clear --transfer-mode=stream --stdin=no --place=${width}x${height}@${left}x${top} $kitty_icat_args "$file"
 fi
 
 # WezTerm terminal emulator
 if [[ -n "$WEZTERM_UNIX_SOCKET" ]]; then
 	# NOTE(): I could not find a way to use `wezterm imgcat`, so I used `chafa`
-	chafa -f iterm -s "$width"x"$height" "$file"
+	chafa -f iterm -s "$width"x"$height" $chafa_args "$file"
 fi
 
 # }}}
