@@ -84,6 +84,12 @@
 			},
 			{
 				"language": [
+					"rust"
+				],
+				"path": "./rust/inline.json"
+			},
+			{
+				"language": [
 					"go"
 				],
 				"path": "./go/test.json"

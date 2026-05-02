@@ -1,0 +1,7 @@
+{
+	"always inline": {
+		"description": "Always inline attribute",
+		"prefix": ["always-inline"],
+		"body": ["#[inline(always)]"]
+	}
+}
