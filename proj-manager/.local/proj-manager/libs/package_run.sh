@@ -44,3 +44,13 @@ package_run_init_provider() {
 package_run_extend_provider() {
 	package_run_provider "./extend-proj/$1" "${@:2}"
 }
+
+# Runs a update script in the 'update-proj' folder
+#
+# $1: The project path relative to the 'update-proj/' folder
+# $2..n: The arguments to pass to the provider
+#
+# stdout: The output of the provider script
+package_run_update_provider() {
+	package_run_provider "./update-proj/$1" "${@:2}"
+}

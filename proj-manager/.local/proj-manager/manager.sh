@@ -19,6 +19,9 @@ help_handle y "$@" << EOF
 	./manager.sh extend [project_name]
 		Run a extension script for a project. If no project name is given, a project will be interactively selected
 
+	./manager.sh update [project_name]
+		Run a update script for a project. If no project name is given, a project will be interactively selected
+
 	./manager.sh create <provider-path>
 		Create a provider script for a project.
 EOF
@@ -61,7 +64,7 @@ case "$main_command" in
 
 		initialize=$(dialog_ask_boolean "Are you sure you want to initialize project '$proj'?" n)
 		if [[ "$initialize" == y ]]; then
-			package_run_provider "./init-proj/$proj" "$@"
+			package_run_init_provider "$proj" "$@"
 		else
 			echo "Aborted"
 			exit 1
@@ -77,7 +80,23 @@ case "$main_command" in
 
 		extend=$(dialog_ask_boolean "Are you sure you want to extend current project with '$proj'?" n)
 		if [[ "$extend" == y ]]; then
-			package_run_provider "./extend-proj/$proj" "$@"
+			package_run_extend_provider "$proj" "$@"
+		else
+			echo "Aborted"
+			exit 1
+		fi
+		;;
+
+	update)
+		if [[ "$1" == '' ]]; then
+			proj=$(select_folder_with_file "$package_run_proj_manager_file_basename" ./update-proj/)
+		else
+			proj="$1"
+		fi
+
+		script=$(dialog_ask_boolean "Are you sure you want to update current project with '$proj'?" n)
+		if [[ "$script" == y ]]; then
+			package_run_update_provider "$proj" "$@"
 		else
 			echo "Aborted"
 			exit 1
@@ -88,14 +107,16 @@ case "$main_command" in
 		folder="$1"
 		file="$folder/$package_run_proj_manager_file_basename"
 
-		# Validation (folder must be inside 'init-proj/' or 'extend-proj/')
+		# Validation (folder must be inside 'init-proj/', 'extend-proj/' or 'update-proj/')
 		if ! [[ \
 			"$folder" == init-proj/* || \
 			"$folder" == ./init-proj/* || \
 			"$folder" == extend-proj/* || \
-			"$folder" == ./extend-proj/* \
+			"$folder" == ./extend-proj/* || \
+			"$folder" == update-proj/* || \
+			"$folder" == ./update-proj/* \
 		]]; then
-			echo "Invalid folder: '$folder'. Must be in 'init-proj' or 'extend-proj'" >&2;
+			echo "Invalid folder: '$folder'. Must be inside 'init-proj', 'extend-proj' or 'update-proj'" >&2;
 			exit 1
 		fi
 
