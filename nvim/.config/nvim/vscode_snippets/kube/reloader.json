@@ -1,0 +1,31 @@
+{
+	"Reload on ConfigMap or Secret change": {
+		"prefix": "reload-annotation",
+		"description": "Annotation to automatically reload a resource on any ConfigMap or Secret change with Stakater Reloader",
+		"body": "reloader.stakater.com/auto: \"true\""
+	},
+
+	"Reload on ConfigMap change": {
+		"prefix": "reload-configmap-annotation",
+		"description": "Annotation to automatically reload a resource on any ConfigMap change with Stakater Reloader",
+		"body": "configmap.reloader.stakater.com/auto: \"true\""
+	},
+
+	"Reload on Secret change": {
+		"prefix": "reload-secret-annotation",
+		"description": "Annotation to automatically reload a resource on any Secret change with Stakater Reloader",
+		"body": "secret.reloader.stakater.com/auto: \"true\""
+	},
+
+	"Reload on specific ConfigMap change": {
+		"prefix": "reload-specific-configmap-annotation",
+		"description": "Annotation to automatically reload a resource on ConfigMap change with Stakater Reloader",
+		"body": "configmap.reloader.stakater.com/reload: ${1:config-map}"
+	},
+
+	"Reload on specific Secret change": {
+		"prefix": "reload-specific-secret-annotation",
+		"description": "Annotation to automatically reload a resource on Secret change with Stakater Reloader",
+		"body": "secret.reloader.stakater.com/reload: ${1:secret}"
+	}
+}
