@@ -1,0 +1,56 @@
+#!/bin/bash
+
+set -e
+
+source ~/.config/bash/libs/help.sh
+
+help_handle n "$@" <<EOF
+	Search for a string in files with ripgrep (rg) and select the files with fzf.
+
+	Usage:
+		rg-fzf [--fzf-args FZF_ARGS] [--rg-args RG_ARGS]
+
+	Flags:
+		--fzf-args FZF_ARGS     Additional arguments to pass to fzf.
+		--rg-args RG_ARGS       Additional arguments to pass to rg.
+EOF
+
+# Parse arguments
+fzf_args=""
+rg_command=""
+while [[ "$#" -gt 0 ]]; do
+	case "$1" in
+		--rg-args)
+			rg_command="$2"
+			shift 2
+			;;
+
+		--fzf-args)
+			fzf_args="$2"
+			shift 2
+			;;
+
+		--)
+			shift
+			break
+			;;
+
+		*)
+			break
+			;;
+	esac
+done
+
+rg_command="rg --column --line-number --no-heading --color=always --smart-case $rg_command"
+
+# Select the entry
+entry=$(fzf --ansi \
+	--bind "start:reload:$rg_command ''" \
+	--bind "change:reload:$rg_command {q} || echo ''" \
+	--delimiter : \
+	--preview 'pretty-preview --bat-args "--highlight-line {r2}" {1}' \
+	--preview-window 'down,60%,border-top,+{2}+3/3' \
+	$fzf_args)
+
+# Extract the file path (remove the line number)
+echo "$entry" | cut -d ':' -f 1
