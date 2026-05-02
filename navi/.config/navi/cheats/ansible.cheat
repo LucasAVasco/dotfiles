@@ -1,0 +1,8 @@
+% Ansible
+
+
+# Create ansible.cfg
+ansible-config init --disabled >> ansible.cfg
+
+# Ping hosts
+ansible <hosts> -m ping
