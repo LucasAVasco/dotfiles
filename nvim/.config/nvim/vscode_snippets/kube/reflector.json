@@ -1,0 +1,39 @@
+{
+	"Annotation to enable reflection": {
+		"prefix": ["reflect"],
+		"description": "Create an annotation to enable reflection in this resource",
+		"body": ["reflector.v1.k8s.emberstack.com/reflection-allowed: \"true\""]
+	},
+
+	"Annotation to select the namespaces to reflect": {
+		"prefix": ["reflect-namespaces"],
+		"description": "Create an annotation to select the namespaces to reflect this resource",
+		"body": [
+			"reflector.v1.k8s.emberstack.com/reflection-allowed-namespaces: \"${1:namespace1,namespace2}\""
+		]
+	},
+
+	"Annotation to automatically reflect this resource": {
+		"prefix": ["reflect-automatically"],
+		"description": "Create an annotation to enable automatic reflection in this resource",
+		"body": [
+			"reflector.v1.k8s.emberstack.com/reflection-auto-enabled: \"true\""
+		]
+	},
+
+	"Annotation to automatically reflect this resource in specific namespaces": {
+		"prefix": ["reflect-automatically-namespaces"],
+		"description": "Create an annotation to automatically reflect this resource in specific namespaces",
+		"body": [
+			"reflector.v1.k8s.emberstack.com/reflection-auto-namespaces: \"${1:namespace1,namespace2}\""
+		]
+	},
+
+	"Annotation to mirror resource of another namespace in this one": {
+		"prefix": ["reflect-mirror"],
+		"description": "Create an annotation to mirror resource of another namespace in this one",
+		"body": [
+			"reflector.v1.k8s.emberstack.com/reflects: \"${1:namespace}/${2:resourceName}\""
+		]
+	}
+}

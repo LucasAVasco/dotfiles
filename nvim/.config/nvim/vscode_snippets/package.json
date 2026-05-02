@@ -58,6 +58,12 @@
 			},
 			{
 				"language": [
+					"yaml"
+				],
+				"path": "./kube/reflector.json"
+			},
+			{
+				"language": [
 					"cpp",
 					"c"
 				],
