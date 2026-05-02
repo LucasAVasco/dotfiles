@@ -41,10 +41,19 @@ MYVAR.utilities_ft = {
 ---@type string[]
 MYVAR.lsp_servers_to_disable = {}
 
+-- Snippets configuration
 MYVAR.snippets = {
+	-- Helm configurations
 	helm = {
+		-- Helm helper configurations
 		helper = {
+			-- Enable snippets related to Helm helper. Replace some snippets to a version that uses the Helm helper
+			enabled = false,
+
+			-- Value of the 'app.kubernetes.io/part-of' label
 			part_of = 'part-of',
+
+			-- Value of the helper library
 			name = 'helper',
 		},
 	},
