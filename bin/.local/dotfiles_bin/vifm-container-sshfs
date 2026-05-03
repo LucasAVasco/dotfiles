@@ -1,0 +1,45 @@
+#!/bin/bash
+#
+# Script to mount a container with container-sshfs and open it in vifm
+
+set -e
+
+source ~/.config/bash/libs/help.sh
+
+help_handle y "$@" <<EOF
+	Mount a container with container-sshfs and open it in vifm
+
+	Usage:
+		container-sshfs-vifm <container-sshfs-backend> <arguments-to-backend>
+
+	Example:
+		container-sshfs-vifm docker container-name
+
+		container-sshfs-vifm kube -n namespace-name pod-name/container-name
+
+	See 'container-sshfs --help' for more information
+EOF
+
+# Creates a temporary mount point
+mount_point=$(mktemp -d -t container-sshfs-vifm.XXXXXX)
+cleanup() {
+	umount "$mount_point" | true
+	rmdir "$mount_point"
+}
+trap cleanup EXIT
+
+# Runs the container-sshfs process in background
+container-sshfs "$@" "$mount_point" 2>&1 | while read -r line; do
+	if ! mountpoint "$mount_point" >/dev/null 2>&1; then
+		printf "%s\n" "$line"
+	fi
+done &
+
+# Waits for the mount point to be ready and open it in vifm
+until mountpoint "$mount_point" >/dev/null 2>&1; do
+	sleep 0.1
+done
+vifm "$mount_point"
+
+# Closes the container-sshfs process
+kill $!
