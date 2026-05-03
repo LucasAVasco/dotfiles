@@ -1,0 +1,45 @@
+#!/bin/bash
+#
+# Print the total size of a list of files and folder excluding files and folder that are not saved for backups
+
+source ~/.config/bash/libs/help.sh
+
+help_handle y "$@" <<EOF
+	Prints the total size of a list of files and folder excluding files and folder that are not saved for backups
+
+	Usage:
+		backup-disc-usage <files...>
+EOF
+
+ignore=(
+	'node_modules'
+	'build'
+	'.build'
+	'cache'
+	'.cache'
+	'.mypy_cache'
+	'.venv'
+	'__pycache__'
+	'*.nobackup'
+	'*.nobackupsync'
+	'svg-inkscape'
+)
+
+# Arguments to pass to `du`
+args=()
+for i in "${ignore[@]}"; do
+	args+=('--exclude' "${i}")
+done
+
+for i in "$@"; do
+	# Size in human readable format.
+	#
+	# `du` outputs one line with the total size of the folder/file in bytes and its name (separated by spaces). The `cut` command
+	# removes the name and leaves only the size. The `tr` command removes the newline characters, so the next echo to stdout is on the same
+	# line
+	du "${args[@]}" -hs -- "$i" | cut -f 1 | tr -d '\n'
+
+	# File name
+	echo -ne "\t"
+	eza -d "$i"
+done
