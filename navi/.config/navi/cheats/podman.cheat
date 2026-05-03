@@ -114,6 +114,12 @@ podman start <exited-containers-var>
 # Stop a container
 podman stop <running-containers-var>
 
+# Stop all containers
+podman stop $(podman ps --format='{{.ID}}')
+
+# Stop all containers forcefully
+podman stop -t 0 $(podman ps --format='{{.ID}}')
+
 # Restart a container
 podman restart <running-containers-var>
 
