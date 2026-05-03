@@ -1,0 +1,28 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/derailed/k9s/master/internal/config/json/schemas/plugins.json
+
+# cSpell: words vifm sshfs
+
+plugins:
+  container-sshfs-pod:
+    shortCut: Shift-M
+    description: Mount a pod's container filesystem
+    scopes: [pod]
+    background: false
+    command: vifm-container-sshfs
+    args:
+      - kube
+      - --namespace
+      - $NAMESPACE
+      - $NAME
+
+  container-sshfs-container:
+    shortCut: Shift-M
+    description: Mount a container filesystem
+    scopes: [container]
+    background: false
+    command: vifm-container-sshfs
+    args:
+      - kube
+      - --namespace
+      - $NAMESPACE
+      - $POD/$NAME
