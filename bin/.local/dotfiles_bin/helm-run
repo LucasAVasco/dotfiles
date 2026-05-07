@@ -1,0 +1,50 @@
+#!/bin/bash
+
+set -e
+
+source ~/.config/bash/libs/help.sh
+
+help_handle y "$@" <<EOF
+	Run helm release with overridden command line arguments
+
+	Usage:
+		helm-run <helm_args...> -- [args_variable_name] [args...]
+
+	Arguments:
+		helm_args...          Helm arguments to pass to Helm. You must provide at least the release name and repository.
+		args_variable_name    The name of the variable to override in the Helm chart.
+		args...               The arguments to override.
+EOF
+
+# Optional Helm arguments
+helm_args=()
+while [[ $# -gt 0 ]]; do
+	case "$1" in
+		--)
+			shift
+			break
+			;;
+
+		*)
+			helm_args+=("$1")
+			shift
+			;;
+	esac
+done
+
+# Overridden command line arguments
+if [[ $# -gt 0 ]]; then
+	args_variable="$1"
+	shift
+
+	# Create a JSON object with the overridden values
+	overrides=$(echo '{}' | jq ".$args_variable = []")
+	for arg in "$@"; do
+		overrides=$(printf "%s" "$overrides" | line="$arg" jq ".$args_variable += [\$ENV.line"])
+	done
+
+	helm_args+=("--set-json" "$overrides")
+fi
+
+# Run helm using the overridden values
+helm upgrade --install "${helm_args[@]}"
