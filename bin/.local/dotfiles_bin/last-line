@@ -1,0 +1,16 @@
+#!/bin/bash
+#
+# Return the last line of standard input.
+
+set -e
+
+source ~/.config/bash/libs/help.sh
+
+help_handle n "$@" << EOF
+	Return the last line of the provided file or standard input.
+
+	Usage:
+		last-line [file]
+EOF
+
+tail -n 1 "$@"
