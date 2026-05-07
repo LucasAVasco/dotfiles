@@ -1,0 +1,13 @@
+% cURL
+
+
+$ X-methods-var: echo -e 'GET\nPOST\nPUT\nDELETE\nCONNECT\nOPTIONS\nTRACE\nPATCH'
+
+# Get certificate
+curl -w %{certs} <url>
+
+# Execute a custom request
+curl -X <X-methods-var> <url>
+
+# Execute a HEAD request
+curl --head <url>
