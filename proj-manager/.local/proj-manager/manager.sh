@@ -33,7 +33,7 @@ export PM_INVOKE_DIR=$(pwd)
 current_dir=$(dirname `realpath "${BASH_SOURCE[0]}"`)
 cd "$current_dir"
 
-# Select a folder with that contains a file
+# Select a folder that contains a file
 #
 # $1: The file to select to search
 # $2: The base directory to search
@@ -46,8 +46,7 @@ select_folder_with_file() {
 	# Executed inside a sub-shell so it doesn't change the current directory
 	(
 		cd "$base_search" && fd "$file" --format={//} | \
-			fzf --preview="echo '# Description:\n' && {}/$file desc \
-			&& echo -e '\n\n# File contents:\n' && pretty-preview {}/$file \
+			fzf --preview="echo -e '# File contents:\n' && pretty-preview {}/$file \
 			&& echo -e '\n# Folder contents:\n' && pretty-preview {}"
 	)
 }

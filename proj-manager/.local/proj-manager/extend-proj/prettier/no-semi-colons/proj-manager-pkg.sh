@@ -1,11 +1,9 @@
 #!/bin/bash
+#
+# Configure Prettier to not add semicolons
 
 source ~/.local/proj-manager/libs/package.sh
 source ~/.local/proj-manager/libs/package_fs.sh
-
-package_handle_cli "$@" << EOF
-	Configure Prettier to not add semicolons
-EOF
 
 package_cd_to_invoke_dir
 

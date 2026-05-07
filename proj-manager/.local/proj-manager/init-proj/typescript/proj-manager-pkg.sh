@@ -1,4 +1,6 @@
 #!/bin/bash
+#
+# Initialize a sample TypeScript project
 
 set -e
 
@@ -6,10 +8,6 @@ source ~/.config/bash/libs/dialog/dialog.sh
 source ~/.config/bash/libs/pkg_manager/node.sh
 source ~/.local/proj-manager/libs/package.sh
 source ~/.local/proj-manager/libs/package_run.sh
-
-package_handle_cli "$@" << EOF
-	Initialize a sample TypeScript project
-EOF
 
 package_cd_to_invoke_dir
 
