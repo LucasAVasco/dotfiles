@@ -1,0 +1,16 @@
+#!/bin/bash
+#
+# Return the first line of standard input.
+
+set -e
+
+source ~/.config/bash/libs/help.sh
+
+help_handle n "$@" << EOF
+	Return the first line of the provided file or standard input.
+
+	Usage:
+		first-line [file]
+EOF
+
+head -n 1 "$@"
