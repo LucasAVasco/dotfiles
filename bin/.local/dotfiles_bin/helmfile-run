@@ -1,0 +1,59 @@
+#!/bin/bash
+
+set -e
+
+source ~/.config/bash/libs/help.sh
+
+help_handle y "$@" <<EOF
+	Run helmfile release with overridden command line arguments
+
+	Usage:
+		helmfile-run <release_name> [helmfile_args...] -- [args_variable_name] [args...]
+
+	Arguments:
+		release_name          Run only this release.
+		helmfile_args...      Helmfile arguments to pass to Helmfile. You must provide at least the release name and repository.
+		args_variable_name    The name of the variable to override in the Helm chart.
+EOF
+
+# Required arguments
+release_name="$1"
+shift
+
+# Optional Helmfile arguments
+helmfile_args=()
+while [[ $# -gt 0 ]]; do
+	case "$1" in
+		--)
+			shift
+			break
+			;;
+
+		*)
+			helmfile_args+=("$1")
+			shift
+			;;
+	esac
+done
+
+# Overridden command line arguments
+if [[ $# -gt 0 ]]; then
+	args_variable="$1"
+	shift
+
+	# Create a JSON object with the overridden values
+	overrides=$(echo '{}' | jq ".$args_variable = []")
+	for arg in "$@"; do
+		overrides=$(printf "%s" "$overrides" | line="$arg" jq ".$args_variable += [\$ENV.line"])
+	done
+
+	# Add a Helmfile argument to use the overridden values
+	overrides_file="$(mktemp helmfile-overrides.XXXXXX.json)"
+	trap 'rm "$overrides_file"' EXIT
+	printf "%s" "$overrides" >"$overrides_file"
+
+	helmfile_args+=("--state-values-file" "$overrides_file")
+fi
+
+# Run helm using the overridden values
+helmfile sync --selector name="$release_name" "${helmfile_args[@]}"
