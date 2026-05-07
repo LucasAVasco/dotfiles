@@ -1,0 +1,7 @@
+% tcpdump
+
+# Dump UDP
+tcpdump -i any -n -vv -X udp
+
+# Dump TCP
+tcpdump -i any -n -vv -X tcp
