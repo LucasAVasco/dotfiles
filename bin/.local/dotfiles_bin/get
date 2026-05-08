@@ -1,0 +1,7 @@
+#!/bin/bash
+#
+# Get a single field from a input formatted as JSON line
+
+set -e
+
+exec only-field "$@"
