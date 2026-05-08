@@ -2,4 +2,4 @@
 #
 # Opens the 'custom-script' tool in the default terminal emulator.
 
-default_term bash -c 'custom-script; read -n 1'
+default_term bash -c 'INTERACTIVE_SHELL=y custom-script; read -n 1'
