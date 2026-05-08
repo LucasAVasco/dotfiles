@@ -1,0 +1,28 @@
+#!/bin/bash
+#
+# Trash files matching the given patterns
+
+set -e
+
+source ~/.config/bash/libs/help.sh
+
+help_handle y "$@" <<EOF
+	Trash the files matching the given patterns.
+
+	Usage:
+		trash-patterns <patterns ...>
+
+	Arguments:
+		<patterns> Files matching the given Bash glob patterns will be trashed
+
+	Examples:
+
+	The following command trashes all .mp3, .mp4 and .jpg files
+
+	trash-patterns '*.mp3' '*.mp4' '*.jpg'
+EOF
+
+# cSpell:disable-next-line
+shopt -s nullglob # ignore patterns that don't match instead of failing
+
+trash $@
