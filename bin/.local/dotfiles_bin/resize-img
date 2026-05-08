@@ -1,0 +1,55 @@
+#!/bin/bash
+#
+# Resize several images to a specified size and replace them in place
+
+# cSpell:words magick
+
+set -e
+
+source ~/.config/bash/libs/help.sh
+source ~/.config/bash/libs/dialog/dialog.sh
+
+help_handle y "$@" <<EOF
+	Resize several images to a specified size and replace them in place
+
+	Usage:
+		resize-img [-s|--size] <size> <files...>
+
+	Flags:
+		-s, --size <size>   Size to resize to. Uses the same format as magick.
+
+	Examples:
+
+	resize-img --size '500x500' *.png
+
+	Resizes all PNGs in the current directory to 500x500
+
+	resize-img --size '1000x1000>' *.jpg
+
+	Resizes all JPGs larger than 1000x1000 in the current directory to 1000x1000
+EOF
+
+# Parse flags
+if [[ "$1" != "--size" && "$1" != "-s" ]]; then
+	echo "Usage: $0 --size <size> <files...>"
+	exit 1
+fi
+
+size="$2"
+shift 2
+
+# Must provide at least one file
+if [[ $# -eq 0 ]]; then
+	echo "Usage: $0 --size <size> <files...>"
+	exit 1
+fi
+
+# Ask for confirmation
+if [[ $(dialog_ask_boolean "Resize $* to $size?" n) == n ]]; then
+	exit
+fi
+
+# Resize
+for i in "$@"; do
+	magick "$i" -resize "$size" "$i"
+done
