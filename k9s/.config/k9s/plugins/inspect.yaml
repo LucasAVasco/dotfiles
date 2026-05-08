@@ -1,0 +1,59 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/derailed/k9s/master/internal/config/json/schemas/plugins.json
+
+plugins:
+  inspect-deploy:
+    shortCut: Shift-I
+    description: Inspect a deployment
+    scopes: [deployment]
+    background: false
+    command: kubectl
+    args:
+      - inspect
+      - container
+      - -n
+      - $NAMESPACE
+      - --deployment
+      - $NAME
+
+  inspect-pod:
+    shortCut: Shift-I
+    description: Inspect a pod
+    scopes: [pod]
+    background: false
+    command: kubectl
+    args:
+      - inspect
+      - container
+      - -n
+      - $NAMESPACE
+      - --pod
+      - $NAME
+
+  inspect-container:
+    shortCut: Shift-I
+    description: Inspect a container
+    scopes: [container]
+    background: false
+    command: kubectl
+    args:
+      - inspect
+      - container
+      - -n
+      - $NAMESPACE
+      - --pod
+      - $POD
+      - --container
+      - $NAME
+
+  inspect-pvc:
+    shortCut: Shift-I
+    description: Inspect a private volume claim
+    scopes: [pvc]
+    background: false
+    command: kubectl
+    args:
+      - inspect
+      - pvc
+      - -n
+      - $NAMESPACE
+      - $NAME
