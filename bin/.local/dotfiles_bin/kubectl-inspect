@@ -1,0 +1,200 @@
+#!/bin/bash
+#
+# Inspect a Kubernetes resource
+
+set -e
+
+source ~/.config/bash/libs/help.sh
+
+help_handle y "$@" <<EOF
+	Inspect a Kubernetes resource (open an interactive shell to inspect it)
+
+	Usage:
+		kubectl inspect container [-n|--namespace] [-d|--deploy|--deployment] [-p|--pod] [-c|--container]
+
+		kubectl inspect pvc [-n|--namespace] <PVC_NAME>
+
+
+	Flags:
+		-n, --namespace               Namespace name. Default: "default"
+		-d, --deploy, --deployment    Deployment name
+		-p, --pod                     Pod name or pod index in the deployment (starts from 0). Default: 0
+		-c, --container               Container name
+EOF
+
+# Get a pod of a deployment
+#
+# $1: Namespace name
+# $2: Deployment name
+# $3: Pod index in the deployment. Starts from 0. Default: 0
+get_pod_of_deploy() {
+	local namespace="$1"
+	local deploy="$2"
+	local pod_index="${3-0}"
+
+	local deploy_labels=$(kubectl get deployments -n "$namespace" "$deploy" -o jsonpath='{.spec.selector.matchLabels}' | \
+		jq -r 'to_entries | map("\(.key)=\(.value)") | join(",")')
+	pod=$(kubectl get pods -n "$namespace" -l "$deploy_labels" -o jsonpath='{.items['"$pod_index"'].metadata.name}')
+
+	echo -n "$pod"
+}
+
+# Get a deployment of a pod
+#
+# $1: Namespace name
+# $2: Pod name
+get_deploy_of_pod() {
+	local namespace="$1"
+	local pod="$2"
+
+	local pod_labels=$(kubectl get pods -n "$namespace" "$pod" -o jsonpath='{.metadata.labels}')
+
+	# INFO(LucasAVasco): kubernetes may add more labels to the pod, so we can not get the deploy with `kubectl get deploy -l "$pod_labels"`.
+	# We need to check all deployments to find the one with compatible labels
+	local deploy=$(kubectl get deploy -n "$namespace" -o jsonpath='{.items}' | \
+		jq --argjson labels "$pod_labels" '.[] | select(. as $deploy | $labels | contains($deploy.spec.selector.matchLabels))')
+	deploy=$(echo "$deploy" | jq -r '.metadata.name')
+
+	echo -n "$deploy"
+}
+
+# Creates a pod to inspect the PVC.
+#
+# Uses the busybox image. Mounts the PVC in `/pvc`.
+#
+# $1: Namespace name
+# $2: PVC name
+# $3: Pod name
+create_pvc_inspector() {
+	local namespace="$1"
+	local pvc="$2"
+	local pod_name="$3"
+
+	cat <<EOF | kubectl apply -n "$namespace" -f -
+apiVersion: v1
+kind: Pod
+metadata:
+  name: "$pod_name"
+spec:
+  containers:
+  - image: busybox
+    name: pvc-inspector
+    command: ["sh"]
+    args:
+      - -c
+      - |
+        # Graceful shutdown
+        must_exit=0
+        trap "must_exit=1" TERM INT
+        while [ \$must_exit -eq 0 ]; do
+          sleep 1
+        done
+    volumeMounts:
+    - mountPath: /pvc
+      name: pvc
+  volumes:
+  - name: pvc
+    persistentVolumeClaim:
+      claimName: "$pvc"
+EOF
+}
+
+resource_type="$1"
+shift
+
+case "$resource_type" in
+	container)
+		# Parse arguments
+		namespace="default"
+		deploy=""
+		pod="0"
+		container=""
+
+		while [[ "$#" -gt 0 ]]; do
+			case "$1" in
+				-n | --namespace)
+					namespace="$2"
+					shift 2
+					;;
+
+				-d | --deploy | --deployment)
+					deploy="$2"
+					shift 2
+					;;
+
+				-p | --pod)
+					pod="$2"
+					shift 2
+					;;
+
+				-c | --container)
+					container="$2"
+					shift 2
+					;;
+
+				*)
+					break
+					;;
+			esac
+		done
+
+		# Resolve missing arguments
+		if [[ -z "$deploy" ]]; then
+			deploy=$(get_deploy_of_pod "$namespace" "$pod")
+		fi
+
+		if [[ "$pod" =~ ^[0-9]+$ ]]; then
+			pod=$(get_pod_of_deploy "$namespace" "$deploy" "$pod")
+		fi
+
+		if [[ -z "$container" ]]; then
+			container=$(kubectl get -n "$namespace" pod "$pod" -o jsonpath='{.spec.containers[0].name}')
+		fi
+
+		# Command line arguments
+		args=("debug" "--profile=sysadmin" "-it" "--image=busybox" "-n" "$namespace" "$pod")
+		if [[ -n "$container" ]]; then
+			args+=("--target=$container")
+		fi
+		args+=("--" "sh" "-c" 'cd /proc/*/root ; sh')
+
+		# Execute
+		kubectl "${args[@]}"
+		;;
+
+	pvc)
+		# Parse arguments
+		namespace="default"
+		while [[ "$#" -gt 0 ]]; do
+			case "$1" in
+				-n | --namespace)
+					namespace="$2"
+					shift 2
+					;;
+
+				*)
+					break
+					;;
+
+			esac
+		done
+
+		pvc="$1"
+
+		# Creates a pod to inspect the PVC
+		pod_name="pvc-inspector-$(openssl rand -hex 10)"
+		create_pvc_inspector "$namespace" "$pvc" "$pod_name"
+		trap 'kubectl delete pod -n "$namespace" "$pod_name"' EXIT # Deletes the pod on exit
+
+		# Waits for the PVC inspector pod to be ready
+		run-with-retry -- kubectl exec -it -n "$namespace" "$pod_name" -- echo -n ''
+
+		# Inspects the PVC
+		kubectl exec -it -n "$namespace" "$pod_name" -- sh -c "cd /pvc && sh"
+		;;
+
+	*)
+		echo "unrecognized resource type: $resource_type" >&2
+		exit 1
+		;;
+esac
