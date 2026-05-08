@@ -6,10 +6,12 @@
 
 set -e
 
-current_dir=$(realpath -m -- "$0/../")
-source "$current_dir/lib/sync_folder.sh"
+source ./lib/sync_folder.sh
+source ~/.config/bash/libs/dialog/dialog.sh
+source ~/.local/custom_scripts/libs/scripts.sh
 
-source "$REPO_DIR/libs/tui.sh"
+# Runs all command in the current directory
+scripts_cd_to_invoke_dir
 
 # Query the folder to apply
 cd "$SYNC_FOLDER"
@@ -29,7 +31,7 @@ else
 fi
 
 # Sends the content to a folder with the user name inside the sync folder
-if [[ $(tui_ask_boolean "Want to apply the modifications of the '$user_to_copy' user in the current 'HOME'?" 'n') == 'n' ]]; then
+if [[ $(dialog_ask_boolean "Want to apply the modifications of the '$user_to_copy' user in the current 'HOME'?" 'n') == 'n' ]]; then
 	echo -e '\nOperation aborted...' >&2
 	exit 1
 fi

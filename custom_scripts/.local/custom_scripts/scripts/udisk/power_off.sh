@@ -9,18 +9,17 @@
 
 set -e
 
-source "$REPO_DIR/libs/tui.sh"
-
-current_dir=$(realpath -m -- "$0/../")
-source "$current_dir/lib/devices.sh"
-
+source ./lib/devices.sh
+source ~/.config/bash/libs/dialog/dialog.sh
+source ~/.local/custom_scripts/libs/scripts.sh
+source ~/.local/custom_scripts/libs/scripts_run.sh
 
 # Shows the udisks status and lsblk output, so the user can see what devices to power-off
-"$current_dir/show_devices.sh"
+scripts_run_script ./show_devices.sh
 echo -e "\n"
 
 # Asks if the user want power-off something or abort
-if [[ $(tui_ask_boolean 'Want to power-off some device?' 'y') == 'n' ]]; then
+if [[ $(dialog_ask_boolean 'Want to power-off some device?' 'y') == 'n' ]]; then
 	echo -e '\nOperation aborted...'
 	exit 1
 fi
@@ -34,7 +33,7 @@ if [[ -z "$selected_device" ]]; then
 fi
 
 # Ensures that user knows what device will be powered-off
-if [[ $(tui_ask_boolean "Want to power-off the '$selected_device' device?" 'y') == 'n' ]]; then
+if [[ $(dialog_ask_boolean "Want to power-off the '$selected_device' device?" 'y') == 'n' ]]; then
 	echo -e '\nOperation aborted...'
 	exit 1
 fi
@@ -43,4 +42,4 @@ fi
 udisksctl power-off -b "/dev/$selected_device"
 
 # Shows the udisks status and lsblk output after the changes
-"$current_dir/show_devices.sh"
+scripts_run_script ./show_devices.sh

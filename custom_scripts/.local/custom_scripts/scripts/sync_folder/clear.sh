@@ -4,14 +4,17 @@
 
 set -e
 
-current_dir=$(realpath -m -- "${BASH_SOURCE[0]}/../")
-source "$current_dir/lib/sync_folder.sh"
+source ./lib/sync_folder.sh
+source ~/.config/bash/libs/dialog/dialog.sh
+source ~/.local/custom_scripts/libs/scripts.sh
 
-source "$REPO_DIR/libs/tui.sh"
+# Runs all command in the current directory
+scripts_cd_to_invoke_dir
 
-if [[ $(tui_ask_boolean "Want to clear the your content inside the sync folder?" 'n') == 'y' ]]; then
-	clear_sync_folder
-else
+# Asks if the user want to clear the sync folder
+if [[ $(dialog_ask_boolean "Want to clear the your content inside the sync folder?" 'n') == 'n' ]]; then
 	echo 'Operation aborted...' >&2
 	exit 1
 fi
+
+clear_sync_folder

@@ -40,12 +40,19 @@ help_handle n "$@" <<EOF
 			used to override the path of the manager script that is used in that case
 EOF
 
-# Export the current directory to all scripts
+# Environment variables
 export CUSTOM_SCRIPT_INVOKE_DIR="$(pwd)"
 
+manager_path=`realpath "${BASH_SOURCE[0]}"`
+manager_dir=$(dirname "$manager_path")
+export CUSTOM_SCRIPT_MANAGER_DIR="$manager_dir"
+export CUSTOM_SCRIPT_MANAGER_PATH="$manager_path"
+
 # Execute the command in the current directory
-current_dir=$(dirname `realpath "${BASH_SOURCE[0]}"`)
-cd "$current_dir"
+cd "$manager_dir"
+
+# Library to run scripts
+source ./libs/scripts_run.sh
 
 # Handle user command
 main_command="$1"
@@ -74,7 +81,7 @@ case "$main_command" in
 		fi
 
 		# Run the script
-		WORKING_DIR="${CUSTOM_SCRIPT_INVOKE_DIR}" REPO_DIR="$PWD/" "$script"
+		scripts_run_script "$manager_dir/$script"
 
 		# Print a command that can be used to re-run the script
 		echo "equivalent command: '$CUSTOM_SCRIPT_MANAGER_EXECUTABLE' run '$script'"

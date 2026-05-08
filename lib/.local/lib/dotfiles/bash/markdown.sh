@@ -2,7 +2,7 @@
 #
 # Markdown functions.
 
-source "$REPO_DIR/libs/security.sh"
+source ~/.config/bash/libs/security/external_software.sh
 
 # Formats a markdown input to be displayed in a terminal.
 #
@@ -10,7 +10,7 @@ source "$REPO_DIR/libs/security.sh"
 #
 # Returns the formatted input.
 markdown_format() {
-	if [[ $(security_check_can_use_external_software) == y ]]; then
+	if [[ $security_external_software_allowed == y ]]; then
 		gum format
 	else
 		cat '/dev/stdin'

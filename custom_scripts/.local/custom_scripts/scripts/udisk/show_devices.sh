@@ -8,7 +8,7 @@
 
 set -e
 
-source "$REPO_DIR/libs/markdown.sh"
+source ~/.local/lib/dotfiles/bash/markdown.sh
 
 show() {
 	echo -e '## Udisks status\n'

@@ -2,10 +2,7 @@
 #
 # Library to sync the clipboard between users.
 
-current_dir=$(dirname `realpath "${BASH_SOURCE[0]}"`)
-top_dir=$(dirname "$current_dir")
-
-source "$top_dir/../lib/sync_folder.sh"
+source ~/.local/custom_scripts/scripts/sync_folder/lib/sync_folder.sh
 
 # Fifo used to sync the clipboard
 clipboard_fifo="$SYNC_FOLDER/clipboard.fifo"

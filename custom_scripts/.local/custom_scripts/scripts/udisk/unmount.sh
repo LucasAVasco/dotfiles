@@ -9,18 +9,17 @@
 
 set -e
 
-source "$REPO_DIR/libs/tui.sh"
-
-current_dir=$(realpath -m -- "$0/../")
-source "$current_dir/lib/devices.sh"
-
+source ./lib/devices.sh
+source ~/.config/bash/libs/dialog/dialog.sh
+source ~/.local/custom_scripts/libs/scripts.sh
+source ~/.local/custom_scripts/libs/scripts_run.sh
 
 # Shows the udisks status and lsblk output, so the user can see what devices can be unmounted
-"$current_dir/show_devices.sh"
+scripts_run_script ./show_devices.sh
 echo -e "\n"
 
 # Asks if the user want unmount something or abort
-if [[ $(tui_ask_boolean 'Want to unmount some device?' y) == 'n' ]]; then
+if [[ $(dialog_ask_boolean 'Want to unmount some device?' y) == 'n' ]]; then
 	echo -e '\nOperation aborted...'
 	exit 1
 fi
@@ -36,7 +35,7 @@ fi
 udisksctl unmount -b "/dev/$selected_device"
 
 # Asks if the user also want to power off the device
-if [[ $(tui_ask_boolean "Want to power-off the '$selected_device' device" 'n') == 'y' ]]; then
+if [[ $(dialog_ask_boolean "Want to power-off the '$selected_device' device" 'n') == 'y' ]]; then
 	udisksctl power-off -b "/dev/$selected_device"
 else
 	echo -en '\nThe device has not been powered-off. You need to powered-off the device before removing it!'
@@ -45,4 +44,4 @@ else
 fi
 
 # Shows the udisks status and lsblk output after the changes
-"$current_dir/show_devices.sh"
+scripts_run_script ./show_devices.sh

@@ -6,13 +6,13 @@
 #
 # See the 'lib/tmp_branch.sh' script for more information
 
-
 set -e
 
+source ./lib/tmp_branch.sh
+source ~/.local/custom_scripts/libs/scripts.sh
 
-current_dir=$(realpath -m -- "$0/../")
-source "${current_dir}/lib/tmp_branch.sh"
-
+# Runs all command in the current directory
+scripts_cd_to_invoke_dir
 
 # Only push if there is at least one temporary branch
 if [[ $(there_is_local_tmp_branch) == 'true' ]]; then

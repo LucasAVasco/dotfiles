@@ -4,8 +4,11 @@
 
 set -e
 
-current_dir=$(realpath -m -- "${BASH_SOURCE[0]}/../")
-source "$current_dir/lib/sync_folder.sh"
+source ./lib/sync_folder.sh
+source ~/.local/custom_scripts/libs/scripts.sh
+
+# Runs all command in the current directory
+scripts_cd_to_invoke_dir
 
 # Query the folder to send
 folder_to_send=$(find -maxdepth 3 -type f -or -type d | fzf)

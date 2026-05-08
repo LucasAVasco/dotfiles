@@ -13,9 +13,10 @@ set -e
 source ~/.local/custom_scripts/libs/scripts.sh
 source ~/.local/custom_scripts/scripts/git/lib/branch.sh
 
-scripts_cd_to_invoke_dir
-
 branch='alt_main.doNotUse'
+
+# Runs all command in the current directory
+scripts_cd_to_invoke_dir
 
 # Ensures the branch exists
 if [[ "$(git_has_branch "$branch")" == n ]]; then

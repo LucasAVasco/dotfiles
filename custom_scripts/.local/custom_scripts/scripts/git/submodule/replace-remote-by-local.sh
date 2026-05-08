@@ -7,6 +7,7 @@
 
 source ~/.config/bash/libs/dialog/dialog.sh
 source ~/.config/bash/libs/log.sh
+source ~/.local/custom_scripts/libs/scripts.sh
 
 # Returns the name and path of all submodules
 #
@@ -16,7 +17,7 @@ get_submodules_name_and_path() {
 }
 
 # Runs all command in the current directory
-cd "$WORKING_DIR"
+scripts_cd_to_invoke_dir
 
 # Changes to the Git root directory
 cd "$(git rev-parse --show-toplevel)"

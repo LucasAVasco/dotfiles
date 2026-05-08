@@ -4,10 +4,12 @@
 
 set -e
 
-current_dir=$(realpath -m -- "${BASH_SOURCE[0]}/../")
-source "$current_dir/lib/remotes.sh"
+source ./lib/remotes.sh
+source ~/.config/bash/libs/dialog/dialog.sh
+source ~/.local/custom_scripts/libs/scripts.sh
 
-source "$REPO_DIR/libs/tui.sh"
+# Runs all command in the current directory
+scripts_cd_to_invoke_dir
 
 # Interactively set the user of some remotes.
 #
@@ -32,7 +34,7 @@ set_user_of_remotes() {
 		new_url=$(echo "$new_url" | sed 's/@www\./@/')
 
 		# Asks permission
-		if [[ $(tui_ask_boolean "Want to set the user '$user_name' to this remote '$remote_name'?", 'y') == 'n' ]]; then
+		if [[ $(dialog_ask_boolean "Want to set the user '$user_name' to this remote '$remote_name'?", 'y') == 'n' ]]; then
 			echo "Skipping remote '$remote_name'"
 			continue
 		fi
@@ -43,14 +45,11 @@ set_user_of_remotes() {
 	done
 }
 
-# Uses the current repository
-cd "$WORKING_DIR"
-
 # User name
 user_name=$(git config --get user.name)
 
-if [[ $(tui_ask_boolean "Want to use this user '$user_name'?" 'y') == 'n' ]]; then
-	user_name=$(tui_ask_input "New user name")
+if [[ $(dialog_ask_boolean "Want to use this user '$user_name'?" 'y') == 'n' ]]; then
+	user_name=$(dialog_ask_input "New user name")
 fi
 
 # New default user name

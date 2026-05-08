@@ -7,10 +7,12 @@
 
 set -e
 
-current_dir=$(realpath -m -- "${BASH_SOURCE[0]}/../")
-source "${current_dir}/lib/tmp_branch.sh"
+source ./lib/tmp_branch.sh
+source ~/.config/bash/libs/dialog/dialog.sh
+source ~/.local/custom_scripts/libs/scripts.sh
 
-source "$REPO_DIR/libs/tui.sh"
+# Runs all command in the current directory
+scripts_cd_to_invoke_dir
 
 # Local branch name
 tmp_branches_name=($(get_local_tmp_branch_name))
@@ -31,7 +33,7 @@ if [[ "$tmp_branch" == '' ]]; then
 fi
 
 # Only creates the branch if the user allows, otherwise cancels the script
-if [[ $(tui_ask_boolean "Create a temporary branch with the name '$tmp_branch'?" 'n') == 'y' ]]; then
+if [[ $(dialog_ask_boolean "Create a temporary branch with the name '$tmp_branch'?" 'n') == 'y' ]]; then
 	git branch "$tmp_branch"
 
 else

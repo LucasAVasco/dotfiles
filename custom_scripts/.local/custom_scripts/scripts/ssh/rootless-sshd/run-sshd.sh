@@ -6,9 +6,6 @@ set -e
 
 source ~/.config/bash/libs/dialog/dialog.sh
 
-current_dir=$(dirname `realpath "${BASH_SOURCE[0]}"`)
-cd "$current_dir"
-
 # Folders
 mkdir -p ~/.ssh/sshd/run
 chmod -R u=rwX,g=,o= ~/.ssh

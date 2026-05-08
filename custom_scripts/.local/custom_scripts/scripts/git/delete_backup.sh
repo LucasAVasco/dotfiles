@@ -4,6 +4,11 @@
 
 set -e
 
+source ~/.local/custom_scripts/libs/scripts.sh
+
+# Runs all command in the current directory
+scripts_cd_to_invoke_dir
+
 # Check if the current commit is a temporary.
 #
 # Return 'y' if it is a temporary commit, 'n' otherwise.
@@ -14,7 +19,7 @@ commit_is_temporary() {
 }
 
 # Delete the current commit if it is a temporary commit.
-delete_temporary_commit() {
+reset_temporary_commit() {
 	if [[ $(commit_is_temporary) == 'y' ]]; then
 		git reset HEAD^1
 	else
@@ -32,7 +37,7 @@ fi
 # Delete all temporary commits.
 while [[ true ]]; do
 	if [[ $(commit_is_temporary) == 'y' ]]; then
-		delete_temporary_commit
+		reset_temporary_commit
 	else
 		break
 	fi

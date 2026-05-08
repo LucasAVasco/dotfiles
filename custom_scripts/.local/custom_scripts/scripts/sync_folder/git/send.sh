@@ -4,11 +4,13 @@
 
 set -e
 
-current_dir=$(dirname `realpath "${BASH_SOURCE[0]}"`)
-source "$current_dir/lib/sync_repo.sh"
+source ./lib/sync_repo.sh
+source ~/.local/custom_scripts/libs/scripts.sh
+
+# Runs all command in the current directory
+scripts_cd_to_invoke_dir
 
 # Uses the current repository
-cd "$WORKING_DIR"
 sync_folder_git_send_current_repo
 
 # Wait by the user

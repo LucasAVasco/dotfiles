@@ -9,18 +9,17 @@
 
 set -e
 
-source "$REPO_DIR/libs/tui.sh"
-
-current_dir=$(realpath -m -- "$0/../")
-source "$current_dir/lib/devices.sh"
-
+source ./lib/devices.sh
+source ~/.config/bash/libs/dialog/dialog.sh
+source ~/.local/custom_scripts/libs/scripts.sh
+source ~/.local/custom_scripts/libs/scripts_run.sh
 
 # Shows the udisks status and lsblk output, so the user can see what devices can be mounted
-"$current_dir/show_devices.sh"
+scripts_run_script ./show_devices.sh
 echo -e "\n"
 
 # Asks if the user want to mount something or abort
-if [[ $(tui_ask_boolean 'Want to mount some device?' y) == 'n' ]]; then
+if [[ $(dialog_ask_boolean 'Want to mount some device?' y) == 'n' ]]; then
 	echo -e '\nOperation aborted...'
 	exit 1
 fi
@@ -37,8 +36,8 @@ fi
 cmd=(udisksctl mount)
 
 # Asks if the user want to mount as another user
-if [[ $(tui_ask_boolean 'Want to mount as another user?' n) == 'y' ]]; then
-	user_name=$(tui_ask_input 'User name')
+if [[ $(dialog_ask_boolean 'Want to mount as another user?' n) == 'y' ]]; then
+	user_name=$(dialog_ask_input 'User name')
 	cmd=(sudo -u "$user_name" -- "${cmd[@]}")
 fi
 
@@ -64,4 +63,4 @@ cmd+=('-b' "/dev/$selected_device")
 "${cmd[@]}"
 
 # Shows the udisks status and lsblk output after the changes
-"$current_dir/show_devices.sh"
+scripts_run_script ./show_devices.sh

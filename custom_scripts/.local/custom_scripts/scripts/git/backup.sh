@@ -11,28 +11,30 @@
 #
 # See the 'lib/tmp_branch.sh' script for more information
 
-
 set -e
 
+source ~/.local/custom_scripts/libs/scripts.sh
+source ~/.local/custom_scripts/libs/scripts_run.sh
+source ./lib/tmp_branch.sh
 
-current_dir=$(realpath -m -- "$0/../")
-source "${current_dir}/lib/tmp_branch.sh"
-
+# Runs all command in the current directory
+scripts_cd_to_invoke_dir
 
 # Only needs to backup if there are files that need to be tracked
-if  [[ $(git status --short) != '' ]]; then
+current_dir="$scripts_current_script_dir"
+if [[ $(git status --short) != '' ]]; then
 	# If there are not a temporary branch, creates a new one.
-	"${current_dir}/create_tmp_branch.sh"
+	scripts_run_script "$current_dir"/create_tmp_branch.sh
 
 	# Checkout to the temporary branch
 	tmp_branches_name=($(get_local_tmp_branch_name))
 	tmp_branch=${tmp_branches_name[0]}
 
-	git checkout "$tmp_branch"  # Need to checkouts before add the files
+	git checkout "$tmp_branch" # Need to checkouts before add the files
 
 	# Creates the commit to track the changed files. Only creates the commit if there are files that need to be tracked
 	# in the temporary branch
-	if  [[ $(git status --short) != '' ]]; then
+	if [[ $(git status --short) != '' ]]; then
 		git add "$(git rev-parse --show-toplevel)"
 		git commit -m "tmp(auto-backup): $(date '+%d %b %Y')"
 	fi
