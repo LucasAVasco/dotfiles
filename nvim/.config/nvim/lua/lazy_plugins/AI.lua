@@ -43,7 +43,7 @@ return {
 		dependencies = {
 			'nvim-lua/plenary.nvim',
 		},
-		build = 'npm install -g mcp-hub@latest',
+		build = 'pnpm install -g mcp-hub@latest',
 
 		cond = MYVAR.not_in_vscode,
 
