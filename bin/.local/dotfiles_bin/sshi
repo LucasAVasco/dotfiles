@@ -1,0 +1,14 @@
+#!/bin/bash
+
+source ~/.config/bash/libs/help.sh
+
+# cSpell: ignore sshi
+
+help_handle y "$@" <<EOF
+	Run ssh with an identity file (private key)
+
+	Usage:
+		sshi <identity_file> [ssh-options...]
+EOF
+
+ssh -o UserKnownHostsFile=/dev/null -o IdentitiesOnly=yes -i "$@"
