@@ -1,7 +1,9 @@
 --- Models
 
 local gemini_model = 'gemini-2.0-flash'
-local gemini_api_key = 'cmd:secret-tool lookup GEMINI_API KEY'
+
+-- You can set it with the command `secret-tool store --label="Google AI Studio API Key" google-ai-studio api-key`
+local gemini_api_auth = 'cmd:secret-tool lookup google-ai-studio api-key'
 
 local normal_visual_mode = { 'n', 'v' }
 
@@ -102,7 +104,7 @@ return {
 									},
 								},
 								env = {
-									api_key = gemini_api_key,
+									api_key = gemini_api_auth,
 								},
 							})
 						end,
@@ -182,7 +184,7 @@ return {
 			providers = {
 				gemini = {
 					model = gemini_model,
-					api_key_name = gemini_api_key,
+					api_key_name = gemini_api_auth,
 				},
 			},
 
