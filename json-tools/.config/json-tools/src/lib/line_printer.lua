@@ -139,10 +139,10 @@ function M.LinePrinter:print_missing_lines()
 	local buffer_size = #self._last_lines
 
 	for i, line in ipairs(self._last_lines) do
-		i = self._current_line + i - buffer_size
+		local index = self._current_line + i - buffer_size
 
 		for _, interval in ipairs(self._line_intervals) do
-			if self:_line_is_in_interval(i, interval) then
+			if self:_line_is_in_interval(index, interval) then
 				print(line)
 				break
 			end
