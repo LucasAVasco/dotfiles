@@ -299,6 +299,17 @@ return {
 				return cmp.core.view:visible() and vim.fn.pumvisible()
 			end
 
+			---Try to open the choice selector. Does nothing if it is not possible
+			---@return boolean opened True if the choice selector was opened
+			local function try_select_choice()
+				if luasnip.choice_active() then -- Shows the choice selector if in insert mode and inside a choice node
+					require('luasnip.extras.select_choice')()
+					return true
+				end
+
+				return false
+			end
+
 			-- CMP configuration
 			cmp.setup({
 				window = {
@@ -423,8 +434,10 @@ return {
 					['<Tab>'] = function(fallback)
 						if cmp_async_visible() and cmp.visible() then
 							cmp.select_next_item({ behavior = cmp.SelectBehavior.Select })
+							try_select_choice()
 						elseif luasnip.jumpable(1) then
 							luasnip.jump(1)
+							try_select_choice()
 						else
 							fallback()
 						end
@@ -433,17 +446,17 @@ return {
 					['<S-Tab>'] = function(fallback)
 						if cmp_async_visible() and cmp.visible() then
 							cmp.select_prev_item({ behavior = cmp.SelectBehavior.Select })
+							try_select_choice()
 						elseif luasnip.jumpable(-1) then
 							luasnip.jump(-1)
+							try_select_choice()
 						else
 							fallback()
 						end
 					end,
 
 					['<C-Tab>'] = function(fallback)
-						if luasnip.choice_active() then -- Shows the choice selector if in insert mode and inside a choice node
-							require('luasnip.extras.select_choice')()
-						else
+						if not try_select_choice() then
 							fallback()
 						end
 					end,
@@ -452,9 +465,12 @@ return {
 					['<CR>'] = function(fallback)
 						if cmp_async_visible() and cmp.get_selected_entry() then
 							cmp.confirm({ behavior = cmp.ConfirmBehavior.Insert, select = true })
-						elseif luasnip.choice_active() then -- Shows the choice selector if in insert mode and inside a choice node
-							require('luasnip.extras.select_choice')()
-						else
+
+							-- Select the choice after the snippet is expanded
+							vim.defer_fn(function()
+								try_select_choice()
+							end, 100)
+						elseif not try_select_choice() then
 							fallback()
 						end
 					end,
