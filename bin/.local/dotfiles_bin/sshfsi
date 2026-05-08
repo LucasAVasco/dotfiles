@@ -1,0 +1,15 @@
+#!/bin/bash
+
+source ~/.config/bash/libs/help.sh
+
+# cSpell: ignore sshfs sshfsi
+
+help_handle y "$@" <<EOF
+	Run ssh with an identity file (private key)
+
+	Usage:
+		sshfsi <identity_file> [sshfs-options...]
+EOF
+
+sshfs -o UserKnownHostsFile=/dev/null -o IdentitiesOnly=yes \
+	-o IdentityFile="$1" "${@:2}"
