@@ -3,6 +3,9 @@
 	pager = delta
 	autocrlf = input ; Convert CRLF to LF when adding a file
 
+[credential]
+	helper = /usr/lib/git-core/git-credential-libsecret
+
 [commit]
 	verbose = true
 
