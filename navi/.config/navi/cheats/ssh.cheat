@@ -6,3 +6,6 @@ $ var-ssh-hosts: printf "%s\n%s" "$(cat ~/.ssh/known_hosts | cut -d ' ' -f1)" "$
 
 # Open an interactive shell on the remote host with ZSH
 ssh <var-ssh-hosts> -t 'sh -l -c zsh'
+
+# Run SSH with no known hosts
+ssh -o UserKnownHostsFile=/dev/null
