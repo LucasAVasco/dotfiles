@@ -44,7 +44,7 @@ while [[ $# -gt 0 ]]; do
 done
 
 # Main loop
-while IFS=$'\n' read -r line; do
+while IFS= read -r line || [[ -n "$line" ]]; do
 	cmd=("$@")
 
 	# Replaces all '/_' in the command by the current line
