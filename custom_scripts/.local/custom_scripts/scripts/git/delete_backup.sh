@@ -12,7 +12,7 @@ scripts_cd_to_invoke_dir
 # Check if the current commit is a temporary.
 #
 # Return 'y' if it is a temporary commit, 'n' otherwise.
-commit_is_temporary() {
+is_commit_temporary() {
 	local current_commit_title=$(git show --oneline --summary | sed -n 1p)
 
 	[[ "$current_commit_title" =~ tmp\(auto-backup\): ]] && echo -n 'y' || echo -n 'n'
@@ -20,7 +20,7 @@ commit_is_temporary() {
 
 # Delete the current commit if it is a temporary commit.
 reset_temporary_commit() {
-	if [[ $(commit_is_temporary) == 'y' ]]; then
+	if [[ $(is_commit_temporary) == 'y' ]]; then
 		git reset HEAD^1
 	else
 		return 1 # Not a temporary commit
@@ -36,7 +36,7 @@ fi
 
 # Delete all temporary commits.
 while [[ true ]]; do
-	if [[ $(commit_is_temporary) == 'y' ]]; then
+	if [[ $(is_commit_temporary) == 'y' ]]; then
 		reset_temporary_commit
 	else
 		break
