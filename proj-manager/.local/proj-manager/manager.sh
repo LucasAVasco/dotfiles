@@ -8,7 +8,7 @@ source ~/.config/bash/libs/help.sh
 source ~/.config/bash/libs/dialog/dialog.sh
 source ~/.local/proj-manager/libs/package_run.sh
 
-help_handle y "$@" << EOF
+help_handle n "$@" << EOF
 	Project manager
 
 	USAGE
@@ -40,66 +40,54 @@ cd "$current_dir"
 #
 # stdout: The selected folder relative to the base directory
 select_folder_with_file() {
-	local file="$1"
-	local base_search="$2"
+	fd --format='{//}'  "$package_run_proj_manager_file_basename" "$@" | \
+		fzf --preview="echo -e '# File contents:\n' && pretty-preview {}/$package_run_proj_manager_file_basename \
+		&& echo -e '\n# Folder contents:\n' && pretty-preview {}"
+}
 
-	# Executed inside a sub-shell so it doesn't change the current directory
-	(
-		cd "$base_search" && fd "$file" --format={//} | \
-			fzf --preview="echo -e '# File contents:\n' && pretty-preview {}/$file \
-			&& echo -e '\n# Folder contents:\n' && pretty-preview {}"
-	)
+# Select a provider script and run it
+#
+# $1: The folders to search for the provider script, separated by spaces
+# $2..n: The arguments to pass to the provider
+select_script_and_run() {
+	folders=($1)
+	shift
+
+	if [[ "$1" == '' ]]; then
+		proj=$(select_folder_with_file "${folders[@]}")
+	else
+		proj="$1"
+	fi
+
+	initialize=$(dialog_ask_boolean "Are you sure you want to run project '$proj'?" n)
+	if [[ "$initialize" == y ]]; then
+		package_run_provider "$proj" "${@:2}"
+	else
+		echo "Aborted"
+		exit 1
+	fi
 }
 
 main_command="$1"
-shift
-case "$main_command" in
-	init)
-		if [[ "$1" == '' ]]; then
-			proj=$(select_folder_with_file "$package_run_proj_manager_file_basename" ./init-proj/)
-		else
-			proj="$1"
-		fi
+if [[ "$main_command" != '' ]]; then
+	shift
+fi
 
-		initialize=$(dialog_ask_boolean "Are you sure you want to initialize project '$proj'?" n)
-		if [[ "$initialize" == y ]]; then
-			package_run_init_provider "$proj" "$@"
-		else
-			echo "Aborted"
-			exit 1
-		fi
+case "$main_command" in
+	'')
+		select_script_and_run "./init-proj ./extend-proj ./update-proj" "$@"
+		;;
+
+	init)
+		select_script_and_run "./init-proj" "$@"
 		;;
 
 	add | extend)
-		if [[ "$1" == '' ]]; then
-			proj=$(select_folder_with_file "$package_run_proj_manager_file_basename" ./extend-proj/)
-		else
-			proj="$1"
-		fi
-
-		extend=$(dialog_ask_boolean "Are you sure you want to extend current project with '$proj'?" n)
-		if [[ "$extend" == y ]]; then
-			package_run_extend_provider "$proj" "$@"
-		else
-			echo "Aborted"
-			exit 1
-		fi
+		select_script_and_run "./extend-proj" "$@"
 		;;
 
 	update)
-		if [[ "$1" == '' ]]; then
-			proj=$(select_folder_with_file "$package_run_proj_manager_file_basename" ./update-proj/)
-		else
-			proj="$1"
-		fi
-
-		script=$(dialog_ask_boolean "Are you sure you want to update current project with '$proj'?" n)
-		if [[ "$script" == y ]]; then
-			package_run_update_provider "$proj" "$@"
-		else
-			echo "Aborted"
-			exit 1
-		fi
+		select_script_and_run "./update-proj" "$@"
 		;;
 
 	create)

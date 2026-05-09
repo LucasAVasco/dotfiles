@@ -24,33 +24,3 @@ package_run_provider() {
 	package_log "Running provider '$script' with arguments '${@:2}'"
 	PM_PROVIDER_DIR="$project_folder" "$script" run "${@:2}"
 }
-
-# Runs a provider script in the 'init-proj' folder
-#
-# $1: The project path relative to the 'init-proj/' folder
-# $2..n: The arguments to pass to the provider
-#
-# stdout: The output of the provider script
-package_run_init_provider() {
-	package_run_provider "./init-proj/$1" "${@:2}"
-}
-
-# Runs a provider script in the 'extend-proj' folder
-#
-# $1: The project path relative to the 'extend-proj/' folder
-# $2..n: The arguments to pass to the provider
-#
-# stdout: The output of the provider script
-package_run_extend_provider() {
-	package_run_provider "./extend-proj/$1" "${@:2}"
-}
-
-# Runs a update script in the 'update-proj' folder
-#
-# $1: The project path relative to the 'update-proj/' folder
-# $2..n: The arguments to pass to the provider
-#
-# stdout: The output of the provider script
-package_run_update_provider() {
-	package_run_provider "./update-proj/$1" "${@:2}"
-}
