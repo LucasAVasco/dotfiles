@@ -2,9 +2,9 @@
 #
 # Auto-type text on the current focused (active) window.
 
-source ~/.config/bash/libs/linux/keyboard/sound_emulator.sh
-source ~/.config/bash/libs/linux/session.sh
-source ~/.config/bash/libs/help.sh
+source ~/.local/lib/dotfiles/bash/linux/keyboard/sound_emulator.sh
+source ~/.local/lib/dotfiles/bash/linux/session.sh
+source ~/.local/lib/dotfiles/bash/help.sh
 
 help() {
 	help_msg_format '\t' << EOF

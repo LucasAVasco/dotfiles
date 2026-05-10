@@ -2,7 +2,7 @@
 #
 # Override k9s binary to automatically install some skins.
 
-source ~/.config/bash/libs/bin_overrides.sh
+source ~/.local/lib/dotfiles/bash/bin_overrides.sh
 
 # Install a k9s skin from the specified URL with CURL.
 #

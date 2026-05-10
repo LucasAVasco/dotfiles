@@ -2,7 +2,7 @@
 #
 # General functions to use in custom scripts
 
-source ~/.config/bash/libs/log.sh
+source ~/.local/lib/dotfiles/bash/log.sh
 
 scripts_current_script="$CUSTOM_SCRIPT_CURRENT_SCRIPT"
 scripts_current_script_dir="$CUSTOM_SCRIPT_CURRENT_SCRIPT_DIR"

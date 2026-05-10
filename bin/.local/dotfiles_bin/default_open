@@ -31,7 +31,7 @@
 
 set -e
 
-source ~/.config/bash/libs/help.sh
+source ~/.local/lib/dotfiles/bash/help.sh
 
 help_handle y "$@" << EOF
 	Open a file or URI with the default application.

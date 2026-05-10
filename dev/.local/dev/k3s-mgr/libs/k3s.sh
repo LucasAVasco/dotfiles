@@ -2,7 +2,7 @@
 #
 # Library to manage K3S clusters
 
-source ~/.config/bash/libs/log.sh
+source ~/.local/lib/dotfiles/bash/log.sh
 
 # Version of K3S to install. You can use `curl https://update.k3s.io/v1-release/channels/stable` to get the latest version
 k3s_version=v1.34.6+k3s1

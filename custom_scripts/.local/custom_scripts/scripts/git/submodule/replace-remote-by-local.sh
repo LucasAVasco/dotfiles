@@ -5,8 +5,8 @@
 # The user selects the remote and the local repository path (host machine). The script configures the submodule remote to point to this
 # local path instead of the remote one. The user can fetch data and pull data from this local repository.
 
-source ~/.config/bash/libs/dialog/dialog.sh
-source ~/.config/bash/libs/log.sh
+source ~/.local/lib/dotfiles/bash/dialog/dialog.sh
+source ~/.local/lib/dotfiles/bash/log.sh
 source ~/.local/custom_scripts/libs/scripts.sh
 
 # Returns the name and path of all submodules

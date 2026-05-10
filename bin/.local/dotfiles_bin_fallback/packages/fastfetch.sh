@@ -6,7 +6,7 @@ set -e
 
 source ../lib/wget.sh
 source ../lib/bin.sh
-source ~/.config/bash/libs/linux/arch.sh
+source ~/.local/lib/dotfiles/bash/linux/arch.sh
 
 version='2.58.0'
 

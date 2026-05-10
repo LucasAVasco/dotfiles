@@ -6,7 +6,7 @@
 # - xclip (Xorg)
 # - wl-copy (Wayland)
 
-source ~/.config/bash/libs/help.sh
+source ~/.local/lib/dotfiles/bash/help.sh
 
 set -e
 

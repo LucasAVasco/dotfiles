@@ -6,8 +6,8 @@
 
 set -e
 
-source ~/.config/bash/libs/devcontainer.sh
-source ~/.config/bash/libs/docker.sh
+source ~/.local/lib/dotfiles/bash/devcontainer.sh
+source ~/.local/lib/dotfiles/bash/docker.sh
 
 # Arguments parsing
 force_update=n

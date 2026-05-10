@@ -2,7 +2,7 @@
 #
 # Exposes a container port on the host
 
-source ~/.config/bash/libs/help.sh
+source ~/.local/lib/dotfiles/bash/help.sh
 
 help_handle y "$@" <<EOF
 	Exposes a container port on the host. Do not require to stop or create the container to work. You can expose a port of an already
@@ -17,7 +17,7 @@ help_handle y "$@" <<EOF
 
 EOF
 
-source ~/.config/bash/libs/docker.sh
+source ~/.local/lib/dotfiles/bash/docker.sh
 
 # Received arguments
 container_id="$1"

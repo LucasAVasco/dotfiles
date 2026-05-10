@@ -5,7 +5,7 @@
 set -e
 
 source ./lib/sync_folder.sh
-source ~/.config/bash/libs/dialog/dialog.sh
+source ~/.local/lib/dotfiles/bash/dialog/dialog.sh
 source ~/.local/custom_scripts/libs/scripts.sh
 
 # Runs all command in the current directory

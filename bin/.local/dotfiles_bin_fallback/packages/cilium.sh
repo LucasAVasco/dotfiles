@@ -5,7 +5,7 @@
 set -e
 
 source ../lib/wget.sh
-source ~/.config/bash/libs/linux/arch.sh
+source ~/.local/lib/dotfiles/bash/linux/arch.sh
 
 version='v0.19.2'
 

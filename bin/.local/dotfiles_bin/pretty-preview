@@ -6,7 +6,7 @@
 #
 # Can be used as a preview script for fzf (also support previewing images in fzf).
 
-source ~/.config/bash/libs/help.sh
+source ~/.local/lib/dotfiles/bash/help.sh
 
 help_handle y "$@" <<EOF
 	Preview files (supports images) and folders.

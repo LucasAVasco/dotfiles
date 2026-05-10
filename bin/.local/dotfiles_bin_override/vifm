@@ -4,7 +4,7 @@
 
 set -e
 
-source ~/.config/bash/libs/bin_overrides.sh
+source ~/.local/lib/dotfiles/bash/bin_overrides.sh
 
 # If the user can not install external software, run 'vifm' without 'vifmimg'
 if [[ "$ALLOW_EXTERNAL_SOFTWARE" != 'y' ]]; then

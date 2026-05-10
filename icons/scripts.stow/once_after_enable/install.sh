@@ -11,13 +11,13 @@ set -e
 local_icons_folder=~/.local/share/icons/
 local_cursor_folder=~/.local/share/icons/
 
-# source ~/.config/bash/libs/git.sh
+# source ~/.local/lib/dotfiles/bash/git.sh
 source "$MY_BASH_LIBS/git.sh"
 
-# source ~/.config/bash/libs/install/git.sh
+# source ~/.local/lib/dotfiles/bash/install/git.sh
 source "$MY_BASH_LIBS/install/git.sh"
 
-# source ~/.config/bash/libs/install/wget.sh
+# source ~/.local/lib/dotfiles/bash/install/wget.sh
 source "$MY_BASH_LIBS/install/wget.sh"
 
 # Install a icon package from the Git download directory.

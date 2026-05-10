@@ -2,8 +2,8 @@
 #
 # Library to manage my scripts used override some binaries.
 
-source ~/.config/bash/libs/string.sh
-source ~/.config/bash/libs/bin_fallback.sh
+source ~/.local/lib/dotfiles/bash/string.sh
+source ~/.local/lib/dotfiles/bash/bin_fallback.sh
 
 _bin_overrides_path=$(realpath ~/.local/dotfiles_bin_override/)
 

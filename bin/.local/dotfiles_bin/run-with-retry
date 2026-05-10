@@ -2,7 +2,7 @@
 
 set -e
 
-source ~/.config/bash/libs/help.sh
+source ~/.local/lib/dotfiles/bash/help.sh
 
 help_handle y "$@" <<EOF
 	Conditionally run a command until it succeeds or the maximum number of tries is reached.

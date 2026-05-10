@@ -2,7 +2,7 @@
 #
 # Change the current Kubernetes context interactively.
 
-source ~/.config/bash/libs/k8s.sh
+source ~/.local/lib/dotfiles/bash/k8s.sh
 
 # Interactively select a context with FZF.
 select_context_interactively() {

@@ -4,7 +4,7 @@
 
 set -e
 
-source ~/.config/bash/libs/dialog/dialog.sh
+source ~/.local/lib/dotfiles/bash/dialog/dialog.sh
 source ~/.local/proj-manager/libs/package.sh
 
 package_cd_to_invoke_dir

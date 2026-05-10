@@ -4,7 +4,7 @@
 
 set -e
 
-source ~/.config/bash/libs/install/node.sh
+source ~/.local/lib/dotfiles/bash/install/node.sh
 
 case "$1" in
 	i | u)

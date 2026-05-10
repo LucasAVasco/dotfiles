@@ -10,7 +10,7 @@
 set -e
 
 source ./lib/devices.sh
-source ~/.config/bash/libs/dialog/dialog.sh
+source ~/.local/lib/dotfiles/bash/dialog/dialog.sh
 source ~/.local/custom_scripts/libs/scripts.sh
 source ~/.local/custom_scripts/libs/scripts_run.sh
 

@@ -4,7 +4,7 @@
 
 set -e
 
-source ~/.config/bash/libs/install/go.sh
+source ~/.local/lib/dotfiles/bash/install/go.sh
 
 install_dir=~/.asdf
 version="v0.18.0"

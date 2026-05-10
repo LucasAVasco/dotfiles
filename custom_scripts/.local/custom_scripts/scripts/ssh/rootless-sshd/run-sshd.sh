@@ -4,7 +4,7 @@
 
 set -e
 
-source ~/.config/bash/libs/dialog/dialog.sh
+source ~/.local/lib/dotfiles/bash/dialog/dialog.sh
 
 # Folders
 mkdir -p ~/.ssh/sshd/run

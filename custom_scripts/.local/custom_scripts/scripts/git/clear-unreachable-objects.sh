@@ -3,7 +3,7 @@
 # Clear unreachable git objects
 
 source ~/.local/custom_scripts/libs/scripts.sh
-source ~/.config/bash/libs/dialog/dialog.sh
+source ~/.local/lib/dotfiles/bash/dialog/dialog.sh
 
 scripts_cd_to_invoke_dir
 

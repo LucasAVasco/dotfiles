@@ -2,7 +2,7 @@
 #
 # File management script.
 
-source ~/.config/bash/libs/help.sh
+source ~/.local/lib/dotfiles/bash/help.sh
 
 help_handle y "$@" << EOF
 	File management script.

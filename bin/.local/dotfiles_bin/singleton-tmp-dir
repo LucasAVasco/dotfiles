@@ -5,7 +5,7 @@
 
 set -e
 
-source ~/.config/bash/libs/help.sh
+source ~/.local/lib/dotfiles/bash/help.sh
 
 help_handle n "$@" <<EOF
 	Creates a temporary directory that is unique to the user (similar to 'mktemp -d'), but always returns the same directory for the same

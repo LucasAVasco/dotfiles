@@ -2,7 +2,7 @@
 #
 # Command to hide all changed/untracked files except for the given patterns.
 
-source ~/.config/bash/libs/help.sh
+source ~/.local/lib/dotfiles/bash/help.sh
 
 # Help message {{{
 

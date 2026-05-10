@@ -2,7 +2,7 @@
 
 set -e
 
-source ~/.config/bash/libs/help.sh
+source ~/.local/lib/dotfiles/bash/help.sh
 
 help_handle n "$@" <<EOF
 	Edit the standard input with the default file manager and paste the content to stdout. Based in the original 'vipe' tool from the

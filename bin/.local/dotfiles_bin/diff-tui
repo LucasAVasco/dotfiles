@@ -2,7 +2,7 @@
 #
 # Show the differences between to directories.
 
-source ~/.config/bash/libs/help.sh
+source ~/.local/lib/dotfiles/bash/help.sh
 
 hewlp() {
 	help_msg_format '\t\t' <<EOF

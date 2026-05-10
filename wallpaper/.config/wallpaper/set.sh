@@ -4,8 +4,8 @@
 
 set -e
 
-source ~/.config/bash/libs/linux/session.sh
-source ~/.config/bash/libs/help.sh
+source ~/.local/lib/dotfiles/bash/linux/session.sh
+source ~/.local/lib/dotfiles/bash/help.sh
 
 # Help message {{{
 

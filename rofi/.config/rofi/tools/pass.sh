@@ -4,9 +4,9 @@
 
 set -e
 
-source ~/.config/bash/libs/pass.sh
-source ~/.config/bash/libs/linux/clipboard.sh
-source ~/.config/bash/libs/linux/keyboard/auto-type.sh
+source ~/.local/lib/dotfiles/bash/pass.sh
+source ~/.local/lib/dotfiles/bash/linux/clipboard.sh
+source ~/.local/lib/dotfiles/bash/linux/keyboard/auto-type.sh
 
 main_password_entry_name='Main Password'
 

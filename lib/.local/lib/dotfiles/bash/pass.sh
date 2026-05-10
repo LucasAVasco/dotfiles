@@ -2,7 +2,7 @@
 #
 # Functions to interact with password manager (pass)
 
-source ~/.config/bash/libs/linux/keyboard/sound_emulator.sh
+source ~/.local/lib/dotfiles/bash/linux/keyboard/sound_emulator.sh
 
 _pass_password_dir=$(pass git rev-parse --show-toplevel || echo "$HOME/.password-store")
 

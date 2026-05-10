@@ -2,7 +2,7 @@
 #
 # Library to run package providers
 
-source ~/.config/bash/libs/paths.sh
+source ~/.local/lib/dotfiles/bash/paths.sh
 source ~/.local/proj-manager/libs/package.sh
 
 package_run_proj_manager_file_basename="proj-manager-pkg.sh"

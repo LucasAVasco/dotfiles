@@ -18,7 +18,7 @@
 # - slurp (Wayland, interactive screenshot)
 # - My 'clipboard/.config/clipboard/copy.sh' script (copy to clipboard)
 
-source ~/.config/bash/libs/linux/session.sh
+source ~/.local/lib/dotfiles/bash/linux/session.sh
 
 set -e
 

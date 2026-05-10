@@ -11,9 +11,9 @@ fi
 
 # Sources the appropriate UI library
 if [[ $__dialog_is_in_tty == 'y' ]]; then
-	source ~/.config/bash/libs/dialog/tui.sh
+	source ~/.local/lib/dotfiles/bash/dialog/tui.sh
 else
-	source ~/.config/bash/libs/dialog/rofi.sh
+	source ~/.local/lib/dotfiles/bash/dialog/rofi.sh
 fi
 
 # Ask a yes/no question.

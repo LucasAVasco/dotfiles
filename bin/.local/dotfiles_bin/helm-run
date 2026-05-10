@@ -2,7 +2,7 @@
 
 set -e
 
-source ~/.config/bash/libs/help.sh
+source ~/.local/lib/dotfiles/bash/help.sh
 
 help_handle y "$@" <<EOF
 	Run helm release with overridden command line arguments

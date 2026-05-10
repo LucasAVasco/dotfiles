@@ -4,8 +4,8 @@
 
 set -e
 
-source ~/.config/bash/libs/dialog/dialog.sh
-source ~/.config/bash/libs/pkg_manager/node.sh
+source ~/.local/lib/dotfiles/bash/dialog/dialog.sh
+source ~/.local/lib/dotfiles/bash/pkg_manager/node.sh
 source ~/.local/proj-manager/libs/package.sh
 source ~/.local/proj-manager/libs/package_run.sh
 

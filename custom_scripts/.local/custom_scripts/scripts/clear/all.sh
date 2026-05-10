@@ -6,7 +6,7 @@
 
 set -e
 
-source ~/.config/bash/libs/dialog/dialog.sh
+source ~/.local/lib/dotfiles/bash/dialog/dialog.sh
 source ~/.local/lib/dotfiles/bash/markdown.sh
 
 if [[ $(dialog_ask_boolean 'Clear all data from the system?' n) == n ]]; then

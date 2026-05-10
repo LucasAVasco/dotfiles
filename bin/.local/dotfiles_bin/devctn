@@ -4,8 +4,8 @@
 
 set -e
 
-source ~/.config/bash/libs/devcontainer.sh
-source ~/.config/bash/libs/help.sh
+source ~/.local/lib/dotfiles/bash/devcontainer.sh
+source ~/.local/lib/dotfiles/bash/help.sh
 
 help() {
 	help_msg_format '\t\t' << EOF

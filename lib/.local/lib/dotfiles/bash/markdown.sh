@@ -2,7 +2,7 @@
 #
 # Markdown functions.
 
-source ~/.config/bash/libs/security/external_software.sh
+source ~/.local/lib/dotfiles/bash/security/external_software.sh
 
 # Formats a markdown input to be displayed in a terminal.
 #

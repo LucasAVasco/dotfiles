@@ -2,8 +2,8 @@
 #
 # Library with the basic functions that a package provider needs
 
-source ~/.config/bash/libs/help.sh
-source ~/.config/bash/libs/log.sh
+source ~/.local/lib/dotfiles/bash/help.sh
+source ~/.local/lib/dotfiles/bash/log.sh
 
 # Change the directory to the one that the user was when the CLI was called
 package_cd_to_invoke_dir() {

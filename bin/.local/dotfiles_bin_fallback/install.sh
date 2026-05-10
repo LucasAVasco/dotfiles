@@ -10,7 +10,7 @@ current_dir=$(dirname `realpath "${BASH_SOURCE[0]}"`)
 cd "$current_dir"
 source "./lib.sh"
 
-source ~/.config/bash/libs/bin.sh
+source ~/.local/lib/dotfiles/bash/bin.sh
 
 # Only runs the installation script if the user is allowed to install external software
 [[ "$ALLOW_EXTERNAL_SOFTWARE" != 'y' ]] && {

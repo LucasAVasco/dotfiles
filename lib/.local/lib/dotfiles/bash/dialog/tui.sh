@@ -2,7 +2,7 @@
 #
 # Dialog library with TUI as the default user interface.
 
-source ~/.config/bash/libs/security/external_software.sh
+source ~/.local/lib/dotfiles/bash/security/external_software.sh
 
 # Ask a yes/no question.
 #

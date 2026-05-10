@@ -10,8 +10,8 @@ if [[ -d ~/.password-store ]]; then
 fi
 
 # Libraries
-source ~/.config/bash/libs/security/gpg.sh
-source ~/.config/bash/libs/dialog/dialog.sh
+source ~/.local/lib/dotfiles/bash/security/gpg.sh
+source ~/.local/lib/dotfiles/bash/dialog/dialog.sh
 
 # Confirms with the user
 create=$(dialog_ask_boolean "The directory '~/.password-store' doesn't exist. Do you want to create it?")

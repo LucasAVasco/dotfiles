@@ -4,7 +4,7 @@
 
 set -e
 
-source ~/.config/bash/libs/install/uv.sh
+source ~/.local/lib/dotfiles/bash/install/uv.sh
 
 case "$1" in
 	i | u)

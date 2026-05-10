@@ -4,7 +4,7 @@
 
 set -e
 
-source ~/.config/bash/libs/help.sh
+source ~/.local/lib/dotfiles/bash/help.sh
 
 help_handle n "$@" << EOF
 	Return the first line of the provided file or standard input.

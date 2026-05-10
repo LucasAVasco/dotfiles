@@ -2,7 +2,7 @@
 #
 # Library to manipulate the file system of a package provider and the invoke directory
 
-source ~/.config/bash/libs/paths.sh
+source ~/.local/lib/dotfiles/bash/paths.sh
 
 # Copies files from the current provider directory to the invoke directory.
 #

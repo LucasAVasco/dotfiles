@@ -9,7 +9,7 @@
 
 set -e
 
-source ~/.config/bash/libs/linux/session.sh
+source ~/.local/lib/dotfiles/bash/linux/session.sh
 
 # Command line arguments
 if [[ "$1" == '-r' ]]; then

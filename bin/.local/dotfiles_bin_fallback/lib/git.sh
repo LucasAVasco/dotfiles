@@ -2,7 +2,7 @@
 #
 # Module to install files from Git repository in the fallback binaries directory.
 
-source ~/.config/bash/libs/install/git.sh
+source ~/.local/lib/dotfiles/bash/install/git.sh
 
 # Export files from a Git repository to the fallback binaries directory.
 #

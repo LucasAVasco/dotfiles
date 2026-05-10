@@ -4,7 +4,7 @@
 
 set -e
 
-source ~/.config/bash/libs/install/go.sh
+source ~/.local/lib/dotfiles/bash/install/go.sh
 
 version='latest'
 completion_file="$HOME/.local/share/zsh_completions/_gum"

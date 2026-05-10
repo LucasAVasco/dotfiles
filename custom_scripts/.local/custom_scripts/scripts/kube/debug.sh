@@ -4,7 +4,7 @@
 
 set -e
 
-source ~/.config/bash/libs/dialog/dialog.sh
+source ~/.local/lib/dotfiles/bash/dialog/dialog.sh
 source ~/.local/lib/dotfiles/bash/markdown.sh
 
 # Run a command in the current machine. Print the command before running it

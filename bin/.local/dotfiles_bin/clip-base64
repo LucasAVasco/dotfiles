@@ -4,8 +4,8 @@
 #
 # Copies data from clipboard, encode/decode to/from base64 and copies the result to the clipboard.
 
-source ~/.config/bash/libs/linux/clipboard.sh
-source ~/.config/bash/libs/help.sh
+source ~/.local/lib/dotfiles/bash/linux/clipboard.sh
+source ~/.local/lib/dotfiles/bash/help.sh
 
 help() {
 	help_msg_format '\t' << EOL

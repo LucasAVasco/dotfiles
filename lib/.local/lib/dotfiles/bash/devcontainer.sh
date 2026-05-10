@@ -2,8 +2,8 @@
 #
 # Library to manager Development containers (https://containers.dev/)
 
-source ~/.config/bash/libs/docker.sh
-source ~/.config/bash/libs/paths.sh
+source ~/.local/lib/dotfiles/bash/docker.sh
+source ~/.local/lib/dotfiles/bash/paths.sh
 
 # List all devcontainers.
 #

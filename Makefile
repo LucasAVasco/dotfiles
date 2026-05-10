@@ -75,7 +75,7 @@ SEARCH_DEPTH ?= 1
 CD_SHELL ?= /bin/bash
 
 # FOlder with custom bash libraries that my script may require
-MY_BASH_LIBS ?= ./bash/.config/bash/libs/
+MY_BASH_LIBS ?= ./lib/.local/lib/dotfiles/bash/
 
 # #endregion
 

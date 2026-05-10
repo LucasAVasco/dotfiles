@@ -4,7 +4,7 @@
 
 set -e
 
-source ~/.config/bash/libs/install/rust.sh
+source ~/.local/lib/dotfiles/bash/install/rust.sh
 
 case "$1" in
 	i | u)

@@ -4,7 +4,7 @@
 
 set -e
 
-source ~/.config/bash/libs/help.sh
+source ~/.local/lib/dotfiles/bash/help.sh
 
 help_handle y "$@" <<EOF
 	Tool to manage K3S clusters. Runs K3S in rootless mode in the host machine (does not run in a container or virtual machine). The

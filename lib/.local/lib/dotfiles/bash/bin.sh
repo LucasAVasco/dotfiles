@@ -2,7 +2,7 @@
 #
 # Module to manage binaries (executable files).
 
-source ~/.config/bash/libs/string.sh
+source ~/.local/lib/dotfiles/bash/string.sh
 
 # Returns the executable path.
 #

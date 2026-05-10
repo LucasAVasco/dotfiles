@@ -1,6 +1,6 @@
 #!/bin/bash
 
-source ~/.config/bash/libs/config_file.sh
+source ~/.local/lib/dotfiles/bash/config_file.sh
 
 # Show help message
 help_msg()

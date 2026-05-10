@@ -2,7 +2,7 @@
 #
 # Wayland screen locker management script
 
-source ~/.config/bash/libs/help.sh
+source ~/.local/lib/dotfiles/bash/help.sh
 
 # Help message {{{
 

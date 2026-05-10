@@ -9,7 +9,7 @@
 
 set -e
 
-source ~/.config/bash/libs/help.sh
+source ~/.local/lib/dotfiles/bash/help.sh
 
 # Manager executable
 if [[ -z "$CUSTOM_SCRIPT_MANAGER_EXECUTABLE" ]]; then

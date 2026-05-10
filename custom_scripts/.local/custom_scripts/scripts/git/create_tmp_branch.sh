@@ -8,7 +8,7 @@
 set -e
 
 source ./lib/tmp_branch.sh
-source ~/.config/bash/libs/dialog/dialog.sh
+source ~/.local/lib/dotfiles/bash/dialog/dialog.sh
 source ~/.local/custom_scripts/libs/scripts.sh
 
 # Runs all command in the current directory

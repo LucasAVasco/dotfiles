@@ -4,7 +4,7 @@
 
 set -e
 
-source ~/.config/bash/libs/install/go.sh
+source ~/.local/lib/dotfiles/bash/install/go.sh
 
 case "$1" in
 	i | u)

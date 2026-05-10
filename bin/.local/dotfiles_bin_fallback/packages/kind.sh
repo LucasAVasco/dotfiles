@@ -4,7 +4,7 @@
 
 set -e
 
-source ~/.config/bash/libs/install/go.sh
+source ~/.local/lib/dotfiles/bash/install/go.sh
 
 version='v0.25.0'
 

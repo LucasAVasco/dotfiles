@@ -4,8 +4,8 @@
 
 set -e
 
-source ~/.config/bash/libs/install/wget.sh
-source ~/.config/bash/libs/linux/arch.sh
+source ~/.local/lib/dotfiles/bash/install/wget.sh
+source ~/.local/lib/dotfiles/bash/linux/arch.sh
 
 case "$1" in
 	i | u)

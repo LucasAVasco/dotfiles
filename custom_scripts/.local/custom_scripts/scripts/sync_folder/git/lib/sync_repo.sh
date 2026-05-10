@@ -2,7 +2,7 @@
 #
 # Library to sync Git repositories between users.
 
-source ~/.config/bash/libs/git/remote.sh
+source ~/.local/lib/dotfiles/bash/git/remote.sh
 source ~/.local/custom_scripts/scripts/sync_folder/lib/sync_folder.sh
 
 sync_folder_git_remote_name='sync-folder'

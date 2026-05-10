@@ -4,8 +4,8 @@
 
 set -e
 
-source ~/.config/bash/libs/help.sh
-source ~/.config/bash/libs/dialog/dialog.sh
+source ~/.local/lib/dotfiles/bash/help.sh
+source ~/.local/lib/dotfiles/bash/dialog/dialog.sh
 source ~/.local/proj-manager/libs/package_run.sh
 
 help_handle n "$@" << EOF

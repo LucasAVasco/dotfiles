@@ -2,7 +2,7 @@
 #
 # Module to install Golang packages.
 
-source ~/.config/bash/libs/bin.sh
+source ~/.local/lib/dotfiles/bash/bin.sh
 
 # Install a go package. Requires Go to be installed to work.
 #

@@ -4,7 +4,7 @@
 #
 # You must call the `wget_init()` function before any other function.
 
-source ~/.config/bash/libs/install/wget.sh
+source ~/.local/lib/dotfiles/bash/install/wget.sh
 
 source "$DOTFILES_FALLBACK_LIBS/bin.sh"
 

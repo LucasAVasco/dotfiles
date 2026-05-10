@@ -2,7 +2,7 @@
 
 set -e
 
-source ~/.config/bash/libs/help.sh
+source ~/.local/lib/dotfiles/bash/help.sh
 
 help_handle n "$@" <<EOF
 	Search for a string in files with ripgrep (rg) and select the files with fzf.

@@ -9,7 +9,7 @@ set -e
 
 local_themes_folder=~/.local/share/themes/
 
-# source ~/.config/bash/libs/install/wget.sh
+# source ~/.local/lib/dotfiles/bash/install/wget.sh
 source "$MY_BASH_LIBS/install/wget.sh"
 
 # Install a theme  from the Wget download directory.

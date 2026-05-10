@@ -2,7 +2,7 @@
 #
 # Move the scroll wheel.
 
-source ~/.config/bash/libs/help.sh
+source ~/.local/lib/dotfiles/bash/help.sh
 
 help() {
 	help_msg_format '\t\t' << EOF

@@ -2,7 +2,7 @@
 #
 # Print the total size of a list of files and folder excluding files and folder that are not saved for backups
 
-source ~/.config/bash/libs/help.sh
+source ~/.local/lib/dotfiles/bash/help.sh
 
 help_handle y "$@" <<EOF
 	Prints the total size of a list of files and folder excluding files and folder that are not saved for backups
