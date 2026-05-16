@@ -17,9 +17,9 @@ help_handle n "$@" << EOF
 		copy.sh [options] -- <content to copy>
 
 	Flags:
-		--stdin              Copy the standard input to the clipboard.
-		-t, --xorg_target    Sets the Xorg target of the copied content.
-		-c, --clear          Clear the clipboard after the provided time (from the command line arguments).
+		--stdin                             Copy the standard input to the clipboard.
+		-t, --xorg_target, --xorg-target    Sets the Xorg target of the copied content.
+		-c, --clear                         Clear the clipboard after the provided time (from the command line arguments).
 
 	Examples:
 
@@ -55,7 +55,7 @@ while [[ $# -gt 0 ]]; do
 			copy_stdin='y'
 			;;
 
-		-t | --xorg_target )
+		-t | --xorg_target | --xorg-target )
 			xorg_target=(-t "$2")
 			shift
 			;;
