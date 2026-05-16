@@ -1,0 +1,63 @@
+#!/bin/bash
+#
+# Add indent to a file or standard input
+
+set -e
+
+source ~/.local/lib/dotfiles/bash/help.sh
+
+help_handle y "$@" << EOF
+	Add indent to a file or standard input
+
+	Usage:
+		indent [-t|--tabs] [-i|--indent <indent>] [-r|--repeat <repeat>] [--] [file path]
+
+	Arguments:
+		file path    The path to the file to indent. If not specified, standard input is used
+
+	Options:
+		-i, --indent         The indent to use. It is a 'sed' regular expression. (default: 4 spaces)
+		-t, --tab, --tabs    Use tabs instead of spaces. Short for "--indent '\t'"
+		-r, --repeat         The number of times to repeat the indent per line (default: 1)
+EOF
+
+# Parse arguments
+indent='    '
+repeat_times=1
+while [[ "$#" -gt 0 ]]; do
+	case "$1" in
+		-i|--indent)
+			indent="$2"
+			shift 2
+			;;
+
+		-t|--tab|--tabs)
+			indent="\t"
+			shift
+			;;
+
+		-r|--repeat)
+			repeat_times="$2"
+			shift 2
+			;;
+
+		--)
+			shift
+			break
+			;;
+
+		*)
+			break
+			;;
+	esac
+done
+
+# Repeat the indent
+indent=$(for i in $(seq "$repeat_times"); do echo -n "$indent"; done)
+
+# Indent the input
+if [[ "$#" -gt 0 ]]; then
+	sed "s/^/$indent/" "$1"
+else
+	sed "s/^/$indent/"
+fi
