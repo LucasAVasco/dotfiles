@@ -5,6 +5,7 @@ MYVAR.in_vscode = vim.g.vscode
 MYVAR.not_in_vscode = not MYVAR.in_vscode
 
 MYVAR.utilities_ft = {
+	'terminal',
 	'NvimTree',
 	'neo-tree',
 	'calendar',
@@ -13,6 +14,8 @@ MYVAR.utilities_ft = {
 	'noice',
 	'snacks_picker_input', -- 'snacks.nvim'
 	'undotree',
+	'qf',
+	'trouble',
 
 	-- AI
 	'codecompanion',
