@@ -53,7 +53,7 @@ get_abs_line_index() {
 
 	# Negative line index
 	if [[ "${relative_line_index:0:1}" == '-' ]]; then
-		abs_line_index=$(("$total_lines" "$relative_line_index"))
+		abs_line_index=$(("$total_lines" "$relative_line_index" + 1)) # +1 because the last line is '-1'
 
 	# line is zero
 	elif [[ "$relative_line_index" == 0 ]]; then
