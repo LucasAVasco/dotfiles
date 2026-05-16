@@ -28,6 +28,10 @@ RowLayout {
         }
     }
 
+    function changeToWorkSpace(id: int) {
+        Hyprland.dispatch(["hl.dsp.focus {workspace = 'r~" + id + "'}"]);
+    }
+
     Repeater {
         model: [1, 2, 3, 4, 5]
 
@@ -40,7 +44,7 @@ RowLayout {
             }
 
             onClicked: function (workspaceName) {
-                Hyprland.dispatch("workspace " + workspaceName);
+                root.changeToWorkSpace(workspaceName);
             }
         }
     }
@@ -61,7 +65,7 @@ RowLayout {
             }
 
             onClicked: function (workspaceName) {
-                Hyprland.dispatch("workspace " + workspaceName);
+                root.changeToWorkSpace(workspaceName);
             }
         }
     }
