@@ -9,22 +9,16 @@ set -e
 
 source ~/.local/lib/dotfiles/bash/help.sh
 
-# Help message {{{
+help_handle n "$@" << EOF
+	Shows short preview of a directory
 
-help() {
-	help_msg_format '\t\t' << EOF
-		Shows short preview of a directory
-
-		USAGE:
-
+	Usage:
 		dir-preview [directory] [n_files]
-		Shows the preview of the directory [directory] with [n_files] maximum files
+
+	Arguments:
+		[directory]    Directory to preview
+		[n_files]      Maximum number of files to show
 EOF
-}
-
-help_call_help_function help n "$@"
-
-# }}}
 
 dir="${1:-.}"
 n_files="${2:-5}"

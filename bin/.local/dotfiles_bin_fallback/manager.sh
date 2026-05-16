@@ -2,35 +2,33 @@
 #
 # Package manager of the fallback installers.
 
+set -e
+
 source ~/.local/lib/dotfiles/bash/help.sh
 
-help() {
-	help_msg_format '\t\t' << EOF
-		Package manager of the fallback installers.
+help_handle y "$@" << EOF
+	Package manager of the fallback installers.
 
-		USAGE:
+	Usage:
 
-		./manager.sh has <package>
-			Check if a package exists (may not be installed). Returns 'y' or 'n'
+	./manager.sh has <package>
+		Check if a package exists (may not be installed). Returns 'y' or 'n'
 
-		./manager.sh is-installed <package>
-			Check if a package is installed. Returns 'y' or 'n'
+	./manager.sh is-installed <package>
+		Check if a package is installed. Returns 'y' or 'n'
 
-		./manager.sh install | add <package>
-			Install a package.
+	./manager.sh install | add <package>
+		Install a package.
 
-		./manager.sh update <package>
-			Update a package.
+	./manager.sh update <package>
+		Update a package.
 
-		./manager.sh uninstall | remove | rm <package>
-			Uninstall a package.
+	./manager.sh uninstall | remove | rm <package>
+		Uninstall a package.
 
-		./manager.sh ls | list
-			List all packages.
+	./manager.sh ls | list
+		List all packages.
 EOF
-}
-
-help_call_help_function help y "$@"
 
 # Only run this script if the user is allowed to install external software
 [[ "$ALLOW_EXTERNAL_SOFTWARE" != "y" ]] && {

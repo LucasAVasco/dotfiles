@@ -8,25 +8,39 @@
 # - sed
 # - printf
 
+set -e
+
 source ~/.local/lib/dotfiles/bash/help.sh
 
-help() {
-	help_msg_format '\t\t' << EOF
-		DESCRIPTION
+help_handle y "$@" << EOF
+	Return the specific lines of standard input.
 
-		Return the specific lines of standard input.
-
-		USAGE
-
+	Usage:
 		lines <line-pair>...
 
-			A <line-pair> has the following format: <first-line>,<last-line>.
+	Arguments:
+		<line-pair> Lines to print
 
-			Prints the lines between (included) the <first-line> and the <last-line> of each <line-pair>. If a negative vales is provided,
-			it is treated as a position relative to the end of the input file. E.g.: line equal to -2 in a file with 5 lines is equivalent a
-			line equal to 3.
+		A line pair has the following format: <first-line>,<last-line>.
+
+		Prints the lines between (included) the <first-line> and the <last-line> of each <line-pair>. If a negative vales is provided,
+		it is treated as a position relative to the end of the input file. E.g.: line equal to -2 in a file with 5 lines is equivalent a
+		line equal to 4.
+
+	Examples:
+
+	lines 2
+
+	Prints the second line
+
+	lines 1,3
+
+	Prints the first, second and third lines
+
+	lines -1
+
+	Prints the last line
 EOF
-}
 
 # Converts a negative relative line in a absolute line. If the line is not negative, return the value unmodified.
 #
@@ -48,12 +62,6 @@ get_abs_line_index() {
 
 	echo -n "$abs_line_index"
 }
-
-# Help message
-if [[ "$1" == '-h' || "$1" == '--help' ]]; then
-	help
-	exit
-fi
 
 # File content
 input=$(cat /dev/stdin)

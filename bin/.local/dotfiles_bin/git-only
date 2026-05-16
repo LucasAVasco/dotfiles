@@ -2,29 +2,19 @@
 #
 # Command to hide all changed/untracked files except for the given patterns.
 
+set -e
+
 source ~/.local/lib/dotfiles/bash/help.sh
 
-# Help message {{{
+help_handle y "$@" << EOF
+	Command to hide all changed/untracked files except for the given patterns.
 
-help() {
-	help_msg_format '\n\n' << EOF
-		Command to hide all changed/untracked files except for the given patterns.
+	Usage:
+		git-only <patterns...>
 
-		Usage: git-only <patterns...>
+	Arguments:
+		<patterns...> Paths to hide. Supports the same format as the 'git stash push' command
 EOF
-}
-
-if [ "$#" -lt 1 ]; then
-	help
-	exit 1
-fi
-
-if [ "$1" == '-h' ] || [ "$1" == '--help' ]; then
-	help
-	exit 0
-fi
-
-# }}}
 
 # exclude the patterns
 declare -a patterns=()

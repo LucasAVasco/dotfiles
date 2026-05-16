@@ -6,23 +6,19 @@ set -e
 
 source ~/.local/lib/dotfiles/bash/help.sh
 
-help() {
-	help_msg_format '\t\t' << EOF
-		Plugin to temporarily hide/un-hide files or directories (saved in stashes)
+help_handle y "$@" << EOF
+	Plugin to temporarily hide/un-hide files or directories (saved in stashes)
 
-		USAGE
-			git hide [--] <paths...>
-				Hide (stash) given files and directories
+	Usage:
+		git hide [--] <patterns...>
+			Hide (stash) files and directories matching the given patterns
 
-			git hide -u
-				Un-hide (restore) all hidden files
+		git hide -u
+			Un-hide (restore) all hidden files
+
+	Arguments:
+		<patterns...> Paths to hide. Supports the same format as the 'git stash push' command
 EOF
-}
-
-if [[ "$1" == '-h' || "$1" == '--help' ]]; then
-	help
-	exit 0
-fi
 
 hidden_files_stash_message="__GIT-HIDE-PLUGIN__"
 

@@ -2,32 +2,25 @@
 #
 # Auto-type text on the current focused (active) window.
 
+set -e
+
 source ~/.local/lib/dotfiles/bash/linux/keyboard/sound_emulator.sh
 source ~/.local/lib/dotfiles/bash/linux/session.sh
 source ~/.local/lib/dotfiles/bash/help.sh
 
-help() {
-	help_msg_format '\t' << EOF
-	DESCRIPTION
-
+help_handle y "$@" << EOF
 	Auto-type text on the current focused (active) window.
 
-	USAGE
+	Usage:
+		type.sh [options] <text-to-auto-type...>
 
-	type.sh [options] <text-to-auto-type...>
-
-	OPTIONS
+	Flags:
 		--notify-end
 			Show a notification after the text by typed.
 
-		-h | --help
-			Show this message and exits.
-
-	ARGUMENTS
-		text-to-auto-type
-			Auto-type all arguments after the options
+	Arguments:
+		<text-to-auto-type>    Auto-type all arguments after the options
 EOF
-}
 
 # Arguments passed to the command
 notify_end=n
@@ -40,11 +33,6 @@ while [[ "$#" -gt 0 ]]; do
 
 		--notify-end)
 			notify_end=y
-			;;
-
-		-h | --help)
-			help
-			exit
 			;;
 
 		*)

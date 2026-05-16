@@ -2,27 +2,23 @@
 #
 # Run a command periodically.
 
+set -e
+
 source ~/.local/lib/dotfiles/bash/help.sh
 
-help() {
-	help_msg_format '\t\t' << EOF
-		Run a command periodically.
+help_handle y "$@" << EOF
+	Run a command periodically.
 
-		USAGE
+	Usage:
 		every <time> [--] <command> <arguments>
-			Runs <command> periodically, every <time>.
 
-		TIME FORMAT
-		<time> is a number followed by a optional unit. If the unit is not specified, it is interpreted as seconds.
+	Arguments:
+		<time>         Time to sleep between executions. A number followed by a optional unit. If not specified, it defaults to seconds.
+		<command>      Command to run.
+		<arguments>    Arguments to pass to the command.
 
-		Supported units: ns (nanoseconds), us (microseconds), ms (milliseconds),
-		s (seconds), min (minutes), h (hours), d (days).
+	Supported units: ns (nanoseconds), us (microseconds), ms (milliseconds), s (seconds), min (minutes), h (hours), d (days).
 EOF
-}
-
-help_call_help_function help y "$@"
-
-set -e
 
 # Execute a simple python calculation.
 #

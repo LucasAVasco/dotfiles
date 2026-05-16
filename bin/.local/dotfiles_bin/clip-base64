@@ -4,34 +4,29 @@
 #
 # Copies data from clipboard, encode/decode to/from base64 and copies the result to the clipboard.
 
+set -e
+
 source ~/.local/lib/dotfiles/bash/linux/clipboard.sh
 source ~/.local/lib/dotfiles/bash/help.sh
 
-help() {
-	help_msg_format '\t' << EOL
-	DESCRIPTION
-
+help_handle n "$@" << EOL
 	Encode/decode the clipboard content to/from base64.
 
 	Copies data from clipboard, encode/decode to/from base64 and copies the result to the clipboard.
 
-	USAGE
+	Usage:
 		clip-base64 [options]
 
-	OPTIONS
-		-e | --encode | encode
+	Flags:
+		-e, --encode, encode
 			Encode the clipboard content to base64. Default behavior.
 
-		-d | --decode | decode
+		-d, --decode, decode
 			Decode the clipboard content from base64.
 
-		-c | --clear <time-to-clear>
-			Time before clear the clipboard. Asynchronous operation.
-
-		-h | --help
-			Show this message.
+		-c, --clear string
+			Time before clear the clipboard (same format of '~/.config/clipboard/copy.sh' script). Asynchronous operation.
 EOL
-}
 
 # Parses the arguments
 clear_after=''
@@ -49,11 +44,6 @@ while [[ "$#" -gt 0 ]]; do
 		-c | --clear )
 			clear_after="$2"
 			shift
-			;;
-
-		-h | --help )
-			help
-			exit
 			;;
 
 		*)

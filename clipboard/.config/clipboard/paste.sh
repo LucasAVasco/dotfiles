@@ -8,28 +8,26 @@ source ~/.local/lib/dotfiles/bash/dialog/dialog.sh
 source ~/.local/lib/dotfiles/bash/linux/session.sh
 source ~/.local/lib/dotfiles/bash/help.sh
 
-help() {
-	help_msg_format '\t' << EOF
-	paste.sh [options]
+help_handle n "$@" << EOF
+	Paste the clipboard to standard output or file.
 
-	OPTIONS
-		-t | --type <clipboard-type>
+	Usage:
+		paste.sh [flags]
+
+	Flags:
+		-t, --type string
 			Sets the clipboard type. Example 'text/plain'.
 			The target depends of the backend: 'xclip' on Xorg or 'wl-paste' on Wayland. You can see the available types with 'paste.sh -t'.
 
 		--ask-type
 			Interactively select the clipboard type.
 
-		-o | --output-file <output-file>
+		-o, --output-file file
 			Save the clipboard content in this file instead of print to clipboard.
 
 		--ask-out-file
 			Interactively select the output file.
-
-		-h | --help
-			Show this message
 EOF
-}
 
 session_type=$(linux_session_get_type)
 
@@ -59,8 +57,6 @@ show_clipboard_types() {
 }
 
 # Command arguments
-show_help=n
-
 clipboard_type=''
 ask_clipboard_type=n
 set_clipboard_type=n
@@ -95,10 +91,6 @@ while [[ "$#" -gt 0 ]]; do
 			output_to_file=y
 			;;
 
-		-h | --help )
-			show_help=y
-			;;
-
 		-- )
 			shift
 			break
@@ -111,12 +103,6 @@ while [[ "$#" -gt 0 ]]; do
 
 	shift
 done
-
-# Shows help message
-if [[ "$show_help" == y ]]; then
-	help
-	exit
-fi
 
 # Shows the available clipboard type
 if [[ $set_clipboard_type == y && $ask_clipboard_type == n && "$clipboard_type" == '' ]]; then

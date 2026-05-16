@@ -6,46 +6,43 @@
 # - xclip (Xorg)
 # - wl-copy (Wayland)
 
-source ~/.local/lib/dotfiles/bash/help.sh
-
 set -e
 
-help() {
-	help_msg_format '\t\t' << EOF
-		Copy the provided arguments or standard input to the clipboard. Works in Xorg and Wayland.
+source ~/.local/lib/dotfiles/bash/help.sh
 
-		USAGE
+help_handle n "$@" << EOF
+	Copy the provided arguments or standard input to the clipboard. Works in Xorg and Wayland.
+
+	Usage:
 		copy.sh [options] -- <content to copy>
 
-		OPTIONS
-			--stdin
-				copy the standard input to the clipboard.
+	Flags:
+		--stdin              Copy the standard input to the clipboard.
+		-t, --xorg_target    Sets the Xorg target of the copied content.
+		-c, --clear          Clear the clipboard after the provided time (from the command line arguments).
 
-			-t | --xorg_target
-				Sets the Xorg target of the copied content.
+	Examples:
 
-		EXAMPLES
-			copy.sh arg1 arg2
-				Copy 'arg1 arg2' to the clipboard.
+	copy.sh arg1 arg2
 
-			copy.sh -- --arg1 --arg2
-				Copy '--arg1 --arg2' to the clipboard.
+	Copy 'arg1 arg2' to the clipboard.
 
-			copy.sh
-				Copy the standard input to the clipboard.
+	copy.sh -- --arg1 --arg2
 
-			copy.sh --stdin
-				Copy the standard input to the clipboard.
+	Copy '--arg1 --arg2' to the clipboard.
 
-			copy.sh --stdin --xorg_target image/png
-				Copy an image provided from the standard input to the clipboard (Xorg requires a \`target\`).
+	copy.sh
+
+	Copy the standard input to the clipboard.
+
+	copy.sh --stdin
+
+	Copy the standard input to the clipboard.
+
+	copy.sh --stdin --xorg_target image/png
+
+	Copy an image provided from the standard input to the clipboard (Xorg requires a \`target\`).
 EOF
-}
-
-if [[ "$1" == '-h' || "$1" == '--help' ]]; then
-	help
-	exit 0
-fi
 
 # Parses the arguments
 copy_stdin='n'

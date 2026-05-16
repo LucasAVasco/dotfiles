@@ -7,26 +7,23 @@ set -e
 source ~/.local/lib/dotfiles/bash/linux/session.sh
 source ~/.local/lib/dotfiles/bash/help.sh
 
-# Help message {{{
+help_handle y "$@" <<EOF
+	Set the current session wallpaper.
 
-help() {
-	help_msg_format '\t\t' <<EOF
-		Set the current session wallpaper.
+	Usage:
+		set.sh [-i|--interactive] [-l|--screen-locker] [--] [wallpaper.jpg]
 
-		USAGE
-		set.sh [-i|--interactive] [-l|--screen-locker] [--] <wallpaper.jpg>
-			Sets the wallpaper. The '-i' or '--interactive' flag allows you to select the wallpaper interactively (you do not need to
-			provide the path to the wallpaper as an argument). The '-l' or '--screen-locker' flag sets the wallpaper for the screen locker
-			instead of the normal wallpaper.
+	Flags:
+		-i, --interactive      Select the wallpaper interactively (you do not need to provide the path to the wallpaper as an argument)
+		-l, --screen-locker    Sets the wallpaper for the screen locker instead of the normal wallpaper.
 
-		NOTES
-		You can set a command to be executed after the wallpaper is set with the \$CUSTOM_DESKTOP_SET_WALLPAPAER_COMMAND variable.
+	Arguments:
+		<wallpaper.jpg> The path to the wallpaper to set. Must be a '.jpg' file.
+
+	Notes:
+
+	You can set a command to be executed after the wallpaper is set with the \$CUSTOM_DESKTOP_SET_WALLPAPAER_COMMAND variable.
 EOF
-}
-
-help_call_help_function help y "$@"
-
-# }}}
 
 current_dir=$(dirname `realpath "${BASH_SOURCE[0]}"`)
 wallpaper_dir="$HOME/.local/share/custom_desktop/wallpaper"

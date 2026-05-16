@@ -1,37 +1,25 @@
 #!/bin/bash
 #
-# Filters the standard input on shows only the specified fields.
+# Filters the standard input and only outputs the specified fields.
+
+set -e
 
 source ~/.local/lib/dotfiles/bash/help.sh
 
-help() {
-	help_msg_format '\t\t' << EOF
-		DESCRIPTION
+help_handle y "$@" << EOF
+	Filters the standard input and only outputs the specified fields.
 
-		Filters the standard input on shows only the specified fields.
+	Usage:
+		fields [-d field-separator] <field-indexes...>
 
-		USAGE
+	Flags:
+		-d string
+			Separator between column fields (AWK regex). Default is to use at least one white space character (space and tabs).
 
-		fields [-d FIELD-SEPARATOR] FIELD-INDEXES...
-
-			FIELD-INDEXES
-				list of field index to maintain. Remove all index out of this list. separated by spaces.
-
-			FIELD-SEPARATOR
-				Separator between column fields (AWK regex). Default is to use at least one white space character (space and tabs).
-
-		To show the help message:
-
-		field -h
-		field --help
+	Arguments:
+		field-indexes
+			List of field index to maintain. Remove all index out of this list. separated by spaces.
 EOF
-}
-
-# Help message
-if [[ "$1" == '-h' || "$1" == '--help' ]]; then
-	help
-	exit
-fi
 
 # Field separator
 separator="[[:space:]]{1,}" # At least one white space character (space and tabs)

@@ -7,28 +7,21 @@ set -e
 source ~/.local/lib/dotfiles/bash/devcontainer.sh
 source ~/.local/lib/dotfiles/bash/help.sh
 
-help() {
-	help_msg_format '\t\t' << EOF
-		Tool to manage development containers.
+help_handle y "$@" << EOF
+	Tool to manage development containers.
 
-		USAGE
+	Usage:
 		devctn <command> [options]
 
-		COMMANDS
+	Commands:
 		zsh [ -f | --force ]
 			Connect to the running devcontainer and run ZSH shell. The '-f' flag forces the
 			reinstallation of the devcontainer.
 
-		Other commands are forwarded to 'devcontainer' and follwow the follwowing options:
+	Other commands are forwarded to 'devcontainer' and follow the same options:
 
+	@help-eval: devcontainer --help
 EOF
-	devcontainer --help
-}
-
-if [[ "$1" == '-h' || "$1" == '--help' ]]; then
-	help
-	exit 0
-fi
 
 # Functions {{{
 

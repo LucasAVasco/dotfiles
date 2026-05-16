@@ -2,22 +2,19 @@
 #
 # Show the differences between to directories.
 
+set -e
+
 source ~/.local/lib/dotfiles/bash/help.sh
 
-hewlp() {
-	help_msg_format '\t\t' <<EOF
+help_handle y "$@" <<EOF
 	Show the differences between two directories
 
-	USAGE
-	diff-tui -h | --help
-		Show this message
+	Usage:
+		diff-tui [--] <dir1> <dir2>
 
-	diff-tui [--] <dir1> <dir2>
-		Show the differences between <dir1> and <dir2>
+	Arguments:
+		<dir1> <dir2>   Show the differences between <dir1> and <dir2>
 EOF
-}
-
-help_call_help_function help y "$@"
 
 # Ignore the first '--' arguments
 if [[ "$1" == '--' ]]; then

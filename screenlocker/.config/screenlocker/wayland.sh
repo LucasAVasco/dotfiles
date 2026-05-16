@@ -2,41 +2,35 @@
 #
 # Wayland screen locker management script
 
+set -e
+
 source ~/.local/lib/dotfiles/bash/help.sh
 
-# Help message {{{
+help_handle y "$@" << EOF
+	Wayland screen locker management script.
 
-help() {
-	help_msg_format '\t\t' << EOF
-		Wayland screen locker management script.
+	Usage:
+		wayland.sh <command> [flags...]
 
-		USAGE
-			wayland.sh <command> [options...]
+	Commands:
+		enable
+			Automatically run the screen-locker after a predefined time interval
 
-		COMMANDS
-			enable
-				Automatically run the screen-locker after a predefined time interval
+		disable
+			Disable the automatic screen-locker
 
-			disable
-				Disable the automatic screen-locker
+		toggle
+			Toggle the automatic screen-locker
 
-			toggle
-				Toggle the automatic screen-locker
+		run
+			Lock the screen
 
-			run
-				Lock the screen
+		is-enabled
+			Check if the screen locker is enabled. Returns 'y' if it is enabled, 'n' otherwise
 
-			is-enabled
-                Check if the screen locker is enabled. Returns 'y' if it is enabled, 'n' otherwise
-
-		OPTIONS
-			--no-notify: does not triggers a desktop notification after the operation
+	Flags:
+		--no-notify   does not triggers a desktop notification after the operation
 EOF
-}
-
-help_call_help_function help y "$@"
-
-# }}}
 
 if [[ -z "$WAYLAND_DISPLAY" ]]; then
 	echo "$log_prefix Wrong Backend. This scripts only works with Wayland, but you are using Wayland"
@@ -52,7 +46,7 @@ shift
 
 # Enable the screen locker idle.
 enable_screen_locker() {
-	pkill-wait -u "$USER" hypridle 2> /dev/null
+	pkill-wait -u "$USER" hypridle 2> /dev/null || true
 	nohup hypridle run > /dev/null 2>&1 &
 
 	if [[ "$1" != '--no-notify' ]]; then
@@ -62,7 +56,7 @@ enable_screen_locker() {
 
 # Disable the screen locker idle.
 disable_screen_locker() {
-	pkill-wait -u "$USER" hypridle 2> /dev/null
+	pkill-wait -u "$USER" hypridle 2> /dev/null || true
 
 	if [[ "$1" != '--no-notify' ]]; then
 		notify-send 'Screen Locker' 'Disabled'
@@ -102,12 +96,8 @@ case "$command" in
 		screen_locker_is_enabled
 		;;
 
-	help | --help)
-		help
-		;;
 	*)
 		echo "$log_prefix Unknown option. $1"
-		help
 		exit 1
 		;;
 esac

@@ -2,21 +2,20 @@
 #
 # Move the scroll wheel.
 
+set -e
+
 source ~/.local/lib/dotfiles/bash/help.sh
 
-help() {
-	help_msg_format '\t\t' << EOF
-		Move the scroll wheel
+help_handle y "$@" << EOF
+	Move the scroll wheel
 
-		USAGE
-
+	Usage:
 		Scroll.sh <num-scrolls>
-			Move the scroll wheel <num-scrolls> times. A positive number moves the wheel up, a negative number moves the wheel down and
+
+	Arguments:
+		<num-scrolls> The number of times to scroll. A positive number moves the wheel up, a negative number moves the wheel down and
 			zero executes a click.
 EOF
-}
-
-help_call_help_function help y "$@"
 
 # Simulate the scroll wheel.
 #

@@ -6,16 +6,13 @@ set -e
 
 source ~/.local/lib/dotfiles/bash/help.sh
 
-# Help message {{{
+help_handle y "$@" <<EOF
+	Manage my QuickShell configurations.
 
-help() {
-	help_msg_format '\t\t' <<EOF
-		Manage my QuickShell configurations.
-
-		USAGE
+	Usage:
 		$0 <command>
 
-		COMMANDS
+	Commands:
 		$0 is-active
 			Checks if the QuickShell process is running.
 
@@ -30,13 +27,8 @@ help() {
 
 		$0 run <script>
 			Runs a QuickShell process script at ~/.config/quickshell/scripts/.
-
 EOF
-}
 
-help_call_help_function help y "$@"
-
-# }}}
 
 # Change to the directory of this script
 current_dir=$(dirname `realpath "${BASH_SOURCE[0]}"`)
@@ -106,7 +98,6 @@ case "$main_command" in
 
 	*)
 		echo "Unknown command \"$main_command\"" >&2
-		help
 		exit 1
 		;;
 esac
