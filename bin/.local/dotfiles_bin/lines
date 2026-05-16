@@ -64,8 +64,8 @@ get_abs_line_index() {
 }
 
 # File content
-input=$(cat /dev/stdin)
-total_lines=$(echo "$input" | wc -l)
+IFS='' read -d '' -r input || true
+total_lines="$(printf "%s" "$input" | wc -l)"
 
 for lines_pair in "$@"; do
 	# Arguments
