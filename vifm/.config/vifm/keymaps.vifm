@@ -56,8 +56,8 @@ noremap yd :!clip-copy %d:p<CR>
 noremap yf :!clip-copy %f:p<CR>
 
 " Open apps
-nnoremap <A-t> :!default_term<CR>
-nnoremap <A-f> :!default_file_manager<CR>
+nnoremap <A-t> :!run-without-env default_term<CR>
+nnoremap <A-f> :!run-without-env default_file_manager<CR>
 nnoremap <CR> :defaultopen<CR>
 
 " Permissions

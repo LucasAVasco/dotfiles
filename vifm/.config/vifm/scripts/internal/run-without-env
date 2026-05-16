@@ -1,0 +1,8 @@
+#!/bin/bash
+#
+# Unset all environment variables related to Vifm and execute the given command
+
+set -e
+
+unset VIFM_OVERRIDE_LEVEL FIFO_UEBERZUG VIFMIMG_LOADED
+exec "$@"
