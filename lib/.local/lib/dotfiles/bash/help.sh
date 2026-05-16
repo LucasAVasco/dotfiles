@@ -2,15 +2,6 @@
 #
 # Utilities functions to manage help messages.
 
-# Format help message.
-#
-# $1: indentation to remove from the help message. A `sed` regex
-# stdin: help message
-# stdout: help message formatted
-help_msg_format() {
-	sed "s/^$1//g"
-}
-
 # Call a help function.
 #
 # $1: help function name.
@@ -52,6 +43,17 @@ help_msg_remove_indent() {
 
 	# Removes the indent from all lines
 	printf "%s" "$message" | sed "s/^\s\{${indent_size}\}//g"
+}
+
+# Format the help message.
+#
+# stdin: help message
+# stdout: help message formatted
+help_msg_format() {
+	# The `sed` command removes trailing new line
+	cat /dev/stdin | help_msg_remove_indent | sed -z 's/\n$//'
+
+	echo "" # Add a single new line at the end
 }
 
 # Handle a help message.
