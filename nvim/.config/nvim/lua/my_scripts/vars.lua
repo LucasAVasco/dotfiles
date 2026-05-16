@@ -6,6 +6,7 @@ MYVAR.not_in_vscode = not MYVAR.in_vscode
 
 MYVAR.utilities_ft = {
 	'NvimTree',
+	'neo-tree',
 	'calendar',
 	'guihua',
 	'lazy', -- 'lazy.nvim'

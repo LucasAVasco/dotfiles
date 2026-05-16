@@ -63,7 +63,7 @@ return {
 			{ icon = ' ', key = 'f', desc = 'Find File', action = ":lua Snacks.dashboard.pick('files')" },
 			{ icon = ' ', key = 't', desc = 'Find Text', action = ":lua Snacks.dashboard.pick('live_grep')" },
 			{ icon = ' ', key = 'r', desc = 'Recent Files', action = ":lua Snacks.dashboard.pick('oldfiles')" },
-			{ icon = ' ', key = 'e', desc = 'File explorer', action = ':NvimTreeFocus' },
+			{ icon = ' ', key = 'e', desc = 'File explorer', action = ':Neotree focus position=float' },
 			{ icon = '󰖌 ', key = 'o', desc = 'Oil', action = ':Oil' },
 			{ icon = ' ', key = 'g', desc = 'Git UI', action = ':Git | only' },
 			{ icon = ' ', key = 'G', desc = 'Lazy Git', action = ':Lazygit' },

@@ -63,6 +63,7 @@ return {
 				-- Offset the buffer line when some applications take part of the screen
 				offsets = {
 					{ filetype = 'NvimTree' },
+					{ filetype = 'neo-tree' },
 				},
 
 				---Ignore some buffers (do not show on the buffer bar).

@@ -28,7 +28,30 @@
 	`F` Disable regex filter.
 ]]
 
+---Decorate a function to return to NeoTree after executing it. Any error caused by the function will be ignored
+---@param func fun(state: neotree.StateWithTree)
+---@return fun(state: neotree.StateWithTree)
+local function decorate_return_to_neo_tree(func)
+	return function(state)
+		pcall(func, state)
+		vim.schedule(function()
+			vim.cmd('Neotree focus position=float')
+		end)
+	end
+end
+
 return {
+	{
+		'antosha417/nvim-lsp-file-operations',
+		dependencies = {
+			'nvim-lua/plenary.nvim',
+			'nvim-neo-tree/neo-tree.nvim',
+		},
+		lazy = true, -- Already loaded by my file explorer configuration
+		config = function()
+			require('lsp-file-operations').setup()
+		end,
+	},
 	{
 		'stevearc/oil.nvim',
 		dependencies = {
@@ -96,178 +119,173 @@ return {
 		end,
 	},
 	{
-		'nvim-tree/nvim-tree.lua',
-
+		'nvim-neo-tree/neo-tree.nvim',
 		dependencies = {
+			'nvim-lua/plenary.nvim',
+			'MunifTanjim/nui.nvim',
 			'nvim-tree/nvim-web-devicons',
 		},
 
+		lazy = true,
 		cond = MYVAR.not_in_vscode,
-
-		cmd = {
-			'NvimTreeOpen',
-			'NvimTreeClose',
-			'NvimTreeToggle',
-			'NvimTreeFocus',
-			'NvimTreeFindFile',
-			'NvimTreeFindFileToggle',
-		},
+		cmd = 'Neotree',
 
 		keys = {
-			{ '<leader>gfe', '<cmd>NvimTreeFocus<CR>', mode = 'n', desc = 'Open file explorer' },
+			{ '<leader>gfe', '<cmd>Neotree focus position=float<CR>', mode = 'n', desc = 'Open file explorer' },
 		},
 
+		---@module 'neo-tree.types.config'
+		---@see defaults ~/.local/share/nvim/lazy/neo-tree.nvim/lua/neo-tree/defaults.lua
+		---@type neotree.Config
 		opts = {
-			sort = {
-				sorter = 'case_sensitive',
-			},
-			view = {
-				width = 60,
-			},
-			renderer = {
-				add_trailing = true, -- Append a trailing slash to folder names
-				group_empty = true, -- Group empty folders in one group
-				highlight_git = 'icon', -- Highlight git attributes
-				highlight_diagnostics = 'icon',
-				highlight_opened_files = 'name',
-				highlight_modified = 'name',
+			close_if_last_window = true,
+			open_files_do_not_replace_types = MYVAR.utilities_ft,
 
-				indent_markers = {
-					enable = true,
-					icons = {
-						corner = '╰',
+			source_selector = {
+				winbar = true,
+				show_scrolled_off_parent_node = true,
+				content_layout = 'center',
+				truncation_character = '…',
+			},
+
+			trash = {
+				-- Use a internal trash implementation that supports undo and the freedesktop standard
+				command = function(...)
+					require('neo-tree.trash.freedesktop').generate_trashfunc(...)
+				end,
+			},
+
+			default_component_configs = {
+				name = {
+					trailing_slash = true,
+					highlight_opened_files = true,
+					use_git_status_colors = false,
+				},
+
+				indent = {
+					with_expanders = true,
+					last_indent_marker = '╰',
+				},
+			},
+
+			window = {
+				-- Floating window configuration
+				popup = {
+					size = {
+						width = '60%',
+					},
+				},
+
+				mappings = {
+					-- File operations
+					['A'] = 'rename',
+
+					-- Movement
+					['<left>'] = 'close_node',
+					['h'] = 'close_node',
+					['<right>'] = 'open_dir',
+					['l'] = 'open_dir',
+					['<A-[>'] = 'prev_source',
+					['<A-]>'] = 'next_source',
+
+					-- Open and return
+					['<cr>'] = 'open_and_return',
+					['<2-LeftMouse>'] = 'open_and_return',
+					['t'] = 'open_tabnew_and_return',
+
+					-- New file or directory
+					['o'] = {
+						'add',
+						config = {
+							show_path = 'none',
+						},
+					},
+					['O'] = {
+						'add',
+						config = {
+							show_path = 'none',
+						},
 					},
 				},
 			},
 
-			git = {
-				enable = true,
-			},
+			filesystem = {
+				use_libuv_file_watcher = true,
 
-			diagnostics = {
-				enable = true,
-				show_on_dirs = true,
-			},
+				-- Do not disable `Netrw` in `neo-tree` configuration. The `oil.nvim` configuration will do it
+				hijack_netrw_behavior = 'disabled',
 
-			modified = {
-				enable = true,
-			},
+				window = {
+					mappings = {
+						['g.'] = 'toggle_hidden',
 
-			filters = {
-				dotfiles = true,
-			},
+						-- Trash actions
+						['d'] = 'noop', -- The default 'delete' action can not be recovered. Disabling it
+						['dd'] = 'trash',
 
-			actions = {
-				expand_all = {
-					-- Do not expand this folders automatically
-					exclude = { '.git' },
+						-- Rename the 'o*' actions to 'S*' (same used by 'Vifm' to sort files)
+						['S'] = { 'show_help', nowait = false, config = { title = 'Sort (order) by', prefix_key = 'S' } },
+						['Sc'] = { 'order_by_created', nowait = false },
+						['Sd'] = { 'order_by_diagnostics', nowait = false },
+						['Sg'] = { 'order_by_git_status', nowait = false },
+						['Sm'] = { 'order_by_modified', nowait = false },
+						['Sn'] = { 'order_by_name', nowait = false },
+						['Ss'] = { 'order_by_size', nowait = false },
+						['St'] = { 'order_by_type', nowait = false },
+
+						['oc'] = 'noop',
+						['od'] = 'noop',
+						['og'] = 'noop',
+						['om'] = 'noop',
+						['on'] = 'noop',
+						['os'] = 'noop',
+						['ot'] = 'noop',
+					},
 				},
 			},
 
-			-- Does not disable `Netrw` in `nvim-tree` configuration. The `oil.nvim` configuration will do it
-			hijack_netrw = false,
-			disable_netrw = false,
-		},
+			git_status = {
+				window = {
+					mappings = {
+						-- Trash actions
+						['d'] = 'noop', -- The default 'delete' action can not be recovered. Disabling it
+						['dd'] = 'trash',
+					},
+				},
+			},
 
-		config = function(_, opts)
-			local api = require('nvim-tree.api')
+			commands = {
+				open_and_return = decorate_return_to_neo_tree(function(state)
+					require('neo-tree.sources.filesystem.commands').open(state)
+				end),
 
-			--- Decorator that does not call the function if the folder is open
-			--- Also call the function it the cursor is under a file
-			---@param func fun() Lua function that will be called
-			---@return fun() decorated_function A Lua function that only calls *func* if the folder is not open
-			local function decorator_ignore_open_folder(func)
-				return function()
-					-- `api.tree.get_node_under_cursor().open` is `true` if the folder is open, `false` if it is closed, and `nil` if it is
-					-- not a folder (E.g. It is a file)
-					if api.tree.get_node_under_cursor().open then
+				open_tabnew_and_return = decorate_return_to_neo_tree(function(state)
+					require('neo-tree.sources.filesystem.commands').open_tabnew(state)
+				end),
+
+				open_dir = function(state)
+					---@module 'nui.tree'
+
+					local success, node = pcall(state.tree.get_node, state.tree)
+					if not success or not node then
 						return
 					end
 
-					func()
-				end
-			end
+					if node.type == 'directory' and not node:is_expanded() then
+						require('neo-tree.sources.filesystem.commands').open(state)
+					end
+				end,
+			},
 
-			--- Decorator that return to the original window after executing *func*
-			---@param func fun() Lua function that will be called.
-			---@return fun() decorated_function A Lua function that will return to the original window after executing *func*
-			local function decorator_return_to_tree(func)
-				return function()
-					local current_win_id = vim.fn.win_getid()
-					func()
-					vim.fn.win_gotoid(current_win_id)
-				end
-			end
+			-- Appearance
 
-			--- Apply custom keymaps to the `nvim-tree` buffer
-			---@param bufnr number Buffer number of the `nvim-tree` buffer
-			local function apply_custom_keymaps(bufnr)
-				local key_options = MYFUNC.decorator_create_options_table({
-					buffer = bufnr,
-					nowait = true,
-					noremap = true,
-					silent = true,
-				})
+			popup_border_style = 'rounded',
+			use_popups_for_input = true,
+		},
 
-				-- Default keymaps
-				api.config.mappings.default_on_attach(bufnr)
-
-				-- Override default open keymap to return to the tree after open the file
-				local open_and_return_to_tree = decorator_return_to_tree(api.node.open.edit)
-
-				for _, key in ipairs({ '<CR>', 'o', '<2-LeftMouse>' }) do
-					vim.keymap.set('n', key, open_and_return_to_tree, key_options('Open to edit'))
-				end
-
-				-- Does not delete files, only trashes them
-				vim.keymap.set('n', 'd', api.fs.trash, key_options('Trash current file or folder'))
-				vim.keymap.set('n', 'bd', api.marks.bulk.trash, key_options('Trash all marked nodes'))
-
-				-- Override 'h' and 'l' to improve movement in the tree
-				vim.keymap.set('n', 'h', api.node.navigate.parent_close, key_options('Close the current folder'))
-				vim.keymap.set('n', 'l', decorator_ignore_open_folder(open_and_return_to_tree), key_options('Open folder or file'))
-
-				-- Custom keymaps
-				vim.keymap.set(
-					'n',
-					'T',
-					decorator_return_to_tree(api.node.open.tab_drop),
-					key_options('Open file in new tab (if not already opened)')
-				)
-
-				vim.keymap.set(
-					'n',
-					't',
-					api.node.open.tab_drop,
-					key_options('Go to file (if not already opened, open in new tab) and close the tree')
-				)
-
-				vim.keymap.set('n', 'g.', function()
-					api.tree.toggle_hidden_filter()
-					api.tree.toggle_gitignore_filter()
-				end, key_options('Show/hide ignored and hidden files'))
-			end
-
-			-- Setup
-			opts.on_attach = apply_custom_keymaps
-			require('nvim-tree').setup(opts)
-
-			-- Snacks rename. Integrates 'nvim-tree' rename file action with LSP 'workspace/willRenameFiles' method. Based on the
-			-- configuration from https://github.com/folke/snacks.nvim/blob/main/docs/rename.md
-
-			local nvim_tree_api_events = require('nvim-tree.api').events
-
-			local last_rename_data = {}
-
-			nvim_tree_api_events.subscribe(nvim_tree_api_events.Event.NodeRenamed, function(rename_data)
-				-- Prevents duplication of the call
-				if vim.deep_equal(last_rename_data, rename_data) then
-					return
-				end
-
-				last_rename_data = rename_data
-				require('snacks').rename.on_rename_file(rename_data.old_name, rename_data.new_name)
-			end)
+		config = function(_, opts)
+			require('neo-tree').setup(opts)
+			require('lsp-file-operations')
 		end,
 	},
 }
