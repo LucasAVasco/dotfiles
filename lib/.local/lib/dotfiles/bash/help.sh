@@ -69,13 +69,33 @@ help_handle() {
 	local help_if_empty="$1"
 	shift
 
+	# Check if should show help
+	show_help_msg='n'
+	exit_status=0
+
 	if [[ "$help_if_empty" == 'y' && "$1" == '' ]]; then
-		cat /dev/stdin | help_msg_remove_indent
-		exit 1
+		show_help_msg='y'
+		exit_status=1
 	fi
 
 	if [[ "$1" == '--help' || "$1" == '-h' || "$1" == 'help' ]]; then
-		cat /dev/stdin | help_msg_remove_indent
-		exit 0
+		show_help_msg='y'
 	fi
+
+	# Abort if the help message should not be shown
+	if [[ "$show_help_msg" == "n" ]]; then
+		return
+	fi
+
+	# Show the help message
+	cat /dev/stdin | help_msg_format | \
+	while IFS= read -r line || [[ -n "$line" ]]; do
+		if [[ "$line" =~ ^@help-eval:.* ]]; then
+			eval "${line#*@help-eval:}"
+		else
+			printf "%s\n" "$line"
+		fi
+	done
+
+	exit $exit_status
 }
