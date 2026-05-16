@@ -1,0 +1,21 @@
+#!/bin/bash
+#
+# Print a new line and add indent to a file or standard input
+
+set -e
+
+source ~/.local/lib/dotfiles/bash/help.sh
+
+help_handle y "$@" << EOF
+	Print a new line and add indent to a file or standard input
+
+	Usage:
+		nindent [indent script flags and arguments]
+
+	'indent' help:
+
+	@help-eval:indent --help
+EOF
+
+echo ""
+exec indent "$@"
