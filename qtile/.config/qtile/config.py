@@ -163,7 +163,7 @@ screens = [
 ]
 
 # Command to update the wallpaper
-os.environ["CUSTOM_DESKTOP_SET_WALLPAPAER_COMMAND"] = (
+os.environ["CUSTOM_DESKTOP_SET_WALLPAPER_COMMAND"] = (
     "qtile cmd-obj -o screen -f set_wallpaper "
     "-a ~/.local/share/custom_desktop/wallpaper/normal.jpg stretch"
 )

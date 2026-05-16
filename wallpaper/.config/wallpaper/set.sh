@@ -22,7 +22,7 @@ help_handle y "$@" <<EOF
 
 	Notes:
 
-	You can set a command to be executed after the wallpaper is set with the \$CUSTOM_DESKTOP_SET_WALLPAPAER_COMMAND variable.
+	You can set a command to be executed after the wallpaper is set with the \$CUSTOM_DESKTOP_SET_WALLPAPER_COMMAND variable.
 EOF
 
 current_dir=$(dirname `realpath "${BASH_SOURCE[0]}"`)
@@ -128,6 +128,6 @@ mkdir -p "$wallpaper_dir"
 ln -sf "$next_wallpaper_path" "$wallpaper_path"
 
 # Custom command that depends on the desktop
-if [[ -n "$CUSTOM_DESKTOP_SET_WALLPAPAER_COMMAND" ]]; then
-	eval "$CUSTOM_DESKTOP_SET_WALLPAPAER_COMMAND"
+if [[ -n "$CUSTOM_DESKTOP_SET_WALLPAPER_COMMAND" ]]; then
+	eval "$CUSTOM_DESKTOP_SET_WALLPAPER_COMMAND"
 fi
