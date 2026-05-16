@@ -1,0 +1,7 @@
+#!/bin/bash
+#
+# Manage the monitor back light
+
+set -e
+
+exec ~/.config/monitor/backlight.sh "$@"
