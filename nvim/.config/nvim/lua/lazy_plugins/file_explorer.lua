@@ -165,7 +165,7 @@ return {
 			},
 
 			-- Does not disable `Netrw` in `nvim-tree` configuration. The `oil.nvim` configuration will do it
-			hijack_netrw = true,
+			hijack_netrw = false,
 			disable_netrw = false,
 		},
 
