@@ -5,6 +5,12 @@
 	`LuaSnipEditFiles` Edit the LuaSnip snippets files
 ]]
 
+local blink_cmp_score_offset = {
+	path = 100,
+	lsp = 90,
+	buffer = 80,
+}
+
 return {
 	-- {
 	--     'nvimtools/none-ls.nvim',
@@ -41,7 +47,7 @@ return {
 			'LuaSnipUnlinkCurrent',
 		},
 
-		lazy = true, -- Will be loaded by `nvim-cmp`
+		lazy = true, -- Will be loaded by `blink.cmp`
 
 		opts = {
 			---Defines the file types used to load snippets for the current buffer.
@@ -111,10 +117,6 @@ return {
 	{
 		'windwp/nvim-autopairs',
 
-		dependencies = {
-			'hrsh7th/nvim-cmp',
-		},
-
 		cond = MYVAR.not_in_vscode, -- Already provided by VSCode
 
 		event = 'InsertEnter',
@@ -142,9 +144,6 @@ return {
 				-- the 'crasis pair' rule. Because of this, there are only one crasis in the right pair
 				Rule('```', '`'),
 			})
-
-			-- Auto-pairs integration with cmp-nvim
-			require('cmp').event:on('confirm_done', require('nvim-autopairs.completion.cmp').on_confirm_done())
 		end,
 	},
 	{
@@ -217,136 +216,85 @@ return {
 		},
 	},
 	{
-		'hrsh7th/nvim-cmp',
-
-		cond = MYVAR.not_in_vscode,
-
-		event = { 'InsertEnter', 'CmdlineEnter' },
-
+		'saghen/blink.cmp',
+		version = '1.*',
 		dependencies = {
-			'hrsh7th/cmp-path',
-			'hrsh7th/cmp-buffer',
-			'hrsh7th/cmp-cmdline',
-
-			-- LSP
-			'hrsh7th/cmp-nvim-lsp',
 			'onsails/lspkind.nvim',
-			'folke/lazydev.nvim', -- LuaLS configuration to edit Neovim configuration files
-
-			-- Snippets
-			'saadparwaiz1/cmp_luasnip',
 			'L3MON4D3/LuaSnip',
+			'rafamadriz/friendly-snippets',
 		},
 
-		config = function()
-			local cmp = require('cmp')
-			local cmp_buffer = require('cmp_buffer')
-			local lspkind = require('lspkind')
-			local luasnip = require('luasnip')
+		cmd = { 'BlinkCmp' },
+		event = { 'InsertEnter', 'CmdlineEnter' },
 
-			-- Defines the name that will be placed with the completion based by its source
-			local source_name2item_menu = {
-				path = ' Path',
-				buffer = ' Buffer',
-				nvim_lsp = ' LSP',
-				luasnip = '󰽥 LuaSnip',
-				cmdline = '󱞪 CmdLine',
-				lazydev = ' LazyDev',
-				orgmode = ' OrgMode',
-				['vim-dadbod-completion'] = ' Database',
-			}
+		---@module 'blink-cmp'
+		---@see defaults ~/.local/share/nvim/lazy/blink.cmp/lua/blink/cmp/config/init.lua
+		---@type blink.cmp.Config
+		opts = {
+			snippets = { preset = 'luasnip' },
+			signature = { enabled = false }, -- I use 'noice.nvim' instead
 
-			--- Configures the highlighting groups that will be used in the suggestions menu
-			local function update_cmp_hl()
-				-- Get all highlight groups and apply the customization to the ones that will appear in the item kind.
-				-- They start with `CmpItemKind`
-				local all_hl_groups = vim.api.nvim_get_hl(0, {})
-
-				for hl_group_name, _ in pairs(all_hl_groups) do
-					if string.find(hl_group_name, 'CmpItemKind', 1, true) then
-						local new_hl = MYFUNC.get_hl_definition(hl_group_name)
-						new_hl.standout = true -- Swap background and foreground colors
-						new_hl.bold = true
-
-						-- The format returned by `get_hl_definition` is the same as the received by `nvim_set_hl`, but LuasLS does not
-						-- recognize it. So I am disabling the diagnostic to the next line
-						---@diagnostic disable-next-line: param-type-mismatch
-						vim.api.nvim_set_hl(0, hl_group_name, new_hl)
-					end
-				end
-			end
-
-			-- Applies the custom highlighting to all color schemes
-			vim.api.nvim_create_autocmd('ColorScheme', {
-				pattern = '*',
-				callback = update_cmp_hl,
-			})
-
-			update_cmp_hl()
-
-			--- Closes the completion and runs the fallback
-			--- It is different from `cmp.close` that runs the fallback only if the completion is closed. This function do the both at the
-			--- same time.
-			---@param fallback fun() Fallback function
-			local function close_completion(fallback)
-				cmp.close()
-				fallback()
-			end
-
-			---Equivalent to the `cmp.visible()` function, but runs asynchronously.
-			---@return boolean
-			local function cmp_async_visible()
-				return cmp.core.view:visible() and vim.fn.pumvisible()
-			end
-
-			---Try to open the choice selector. Does nothing if it is not possible
-			---@return boolean opened True if the choice selector was opened
-			local function try_select_choice()
-				if luasnip.choice_active() then -- Shows the choice selector if in insert mode and inside a choice node
-					require('luasnip.extras.select_choice')()
-					return true
-				end
-
-				return false
-			end
-
-			-- CMP configuration
-			cmp.setup({
-				window = {
-					documentation = cmp.config.window.bordered({
-						border = 'rounded',
-					}),
-					completion = cmp.config.window.bordered({
-						border = 'rounded',
-					}),
+			completion = {
+				list = {
+					selection = {
+						preselect = false,
+						auto_insert = false,
+					},
 				},
 
-				enabled = function()
-					-- Disables CMP when running a macro. The default CMP configuration also disables it when tipping a macro, but I
-					-- want the suggestions in this case. Only remember to not trigger the suggestions when tipping a macro or the behavior
-					-- will be unexpected.
-					local enabled = vim.fn.reg_executing() == ''
+				menu = {
+					border = 'rounded',
+					max_height = 20,
 
-					-- The default CMP configuration also disables it when in a prompt
-					enabled = enabled and vim.bo.buftype ~= 'prompt'
+					draw = {
+						treesitter = { 'lsp' },
+						columns = { { 'kind_icon', 'label', gap = 2 }, { 'source_name' } },
+					},
+				},
 
-					return enabled
-				end,
+				documentation = {
+					auto_show = true,
+					auto_show_delay_ms = 200,
 
-				sources = {
-					{
-						name = 'path',
-						priority = 50,
-						option = {
-							---Return the directory that `cmp-path` will use when inserting relative paths
-							---@param cmp_data table<string, any> Data provided by `cmp-path`
+					window = {
+						border = 'rounded',
+					},
+				},
+			},
+
+			sources = {
+				-- Enabled sources
+
+				default = { 'path', 'lsp', 'snippets', 'buffer' },
+
+				per_filetype = {
+					lua = { inherit_defaults = true, 'lazydev' },
+					org = { inherit_defaults = true, 'orgmode' },
+				},
+
+				-- Source providers configuration
+
+				providers = {
+					cmdline = {
+						name = '󱞪 CmdLine',
+						score_offset = 200,
+					},
+
+					path = {
+						name = ' Path',
+						score_offset = blink_cmp_score_offset.path,
+
+						opts = {
+							show_hidden_files_by_default = true,
+
+							---Return the directory that `blink.cmp` will use when inserting relative paths
+							---@param context blink.cmp.Context Data provided by `blink.cmp`
 							---@return string current_working_directory
-							get_cwd = function(cmp_data)
-								local buffer_nr = cmp_data.context.bufnr
+							get_cwd = function(context)
+								local buffer_nr = context.bufnr
 								local buffer_file_type = vim.bo[buffer_nr].filetype
 								local buffer_path = vim.api.nvim_buf_get_name(buffer_nr)
 								local base_dir = vim.fn.fnamemodify(buffer_path, ':p:h') -- Current working directory
-								local text_before_cursor = cmp_data.context.cursor_before_line --[[@as string]]
 
 								-- Use the global variable
 								if vim.g.cmp_pth_cwd then
@@ -381,169 +329,251 @@ return {
 							end,
 						},
 					},
-					{
-						name = 'buffer',
-						get_bufnrs = function()
-							--- Filter to get the buffers that will be used in this suggestions
-							---@param buf_nr number Buffer number
-							---@return boolean can_suggestions if the buffer should be used in the suggestions (true or false)
-							local function filter_buffers(buf_nr)
-								-- Only uses normal buffers
-								if vim.bo[buf_nr].buftype ~= '' then
-									return false
-								end
 
-								-- Does not use large files
-								local buffer_size = vim.api.nvim_buf_get_offset(buf_nr, vim.api.nvim_buf_line_count(buf_nr))
-								if buffer_size > 10 * 1024 * 1024 then
-									return false
-								end
+					lsp = {
+						name = ' LSP',
+						score_offset = blink_cmp_score_offset.lsp,
 
-								return true
-							end
-
-							-- Gets all buffers and filter them before send to CMP
-							local buffers = vim.api.nvim_list_bufs()
-							return vim.tbl_filter(filter_buffers, buffers)
-						end,
+						fallbacks = {}, -- Always show the buffer source when there is no fallback
 					},
-					{ name = 'nvim_lsp', priority = 30 },
-					{ name = 'luasnip' },
 
-					-- Specific to some filetypes
-					{ name = 'lazydev' }, -- Suggestions to `require()`
-					{ name = 'orgmode', priority = 20 },
-					{ name = 'vim-dadbod-completion', priority = 20 },
-				},
+					snippets = {
+						name = '󰽥 Snippets',
+						score_offset = blink_cmp_score_offset.buffer,
+					},
 
-				sorting = {
-					priority_weight = 1,
+					buffer = {
+						name = ' Buffer',
+						score_offset = blink_cmp_score_offset.buffer,
+					},
 
-					comparators = {
-						cmp.config.compare.recently_used,
-						cmp.config.compare.locality,
-						cmp.config.compare.score,
+					-- Additional sources
+
+					orgmode = {
+						name = ' OrgMode',
+						module = 'orgmode.org.autocompletion.blink',
+						score_offset = blink_cmp_score_offset.lsp,
+					},
+
+					lazydev = {
+						name = ' LazyDev',
+						module = 'lazydev.integrations.blink',
+						score_offset = blink_cmp_score_offset.path + 100, -- High priority then 'lsp' and 'path'
 					},
 				},
+			},
 
-				mapping = {
-					-- Navigate thought the suggestions
-					['<Down>'] = cmp.mapping.select_next_item({ behavior = cmp.SelectBehavior.Select, count = 6 }),
-					['<Up>'] = cmp.mapping.select_prev_item({ behavior = cmp.SelectBehavior.Select, count = 6 }),
-
-					['<Tab>'] = function(fallback)
-						if cmp_async_visible() and cmp.visible() then
-							cmp.select_next_item({ behavior = cmp.SelectBehavior.Select })
-							try_select_choice()
-						elseif luasnip.jumpable(1) then
-							luasnip.jump(1)
-							try_select_choice()
-						else
-							fallback()
-						end
-					end,
-
-					['<S-Tab>'] = function(fallback)
-						if cmp_async_visible() and cmp.visible() then
-							cmp.select_prev_item({ behavior = cmp.SelectBehavior.Select })
-							try_select_choice()
-						elseif luasnip.jumpable(-1) then
-							luasnip.jump(-1)
-							try_select_choice()
-						else
-							fallback()
-						end
-					end,
-
-					['<C-Tab>'] = function(fallback)
-						if not try_select_choice() then
-							fallback()
-						end
-					end,
-
-					-- Accept the suggestions or snippet entry
-					['<CR>'] = function(fallback)
-						if cmp_async_visible() and cmp.get_selected_entry() then
-							cmp.confirm({ behavior = cmp.ConfirmBehavior.Insert, select = true })
-
-							-- Select the choice after the snippet is expanded
-							vim.defer_fn(function()
-								try_select_choice()
-							end, 100)
-						elseif not try_select_choice() then
-							fallback()
-						end
-					end,
-
-					['<S-CR>'] = function(fallback)
-						if cmp_async_visible() and cmp.visible() then
-							cmp.close()
-						else
-							fallback()
-						end
-					end,
-
-					['<C-Space>'] = cmp.mapping.complete(),
-
-					-- Expand the snippet entry
-					['<A-CR>'] = function(fallback)
-						if luasnip.expandable() then
-							luasnip.expand({})
-						else
-							fallback()
-						end
-					end,
-
-					-- Abort the completion
-					['<A-q>'] = cmp.mapping.close(),
-					['<A-a>'] = cmp.mapping.close(),
-					['<Left>'] = close_completion,
-					['<Right>'] = close_completion,
-
-					-- Docs
-					['<A-d>'] = cmp.mapping.scroll_docs(6),
-					['<A-u>'] = cmp.mapping.scroll_docs(-6),
+			cmdline = {
+				keymap = {
+					['<Right>'] = false,
+					['<Left>'] = false,
 				},
 
-				snippet = {
-					expand = function(args)
-						luasnip.lsp_expand(args.body)
+				completion = {
+					menu = {
+						-- Always show the completion menu
+						auto_show = true,
+					},
+				},
+			},
+
+			keymap = {
+				preset = 'enter',
+
+				['<down>'] = {
+					function(cmp)
+						return cmp.select_next({ count = 6 })
 					end,
+					'fallback',
 				},
 
-				-- Custom formatting to the suggestions
-				formatting = {
-					expandable_indicator = true,
-
-					fields = { 'kind', 'abbr', 'menu' },
-
-					format = function(entry, vim_completed_item)
-						local kind = lspkind.presets.default[vim_completed_item.kind] -- Convert the kind with lspkind
-						vim_completed_item.kind = ' ' .. (kind or '?') .. ' '
-						vim_completed_item.menu = source_name2item_menu[entry.source.name] -- Add the source name to the menu
-
-						return vim_completed_item
+				['<up>'] = {
+					function(cmp)
+						return cmp.select_prev({ count = 6 })
 					end,
+					'fallback',
 				},
+
+				-- Abort the completion
+				['<S-CR>'] = { 'cancel', 'fallback' },
+				['<A-q>'] = { 'hide', 'fallback' },
+				['<A-a>'] = { 'hide', 'fallback' },
+				['<Left>'] = {
+					-- Hide and run fallback
+					function(cmp)
+						cmp:hide()
+					end,
+					'fallback',
+				},
+				['<Right>'] = {
+					-- Hide and run fallback
+					function(cmp)
+						cmp:hide()
+					end,
+					'fallback',
+				},
+
+				-- Docs
+				['<A-u>'] = { 'scroll_documentation_up', 'fallback' },
+				['<A-d>'] = { 'scroll_documentation_down', 'fallback' },
+			},
+
+			appearance = {
+				-- I do not like the default appearance of the completion menu configured by Kanagawa. The following configuration makes
+				-- 'blink.cmp' looks like 'nvim-cmp'
+				use_nvim_cmp_as_default = true,
+			},
+		},
+
+		opts_extend = { 'sources.default' },
+
+		---@param opts blink.cmp.Config
+		config = function(_, opts)
+			local luasnip = require('luasnip')
+
+			---Configure the highlighting groups that are used in the suggestions menu
+			local function update_hl()
+				-- Get all highlight groups and apply the customization to the ones that appears in the item kind.
+				-- They start with `BlinkCmpKind`
+				local all_hl_groups = vim.api.nvim_get_hl(0, {})
+
+				for hl_group_name, _ in pairs(all_hl_groups) do
+					if string.find(hl_group_name, 'BlinkCmpKind', 1, true) then
+						local new_hl = MYFUNC.get_hl_definition(hl_group_name)
+						new_hl.standout = true -- Swap background and foreground colors
+						new_hl.bold = true
+
+						-- The format returned by `get_hl_definition` is the same as the received by `nvim_set_hl`, but LuasLS does not
+						-- recognize it. So I am disabling the diagnostic to the next line
+						---@diagnostic disable-next-line: param-type-mismatch
+						vim.api.nvim_set_hl(0, hl_group_name, new_hl)
+					end
+				end
+
+				-- Customize the highlight groups that appears in the completion menu
+				vim.api.nvim_set_hl(0, 'BlinkCmpMenu', { link = 'Float' })
+				vim.api.nvim_set_hl(0, 'BlinkCmpMenuBorder', { link = 'FloatBorder' })
+			end
+
+			-- Applies the custom highlighting to all color schemes
+			vim.api.nvim_create_autocmd('ColorScheme', {
+				pattern = '*',
+				callback = update_hl,
 			})
 
-			-- Completions for search modes
-			cmp.setup.cmdline({ '/', '?' }, {
-				mapping = cmp.mapping.preset.cmdline(),
-				sources = {
-					{ name = 'path' },
-					{ name = 'buffer' },
-				},
-			})
+			update_hl()
 
-			-- Completions for command mode
-			cmp.setup.cmdline(':', {
-				mapping = cmp.mapping.preset.cmdline(),
-				sources = cmp.config.sources({
-					{ name = 'path' },
-					{ name = 'cmdline' },
-				}),
-			})
+			-- Format the kind icon with the symbols from 'lspkind'
+			MYFUNC.tbl_set(opts, 'completion.menu.draw.components.kind_icon', {})
+			local lsp_symbol_map = require('lspkind').symbol_map
+			opts.completion.menu.draw.components.kind_icon.text = function(ctx)
+				return ' ' .. (lsp_symbol_map[ctx.kind] or '?') .. ' '
+			end
+
+			---Jump to the snippet entry. Do not expand the snippet
+			---@param direction integer 1 for forward, -1 for backward
+			local function jump_snippet(direction)
+				if not luasnip.jumpable(direction) then
+					return false
+				end
+
+				vim.schedule(function()
+					luasnip.jump(direction)
+				end)
+
+				return true
+			end
+
+			---Try to open the choice selector. Do nothing if it is not possible
+			---@return boolean opened True if the choice selector was opened
+			---@param cmp blink.cmp.API
+			local function try_select_choice(cmp)
+				if cmp.snippet_active() and luasnip.choice_active() then
+					-- The choice selector must be opened in the next event loop because of a textlock
+					vim.schedule(function()
+						-- Choice may not be active in the next event loop. Need to check
+						if luasnip.choice_active() then
+							require('luasnip.extras.select_choice')()
+						end
+					end)
+					return true
+				end
+
+				return false
+			end
+
+			-- Navigate thought the suggestions
+			opts.keymap['<Tab>'] = {
+				'select_next',
+				function(cmp)
+					if jump_snippet(1) then
+						try_select_choice(cmp)
+						return true
+					end
+				end,
+				'fallback',
+			}
+
+			opts.keymap['<S-Tab>'] = {
+				'select_prev',
+				function(cmp)
+					if jump_snippet(-1) then
+						try_select_choice(cmp)
+						return true
+					end
+				end,
+				'fallback',
+			}
+
+			opts.keymap['<C-Tab>'] = {
+				function(cmp)
+					return try_select_choice(cmp)
+				end,
+				'fallback',
+			}
+
+			-- Accept the suggestions or snippet entry
+			opts.keymap['<CR>'] = {
+				---Try to accept the current suggestion
+				---@param cmp blink.cmp.API
+				---@return boolean|nil
+				function(cmp)
+					if not cmp:is_active() then
+						return
+					end
+
+					if cmp.accept() then
+						-- Select the choice after the snippet is expanded
+						vim.schedule(function()
+							try_select_choice(cmp)
+						end)
+
+						return true
+					end
+				end,
+
+				---Try to handle auto-pairing
+				---@return string
+				function()
+					return require('nvim-autopairs').autopairs_cr()
+				end,
+
+				'fallback',
+			}
+
+			-- Expand the snippet entry
+			opts.keymap['<A-CR>'] = {
+				function()
+					if luasnip.expandable() then
+						vim.schedule(luasnip.expand)
+						return true
+					end
+				end,
+				'fallback',
+			}
+
+			-- Setup
+			require('blink.cmp').setup(opts)
 		end,
 	},
 }

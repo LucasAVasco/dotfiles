@@ -164,7 +164,6 @@ return {
 			'ravitemer/mcphub.nvim',
 
 			--- Optional dependencies
-			'hrsh7th/nvim-cmp',
 			'nvim-telescope/telescope.nvim',
 			'nvim-tree/nvim-web-devicons',
 		},

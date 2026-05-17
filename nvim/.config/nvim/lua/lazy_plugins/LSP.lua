@@ -3,11 +3,6 @@ MYPLUGVAR.lspFileTypes = {}
 
 return {
 	{
-		'hrsh7th/cmp-nvim-lsp',
-		lazy = true,
-		cond = MYVAR.not_in_vscode,
-	},
-	{
 		'neovim/nvim-lspconfig',
 
 		cond = MYVAR.not_in_vscode,
@@ -15,7 +10,7 @@ return {
 		dependencies = {
 			'williamboman/mason.nvim',
 			'williamboman/mason-lspconfig.nvim',
-			'hrsh7th/cmp-nvim-lsp',
+			'saghen/blink.cmp',
 			'folke/neoconf.nvim',
 			'b0o/schemastore.nvim', -- Used by 'jsonls' and 'yamlls'
 
@@ -95,7 +90,7 @@ return {
 				return false
 			end
 
-			local client_capabilities = require('cmp_nvim_lsp').default_capabilities()
+			local client_capabilities = require('blink.cmp').get_lsp_capabilities({})
 
 			vim.lsp.config('*', {
 				capabilities = client_capabilities,
