@@ -10,32 +10,40 @@ _G.MYPLUGFUNC = {} -- For plugins
 -- #region Utility functions
 
 --- Recursively set a value in a table.
---- This function is analogous to `vim.tbl_get`, but sets the value instead of getting it. If you run:
---- `MYFUNC.tbl_set({a = {b = {c = 1}}}, {'a', 'b', 'c'}, 2)`, `tbl` will be `{a = {b = {c = 2}}}`.
+--- This function works like `vim.tbl_get`, but sets the value instead of getting it.
+---
+--- The key may be a string that each inner element is separated by a dot, or a table that each inner element is a element of the table.
+---
+--- E.g. If you run: `MYFUNC.tbl_set({a = {b = {c = 1}}}, {'a', 'b', 'c'}, 2)` or `MYFUNC.tbl_set({a = {b = {c = 1}}}, 'a.b.c', 2)`,
+--- `tbl` will be `{a = {b = {c = 2}}}`.
 ---@param tbl table Table where the value will be set.
----@param args table List of arguments that defines the element to be set in the table.
+---@param key string|string[] Key that will be set.
 ---@param value any Value that will be set.
-function MYFUNC.tbl_set(tbl, args, value)
+function MYFUNC.tbl_set(tbl, key, value)
+	if type(key) == 'string' then
+		key = vim.split(key, '.', { plain = true })
+	end
+
 	-- If the `args` is empty, considers that is a insertion
-	if #args == 0 then
+	if #key == 0 then
 		table.insert(tbl, value)
 	else
 		local sub_tbl = tbl
 
 		-- Iterate trough the `tbl`. The `sub_tbl` will be the last element in the table before the `args[#args]`.
-		for i = 1, #args - 1 do
-			local next_tbl = sub_tbl[args[i]]
+		for i = 1, #key - 1 do
+			local next_tbl = sub_tbl[key[i]]
 
 			if type(next_tbl) ~= 'table' then -- Creates the `sub_tbl` if it doesn't exist in the table
 				next_tbl = {}
-				sub_tbl[args[i]] = next_tbl
+				sub_tbl[key[i]] = next_tbl
 			end
 
 			sub_tbl = next_tbl
 		end
 
 		-- Sets the last `args` element to the corresponding `value`.
-		sub_tbl[args[#args]] = value
+		sub_tbl[key[#key]] = value
 	end
 end
 
