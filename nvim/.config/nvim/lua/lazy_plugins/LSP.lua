@@ -11,7 +11,6 @@ return {
 			'williamboman/mason.nvim',
 			'williamboman/mason-lspconfig.nvim',
 			'saghen/blink.cmp',
-			'folke/neoconf.nvim',
 			'b0o/schemastore.nvim', -- Used by 'jsonls' and 'yamlls'
 
 			-- Required by my commands
@@ -30,35 +29,8 @@ return {
 		},
 
 		config = function()
-			-- Uses `neoconf` to get a list of LSP servers to enable or disable
-			local selected_lsp = {
-				disable = {},
-				enable = {},
-			}
-
-			require('neoconf.plugins').register({
-				name = 'Lsp-select',
-				on_schema = function(schema)
-					schema:import('selected-lsp', selected_lsp)
-
-					schema:set('selected-lsp.enable', {
-						description = 'LSP servers to enable (disable all others)',
-						anyOf = { { type = 'string' } },
-					})
-
-					schema:set('selected-lsp.disable', {
-						description = 'LSP servers to disable (enable all others)',
-						anyOf = { { type = 'string' } },
-					})
-				end,
-			})
-
 			-- Enable codelens
 			vim.lsp.codelens.enable(true)
-
-			-- Query the selected LSP servers from `neoconf`. The user can not provide the 'enabled' and 'disable' fields at the same time.
-			-- So this variable will have at least one empty list
-			selected_lsp = require('neoconf').get('selected-lsp', selected_lsp)
 
 			-- Mason configuration to automatically download LSP servers. The setup order is required: 1. mason, 2. mason-lspconfig,
 			-- 3. nvim-lspconfig
@@ -76,18 +48,7 @@ return {
 			---@return boolean should_abort_configuration
 			---@nodiscard
 			local function should_abort_lsp_config(server_name)
-				-- Lists of LSP servers to disable
-				if vim.tbl_contains(selected_lsp.disable, server_name) or vim.tbl_contains(MYVAR.lsp_servers_to_disable, server_name) then
-					return true
-				end
-
-				-- If the user enabled some LSP server, need to disable all the other servers
-				if #selected_lsp.enable > 0 and not vim.tbl_contains(selected_lsp.enable, server_name) then
-					return true
-				end
-
-				-- Fallback value
-				return false
+				return vim.tbl_contains(MYVAR.lsp_servers_to_disable, server_name)
 			end
 
 			local client_capabilities = require('blink.cmp').get_lsp_capabilities({})
