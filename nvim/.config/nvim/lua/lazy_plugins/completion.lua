@@ -12,23 +12,6 @@ local blink_cmp_score_offset = {
 }
 
 return {
-	-- {
-	--     'nvimtools/none-ls.nvim',
-	--     main = 'null-ls',
-	--     dependencies = {
-	--         'nvim-lua/plenary.nvim'
-	--     },
-	--
-	--     config = function()
-	--         null_ls = require('null-ls')
-	--
-	--         null_ls.setup({
-	--             sources = {
-	--                 -- E.null_ls.builtins.formatting.stylua,
-	--             }
-	--         })
-	--     end
-	-- },
 	{
 		'L3MON4D3/LuaSnip',
 		version = 'v2.*',
