@@ -144,7 +144,7 @@ return {
 					end
 
 					if MYVAR.not_in_vscode then
-						vim.cmd.LspStart({ args = { server_name } })
+						vim.cmd.lsp({ args = { 'enable', server_name } })
 					end
 				end)
 			end
