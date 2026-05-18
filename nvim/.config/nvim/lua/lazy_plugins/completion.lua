@@ -205,6 +205,10 @@ return {
 			'onsails/lspkind.nvim',
 			'L3MON4D3/LuaSnip',
 			'rafamadriz/friendly-snippets',
+			{
+				'mikavilpas/blink-ripgrep.nvim',
+				version = '*',
+			},
 		},
 
 		cmd = { 'BlinkCmp' },
@@ -248,7 +252,16 @@ return {
 			sources = {
 				-- Enabled sources
 
-				default = { 'path', 'lsp', 'snippets', 'buffer' },
+				default = {
+					-- Default sources
+					'path',
+					'lsp',
+					'snippets',
+					'buffer',
+
+					-- Additional sources
+					'ripgrep',
+				},
 
 				per_filetype = {
 					lua = { inherit_defaults = true, 'lazydev' },
@@ -331,6 +344,16 @@ return {
 					},
 
 					-- Additional sources
+
+					ripgrep = {
+						name = ' Ripgrep',
+						score_offset = blink_cmp_score_offset.buffer - 5,
+						module = 'blink-ripgrep',
+
+						---@module "blink-ripgrep"
+						---@type blink-ripgrep.Options
+						opts = {},
+					},
 
 					orgmode = {
 						name = ' OrgMode',
