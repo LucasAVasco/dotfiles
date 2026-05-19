@@ -11,6 +11,8 @@ set -e
 
 source ~/.local/lib/dotfiles/bash/help.sh
 
+last_executed_script_dconf_key='/apps/custom-desktop/last-executed-script'
+
 # Manager executable
 if [[ -z "$CUSTOM_SCRIPT_MANAGER_EXECUTABLE" ]]; then
 	CUSTOM_SCRIPT_MANAGER_EXECUTABLE="$PWD/manager.sh"
@@ -24,6 +26,9 @@ help_handle n "$@" <<EOF
 		$manager_command run [script-name]
 			Run a script. The script name must be relative to the custom scripts directory. This means that the proided path must begin with
 			'scripts/' or './scripts/'. If omitted, the script will be selected interactively
+
+		$manager_command run-last
+			Re-run the last executed script
 
 		$manager_command get-root-dir
 			Print the root directory of the custom scripts directory (absolute path)
@@ -83,8 +88,26 @@ case "$main_command" in
 		# Run the script
 		scripts_run_script "$manager_dir/$script"
 
+		# Save the last executed script
+		dconf write "$last_executed_script_dconf_key" "'$script'"
+
 		# Print a command that can be used to re-run the script
 		echo "equivalent command: '$CUSTOM_SCRIPT_MANAGER_EXECUTABLE' run '$script'"
+		;;
+
+	run-last)
+		script="$(dconf read "$last_executed_script_dconf_key")"
+
+		if [ -z "$script" ]; then
+			exit 1
+		fi
+
+		# Remove quotes
+		script="${script:1}"
+		script="${script:0:${#script}-1}"
+
+		# Run the script
+		scripts_run_script "$manager_dir/$script"
 		;;
 
 	ls)
