@@ -1,4 +1,6 @@
 local schemastore = require('schemastore')
+
+---@type table<string, string[]> Maps the schema URL to its file matches
 local schemas = schemastore.yaml.schemas()
 
 -- Configure the patterns for kubernetes files
