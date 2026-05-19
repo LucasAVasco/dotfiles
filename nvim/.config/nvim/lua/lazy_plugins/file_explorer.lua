@@ -132,6 +132,7 @@ return {
 
 		keys = {
 			{ '<leader>gfe', '<cmd>Neotree focus position=float<CR>', mode = 'n', desc = 'Open file explorer' },
+			{ '<leader>gfr', '<cmd>Neotree reveal position=float<CR>', mode = 'n', desc = 'Open current file in file explorer' },
 		},
 
 		---@module 'neo-tree.types.config'
