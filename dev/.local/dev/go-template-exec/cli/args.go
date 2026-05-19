@@ -17,7 +17,7 @@ type Args struct {
 	Data          string `type:"string" help:"Data content"`
 	DataFile      string `type:"path" help:"Data path"`
 	DataStdin     bool   `type:"bool" help:"Read data from stdin" default:"false"`
-	DataFormat    string `type:"string" help:"Data format" default:"json"`
+	DataFormat    string `type:"string" help:"Data format" default:"yaml"`
 }
 
 // validateCommon validates common arguments (between template data and template content)
