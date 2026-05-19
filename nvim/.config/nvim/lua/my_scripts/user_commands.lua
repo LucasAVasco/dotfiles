@@ -41,6 +41,31 @@ end, {
 	nargs = '?',
 })
 
+vim.api.nvim_create_user_command('CopyPath', function(arguments)
+	-- Absolute of the current file
+	local path = arguments.fargs[1] or vim.fn.expand('%')
+	path = vim.fs.abspath(path)
+
+	vim.fn.setreg('+', path)
+end, {
+	desc = 'Copy the current file path to the clipboard',
+	nargs = '?',
+})
+
+vim.api.nvim_create_user_command('CopyDir', function(arguments)
+	-- Absolute of the current file
+	local path = arguments.fargs[1] or vim.fn.expand('%')
+	path = vim.fs.abspath(path)
+
+	-- Gets the parent directory
+	path = vim.fs.dirname(path)
+
+	vim.fn.setreg('+', path)
+end, {
+	desc = 'Copy the directory of the current file to the clipboard',
+	nargs = '?',
+})
+
 vim.api.nvim_create_user_command('Schedule', function(arguments)
 	local command = arguments.fargs[1]
 
