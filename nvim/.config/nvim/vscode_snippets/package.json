@@ -28,6 +28,12 @@
 			},
 			{
 				"language": [
+					"make"
+				],
+				"path": "./make/targets.json"
+			},
+			{
+				"language": [
 					"zsh"
 				],
 				"path": "./zsh/paths.json"

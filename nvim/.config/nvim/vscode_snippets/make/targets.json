@@ -1,0 +1,7 @@
+{
+	"Add PHONY targets": {
+		"prefix": ["phony", "PHONY"],
+		"description": "Add PHONY targets",
+		"body": [".PHONY: ${1:FORCE}"]
+	}
+}
