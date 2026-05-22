@@ -68,6 +68,16 @@ done
 export ALLOW_EXTERNAL_SOFTWARE=$ALLOW_EXTERNAL_SOFTWARE
 
 
+# Variable that indicates if the shell is running inside a container
+if [ -z "$RUNNING_INSIDE_CONTAINER" ]; then
+	if [ -f /.dockerenv -o -f /run/.containerenv ]; then
+		export RUNNING_INSIDE_CONTAINER=y
+	else
+		export RUNNING_INSIDE_CONTAINER=n
+	fi
+fi
+
+
 # Apps configuration
 export FZF_DEFAULT_OPTS_FILE=~/.fzfrc
 
