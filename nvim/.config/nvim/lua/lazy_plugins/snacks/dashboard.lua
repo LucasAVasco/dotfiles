@@ -66,6 +66,7 @@ return {
 			{ icon = ' ', key = 'e', desc = 'File explorer', action = ':Neotree focus position=float' },
 			{ icon = '󰖌 ', key = 'o', desc = 'Oil', action = ':Oil' },
 			{ icon = ' ', key = 'g', desc = 'Git UI', action = ':Git | only' },
+			{ icon = ' ', key = 'D', desc = 'Diff view', action = ':DiffviewOpen' },
 			{ icon = ' ', key = 'G', desc = 'Lazy Git', action = ':Lazygit' },
 			{ icon = '󰆼 ', key = 'd', desc = 'Database UI', action = ':ene | DBUI' },
 			{ icon = '󱃆 ', key = 'p', desc = 'List NOPUSH comments', action = ':TodoTelescope keywords=NOPUSH' },
