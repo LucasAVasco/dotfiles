@@ -1,0 +1,42 @@
+#!/bin/bash
+#
+# Populate cspell dictionary with additional words
+
+source ~/.local/lib/dotfiles/bash/strict.sh
+source ~/.local/lib/dotfiles/bash/help.sh
+source ~/.local/lib/dotfiles/bash/log.sh
+source ~/.local/lib/dotfiles/bash/dialog/dialog.sh
+
+help_handle y "$@" <<EOF
+	Populate cspell dictionary with additional words
+
+	Usage:
+		cspell-populate <dictionary> <cspell-args...>
+
+	Arguments:
+		<dictionary>     Path to cspell dictionary
+		<cspell-args...>      Additional arguments to pass to cspell. You must at least pass the paths to search for words
+
+	Examples:
+
+	# Populate cspell dictionary (~/words.txt) with words from the current directory
+	cspell-populate ~/words.txt .
+EOF
+
+# Arguments
+dictionary="$1"
+shift
+
+# Populate (append) dictionary with additional words
+log_info "Populating $dictionary"
+cspell --no-exit-code --words-only --unique "$@" | sort --ignore-case >> "$dictionary"
+
+# Preview
+pretty-preview "$dictionary"
+
+# Sort
+if [[ "$(dialog_ask_boolean "Sort dictionary?" n)" == y ]]; then
+	log_info "Sorting $dictionary"
+	sort --ignore-case "$dictionary" | uniq | sponge "$dictionary"
+	pretty-preview "$dictionary"
+fi
