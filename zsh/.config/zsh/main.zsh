@@ -1,13 +1,14 @@
+# Load profile if not already loaded
+if [[ "$PROFILE_ALREADY_SOURCED" != 'y' ]]; then
+	source ~/.profile
+fi
+
 # Configuration applied if running docker inside a container
-if [[ -f /.dockerenv ]]; then
-	source ~/.profile # Docker does not source .profile by default
-	export RUNNING_INSIDE_CONTAINER=y
+if [[ "$RUNNING_INSIDE_CONTAINER" = y ]]; then
 	export ALLOW_EXTERNAL_SOFTWARE=y
 
 	# Allows more colors
 	export TERM=xterm-256color
-else
-	export RUNNING_INSIDE_CONTAINER=n
 fi
 
 # Macro to indicate that the shell is interactive
