@@ -4,6 +4,10 @@
 # from the '~/.bash_profile' if you want to use it
 
 
+# Indicate that the profile was already sourced
+export PROFILE_ALREADY_SOURCED=y
+
+
 # Custom paths added to PATH variable
 export PATH="$PATH:$HOME/.local/bin:$HOME/.local/dotfiles_bin"
 
