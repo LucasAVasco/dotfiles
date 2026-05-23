@@ -56,3 +56,17 @@ dialog_ask_selection() {
 		dialog_rofi_ask_selection "$@"
 	fi
 }
+
+# Ask a file selection question to the user.
+#
+# $1: The question to ask.
+# $2: The file to start the search.
+#
+# Return the user response or an empty string if no option is selected.
+dialog_tui_ask_file() {
+	if [[ $__dialog_is_in_tty == 'y' ]]; then
+		dialog_tui_ask_file "$@"
+	else
+		dialog_rofi_ask_file "$@"
+	fi
+}

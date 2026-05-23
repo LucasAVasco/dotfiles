@@ -116,3 +116,13 @@ dialog_tui_ask_selection() {
 		printf '%s' "$response"
 	fi
 }
+
+# Ask a file selection question to the user.
+#
+# $1: The question to ask.
+# $2: The file to start the search.
+#
+# Return the user response or an empty string if no option is selected.
+dialog_tui_ask_file() {
+	file-chooser --tui --echo-on-abort '' --header "$1" -- "$2"
+}

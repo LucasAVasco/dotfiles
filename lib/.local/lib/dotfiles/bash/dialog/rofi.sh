@@ -35,3 +35,13 @@ dialog_rofi_ask_input() {
 dialog_rofi_ask_selection() {
 	~/.config/rofi/tools/dialog/select.sh "$@"
 }
+
+# Ask a file selection question to the user.
+#
+# $1: The question to ask.
+# $2: The file to start the search.
+#
+# Return the user response or an empty string if no option is selected.
+dialog_rofi_ask_file() {
+	file-chooser --gui --echo-on-abort '' --header "$1" -- "$2"
+}
