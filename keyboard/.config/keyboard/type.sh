@@ -48,10 +48,10 @@ linux_keyboard_sound_emulator_disable_until_end
 session_type=$(linux_session_get_type)
 
 case "$session_type" in
-	'xorg')
+	x11)
 		xdotool type -- "$@"
 		;;
-	'wayland')
+	wayland)
 		wtype -- "$@"
 		;;
 

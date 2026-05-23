@@ -42,7 +42,7 @@ exit_error_unknown_session_type() {
 # Show the available clipboards types. On Xorg, show `xclip` targets.
 show_clipboard_types() {
 	case "$session_type" in
-		xorg)
+		x11)
 			xclip -selection clipboard -target TARGETS -out | sed '/TARGETS/d'
 			;;
 
@@ -127,7 +127,7 @@ fi
 # Generates the clipboard type option
 if [[ -n "$clipboard_type" ]]; then
 	case $session_type in
-		xorg)
+		x11)
 			clipboard_type_option="-target $clipboard_type"
 			;;
 
@@ -148,7 +148,7 @@ fi
 
 # Pastes the content
 case "$session_type" in
-	xorg)
+	x11)
 		if [[ $output_to_file == y ]]; then
 			xclip -selection clipboard $clipboard_type_option -out > "$output_file"
 		else

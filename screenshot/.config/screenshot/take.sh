@@ -61,7 +61,7 @@ fi
 screenshot_cmd=()
 
 case $(linux_session_get_type) in
-	xorg)
+	x11)
 		screenshot_cmd=(maim)
 		if [[ $interactive == 'y' ]]; then
 			screenshot_cmd+=(-g "$(slop)")
@@ -79,7 +79,7 @@ case $(linux_session_get_type) in
 		;;
 
 	*)
-		echo "Unknown session type: '$(linux_session_get_type)'" >&2
+		echo "Unsupported session type: '$(linux_session_get_type)'" >&2
 		exit 1
 esac
 

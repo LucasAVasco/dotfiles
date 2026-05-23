@@ -32,7 +32,7 @@ reset_gammastep() {
 # Disable GammaStep if enabled.
 disable_gammastep() {
 	case $(linux_session_get_type) in
-		xorg)
+		x11)
 			# In Xorg, GammaStep is non-blocking. It just configures the temperature and exits
 			gammastep -x
 			;;
@@ -43,7 +43,7 @@ disable_gammastep() {
 			;;
 
 		*)
-			echo 'Unknown session type' >&2
+			echo 'Unsupported session type' >&2
 			exit 1
 			;;
 	esac
@@ -52,7 +52,7 @@ disable_gammastep() {
 # Enable GammaStep if disabled.
 enable_gammastep() {
 	case $(linux_session_get_type) in
-		xorg)
+		x11)
 			# In Xorg, GammaStep is non-blocking. It just configures the temperature and exits
 			gammastep -P -O "$warm"
 			;;
@@ -66,7 +66,7 @@ enable_gammastep() {
 			;;
 
 		*)
-			echo 'Unknown session type' >&2
+			echo 'Unsupported session type' >&2
 			exit 1
 			;;
 	esac
