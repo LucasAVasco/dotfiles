@@ -1,0 +1,20 @@
+#!/bin/bash
+#
+# Format all files with nvim and save them
+
+source ~/.local/lib/dotfiles/bash/strict.sh
+source ~/.local/lib/dotfiles/bash/help.sh
+
+help_handle y "$@" <<EOF
+	Format all files with nvim and save them
+
+	Usage:
+		nvim-format <files...>
+
+	Examples:
+
+	# Format all files that are tracked by git
+	nvim-format \$(git ls-files)
+EOF
+
+nvim --headless -c 'bufdo e' -c 'Formatter format all' -c 'bufdo update' -c 'qa' "$@"
