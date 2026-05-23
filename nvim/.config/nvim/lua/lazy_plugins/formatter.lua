@@ -26,8 +26,7 @@ return {
 			'ConformInfo',
 
 			-- My commands (not a `conform.nvim` default)
-			'ConformFormat',
-			'ConformAutoFormat',
+			'Formatter',
 		},
 
 		keys = {
@@ -74,37 +73,58 @@ return {
 			opts.formatters_by_ft = settings.filetype2formatter
 
 			-- Setup
-			require('conform').setup(vim.tbl_deep_extend('force', opts, vim.g.conform_opts or {}))
+			local conform = require('conform')
+			conform.setup(vim.tbl_deep_extend('force', opts, vim.g.conform_opts or {}))
 
-			-- User commands {{{
+			MYFUNC.create_user_command_from_handler('Formatter', {
+				info = 'ConformInfo',
 
-			vim.api.nvim_create_user_command('ConformFormat', function()
-				require('conform').format()
-			end, {
+				format = {
+					function(...)
+						VALIDATE.no_args({ ... })
+
+						conform.format()
+					end,
+
+					all = function(...)
+						VALIDATE.no_args({ ... })
+
+						for _, buffer in ipairs(vim.api.nvim_list_bufs()) do
+							local buffer_options = vim.bo[buffer]
+							if vim.api.nvim_buf_is_valid(buffer) and buffer_options.buftype == '' and buffer_options.modifiable then
+								conform.format({ bufnr = buffer })
+							end
+						end
+					end,
+				},
+
+				auto = {
+					function(arg, ...)
+						VALIDATE.no_args({ ... })
+
+						if arg == 'enable' then
+							autoformat_disabled = false
+						elseif arg == 'disable' then
+							autoformat_disabled = true
+						elseif arg == 'toggle' then
+							autoformat_disabled = not autoformat_disabled
+						else
+							VALIDATE.fail(('error: wrong argument: %s'):format(arg))
+						end
+					end,
+				},
+			}, {
+				nargs = '+',
 				range = true,
+				bar = true,
+				complete = {
+					auto = {
+						'enable',
+						'disable',
+						'toggle',
+					},
+				},
 			})
-
-			vim.api.nvim_create_user_command('ConformAutoFormat', function(arguments)
-				local arg = arguments.fargs[1]
-				if arg == 'enable' then
-					autoformat_disabled = false
-				elseif arg == 'disable' then
-					autoformat_disabled = true
-				elseif arg == 'toggle' then
-					autoformat_disabled = not autoformat_disabled
-				else
-					vim.notify(('Error: wrong argument: %s'):format(arg), vim.log.levels.ERROR)
-				end
-			end, {
-				nargs = 1,
-				complete = MYFUNC.create_complete_function({
-					'enable',
-					'disable',
-					'toggle',
-				}),
-			})
-
-			-- }}}
 
 			-- Automatically installs the formatter with `mason.nvim` {{{
 
