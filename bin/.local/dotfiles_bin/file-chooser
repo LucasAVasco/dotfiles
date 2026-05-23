@@ -12,21 +12,29 @@ help_handle n "$@" << EOF
 	Navigates to the file or folder with 'Tab'. Use 'Shift-Tab' to navigate up a directory. Press 'Enter' to accept the selection and return
 	the path.
 
-	USAGE
+	Usage:
+		file-chooser [flags...] [--] [starting_directory]
+			Run the script with the optional 'starting_directory' as the starting directory. Use the current directory if not specified.
 
-	file-chooser [--pwd-on-abort] [--] [starting_directory]
-		Run the script with the optional 'starting_directory' as the starting directory. The '--pwd-on-abort' option will print the current
-		directory on abort.
+	Flags:
+		--pwd-on-abort            Print the current directory on abort instead of exiting with an error
+		--echo-on-abort <text>    Print <text> on abort instead of exiting with an error
+		--only-dirs               Only list directories.
+		--header <text>           Set the header text.
 
-	file-chooser [--echo-on-abort <text>] [--] [starting_directory]
-		Run the script with the optional 'starting_directory' as the starting directory. The '--echo-on-abort' option will print the <text>
-		if the user aborts.
+	Arguments:
+		<starting_directory>   The starting directory. Use the current directory if not specified.
+
+	Notes:
+
+	You can not provide both the '--echo-on-abort' and '--pwd-on-abort' options. The '--pwd-on-abort' option will take precedence.
 EOF
 
 # Command line arguments
 pwd_on_abort=n
 echo_on_abort=''
 only_dirs=n
+header='Current directory'
 while [[ "$#" -gt 0 ]]; do
 	case "$1" in
 		--echo-on-abort)
@@ -42,6 +50,11 @@ while [[ "$#" -gt 0 ]]; do
 		--only-dirs)
 			only_dirs=y
 			shift
+			;;
+
+		--header)
+			header="$2"
+			shift 2
 			;;
 
 		--)
@@ -79,7 +92,7 @@ while true; do
 	# `Enter` to select the file or folder (this script will return it).
 	# `Alt-Enter` to select the current folder (this script will return the current directory).
 	file=$(list_files_current_dir "$only_dirs" \
-		| fzf --ansi --header "Current directory: $(pwd)" \
+		| fzf --ansi --header "${header}: $(pwd)" \
 		--bind tab:accept-or-print-query --bind 'btab:become(echo -n ..)' \
 		--bind 'enter:print(-)+accept-or-print-query' \
 		--bind 'alt-enter:+become(echo -ne "-\n.")') \
