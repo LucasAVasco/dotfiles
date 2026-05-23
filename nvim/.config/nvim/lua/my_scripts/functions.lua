@@ -560,11 +560,16 @@ function MYFUNC.get_complete_suggestions(current_arg_lead, entire_command, curso
 		completions = arguments_table
 	end
 
+	-- Must be a table to continue after this point
+	if type(completions) ~= 'table' then
+		return {}
+	end
+
 	-- Formats the completions to be returned as a list of strings
 	local index = 1
 	local response = {} -- Formatted completions
 	for key, value in pairs(completions or {}) do
-		if type(value) == 'table' then
+		if type(key) == 'string' then
 			response[index] = key
 		else
 			response[index] = value
@@ -611,6 +616,83 @@ function MYFUNC.get_fargs_handler(fargs, map_cmd_to_handler)
 	end
 
 	return MYFUNC.pattern_map_get(args, map)
+end
+
+---@alias my_scripts.CommandHandler fun(...:string): string? | string A function that returns an error or nil. Or a vim command to execute
+
+---@class my_scripts.CommandHandlerMap Maps each 'farg' to the next command handler in the tree
+---@field [integer] my_scripts.CommandHandler Only the first element is used
+---@field [string] my_scripts.CommandHandlerMap|my_scripts.CommandHandler
+
+---Handle the 'fargs' of a command. Iterate over the tree based on the current 'fargs' until find a command handler. Execute this handler
+---with the remaining arguments.
+---
+---Examples:
+---```lua
+----- Executes 'command_handler' vim command
+---MYFUNC.handle_fargs({ 'a', 'b', 'c' }, { a = { b = { c = 'command_handler' } } })
+---MYFUNC.handle_fargs({ 'a', 'b', 'c' }, { a = { b = { c = { 'command_handler' } } } })
+---
+----- Executes the function and pass the remaining arguments to it (unpack them in the function arguments)
+---MYFUNC.handle_fargs({ 'a', 'b', 'c' }, { a = { b = { c = { function(arg1, arg2,...)end } } } })
+---
+----- Similar to the previous example, but executes the 'd' function (prints 'd'). The other function will only be called if the user
+---provide other argument than 'd' in the 'fargs'
+---MYFUNC.handle_fargs({ 'a', 'b', 'c', 'd' }, { a = { b = { c = { function()end, d=function()vim.print('d')end } } } })
+--- ```
+---@param fargs string[] Arguments of the command
+---@param handler_tree my_scripts.CommandHandlerMap|my_scripts.CommandHandler Map with the command handlers
+---@return string? err_message Error message
+function MYFUNC.handle_fargs(fargs, handler_tree)
+	local remaining_args = vim.deepcopy(fargs) -- This function changes the table, so we need to make a copy
+
+	local current_element = handler_tree
+	while type(current_element) == 'table' and #remaining_args > 0 do
+		local next_element = current_element[remaining_args[1]]
+		if type(next_element) == 'nil' then
+			break
+		end
+
+		table.remove(remaining_args, 1)
+		current_element = next_element
+	end
+
+	if type(current_element) == 'table' then
+		current_element = current_element[1]
+	end
+
+	if type(current_element) == 'string' then
+		vim.cmd({ cmd = current_element, args = remaining_args })
+	elseif type(current_element) == 'function' then
+		current_element(unpack(remaining_args))
+	else
+		local err_message = 'Unknown command: ' .. table.concat(fargs, ' ')
+		vim.notify(err_message, vim.log.levels.ERROR)
+		return err_message
+	end
+end
+
+---Create a user command from a command handler tree
+---@param command_name string
+---@param handler_tree my_scripts.CommandHandlerMap|my_scripts.CommandHandler
+---@param opts? vim.api.keyset.user_command Consumed on use
+function MYFUNC.create_user_command_from_handler(command_name, handler_tree, opts)
+	opts = opts or {}
+	opts.complete = opts.complete or {}
+
+	-- Extend the complete function with the user handler tree
+	if type(handler_tree) == 'table' and type(opts.complete) == 'table' then
+		local complete = vim.tbl_deep_extend('keep', opts.complete, handler_tree)
+		opts.complete = MYFUNC.create_complete_function(complete)
+	end
+
+	-- Create the user command
+	vim.api.nvim_create_user_command(command_name, function(args)
+		local err = MYFUNC.handle_fargs(args.fargs, handler_tree)
+		if err ~= nil then
+			vim.notify(err, vim.log.levels.ERROR)
+		end
+	end, opts)
 end
 
 -- #endregion
