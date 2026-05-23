@@ -6,7 +6,7 @@ command! defaultopen : if system($HOME . '/.config/vifm/internal/scripts/try-ope
 
 " Select a directory interactively and `cd` to it
 " The 'echo' is used to reset the cursor shape. Otherwise, it will be a block after this command.
-command! filechooser : execute 'cd' fnameescape(system('file-chooser --only-dirs --echo-on-abort %"d'))
+command! filechooser : execute 'cd' fnameescape(system('file-chooser --tui --only-dirs --echo-on-abort %"d'))
 	\| !echo -ne ""
 
 " Change to directory with Zoxide.
