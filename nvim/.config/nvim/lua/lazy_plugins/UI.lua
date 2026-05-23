@@ -22,7 +22,11 @@ return {
 				backend = 'cmp',
 			},
 			lsp = {
-				override = {}, -- Will be fulfilled in the configuration function
+				override = {
+					['cmp.entry.get_documentation'] = true,
+					['vim.lsp.util.convert_input_to_markdown_lines'] = true,
+					['vim.lsp.util.stylize_markdown'] = true,
+				},
 			},
 			presets = {
 				lsp_doc_border = true,
@@ -36,28 +40,14 @@ return {
 			},
 		},
 
-		config = function(plugin, opts)
-			-- Name of the module to load. I do not hard-coded it because `typos_ls` is showing some warnings
-			local plugin_main = plugin.name:sub(1, plugin.name:find('.', 1, true) - 1)
-			local nc_lsp = require(plugin_main .. '.lsp')
+		config = function(_, opts)
+			require('noice').setup(opts)
 
-			-- Enables all LSP overrides
-			local lsp_overrides = {
-				'cmp.entry.get_documentation',
-				'vim.lsp.util.convert_input_to_markdown_lines',
-				'vim.lsp.util.stylize_markdown',
-			}
-
-			for _, override in pairs(lsp_overrides) do
-				opts.lsp.override[override] = true
-			end
-
-			-- Setup
-			require(plugin_main).setup(opts)
-
-			MYPLUGFUNC.load_telescope_extension(plugin_main, { plugin_main })
+			MYPLUGFUNC.load_telescope_extension('noice', { 'noice' })
 
 			-- Keymaps
+
+			local noice_lsp = require('noice.lsp')
 
 			---Add a key map to scroll in the hover and signature popups.
 			---If there are not a popup to scroll, execute the normal command '<C-key>' and centralize vertically the cursor in the screen
@@ -68,7 +58,7 @@ return {
 
 				vim.keymap.set({ 'n', 'v', 'i' }, '<A-' .. key .. '>', function()
 					-- Applies the scroll operation and ends
-					if nc_lsp.scroll(scroll_amount) then
+					if noice_lsp.scroll(scroll_amount) then
 						return
 					end
 
