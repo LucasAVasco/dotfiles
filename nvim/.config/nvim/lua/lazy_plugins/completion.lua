@@ -191,7 +191,7 @@ return {
 					return current_dir:find(top_dir, 1, true) ~= nil
 				end
 
-				return current_dir_is_inside_folder(MYPATHS.config)
+				return current_dir_is_inside_folder(MYPATHS.config_folder_rel_to_home)
 					or current_dir_is_inside_folder(MYPATHS.data)
 					or current_dir_is_inside_folder(MYPATHS.dev)
 					or current_dir_is_inside_folder('.nvim-proj')

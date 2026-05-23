@@ -2,13 +2,15 @@ local data = vim.fn.stdpath('data') --[[@as string]]
 
 ---@type string
 local home = vim.env.HOME
-local config = home .. '/.config/nvim/'
+local config_folder_rel_to_home = '.config/nvim/'
+local config = home .. '/' .. config_folder_rel_to_home
 local config_lua = config .. '/lua/'
 local mason = data .. '/mason/'
 
 MYPATHS = {
 	home = home,
 	config = config,
+	config_folder_rel_to_home = config_folder_rel_to_home,
 	dev = home .. '/Repositories/neovim_repos/', -- Development folder (used to load plugins in 'dev' mode)
 	org = home .. '/Org', -- Organization related data (notes, agenda, etc)
 	data = data,
