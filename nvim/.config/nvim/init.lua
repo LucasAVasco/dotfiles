@@ -11,6 +11,7 @@ load_script('paths') -- Should be loaded first
 load_script('vars')
 load_script('functions')
 load_script('function_keys')
+load_script('validate')
 
 -- Configuration
 load_script('setup') -- Add a function and command to run custom setup (need to be load to use them)
