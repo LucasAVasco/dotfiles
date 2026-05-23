@@ -1,5 +1,5 @@
 ---@type table<string, string[]|"*"> Relates the LSP server name with its filetypes
-MYPLUGVAR.lspFileTypes = {}
+MYPLUGVAR.lsp_filetypes = {}
 
 return {
 	{
@@ -79,7 +79,7 @@ return {
 				end
 
 				-- Overrides file-types
-				local filetypes = MYPLUGVAR.lspFileTypes[lsp_server_name]
+				local filetypes = MYPLUGVAR.lsp_filetypes[lsp_server_name]
 				if type(filetypes) == 'table' then
 					server_opts.filetypes = filetypes
 				end
@@ -120,8 +120,10 @@ return {
 					filetypes = lsp_filetypes_overrides[lsp_server_name]
 				end
 
-				MYPLUGVAR.lspFileTypes[lsp_server_name] = filetypes
+				-- Maps the LSP server to the file types
+				MYPLUGVAR.lsp_filetypes[lsp_server_name] = filetypes
 
+				-- Automatically starts the LSP server for the file types
 				vim.api.nvim_create_autocmd('FileType', {
 					pattern = filetypes,
 					callback = function()
@@ -175,7 +177,7 @@ return {
 				vim.api.nvim_buf_set_lines(popup.bufnr, 0, 0, true, { '-- LSP servers and its file types' })
 
 				-- body (LSP servers and its file types)
-				local lines = MYFUNC.str_split(vim.inspect(MYPLUGVAR.lspFileTypes), '\n')
+				local lines = MYFUNC.str_split(vim.inspect(MYPLUGVAR.lsp_filetypes), '\n')
 				vim.api.nvim_buf_set_lines(popup.bufnr, 2, -1, true, lines)
 
 				popup:mount()
