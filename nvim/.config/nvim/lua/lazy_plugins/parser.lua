@@ -197,25 +197,53 @@ return {
 				end,
 			})
 
-			-- User command to edit a Tree-sitter query file in a project runtime directory
-			vim.api.nvim_create_user_command('TSEditQueryRtd', function(arguments)
-				local query_name = arguments.fargs[1]
-				local query_folder = 'queries/' .. vim.bo.filetype .. '/'
+			-- User commands
 
-				require('project_runtime_dirs.api.project.enabled_rtd').select_by_name(function(rtd)
-					rtd:edit(query_folder .. query_name .. '.scm', true)
+			local complete_function = MYFUNC.create_complete_function({
+				'folds',
+				'highlights',
+				'indents',
+				'injections',
+				'locals',
+				'matchup',
+			})
+
+			---Get the sub path of the tree-sitter query file of the current buffer
+			---@param buffer integer
+			---@param query_name string
+			---@return string sub_path Matches the following format 'queries/{lang}/{query_name}.scm'
+			local function get_buffer_query_sub_path(buffer, query_name)
+				local lang = vim.treesitter.language.get_lang(vim.bo[buffer].filetype)
+
+				return 'queries/' .. lang .. '/' .. query_name .. '.scm'
+			end
+
+			vim.api.nvim_create_user_command('TSEditQueryConfig', function(args)
+				vim.cmd.edit({ args = { MYPATHS.config .. get_buffer_query_sub_path(0, args.fargs[1]) } })
+			end, {
+				desc = 'Edit a Tree-sitter query file at configuration directory',
+				nargs = 1,
+				complete = complete_function,
+			})
+
+			vim.api.nvim_create_user_command('TSEditQueryRtd', function(arguments)
+				local sub_path = get_buffer_query_sub_path(0, arguments.fargs[1])
+
+				local enabled_rtd = require('project_runtime_dirs.api.project.enabled_rtd')
+				if #enabled_rtd.get_all() == 0 then
+					vim.notify('No runtime directories enabled', vim.log.levels.WARN, { title = 'Tree-sitter' })
+					return
+				end
+
+				enabled_rtd.select_by_name(function(rtd)
+					if rtd ~= nil then
+						rtd:edit(sub_path, true)
+					end
 				end)
 			end, {
 				desc = 'Edit a Tree-sitter query file in a project runtime directory',
 				nargs = 1,
-				complete = MYFUNC.create_complete_function({
-					'folds',
-					'highlights',
-					'indents',
-					'injections',
-					'locals',
-					'matchup',
-				}),
+				complete = complete_function,
 			})
 		end,
 	},
