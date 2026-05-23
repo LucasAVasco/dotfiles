@@ -4,11 +4,13 @@
 
 # Return the current session type.
 #
-# Returns: 'xorg' or 'wayland'
+# Returns: 'xorg', 'wayland', 'tty' or '' (if can not be determined).
 linux_session_get_type() {
-	if [[ -z "$WAYLAND_DISPLAY" ]]; then
-		echo 'xorg'
+	if [[ -n "${WAYLAND_DISPLAY:-}" ]]; then
+		echo -n 'wayland'
+	elif [[ -n "${DISPLAY:-}" ]]; then
+		echo -n 'xorg'
 	else
-		echo 'wayland'
+		echo -n "${XDG_SESSION_TYPE:-}"
 	fi
 }
