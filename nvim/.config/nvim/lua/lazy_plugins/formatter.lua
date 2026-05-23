@@ -70,7 +70,8 @@ return {
 		---@param _ string
 		---@param opts conform.setupOpts
 		config = function(_, opts)
-			opts.formatters_by_ft = require('my_configs.formatter.settings').filetype2formatter
+			local settings = require('my_configs.formatter.settings')
+			opts.formatters_by_ft = settings.filetype2formatter
 
 			-- Setup
 			require('conform').setup(vim.tbl_deep_extend('force', opts, vim.g.conform_opts or {}))
@@ -138,7 +139,7 @@ return {
 						if type(mason_name) ~= 'number' then
 							if mason_reg.has_package(mason_name) then
 								MYPLUGFUNC.ensure_mason_package_installed(mason_name)
-							else
+							elseif not vim.tbl_contains(settings.no_notify_if_can_not_install, mason_name) then
 								vim.notify(
 									('The formatter "%s" can not be installed with `mason.nvim`'):format(mason_name),
 									vim.log.levels.WARN

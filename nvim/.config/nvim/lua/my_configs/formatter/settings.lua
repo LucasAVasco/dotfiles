@@ -1,6 +1,5 @@
----@class myconfig.formatter.settings
----@field filetype2formatter table<string, string[]> Map each file-type to a list of available code-formatters.
 local Config = {
+	---@type table<string, string[]> Map each file-type to a list of available code-formatters.
 	filetype2formatter = {
 		lua = { 'stylua' },
 		yaml = { 'prettier' },
@@ -17,6 +16,12 @@ local Config = {
 		cpp = { 'clang-format' },
 		rust = { 'rustfmt' },
 		cmake = { 'cmake_format' },
+	},
+
+	---@type string[] List of code formatters that should not notify the user if they can not be installed automatically with 'mason.nvim'
+	no_notify_if_can_not_install = {
+		'gofmt',
+		'rustfmt',
 	},
 }
 
