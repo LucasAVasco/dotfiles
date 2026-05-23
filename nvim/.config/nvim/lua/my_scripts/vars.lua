@@ -62,3 +62,13 @@ MYVAR.snippets = {
 		},
 	},
 }
+
+MYVAR.formatter = {
+	---List of functions that return `true` if the file should not be formatted or `false` otherwise
+	---@type (fun(buffer_number: number): boolean)[]
+	check_disabled = {},
+
+	---List of filetypes that should not be formatted
+	---@type string[]
+	disabled_filetypes = {},
+}

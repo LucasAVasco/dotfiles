@@ -56,12 +56,25 @@ return {
 			---@param buffer_number number Number of the buffer to format
 			---@return conform.FormatOpts format_opts Options passed to the `format()` function
 			format_after_save = function(buffer_number)
-				-- Auto-format disabled
+				-- Check if should not format
 				if autoformat_disabled then
 					return
 				end
 
-				-- Auto-format
+				local buffer_filetype = vim.bo[buffer_number].filetype
+				for _, filetype in ipairs(MYVAR.formatter.disabled_filetypes) do
+					if filetype == buffer_filetype then
+						return
+					end
+				end
+
+				for _, check_func in ipairs(MYVAR.formatter.check_disabled) do
+					if check_func(buffer_number) then
+						return
+					end
+				end
+
+				-- Format
 				return { async = true, lsp_format = 'fallback' }
 			end,
 		},
