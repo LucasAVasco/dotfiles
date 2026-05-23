@@ -1,0 +1,5 @@
+% cspell
+
+
+# Check all files in current directory
+cspell lint .
