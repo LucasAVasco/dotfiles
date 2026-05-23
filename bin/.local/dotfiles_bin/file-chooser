@@ -5,9 +5,10 @@
 set -e
 
 source ~/.local/lib/dotfiles/bash/help.sh
+source ~/.local/lib/dotfiles/bash/linux/session.sh
 
 help_handle n "$@" << EOF
-	Interactively select a file or folder with fzf.
+	Interactively select a file or folder with fzf or Rofi.
 
 	Navigates to the file or folder with 'Tab'. Use 'Shift-Tab' to navigate up a directory. Press 'Enter' to accept the selection and return
 	the path.
@@ -21,6 +22,8 @@ help_handle n "$@" << EOF
 		--echo-on-abort <text>    Print <text> on abort instead of exiting with an error
 		--only-dirs               Only list directories.
 		--header <text>           Set the header text.
+		---tui                    Force use of the TUI instead of the GUI.
+		---gui                    Force use of the GUI instead of the TUI.
 
 	Arguments:
 		<starting_directory>   The starting directory. Use the current directory if not specified.
@@ -35,6 +38,17 @@ pwd_on_abort=n
 echo_on_abort=''
 only_dirs=n
 header='Current directory'
+use_tui=''
+case "$(linux_session_get_type)" in
+	'tty')
+		use_tui=y
+		;;
+
+	*)
+		use_tui="${INTERACTIVE_SHELL:-n}"
+		;;
+esac
+
 while [[ "$#" -gt 0 ]]; do
 	case "$1" in
 		--echo-on-abort)
@@ -57,6 +71,16 @@ while [[ "$#" -gt 0 ]]; do
 			shift 2
 			;;
 
+		--tui)
+			use_tui=y
+			shift
+			;;
+
+		--gui)
+			use_tui=n
+			shift
+			;;
+
 		--)
 			shift
 			break
@@ -76,44 +100,61 @@ fi
 # List the current directory contents with colors.
 #
 # $1: If only directories should be listed. Accepts 'y' or 'n'.
+# $2: Output colors. Accepts 'y' or 'n'.
 list_files_current_dir() {
+	local args=(-A -1 -d)
+	if [[ "$2" == y ]]; then
+		args+=(--color=always )
+	fi
+
 	if [[ "$1" == y ]]; then
-		ls --color=always -A -1 -d .*/ */ 2>/dev/null
+		ls "${args[@]}" .*/ */ 2>/dev/null
 	else
-		ls --color=always -A -1 -d .* * 2>/dev/null
+		ls "${args[@]}" .* * 2>/dev/null
 	fi
 }
 
 # Select a file
 while true; do
-	# When selecting a file, fzf will return '-\n<selected-file>'. The first line will be a minus ('-') indicating that the user selected a
-	# file/folder and the second line will be the selected file/folder.
-	# `Tab` to enter into current directory, `Shift-Tab` to navigate up a directory.
-	# `Enter` to select the file or folder (this script will return it).
-	# `Alt-Enter` to select the current folder (this script will return the current directory).
-	file=$(list_files_current_dir "$only_dirs" \
-		| fzf --ansi --header "${header}: $(pwd)" \
-		--bind tab:accept-or-print-query --bind 'btab:become(echo -n ..)' \
-		--bind 'enter:print(-)+accept-or-print-query' \
-		--bind 'alt-enter:+become(echo -ne "-\n.")') \
-		|| break
+	if [[ "$use_tui" == y ]]; then
+		# When selecting a file, fzf will return '-\n<selected-file>'. The first line will be a minus ('-') indicating that the user selected a
+		# file/folder and the second line will be the selected file/folder.
+		# `Tab` to enter into current directory, `Shift-Tab` to navigate up a directory.
+		# `Enter` to select the file or folder (this script will return it).
+		# `Alt-Enter` to select the current folder (this script will return the current directory).
+		file=$(list_files_current_dir "$only_dirs" y \
+			| fzf --ansi --header "${header}: $(pwd)" \
+			--bind tab:accept-or-print-query --bind 'btab:become(echo -n ..)' \
+			--bind 'enter:print(-)+accept-or-print-query' \
+			--bind 'alt-enter:+become(echo -ne "-\n.")') \
+			|| break
+	else
+		# When selecting the '-' option, this script will ends and return the current directory
+		file=$({ echo -e "-\n.."; list_files_current_dir "$only_dirs" n; } \
+			| rofi -theme ~/.config/rofi/themes/my-theme-dense.rasi -theme-str "listview { columns: 3;}" \
+			-dmenu -i -p "${header}: $(pwd)")
+	fi
 
 	# Pressed enter. The user selected the final file or directory
-	if [[ $(echo "$file" | wc -l) -gt 1 ]]; then
-		file="$(echo -n "$file" | sed -n 2p)" # Gets the second line
+	if [[ $(printf '%s' "$file" | sed -n 1p) == '-' ]]; then
+		file="$(printf "%s' '$file" | sed -n 2p)" # Gets the second line
 
 		if [[ "$file" == '.' ]]; then
-			echo "$PWD"
+			printf '%s' "$PWD"
 		elif [[ "$file" == '..' ]]; then
-			echo $(dirname "$PWD")
+			printf '%s' "$(dirname "$PWD")"
 		else
-			echo "$PWD/$file"
+			printf '%s' "$PWD/$file"
 		fi
 		exit 0
 
-	# Pressed tab or shift-tab. The user selected a file or directory
 	elif [[ -d "$file" ]]; then
 		cd "$file"
+
+	# Returns the selected file
+	elif [[ -f "$file" ]]; then
+		printf '%s' "$file"
+		exit 0
 	fi
 done
 
