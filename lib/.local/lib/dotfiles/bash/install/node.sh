@@ -4,14 +4,14 @@
 
 # Install a binary from a NPM package
 #
-# $1: NPM package.
+# $@: NPM packages and `pnpm install` options
 install_node_install_package() {
-	pnpm install -g "$1"
+	pnpm install -g "$@"
 }
 
 # Remove a binary installed with a NPM package.
 #
-# $1: NPM package.
+# $@: NPM packages and `pnpm uninstall` options
 install_node_remove_package() {
-	pnpm uninstall -g "$1"
+	pnpm uninstall -g "$@"
 }
