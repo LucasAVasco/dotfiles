@@ -7,10 +7,13 @@
 # Usage:
 # ./shell-color-script <arguments passed to shell-color-scripts>
 
-repo_path=~/.local/share/shell-color-script/
+source ~/.local/lib/dotfiles/bash/strict.sh
 
-if [[ ! -d "${repo_path}" ]]; then
-	git clone --depth 1 https://gitlab.com/dwt1/shell-color-scripts.git "$repo_path"
+repo_path=~/.local/share/shell-color-script
+
+if [[ ! -f "${repo_path}/colorscript.sh" ]]; then
+	mkdir -p "$repo_path"
+	git clone --depth 1 https://gitlab.com/dwt1/shell-color-scripts.git "$repo_path" > /dev/null 2>&1
 fi
 
 cd "$repo_path"
