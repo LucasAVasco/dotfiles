@@ -5,6 +5,8 @@
 # Does not run this script if the user can not install external software
 [ "$ALLOW_EXTERNAL_SOFTWARE" != 'y' ] && exit
 
+# The container uses the fount of the host, so there is no need to run this script
+[ "$RUNNING_INSIDE_CONTAINER" == 'y' ] && exit
 
 nerdfonts_version=v3.4.0             # Version of the fonts from Nerd Fonts
 google_emoji_version=v2.047          # Version of the Google's Emoji Fonts
