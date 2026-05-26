@@ -21,15 +21,16 @@ vim.api.nvim_create_autocmd('ColorScheme', {
 
 -- Load the last selected color-scheme
 local file = io.open(file_path, 'r')
+local colorscheme = 'kanagawa'
 if file ~= nil then
-	local colorscheme = file:read('*a')
+	colorscheme = file:read('*a')
 	file:close()
+end
 
-	-- Color scheme update
+-- Color scheme update
 
-	local success, result = pcall(vim.cmd.colorscheme, colorscheme)
+local success, result = pcall(vim.cmd.colorscheme, colorscheme)
 
-	if not success then
-		vim.notify(('Can not load the color scheme: %s. Result: %s'):format(colorscheme, vim.inspect(result)), vim.log.levels.ERROR)
-	end
+if not success then
+	vim.notify(('Can not load the color scheme: %s. Result: %s'):format(colorscheme, vim.inspect(result)), vim.log.levels.ERROR)
 end
