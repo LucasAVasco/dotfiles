@@ -11,6 +11,13 @@ set -e
 
 source ~/.local/lib/dotfiles/bash/linux/session.sh
 
+# Lock the execution of this script
+exec 9>"/tmp/$USER-update-workspace-screen-temp.lock"
+if ! flock -n 9; then
+	echo 'update-workspace-screen-temp.sh is already running' >&2
+	exit 0
+fi
+
 # Command line arguments
 if [[ "$1" == '-r' ]]; then
 	reset_screen_temp=y
@@ -24,7 +31,7 @@ warm="${WARM_TEMPERATURE:-3000}"
 # Reset GammaStep and the screen temperature.
 reset_gammastep() {
 	pkill-wait -u "$USER" -f '^gammastep ' || true # Must not start a new instance if already running
-	gammastep -x & # Reset
+	gammastep -x 9>&- & # Reset
 	sleep 0.1
 	pkill-wait -u "$USER" -f '^gammastep ' || true
 }
@@ -62,7 +69,7 @@ enable_gammastep() {
 			# INFO(LucasAVasco): must not start a new instance if already running. Otherwise, GammaStep will not release the resources and
 			# you will not be able to change the color temperature until stop the compositor and restart it
 			pgrep -u "$USER" -f '^gammastep ' > /dev/null 2>&1 || \
-				gammastep -P -O "$warm" & disown
+				run-detached gammastep -P -O "$warm" 9>&-
 			;;
 
 		*)
