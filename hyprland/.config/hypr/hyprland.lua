@@ -11,12 +11,11 @@ local function rgba(r, g, b, a)
 	return "rgba(" .. r .. "," .. g .. "," .. b .. "," .. a .. ")"
 end
 
---- Initialization scripts {{{
+-- Initialization scripts {{{
 
 hl.on("hyprland.start", function()
 	hl.exec_cmd("~/.config/hypr/init.sh")
 	hl.exec_cmd("hyprpaper")
-	hl.exec_cmd("~/.config/hypr/gammastep.sh")
 end)
 
 --- }}}
@@ -82,6 +81,30 @@ hl.window_rule({
 	match = { workspace = "w[t1]" },
 	border_size = 0,
 })
+
+-- }}}
+
+-- Events and callbacks {{{
+
+---Update workspace screen temperature on workspace switch
+---@param workspace HL.Workspace
+hl.on("workspace.active", function(workspace)
+	if workspace == nil then
+		return
+	end
+
+	hl.exec_cmd("~/.config/monitor/update-workspace-screen-temp.sh " .. workspace.name)
+end)
+
+---Reset workspace screen temperature when the user switches from another tty
+hl.on("monitor.layout_changed", function()
+	local workspace = hl.get_active_workspace()
+	if workspace == nil then
+		return
+	end
+
+	hl.exec_cmd("~/.config/monitor/update-workspace-screen-temp.sh -r " .. workspace.name)
+end)
 
 -- }}}
 
