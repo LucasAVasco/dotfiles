@@ -8,6 +8,7 @@
 # $2..n: options passed to `cargo install`.
 install_rust_install_package() {
 	cargo install "$@"
+	mise reshim
 }
 
 # Remove a package installed with the Cargo registry.
@@ -15,4 +16,5 @@ install_rust_install_package() {
 # $1: package name.
 install_rust_remove_package() {
 	cargo uninstall "$1"
+	mise reshim
 }
