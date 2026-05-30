@@ -7,15 +7,15 @@ vim.loop = vim.loop or uv
 _G.MYFUNC = {}
 _G.MYPLUGFUNC = {} -- For plugins
 
--- #region Utility functions
+-- Utility functions {{{
 
 --- Recursively set a value in a table.
 --- This function works like `vim.tbl_get`, but sets the value instead of getting it.
 ---
 --- The key may be a string that each inner element is separated by a dot, or a table that each inner element is a element of the table.
 ---
---- E.g. If you run: `MYFUNC.tbl_set({a = {b = {c = 1}}}, {'a', 'b', 'c'}, 2)` or `MYFUNC.tbl_set({a = {b = {c = 1}}}, 'a.b.c', 2)`,
---- `tbl` will be `{a = {b = {c = 2}}}`.
+--- E.g. If you run: `MYFUNC.tbl_set({a = {b = {c = 1} } }, {'a', 'b', 'c'}, 2)` or `MYFUNC.tbl_set({a = {b = {c = 1} } }, 'a.b.c', 2)`,
+--- `tbl` will be `{a = {b = {c = 2} } }`.
 ---@param tbl table Table where the value will be set.
 ---@param key string|string[] Key that will be set.
 ---@param value any Value that will be set.
@@ -297,9 +297,9 @@ function MYFUNC.get_last_selection_lines(buffer_number)
 		{}
 	)
 end
--- #endregion
+-- }}}
 
--- #region File management functions
+-- File management functions {{{
 
 ---Return `true` if the file exists (is readable) and `false` otherwise.
 ---@param path string
@@ -346,9 +346,9 @@ function MYFUNC.get_current_line_char(col_offset)
 	return vim.api.nvim_get_current_line():sub(col, col)
 end
 
--- #endregion
+-- }}}
 
--- #region Functions related to `ftplugin`
+-- Functions related to `ftplugin` {{{
 
 ---You should use this function only into configurations at 'ftplugin' directory.
 ---
@@ -377,9 +377,9 @@ function MYFUNC.call_if_before_editor_config(func)
 	end
 end
 
--- #endregion
+-- }}}
 
--- #region Decorators to call vim functions
+-- Decorators to call vim functions {{{
 
 --- Decorator that returns a Lua function that runs the provided vim function.
 --- If you pass more than one argument, the others will be used as the parameters of the provided vim function.
@@ -404,9 +404,9 @@ function MYFUNC.decorator_call_function(func, args)
 	end
 end
 
--- #endregion
+-- }}}
 
--- #region functions to manage colors
+-- functions to manage colors {{{
 
 --- Converts an decimal number to a hexadecimal form to be used as an color.
 --- E.g. '1234567' is converted to '#12d687'.
@@ -452,9 +452,9 @@ function MYFUNC.normalize_rgb(integer_value, sum_each_color)
 	return hex_value
 end
 
--- #endregion
+-- }}}
 
--- #region Functions to manage Highlight groups
+-- Functions to manage Highlight groups {{{
 
 --- Get the definition of a highlight group (pass through the links to the original highlight group)
 ---@param hl_group_name string Name of the highlight group
@@ -522,9 +522,9 @@ function MYFUNC.user_can_change_appearance(window_id, buffer_nr)
 	return true
 end
 
--- #endregion
+-- }}}
 
--- #region Functions related to `nvim_create_user_command`
+-- Functions related to `nvim_create_user_command` {{{
 
 --- Return a list with the possible completions for a command.
 --- You need to provide a table with the arguments configuration. If the item is a string, its content is a possible completion. If it is a
@@ -695,9 +695,9 @@ function MYFUNC.create_user_command_from_handler(command_name, handler_tree, opt
 	end, opts)
 end
 
--- #endregion
+-- }}}
 
--- #region Functions to manage diagnostics
+-- Functions to manage diagnostics {{{
 
 ---Resets all diagnostics (`vim.diagnostic` API).
 ---
@@ -733,9 +733,9 @@ function MYFUNC.reset_diagnostics()
 	end
 end
 
--- #endregion
+-- }}}
 
--- #region Functions related to key maps.
+-- Functions related to key maps. {{{
 
 --- Decorator to create a function that returns a options table equal the `default_options` with the `desc` option overridden.
 --- This function is useful if the you need to create a lot of key maps with the same options, but with different description. You can
@@ -750,7 +750,7 @@ function MYFUNC.decorator_create_options_table(default_options)
 	end
 end
 
--- #region Functions to set key map names
+-- Functions to set key map names {{{
 
 MYVAR.is_wichkey_loaded = false -- If the `which-key` plugin is loaded (required to apply the keymap names)
 local which_key_maps_to_load = {} -- Until the `which-key` plugin is loaded, the keymap names will be stored here
@@ -791,11 +791,11 @@ function MYPLUGFUNC.set_keymap_name(keymap, name, modes)
 	end
 end
 
--- #endregion
+-- }}}
 
--- #endregion
+-- }}}
 
--- #region Debug functions
+-- Debug functions {{{
 
 --- Show the elapsed time of a function.
 --- Test it multiple times and shows the average value of the elapsed time.
@@ -832,4 +832,4 @@ function MYFUNC.show_elapsed_time_function(func, times, args)
 	print(response)
 end
 
--- #endregion
+-- }}}
