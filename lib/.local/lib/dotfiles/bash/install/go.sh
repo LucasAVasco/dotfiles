@@ -10,6 +10,7 @@ source ~/.local/lib/dotfiles/bash/bin.sh
 install_go_install_package() {
 	local package="$1"
 	go install "$package"
+	mise reshim
 }
 
 # Remove a go package.
@@ -26,4 +27,7 @@ install_go_remove_package() {
 	# Removes the executable
 	local path=$(bin_get_executable_path "$executable")
 	trash "$path"
+
+	# Remove the binary from mise shims
+	mise reshim
 }
