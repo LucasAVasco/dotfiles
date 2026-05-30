@@ -189,6 +189,9 @@ return {
 				end,
 			})
 
+			-- Dedent tree-sitter injections
+			require('my_plugins.dedent_ts_injections').setup()
+
 			-- User commands
 
 			local complete_function = MYFUNC.create_complete_function({
