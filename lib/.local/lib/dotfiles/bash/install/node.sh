@@ -7,6 +7,7 @@
 # $@: NPM packages and `pnpm install` options
 install_node_install_package() {
 	pnpm install -g "$@"
+	mise reshim
 }
 
 # Remove a binary installed with a NPM package.
@@ -14,4 +15,5 @@ install_node_install_package() {
 # $@: NPM packages and `pnpm uninstall` options
 install_node_remove_package() {
 	pnpm uninstall -g "$@"
+	mise reshim
 }
