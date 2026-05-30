@@ -1,3 +1,5 @@
+;extends
+
 ; Injects shell script in scalars that may represent a shell script
 (
   block_mapping_pair
