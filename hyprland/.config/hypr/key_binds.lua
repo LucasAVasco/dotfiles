@@ -229,7 +229,12 @@ hl.bind(key(SUPER, "b"), hl.dsp.exec_cmd("~/.config/keyboard/sound_emulator.sh t
 
 -- }}}
 
--- Mouse settings {{{
+-- Mouse Key binds {{{
+
+hl.bind(key(SUPER, "e"), hl.dsp.exec_cmd("simulate-input mouse scroll 5 20 0 -15"))
+hl.bind(key(SUPER, "u"), hl.dsp.exec_cmd("simulate-input mouse scroll 5 20 0 -15"))
+hl.bind(key(SUPER, "d"), hl.dsp.exec_cmd("simulate-input mouse scroll 5 20 0 15"))
+hl.bind(key(SUPER, SHIFT, "d"), hl.dsp.exec_cmd("simulate-input mouse click middle"))
 
 -- Move through workspaces with mouse scroll
 hl.bind(key(SUPER, MOUSE_DOWN), hl.dsp.focus({ workspace = "m+1" }))
