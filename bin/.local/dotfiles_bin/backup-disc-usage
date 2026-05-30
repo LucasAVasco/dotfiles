@@ -21,6 +21,7 @@ ignore=(
 	'.venv'
 	'__pycache__'
 	'*.nobackup'
+	'*.nosyncbackup'
 	'*.nobackupsync'
 	'svg-inkscape'
 )
