@@ -297,6 +297,79 @@ function MYFUNC.get_last_selection_lines(buffer_number)
 		{}
 	)
 end
+
+---@class MyFunctions.DedentOpts
+---@field indent_size? integer Number of whitespaces to remove. If not provided, it will be calculated automatically from the text.
+---@field ignore_first_line_indentation? boolean Ignore the indentation of the first line if it is 0.
+
+---Dedent (remove indentation) a text and split it by lines
+---@param text string Text to dedent
+---@param opts? MyFunctions.DedentOpts
+---@return string[] dedented_lines Lines dedented
+---@return integer original_indent_size Number of whitespaces removed for each line (excluding the first line if it was ignored)
+function MYFUNC.dedent_and_split(text, opts)
+	if opts == nil then
+		opts = {}
+	end
+
+	local lines = vim.split(text, '\n', { plain = true })
+
+	-- Get the indentation size of all lines
+
+	local indent_size = opts.indent_size
+
+	if not indent_size then
+		-- Indentation of all lines except the first one
+		indent_size = math.huge
+		for line_num = 2, #lines do
+			local line = lines[line_num]
+
+			-- Ignore empty lines
+			if line ~= '' then
+				local indent = #(line:match('^%s*'))
+				indent_size = math.min(indent_size, indent)
+			end
+		end
+
+		-- Indentation of the first line
+		if not opts.ignore_first_line_indentation then
+			local first_line_indent = math.huge
+			local first_line = lines[1]
+			if first_line ~= '' then
+				first_line_indent = #(first_line:match('^%s*'))
+				indent_size = math.min(indent_size, first_line_indent)
+			end
+		end
+	end
+
+	-- No indentation, return the lines
+	if indent_size == math.huge then
+		return lines, 0
+	end
+
+	-- Dedent the lines with the indent size
+	if not opts.ignore_first_line_indentation and #lines > 0 then
+		lines[1] = lines[1]:sub(indent_size + 1)
+	end
+
+	for i = 2, #lines do
+		lines[i] = lines[i]:sub(indent_size + 1)
+	end
+
+	return lines, indent_size
+end
+
+---Dedent (remove indentation) a text
+---@param text string Text to dedent
+---@param opts? MyFunctions.DedentOpts
+---@return string dedented_text Text dedented
+---@return integer original_indent_size Number of whitespaces removed for each line (excluding the first line if it was ignored)
+function MYFUNC.dedent(text, opts)
+	local out, original_indent_size = MYFUNC.dedent_and_split(text, opts)
+
+	return table.concat(out, '\n'), original_indent_size
+end
+
 -- }}}
 
 -- File management functions {{{
