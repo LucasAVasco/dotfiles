@@ -32,19 +32,11 @@
 	* https://tree-sitter.github.io/tree-sitter/syntax-highlighting#language-injection
 ]]
 
---- Returns `true` if the buffer has a tree-sitter parser
----@param buffer integer
----@return boolean
-local function buffer_has_parser(buffer)
-	local lang = vim.treesitter.language.get_lang(vim.bo[buffer].filetype)
-	return require('nvim-treesitter.parsers')[lang] ~= nil
-end
-
 --- Starts the tree-sitter parser in the buffer. Does nothing if the parser is already running or if the buffer does not have a available
 --- parser
 ---@param buffer integer
 local function enable_highlighting(buffer)
-	if not buffer_has_parser(buffer) then
+	if not require('my_plugin_libs.treesitter').buffer_has_parser(buffer) then
 		return
 	end
 
@@ -121,7 +113,7 @@ end
 ---@param langs? string[]
 ---@param buffer integer
 local function setup_parsers(buffer, langs)
-	if not buffer_has_parser(buffer) then
+	if not require('my_plugin_libs.treesitter').buffer_has_parser(buffer) then
 		return
 	end
 
