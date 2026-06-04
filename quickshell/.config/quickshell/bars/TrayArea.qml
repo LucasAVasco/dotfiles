@@ -17,6 +17,7 @@ Rectangle {
         // Layout
         anchors.fill: parent
         orientation: Qt.Horizontal
+        spacing: root.width / 30
 
         // Model
         model: SystemTray.items.values
