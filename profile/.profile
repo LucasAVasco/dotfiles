@@ -100,7 +100,11 @@ if [ "$ALLOW_EXTERNAL_SOFTWARE" = y ]; then
 	# session to use some software installed by ASDF. Requires the user's default shell to be `bash`
 	if [ "$0" = 'bash' -o "$0" = '-bash' ]; then
 		export PATH="$HOME/.asdf/shims:$PATH"
-		test -d ~/.local/share/mise/ && eval "$(~/.local/bin/mise activate --shims bash)"
+		if [ -d ~/.local/share/mise/ ]; then
+			eval "$(~/.local/bin/mise activate --shims bash)"
+		else
+			export PATH="$HOME/.local/share/mise/shims:$PATH"
+		fi
 	fi
 
 	# Lua environment variables
