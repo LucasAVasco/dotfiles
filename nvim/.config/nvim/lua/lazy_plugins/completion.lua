@@ -349,6 +349,7 @@ return {
 						name = ' Ripgrep',
 						score_offset = blink_cmp_score_offset.buffer - 5,
 						module = 'blink-ripgrep',
+						async = true,
 
 						---@module "blink-ripgrep"
 						---@type blink-ripgrep.Options
