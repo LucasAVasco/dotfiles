@@ -24,20 +24,22 @@ nnoremap gnp :!NOTIFY_SEND=y nvim-proj open<CR>
 nnoremap gnr :cd $HOME/Repositories/neovim_repos/<CR>
 
 " Tabs
-nnoremap <A-A> :tabnew<CR>
-nnoremap <esc>] :tabnext<CR>
-nnoremap <esc>[ :tabprev<CR>
-nnoremap <esc>} :execute 'tabmove' tabpagenr()+1<CR>
-nnoremap <esc>{ :execute 'tabmove' tabpagenr()-2<CR>
-nnoremap <A-1> 1gt
-nnoremap <A-2> 2gt
-nnoremap <A-3> 3gt
-nnoremap <A-4> 4gt
-nnoremap <A-5> 5gt
-nnoremap <A-6> 6gt
-nnoremap <A-7> 7gt
-nnoremap <A-8> 8gt
-nnoremap <A-9> 9gt
+let g:lasttab = 1
+nnoremap <A-A> :let g:lasttab = tabpagenr() | tabnew<CR>
+nnoremap <esc>] :let g:lasttab = tabpagenr() | tabnext<CR>
+nnoremap <esc>[ :let g:lasttab = tabpagenr() | tabprev<CR>
+nnoremap <esc>} :let g:lasttab = tabpagenr() | execute 'tabmove' tabpagenr()+1<CR>
+nnoremap <esc>{ :let g:lasttab = tabpagenr() | execute 'tabmove' tabpagenr()-2<CR>
+nnoremap <A-1> :let g:lasttab = tabpagenr() | tabnext 1 <CR>
+nnoremap <A-2> :let g:lasttab = tabpagenr() | tabnext 2 <CR>
+nnoremap <A-3> :let g:lasttab = tabpagenr() | tabnext 3 <CR>
+nnoremap <A-4> :let g:lasttab = tabpagenr() | tabnext 4 <CR>
+nnoremap <A-5> :let g:lasttab = tabpagenr() | tabnext 5 <CR>
+nnoremap <A-6> :let g:lasttab = tabpagenr() | tabnext 6 <CR>
+nnoremap <A-7> :let g:lasttab = tabpagenr() | tabnext 7 <CR>
+nnoremap <A-8> :let g:lasttab = tabpagenr() | tabnext 8 <CR>
+nnoremap <A-9> :let g:lasttab = tabpagenr() | tabnext 9 <CR>
+nnoremap <BS> :let g:nextlasttab = tabpagenr() | execute "tabnext ".g:lasttab | let g:lasttab = g:nextlasttab<cr>
 nnoremap <A-w> :quit<CR>
 
 " I do not like to open the file with 'l' and 'right'
