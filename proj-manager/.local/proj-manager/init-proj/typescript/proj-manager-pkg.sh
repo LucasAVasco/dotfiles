@@ -43,6 +43,6 @@ console.log('Hello, World!')
 EOF
 
 # Run the extension scripts
-package_run_extend_provider json/2-spaces
-package_run_extend_provider prettier/no-semi-colons
-package_run_extend_provider typescript/4-spaces
+package_run_provider ./extend-proj/json/2-spaces
+package_run_provider ./extend-proj/prettier/no-semi-colons
+package_run_provider ./extend-proj/typescript/4-spaces
