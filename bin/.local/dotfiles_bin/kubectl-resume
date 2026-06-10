@@ -1,0 +1,17 @@
+#!/bin/bash
+#
+# Resume a suspended resource.
+
+source ~/.local/lib/dotfiles/bash/strict.sh
+source ~/.local/lib/dotfiles/bash/help.sh
+
+help_handle y "$@" <<-EOF
+	Resume a suspended resource.
+
+	Usage: kubectl-suspend [-n | --namespace <namespace>] <kind> <resource>
+
+	Flags:
+		-n, --namespace <ns>    The namespace of the resource. Use "default" if not specified.
+EOF
+
+kubectl-suspend --resume "$@"
