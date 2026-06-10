@@ -33,6 +33,8 @@ export PM_INVOKE_DIR=$(pwd)
 current_dir=$(dirname `realpath "${BASH_SOURCE[0]}"`)
 cd "$current_dir"
 
+export PM_MANAGER_DIR="$current_dir"
+
 # Select a folder that contains a file
 #
 # $1: The file to select to search
