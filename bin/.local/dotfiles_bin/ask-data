@@ -1,0 +1,105 @@
+#!/bin/bash
+#
+# Ask for data serialized as YAML or JSON to the user.
+
+source ~/.local/lib/dotfiles/bash/strict.sh
+source ~/.local/lib/dotfiles/bash/help.sh
+
+help_handle n "$@" <<EOF
+	Ask for data serialized as YAML or JSON to the user.
+
+	Usage: ask-data [--input-format format] [--output-format format] [--schema-file path] [--schema schema] [--new-window]
+
+	Flags:
+		-i, --input-format     The format of the input file (yaml or json). Default: yaml
+		-o, --output-format    The format of the output file (yaml or json). Default: same as input
+		--schema-file          The path to the schema file to validate the file against
+		--schema               The schema to validate the file against. Overrides '--schema-file'
+		--new-window           Open the file editor in a new window
+EOF
+
+input_format=yaml
+output_format=''
+schema_content=''
+schema_file=''
+new_window=n
+while [ $# -gt 0 ]; do
+	case "$1" in
+		-i | --input-format)
+			input_format="$2"
+			shift 2
+			;;
+
+		-o | --output-format)
+			output_format="$2"
+			shift 2
+			;;
+
+		--schema)
+			schema_content="$2"
+			shift 2
+			;;
+
+		--schema-file)
+			schema_file="$(realpath "$2")"
+			shift 2
+			;;
+
+		--new-window)
+			new_window=y
+			shift
+			;;
+
+		*)
+			break
+			;;
+	esac
+done
+
+if [[ -z "$output_format" ]]; then
+	output_format="$input_format"
+fi
+
+# Create a temporary schema file
+if [[ -n "$schema_content" ]]; then
+	schema_file="$(mktemp --suffix=.schema.json)"
+	trap "rm $schema_file" EXIT
+	printf '%s' "$schema_content" > "$schema_file"
+fi
+
+# Create a temporary YAML file to store the user's input
+input_file="$(mktemp "--suffix=.${input_format}")"
+trap "rm $input_file" EXIT
+
+# Set the schema
+if [[ -n "$schema_file" ]]; then
+	case "$input_format" in
+		json)
+			echo -e '{\n  "$schema": "'"$schema_file"'"\n}' > "$input_file"
+			;;
+
+		yaml)
+			echo -e "# yaml-language-server: \$schema=$schema_file\n" > "$input_file"
+			;;
+
+		*)
+			echo "Unknown format: $input_format" >&2
+			exit 1
+			;;
+	esac
+fi
+
+# Open the file in the default text editor. Wait for the user to exit
+if [[ "$new_window" == y ]]; then
+	default_text_editor_synced "$input_file" >&2
+else
+	default_term_text_editor "$input_file" >&2
+fi
+
+# Remove the '$schema' key if it exists
+if [[ "$input_format" == 'json' ]]; then
+	jq 'del(.["$schema"])' "$input_file" | sponge "$input_file"
+fi
+
+# Print the contents of the file
+yq -o "$output_format" "$input_file"
