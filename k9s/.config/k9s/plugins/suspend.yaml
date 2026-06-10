@@ -1,0 +1,16 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/derailed/k9s/master/internal/config/json/schemas/plugins.json
+
+plugins:
+  suspend:
+    shortCut: s
+    description: Suspend a resource
+    scopes: [job, cronjob]
+    background: false
+    command: kubectl
+    args:
+      - suspend
+      - --interactive
+      - -n
+      - $NAMESPACE
+      - $RESOURCE_NAME
+      - $NAME
