@@ -1,0 +1,69 @@
+#!/bin/bash
+#
+# Manage resource suspension
+
+source ~/.local/lib/dotfiles/bash/strict.sh
+source ~/.local/lib/dotfiles/bash/help.sh
+source ~/.local/lib/dotfiles/bash/dialog/dialog.sh
+
+help_handle y "$@" <<-EOF
+	Manage resource suspension.
+
+	Usage: kubectl-suspend [-r | --resume] [-i | --interactive] [-n | --namespace <namespace>] <kind> <resource>
+
+	Flags:
+		-r, --resume            Resume the resource instead of suspending it.
+		-i, --interactive       Interactively ask for the new suspended state.
+		-n, --namespace <ns>    The namespace of the resource. Use "default" if not specified.
+EOF
+
+# Flags
+suspended=y
+interactive=n
+namespace=default
+while [[ "$#" -gt 0 ]]; do
+	case "$1" in
+		-r|--resume)
+			suspended=n
+			shift
+			;;
+
+		-i|--interactive)
+			interactive=y
+			shift
+			;;
+
+		-n|--namespace)
+			namespace="$2"
+			shift 2
+			;;
+
+		*)
+			break
+			;;
+	esac
+done
+
+# Positional arguments
+kind="$1"
+resource="$2"
+
+# Get the status to set
+if [[ "$interactive" == y ]]; then
+	status=$(dialog_ask_selection "Change suspended state of $kind $resource" "Suspend" "Resume")
+
+	# Get the new suspended state
+	declare -A map_status_to_suspended
+	map_status_to_suspended['Suspend']=y
+	map_status_to_suspended['Resume']=n
+	suspended=${map_status_to_suspended[$status]}
+	if [[ -z "$suspended" ]]; then
+		echo "Unknown status: $status" >&2
+		exit
+	fi
+fi
+
+boolean_suspended=$(if [[ "$suspended" == y ]]; then echo true; else echo false; fi)
+
+# Patch the resource
+kubectl patch -n "$namespace" "$kind" "$resource" -p '{"spec":{"suspend":'"$boolean_suspended"'}}'
