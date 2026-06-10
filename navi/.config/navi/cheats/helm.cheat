@@ -1,0 +1,5 @@
+% Helm
+
+
+# Get all values of a release
+helm get values -n <namespace> --all <release> | bat -l yaml
