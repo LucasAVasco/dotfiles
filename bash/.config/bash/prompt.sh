@@ -54,7 +54,7 @@ refresh_prompt_ps1() {
 	local error_message=''
 	if [[ $last_exit_code != 0 ]]; then
 		# Left separator
-		error_message+="$(set_term_foreground_color $color_cmd_error_bg)󱎕"
+		error_message+="$(set_term_foreground_color $color_cmd_error_bg)"
 		error_message+="$(set_term_background_color $color_cmd_error_bg)"
 		error_message+="$(set_term_foreground_color $color_cmd_error_fg)"
 
