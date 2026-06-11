@@ -61,6 +61,8 @@ noremap yf :!clip-copy %f:p<CR>
 nnoremap <A-t> :!run-without-env default_term<CR>
 nnoremap <A-f> :!run-without-env default_file_manager<CR>
 nnoremap <CR> :defaultopen<CR>
+nnoremap <A-e> :!run-without-env default_text_editor %f<CR>
+vnoremap <A-e> :!run-without-env default_text_editor %f<CR>
 
 " Permissions
 noremap <A-x> :!chmod u+x %f<CR>
