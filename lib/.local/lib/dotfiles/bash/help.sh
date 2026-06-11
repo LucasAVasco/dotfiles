@@ -44,19 +44,20 @@ help_msg_format() {
 # $1: should the help function be called if the first argument is empty. Accepted values: 'y' or 'n'.
 # $2-n: all command line arguments.
 help_handle() {
-	local help_if_empty="$1"
+	local help_if_empty="${1:-}"
 	shift
 
 	# Check if should show help
 	show_help_msg='n'
 	exit_status=0
+	first_argument="${1:-}"
 
-	if [[ "$help_if_empty" == 'y' && "$1" == '' ]]; then
+	if [[ "$help_if_empty" == 'y' && "$first_argument" == '' ]]; then
 		show_help_msg='y'
 		exit_status=1
 	fi
 
-	if [[ "$1" == '--help' || "$1" == '-h' || "$1" == 'help' ]]; then
+	if [[ "$first_argument" == '--help' || "$first_argument" == '-h' || "$first_argument" == 'help' ]]; then
 		show_help_msg='y'
 	fi
 
