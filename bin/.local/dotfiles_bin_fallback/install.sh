@@ -52,7 +52,6 @@ install_package() {
 
 	# Ensures that the installer will only run if the original executable does not exist
 	if [[ "$fallback_executable_top_dir" != "$DOTFILES_FALLBACK_SCRIPTS" ]]; then
-		notify '' "Executable '$executable_name' already installed."
 		return
 	fi
 
