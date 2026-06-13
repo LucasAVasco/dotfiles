@@ -26,7 +26,7 @@ return {
 			local nvim_lint = require('lint')
 
 			nvim_lint.linters_by_ft = {
-				['*'] = { 'cspell', 'gitleaks', 'detect-secrets' },
+				['*'] = { 'cspell', 'gitleaks', 'detect-secrets', 'trivy' },
 				-- lua = { 'luacheck' },
 			}
 
