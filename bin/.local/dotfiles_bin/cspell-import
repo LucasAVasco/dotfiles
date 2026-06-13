@@ -1,0 +1,200 @@
+#!/bin/bash
+#
+# Import a cSpell configuration file into another one. Supports configuration files in YAML and JSON formats.
+
+source ~/.local/lib/dotfiles/bash/strict.sh
+source ~/.local/lib/dotfiles/bash/help.sh
+source ~/.local/lib/dotfiles/bash/log.sh
+
+help_handle y "$@" <<EOF
+	Import a cSpell configuration file into another one. Supports configuration files in YAML and JSON formats.
+
+	Usage: cspell-import [options] <config_file> [imported_config_file]
+
+	Options:
+		-p, --parent       Import tha parent config file into the config file. The [imported_config_file] argument is ignored.
+		-r, --recursive    Execute the import operation in each parent config file. Requires the '-p' flag.
+
+	Arguments:
+		config_file             The configuration file to import into.
+		imported_config_file    The configuration file to import.
+EOF
+
+cspell_config_files=(
+	.cspell.config.yaml
+	.cspell.config.yml
+	cspell.config.yaml
+	cspell.config.yml
+	.cspell.yaml
+	.cspell.yml
+	cspell.yaml
+	cspell.yml
+	.cspell.json
+	cspell.json
+	.cSpell.json
+	cSpell.json
+	# .cspell.jsonc
+	# cspell.jsonc
+	.cspell.config.json
+	# .cspell.config.jsonc
+	cspell.config.json
+	# cspell.config.jsonc
+	# cspell.config.toml
+	# .cspell.config.toml
+)
+
+# Get the first available configuration file in a directory.
+#
+# $1: The directory to search.
+get_first_available_config_file() {
+	local dir="$1"
+
+	for file in "${cspell_config_files[@]}"; do
+		if [[ -f "$dir/$file" ]]; then
+			printf "%s" "$dir/$file"
+			return
+		fi
+	done
+}
+
+# Search for the first available configuration file in parent directories.
+#
+# $1: The directory to search.
+search_config_file_on_parent_directories() {
+	local dir="$1"
+
+	while [[ "$dir" != "/" ]]; do
+		local file="$(get_first_available_config_file "$dir")"
+		if [[ -n "$file" ]]; then
+			printf "%s" "$file"
+			return
+		fi
+		dir="$(dirname "$dir")"
+	done
+}
+
+# Convert a path to be relative to the directory of another file.
+#
+# $1: Relative to this file. Must be a fine, not a directory.
+# $2: File to convert.
+convert_path_relative_to_file() {
+	local relative_to="$1"
+	local file_to_convert="$2"
+
+	local base_file_dir="$(dirname "$relative_to")"
+	local relative_path="$(realpath --relative-to="$base_file_dir" "$file_to_convert")"
+	printf "%s" "$relative_path"
+}
+
+# Check if the cSpell configuration file imports another one.
+#
+# $1: The configuration file to check.
+# $2: The imported configuration file.
+is_config_file_imported() {
+	local config_file="$1"
+	local imported_config_file="$2"
+
+	local imported_config_file="\${cwd}/$(convert_path_relative_to_file "$config_file" "$imported_config_file")"
+
+	# If the configuration file has no imports
+	if [[ "$(yq ".import == null" "$config_file")" == "true" ]]; then
+		echo -n n
+		return
+	fi
+
+	# If the configuration file has the imported configuration file
+	if [[ "$(yq ".import | any_c(. == \"$imported_config_file\")" "$config_file")" == "true" ]]; then
+		echo -n y
+	else
+		echo -n n
+	fi
+}
+
+# Import a configuration file into another one.
+#
+# $1: The configuration file that imports the other one.
+# $2: The imported configuration file.
+import_config_file() {
+	local config_file="$1"
+	local imported_config_file="$2"
+
+	if [[ "$(is_config_file_imported "$config_file" "$imported_config_file")" == y ]]; then
+		return
+	fi
+
+	local import_entry="\${cwd}/$(convert_path_relative_to_file "$config_file" "$imported_config_file")"
+
+	yq ".import += [\"$import_entry\"]" "$config_file" | sponge "$config_file"
+}
+
+# Import a parent configuration file into a child one.
+#
+# $1: The child configuration file to import its parent one.
+#
+# Return the imported configuration file path if it was imported. Return nothing otherwise.
+import_parent_config_file() {
+	local config_file="$1"
+	local config_file_dir="$(dirname "$config_file")"
+	local config_file_top_dir="$(dirname "$config_file_dir")"
+
+	local parent_config_file="$(search_config_file_on_parent_directories "$config_file_top_dir")"
+	if [[ -z "$parent_config_file" ]]; then
+		return
+	fi
+
+	import_config_file "$config_file" "$parent_config_file"
+	printf "%s" "$parent_config_file"
+}
+
+# Import a parent configuration file into a child one recursively (this function is called for each parent configuration file).
+#
+# $1: The child configuration file to import its parent one (start point).
+#
+# Return the files that imported the parent configuration file and the imported configuration file of each of them. Each line is composed of
+# the child configuration file and the imported configuration file separated by a tab.
+import_parent_config_file_recursively() {
+	local config_file="$(realpath "$1")"
+
+	local imported_config_file="$(import_parent_config_file "$config_file")"
+	if [[ -n "$imported_config_file" ]]; then
+		printf "%s\t%s\n" "$config_file" "$imported_config_file"
+		imported_config_file="$(realpath "$imported_config_file")"
+		import_parent_config_file_recursively "$imported_config_file"
+	fi
+}
+
+# Parse command line arguments
+parent=n
+recursive=n
+while [[ "$#" -gt 0 ]]; do
+	case "$1" in
+		-p|--parent)
+			parent=y
+			shift
+			;;
+
+		-r|--recursive)
+			recursive=y
+			shift
+			;;
+
+		*)
+			break
+			;;
+	esac
+done
+
+# Handle arguments
+if [[ "$parent" == y ]]; then
+	if [[ "$recursive" == y ]]; then
+		import_parent_config_file_recursively "$1" | while IFS=$'\t' read -r config_file imported_config_file; do
+			log_info "Imported parent configuration file '$imported_config_file' into '$config_file'"
+		done
+	else
+		parent_config_file="$(import_parent_config_file "$1")"
+		log_info "Imported parent configuration file '$parent_config_file' into '$1'"
+	fi
+else
+	import_config_file "$1" "$2"
+	log_info "Imported configuration file '$2' into '$1'"
+fi
