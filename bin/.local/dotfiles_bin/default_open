@@ -219,12 +219,17 @@ open_local_file() {
 	elif [[ "$mime_type" =~ ^text/ ]]; then
 		open_file_editor "$file" "$line_number" "${args[@]}"
 
-	elif [[ "$mime_type" == "application/javascript" ]]; then
-		open_file_editor "$file" "$line_number" "${args[@]}"
-
 	# Fallback
 	else
-		open_with_xdg "$file" "${args[@]}"
+		case "$mime_type" in
+			"application/javascript" | "application/json")
+				open_file_editor "$file" "$line_number" "${args[@]}"
+				;;
+
+			*)
+				open_with_xdg "$file" "${args[@]}"
+				;;
+		esac
 	fi
 }
 
