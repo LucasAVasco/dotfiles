@@ -1,9 +1,10 @@
 import QtQuick
 import Quickshell.Hyprland
 
+import "../../../components"
 import "../../config"
 
-Text {
+LimitedText {
     color: Colors.foreground
 
     text: {

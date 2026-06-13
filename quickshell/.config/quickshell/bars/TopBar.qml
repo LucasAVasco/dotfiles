@@ -42,7 +42,9 @@ PanelWindow {
                 size: root.height
             }
 
-            WindowTitle {}
+            WindowTitle {
+                Layout.preferredWidth: parent.width / 2
+            }
         }
 
         // Widgets at the center
