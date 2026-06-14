@@ -222,7 +222,7 @@ open_local_file() {
 	# Fallback
 	else
 		case "$mime_type" in
-			"application/javascript" | "application/json")
+			"inode/x-empty" | "application/javascript" | "application/json")
 				open_file_editor "$file" "$line_number" "${args[@]}"
 				;;
 
