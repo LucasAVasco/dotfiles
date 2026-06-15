@@ -110,7 +110,8 @@ if [[ "$expose_dbus" == y ]]; then
 	args+=(-v "/run/user/$(id -u):/run/user/$(id -u)")
 	args+=(-e "DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/$(id -u)/bus")
 else
-	notification_bridge_dir="/run/user/$(id -u)/container-notification-bridge/"
+	notification_bridge_dir="$HOME/.cache/dotfiles_in_container/socket-dir/"
+	mkdir -p "$notification_bridge_dir"
 	args+=(-v "$notification_bridge_dir:/container-notification-bridge-root:z")
 	notification_bridge_path="$(ensure_download_notification_bridge)"
 	export CONTAINER_NOTIFICATION_BRIDGE_SOCKET="$notification_bridge_dir/socket"
