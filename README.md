@@ -3,13 +3,26 @@
 This repository contains my personal dot files. I manage then with [GNU Stow](https://www.gnu.org/software/stow/) and a
 [Makefile](Makefile) with simple commands.
 
-
 ## Installation
 
 To install these dot files, you can use git:
 
 ```sh
 git clone https://github.com/LucasAVasco/dotfiles ~/.local/dotfiles
+```
+
+### Run in container
+
+To run int in a container (docker or podman), you can use one of the following commands:
+
+```sh
+bash <(wget -O - https://raw.githubusercontent.com/LucasAVasco/dotfiles/refs/heads/main/run-in-container.sh 2> /dev/null)
+```
+
+Or
+
+```sh
+bash <(curl -s https://raw.githubusercontent.com/LucasAVasco/dotfiles/refs/heads/main/run-in-container.sh 2> /dev/null)
 ```
 
 ## Usage
