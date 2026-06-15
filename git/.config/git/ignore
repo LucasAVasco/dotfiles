@@ -22,6 +22,12 @@
 .env.*.key
 
 
+# Local configuration files (the official documentation of the tools says that these file should not be added to a Git repository)
+mise.local.toml
+falcula.local.yaml
+falcula.local.yml
+
+
 # Sometimes I user a backup script that saves the files as a '.zip' file. Ignore this files
 *.my_bkp_script.gitignore.py
 *.my_bkp_script.gitignore.zip
