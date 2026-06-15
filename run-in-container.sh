@@ -83,9 +83,12 @@ ensure_download_notification_bridge() {
 	echo -n "$executable"
 }
 
-# Execute the script inside the current directory
-current_dir=$(dirname `realpath "${BASH_SOURCE[0]}"`)
-cd "$current_dir"
+# Execute the script inside the current directory if it is executed directly from the file (not form a stdin or a file descriptor) inside
+# a home directory
+if [[ -n "${BASH_SOURCE:-}" && "${BASH_SOURCE[0]}" =~ /home/* ]]; then
+	current_dir=$(dirname `realpath "${BASH_SOURCE[0]}"`)
+	cd "$current_dir"
+fi
 
 # Ensure the cache directory exists
 cache_dir="$HOME/.cache/dotfiles_in_container"
