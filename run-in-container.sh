@@ -1,7 +1,7 @@
 #!/bin/bash
 #
 # Usage:
-#   ./run-in-container.sh [-d | --detach] [--name NAME] [--dbus] [engine]
+#   ./run-in-container.sh [-d | --detach] [--name NAME] [--engine ENGINE] [--dbus]
 #
 # Flags:
 #   -d, --detach      Run the container in the background
