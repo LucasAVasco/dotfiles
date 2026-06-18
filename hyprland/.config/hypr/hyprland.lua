@@ -86,24 +86,68 @@ hl.window_rule({
 
 -- Events and callbacks {{{
 
----Update workspace screen temperature on workspace switch
----@param workspace HL.Workspace
-hl.on("workspace.active", function(workspace)
+---Update the screen temperature of the current workspace.
+---@param workspace? HL.Workspace The workspace to update. If nil, the active workspace will be used.
+---@param reset? boolean If should reset the temperature before updating it.
+local update_workspace_screen_temp = function(workspace, reset)
+	if workspace == nil then
+		workspace = hl.get_active_workspace()
+	end
+
 	if workspace == nil then
 		return
 	end
 
-	hl.exec_cmd("~/.config/monitor/update-workspace-screen-temp.sh " .. workspace.name)
-end)
+	-- Name of the current workspace
+	local name = workspace.name
+	local index = tonumber(name)
+	if index == nil then
+		return name
+	end
+	name = tostring(index % 10)
+
+	-- Run the script that updates the screen temperature
+	hl.exec_cmd("~/.config/monitor/update-workspace-screen-temp.sh " .. (reset and "-r " or "") .. name)
+end
+
+---Update workspace screen temperature on workspace switch
+hl.on("workspace.active", update_workspace_screen_temp)
 
 ---Reset workspace screen temperature when the user switches from another tty
 hl.on("monitor.layout_changed", function()
-	local workspace = hl.get_active_workspace()
-	if workspace == nil then
-		return
-	end
+	update_workspace_screen_temp(nil, true)
+end)
 
-	hl.exec_cmd("~/.config/monitor/update-workspace-screen-temp.sh -r " .. workspace.name)
+---Update workspace screen temperature when the user switches to another monitor
+hl.on("monitor.focused", function()
+	update_workspace_screen_temp(nil)
+end)
+
+-- }}}
+
+-- Workspaces configuration {{{
+
+---Configure workspaces for a monitor
+---@param monitor HL.Monitor
+local function configure_workspaces_for_monitor(monitor)
+	local current_monitor_index = monitor.id * 10
+	for index = 0, 9 do
+		current_monitor_index = current_monitor_index + 1
+		hl.workspace_rule({
+			workspace = tostring(current_monitor_index),
+			monitor = monitor.name,
+			default = (index == 0),
+		})
+	end
+end
+
+for _, monitor in pairs(hl.get_monitors()) do
+	configure_workspaces_for_monitor(monitor)
+end
+
+-- Re-run if a new monitor is plugged in
+hl.on("monitor.added", function(monitor)
+	configure_workspaces_for_monitor(monitor)
 end)
 
 -- }}}

@@ -114,28 +114,60 @@ end
 -- }}}
 
 -- Workspaces {{{
+
+---Returns the id of the current monitor or 0 if not found
+---@return number
+local function get_current_monitor_id()
+	local monitor = hl.get_active_monitor()
+	if monitor == nil then
+		return 0
+	end
+
+	return monitor.id
+end
+
+---Calculates the workspace id for the provided index based on the current monitor.
+---@param index string | number Index of the workspace. If a string, it is returned as is.
+---@return string
+local function get_workspace_id_for_current_monitor(index)
+	if type(index) == "string" then
+		return index
+	end
+	local monitor_id = get_current_monitor_id()
+	return tostring(index + monitor_id * 10)
+end
+
 local workspaces = {
-	["r~1"] = "1",
-	["r~2"] = "2",
-	["r~3"] = "3",
-	["r~4"] = "4",
-	["r~5"] = "5",
-	["r~6"] = "F1",
-	["r~7"] = "F2",
-	["r~8"] = "F3",
-	["r~9"] = "F4",
-	["r~10"] = "F5",
+	[1] = "1",
+	[2] = "2",
+	[3] = "3",
+	[4] = "4",
+	[5] = "5",
+	[6] = "F1",
+	[7] = "F2",
+	[8] = "F3",
+	[9] = "F4",
+	[10] = "F5",
 	["m-1"] = "BracketLeft",
 	["m+1"] = "BracketRight",
 	["previous"] = "Backspace",
 }
 
 for name, key_bind in pairs(workspaces) do
-	hl.bind(key(SUPER, key_bind), hl.dsp.focus({ workspace = name })) -- Focus to work space
-	hl.bind(key(SUPER, ALT, key_bind), hl.dsp.window.move({ workspace = name })) -- Move window to work space
+	-- Focus to work space
+	hl.bind(key(SUPER, key_bind), function()
+		hl.dispatch(hl.dsp.focus({ workspace = get_workspace_id_for_current_monitor(name) }))
+	end)
+
+	-- Move window to work space
+	hl.bind(key(SUPER, ALT, key_bind), function()
+		hl.dispatch(hl.dsp.window.move({ workspace = get_workspace_id_for_current_monitor(name) }))
+	end)
 
 	-- Move window to work space but continue in the current one
-	hl.bind(key(SUPER, SHIFT, key_bind), hl.dsp.window.move({ workspace = name, follow = false }))
+	hl.bind(key(SUPER, SHIFT, key_bind), function()
+		hl.dispatch(hl.dsp.window.move({ workspace = get_workspace_id_for_current_monitor(name), follow = false }))
+	end)
 end
 
 -- Magic workspace {{{
@@ -167,6 +199,50 @@ hl.bind(key(SUPER, SHIFT, "Tab"), function()
 end)
 
 -- }}}
+
+-- }}}
+
+-- Monitors {{{
+
+local function get_monitor_by_id(id)
+	for _, monitor in pairs(hl.get_monitors()) do
+		if monitor.id == id then
+			return monitor
+		end
+	end
+	return nil
+end
+
+for key_bind = 1, 5 do
+	local monitor_id = key_bind - 1
+
+	-- Focus to monitor
+	hl.bind(key(SUPER, CTRL, tostring(key_bind)), function()
+		local target_monitor = get_monitor_by_id(monitor_id)
+		if target_monitor == nil then
+			return
+		end
+		hl.dispatch(hl.dsp.focus({ monitor = target_monitor.name }))
+	end)
+
+	-- Move window to monitor
+	hl.bind(key(SUPER, CTRL, ALT, tostring(key_bind)), function()
+		local target_monitor = get_monitor_by_id(monitor_id)
+		if target_monitor == nil then
+			return
+		end
+		hl.dispatch(hl.dsp.window.move({ workspace = monitor_id * 10 + 1 }))
+	end)
+
+	-- Move window to monitor but continue in the current one
+	hl.bind(key(SUPER, CTRL, SHIFT, tostring(key_bind)), function()
+		local target_monitor = get_monitor_by_id(monitor_id)
+		if target_monitor == nil then
+			return
+		end
+		hl.dispatch(hl.dsp.window.move({ workspace = monitor_id * 10 + 1, follow = false }))
+	end)
+end
 
 -- }}}
 
