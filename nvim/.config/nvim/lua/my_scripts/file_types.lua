@@ -10,6 +10,7 @@ vim.filetype.add({
 	extension = {
 		['cheat'] = 'cfg',
 		['vifm'] = 'vim',
+		['alloy'] = 'hcl',
 	},
 })
 
