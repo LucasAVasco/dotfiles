@@ -154,9 +154,14 @@ end)
 
 require("key_binds")
 
--- Arch wiki recommendation to enable screen cast (https://wiki.archlinux.org/title/XDG_Desktop_Portal).
--- hl.on("hyprland.start", function()
---		hl.exec_cmd("systemctl --user import-environment WAYLAND_DISPLAY XDG_CURRENT_DESKTOP")
---		hl.exec_cmd("dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP")
--- end)
--- NOTE(LucasAVasco): My configuration works well without these configurations, but you may need to enable them.
+-- Configures the environment variables for the XDG Desktop Portal. Based in the instructions from ArchWiki
+-- (https://wiki.archlinux.org/title/XDG_Desktop_Portal) and Hyprland documentation
+-- (https://wiki.hypr.land/Hypr-Ecosystem/xdg-desktop-portal-hyprland/)
+hl.on("hyprland.start", function()
+	hl.exec_cmd("systemctl --user import-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP")
+	hl.exec_cmd("dbus-update-activation-environment --systemd --all")
+	hl.exec_cmd("systemctl --user import-environment QT_QPA_PLATFORMTHEME")
+
+	-- Manually start the graphical session (Hyprland does not do this automatically)
+	hl.exec_cmd("systemctl --user start manual-graphical-session.target")
+end)
