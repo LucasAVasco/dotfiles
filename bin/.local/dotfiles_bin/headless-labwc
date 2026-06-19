@@ -1,0 +1,107 @@
+#!/bin/bash
+#
+# Run labwc and connect to it with vncviewer.
+
+source ~/.local/lib/dotfiles/bash/strict.sh
+source ~/.local/lib/dotfiles/bash/help.sh
+source ~/.local/lib/dotfiles/bash/log.sh
+
+help_handle y "$@" <<EOF
+	Run labwc and connect to it with vncviewer.
+
+	Usage: headless-labwc <command> [wayland_display]
+
+	Commands:
+		start           Run labwc in a headless environment.
+		restore-env     Restore the environment to the host environment (update dbus activation environment and XDG desktop portals).
+		vnc             Open a vncviewer session to connect to labwc.
+
+	Arguments:
+
+	wayland_display    The display to connect to (default: first labwc wayland display). Only used with the 'vnc' command.
+EOF
+
+# Get the display name of the last labwc wayland running.
+get_last_labwc_wayland_display() {
+	local target_display_socket=''
+	for display_socket in "$XDG_RUNTIME_DIR"/wayland-*.lock; do
+		# Get the name of the process that owns the socket. `fuser` returns the process ID. `xargs` and `tail` extract the process name.
+		local process_name=$(fuser "$display_socket" 2>/dev/null | xargs ps -o comm= | tail -n 1)
+
+		if [[ "$process_name" == 'labwc' ]]; then
+			target_display_socket="$display_socket"
+			break
+		fi
+	done
+
+	if [[ -z "$target_display_socket" ]]; then
+		echo "No labwc waysland display" >&2
+		exit 1
+	fi
+
+	# Get the display name from the socket name (same format than the `WAYLAND_DISPLAY` environment variable)
+	echo "$target_display_socket" | xargs basename -s .lock
+}
+
+# Updates dbus activation environment and kill XDG desktop portals.
+update_environment() {
+	dbus-update-activation-environment --systemd XDG_CURRENT_DESKTOP XDG_RUNTIME_DIR
+	pkill -u "$USER" -f xdg-desktop-portal || true
+}
+
+# handle the command line arguments
+main_command="$1"
+shift
+
+case "$main_command" in
+	start)
+		# Reset the environment on exit
+		trap 'log_info "Restoring environment" && update_environment' EXIT
+
+		# Run labwc in a separate subshell (to avoid polluting the current environment)
+		(
+			# Force the headless backend and ignore physical keyboards/mice
+			export WLR_BACKENDS=headless
+			export WLR_LIBINPUT_NO_DEVICES=1
+
+			# Clear and update the local environment
+			export XDG_CURRENT_DESKTOP=labwc
+
+			update_environment
+
+			# Run labwc and let its startup command cleanly hook the backends.
+			# We manually invoke the backend, then overwrite the main portal manager to force a refresh.
+			labwc -s '
+			/usr/lib/xdg-desktop-portal-wlr &
+			sleep 1 && /usr/lib/xdg-desktop-portal --replace &
+			'
+		)
+		;;
+
+	restore-env|restore-environment)
+		update_environment
+		;;
+
+	vnc)
+		wayland_display="${1:-}"
+		if [[ -z "$wayland_display" ]]; then
+			wayland_display="$(get_last_labwc_wayland_display)"
+		fi
+
+		# Create the sockets
+		socket_dir=$(mktemp -d "/run/user/$(id -u)/headless-labwc-vnc-XXXXX")
+		trap "rm -r $socket_dir" EXIT
+		control_socket="$socket_dir/control.sock"
+		unix_file="$socket_dir/data.sock"
+
+		# Run wayvnc
+		WAYLAND_DISPLAY="$wayland_display" wayvnc --socket "$control_socket" --unix-socket "$unix_file" &
+		sleep 1 # Wait for wayvnc to be ready
+		vncviewer "$unix_file"
+		;;
+
+	*)
+		echo "Unrecognized command: '$main_command'" >&2
+		exit 1
+		;;
+esac
