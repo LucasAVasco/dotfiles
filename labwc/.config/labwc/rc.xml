@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<!-- Full configuration at /usr/share/doc/labwc/rc.xml.all -->
+<labwc_config>
+  <keyboard>
+    <default />
+
+    <keybind key="C-S-c">
+      <action name="Close" />
+    </keybind>
+
+    <keybind key="C-S-a">
+      <action name="Execute" command="~/.config/rofi/tools/applications.sh" />
+    </keybind>
+  </keyboard>
+</labwc_config>
