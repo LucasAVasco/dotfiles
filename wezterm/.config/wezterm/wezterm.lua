@@ -50,6 +50,29 @@ config.set_environment_variables = {
 	TERMINAL_EMULATOR = 'wezterm',
 }
 
+-- Dynamically override font size after the window is up and running
+wezterm.on('window-config-reloaded', function(window, _)
+	local screens = wezterm.gui.screens()
+	local screen = screens.main or screens.active
+
+	if screen then
+		local width = screen.width
+		local target_size = 10.0
+
+		if width >= 3840 then
+			target_size = 16.0
+		elseif width >= 2560 then
+			target_size = 14.0
+		elseif width >= 1920 then
+			target_size = 12.0
+		end
+
+		window:set_config_overrides({
+			font_size = target_size,
+		})
+	end
+end)
+
 -- Key binds
 
 config.leader = { key = 'q', mods = 'SUPER', timeout_milliseconds = 1000 }
