@@ -22,7 +22,7 @@ fi
 
 # Compiles the document
 mkdir -p build/latex
-pdflatex "${args[@]}" -output-directory ./build/latex ./main.tex
+pdflatex -halt-on-error "${args[@]}" -output-directory ./build/latex ./main.tex
 
 # The output file must be set
 if [[ -z "$OUTPUT_FILE" ]]; then
