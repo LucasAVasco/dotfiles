@@ -8,4 +8,4 @@ set -e
 
 current_dir=$(dirname `realpath "${BASH_SOURCE[0]}"`)
 
-entr try "${current_dir}/build.sh" "$@"
+watch-file "${current_dir}/build.sh" "$@"
