@@ -48,7 +48,7 @@ else
 		# '-d' is used to treat directories as files
 		# '-X' is used dereference symlinks
 		# The `tr` command removes the new line at the end
-		eza -d -X --icons=always --color=always --hyperlink "$@" | tr -d '\n'
+		eza -d -X --icons=always --color=always --hyperlink always "$@" | tr -d '\n'
 	}
 fi
 
