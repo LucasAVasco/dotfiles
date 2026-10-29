@@ -1,0 +1,50 @@
+#!/bin/bash
+#
+# A simple calculator for Python expressions
+
+source ~/.local/lib/dotfiles/bash/strict.sh
+
+source ~/.local/lib/dotfiles/bash/help.sh
+
+help_handle y "$@" <<EOF
+	Usage: calc [OPTION]... [EXPRESSION]
+
+	A simple calculator for Python expressions. All functions and variables from math module are available.
+
+	Options:
+		--import MODULE      Import an additional MODULE
+EOF
+
+additional_imports=()
+while [[ "$#" -gt 0 ]]; do
+	case "$1" in
+		--import)
+			additional_imports+=("$2")
+			shift 2
+			;;
+
+		*)
+			break
+			;;
+	esac
+done
+
+cd ~ # Executes it in home to avoid issues with virtual environments
+
+# Mounts the import command
+import_command="import sys; from math import *;"
+for additional_import in "${additional_imports[@]}"; do
+	if [[ "$additional_import" == 'numpy' || "$additional_import" == 'np' ]]; then
+		import_command+="import numpy as np;"
+	else
+		import_command+="import $additional_import;"
+	fi
+done
+
+# Runs the command in Python
+python_command=(python3 -c "${import_command}"' print(eval(sys.stdin.read().replace("\n", " ").replace("\t", " ")))')
+if [[ -t 0 ]]; then
+	echo "$@" | "${python_command[@]}" # From command line arguments
+else
+	"${python_command[@]}" # From stdin
+fi
