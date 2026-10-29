@@ -72,7 +72,19 @@ case $(linux_session_get_type) in
 	wayland)
 		screenshot_cmd=(grim)
 		if [[ $interactive == 'y' ]]; then
-			screenshot_cmd+=(-g "$(slurp)" -)
+			region=$(slurp -w 1 -f "%x %y %w %h")
+			x=$(echo "$region" | cut -d ' ' -f 1)
+			y=$(echo "$region" | cut -d ' ' -f 2)
+			w=$(echo "$region" | cut -d ' ' -f 3)
+			h=$(echo "$region" | cut -d ' ' -f 4)
+
+			# Removes the border
+			x=$((x+1))
+			y=$((y+1))
+			w=$((w-2))
+			h=$((h-2))
+
+			screenshot_cmd+=(-g "${x},${y} ${w}x${h}" -)
 		else
 			screenshot_cmd+=(-)
 		fi
