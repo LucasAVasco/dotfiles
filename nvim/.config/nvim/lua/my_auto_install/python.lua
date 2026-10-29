@@ -7,7 +7,7 @@ MYPLUGFUNC.ensure_mason_package_installed('python-lsp-server', {
 			'-c',
 			[[
 		source ~/.local/share/nvim/mason/packages/python-lsp-server/venv/bin/activate
-		pip install pylsp-mypy python-lsp-ruff
+		pip install "python-lsp-server[all]" pylsp-mypy python-lsp-ruff
 		]],
 		})
 	end,
