@@ -1,11 +1,16 @@
 {
 	"Install package with apk": {
 		"prefix": "RUN-apk-add",
-		"description": [
-			"Install a package with `apk`. Optimized for Dockerfiles"
-		],
+		"description": "Install a package with `apk`. Optimized for Dockerfiles",
+		"body": ["RUN apk add --force-refresh --no-cache ${0:packages}"]
+	},
+	"Install package with apt": {
+		"prefix": "RUN-apt-install",
+		"description": "Install a package with `apt`. Optimized for Dockerfiles",
 		"body": [
-			"RUN apk add --force-refresh --no-cache ${0:packages}"
+			"RUN apt-get update \\",
+			"\t&& apt-get install -y --no-install-recommends ${0:packages} \\",
+			"\t&& rm -rf /var/lib/apt/lists/*"
 		]
 	}
 }
