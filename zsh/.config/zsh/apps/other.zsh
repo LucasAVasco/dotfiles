@@ -23,8 +23,8 @@ if [[ -f /usr/bin/zoxide ]]; then
 fi
 
 # Eza
-alias exa='/usr/bin/exa --smart-group --group --icons=always --color=always --git --hyperlink'
-alias eza='/usr/bin/eza --smart-group --group --icons=always --color=always --git --hyperlink'
+alias exa='/usr/bin/exa --smart-group --group --icons=always --color=always --git --hyperlink always'
+alias eza='/usr/bin/eza --smart-group --group --icons=always --color=always --git --hyperlink always'
 [[ -f /usr/bin/exa ]] && alias ls='exa'
 [[ -f /usr/bin/eza ]] && alias ls='eza'
 
