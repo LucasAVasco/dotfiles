@@ -17,8 +17,10 @@ eval "$(atuin init zsh --disable-ctrl-r --disable-up-arrow)"
 bindkey '^[h' atuin-up-search
 
 # Zoxide
-eval "$(zoxide init zsh)"
-alias cd='z'
+if [[ -f /usr/bin/zoxide ]]; then
+	eval "$(zoxide init zsh)"
+	alias cd='z'
+fi
 
 # Eza
 alias exa='/usr/bin/exa --smart-group --group --icons=always --color=always --git --hyperlink'
