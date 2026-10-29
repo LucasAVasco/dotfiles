@@ -8,7 +8,7 @@ source ~/.local/lib/dotfiles/bash/paths.sh
 #
 # $1..n-1: The files to copy or `cp` arguments (relative to the provider directory). The '-i' option is added automatically
 # $n: The target directory (relative to the invoke directory)
-package_fs_cd() {
+package_fs_cp() {
 	local where="$PM_INVOKE_DIR/${@: -1}"
 
 	# Executed inside a sub-shell so it doesn't change the current directory
