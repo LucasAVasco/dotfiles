@@ -22,6 +22,10 @@ return {
 			'Lint',
 		},
 
+		keys = {
+			{ '<leader>Ic', '<CMD>Lint clear<CR>', desc = 'Clear lint diagnostics' },
+		},
+
 		config = function()
 			local nvim_lint = require('lint')
 
