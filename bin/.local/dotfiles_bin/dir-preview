@@ -23,7 +23,7 @@ EOF
 dir="${1:-.}"
 n_files="${2:-5}"
 
-if [[ "$ALLOW_EXTERNAL_SOFTWARE" == 'y' ]]; then
+if [[ "$ALLOW_EXTERNAL_SOFTWARE" != 'y' || ! -f /usr/bin/eza ]]; then
 	# Show a file or directory with `ls`.
 	#
 	# Has a default appearance configuration for files and directories. Does not places a new line at the end.
