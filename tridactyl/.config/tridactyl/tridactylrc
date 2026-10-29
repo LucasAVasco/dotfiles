@@ -20,5 +20,7 @@ bind O fillcmdline tabopen
 " Editor
 bind --mode=insert <C-e> editor
 set editorcmd default_text_editor_synced
+setpref devtools.editor.keymap "vim"
+" INFO(LucasAVasco): use <CTRL-C> to go from insert mode to normal mode
 
 " vi: ft=vim
