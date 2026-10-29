@@ -309,15 +309,20 @@ return {
 									return false
 								end
 
-								-- Use the git repository root directory when editing the '.git/COMMIT_EDITMSG' file
 								if vim.env.EDITING_COMMAND_LINE then
 									return vim.env.PWD
 								elseif buffer_file_type == 'gitcommit' then
+									-- Use the git repository root directory when editing the '.git/COMMIT_EDITMSG' file
 									base_dir = vim.fn.fnamemodify(base_dir, ':h')
 								elseif buffer_file_type == 'yaml' then
 									-- Use the root directory of the GitHub workflow
 									if split_base_dir_at_index(string.find(base_dir, '/.github/workflows', 0, true)) then
 										return base_dir
+									end
+								elseif buffer_file_type == 'markdown' then
+									-- Use the current working directory when editing a Claude prompt
+									if split_base_dir_at_index(string.find(base_dir, '/tmp/claude-', 0, true)) then
+										return vim.env.PWD
 									end
 								end
 
