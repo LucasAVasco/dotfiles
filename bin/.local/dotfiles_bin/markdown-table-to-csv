@@ -1,0 +1,19 @@
+#!/bin/env python3
+
+"""Convert markdown tables to CSV."""
+
+import fileinput
+import re
+
+if __name__ == "__main__":
+    with fileinput.input() as file:
+        for line in file:
+            # Skip '| --- |' lines
+            if re.match(r"^\|\s*[-:]+", line.strip()):
+                continue
+
+            # Extract cells, strip whitespace, and join with commas
+            cells = [c.strip() for c in line.strip().split("|")[1:-1]]
+            cvs_line = ",".join(cells) + "\n"
+
+            print(cvs_line, end="")  # noqa: T201
