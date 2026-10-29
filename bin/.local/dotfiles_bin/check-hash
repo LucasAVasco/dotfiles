@@ -1,0 +1,222 @@
+#!/bin/bash
+#
+# Check the hash of a file, or compare the hash of two files.
+
+source ~/.local/lib/dotfiles/bash/strict.sh
+
+source ~/.local/lib/dotfiles/bash/markdown.sh
+source ~/.local/lib/dotfiles/bash/help.sh
+
+help_handle y "$@" <<EOF
+	Check the hash of a file, or compare the hash of two files.
+
+	Usage: check-hash [options] <file1> [<file2>]
+
+	Options:
+		--md5sum | --md5 <hash>                 Check the MD5 hash
+		--sha1sum | --sha1 <hash>               Check the SHA1 hash
+		--sha224sum | --sha224 <hash>           Check the SHA224 hash
+		--sha256sum | --sha256 <hash>           Check the SHA256 hash
+		--sha384sum | --sha384 <hash>           Check the SHA384 hash
+		--sha512sum | --sha512 <hash>           Check the SHA512 hash
+		--sha512224sum | --sha512224 <hash>     Check the SHA512224 hash
+		--sha512256sum | --sha512256 <hash>     Check the SHA512256 hash
+		--crc | --crc32 <hash>                  Check the CRC32 hash
+		--all                                   Check all hashes.
+EOF
+
+algorithms_to_check=()
+declare -A expected_hashes=()
+
+# Add the algorithm and hash to the list of hashes to check.
+add_hash_to_check() {
+	local algorithm="$1"
+	local hash="$2"
+
+	# Adds the algorithm to the list
+	already_added=n
+	for already_addd_algorithm in "${algorithms_to_check[@]}"; do
+		if [[ "$algorithm" == "$already_addd_algorithm" ]]; then
+			already_added=y
+			break
+		fi
+	done
+
+	if [[ "$already_added" == n ]]; then
+		algorithms_to_check+=("$algorithm")
+	fi
+
+	# Sets the hash. Only sets the hash if it is not already set
+	if [[ -n "$hash" ]]; then
+		if [[ -n "${expected_hashes[$algorithm]-}" ]]; then
+			echo "Hash for $algorithm is already set to ${expected_hashes[$algorithm]}" >&2
+			exit 1
+		else
+			expected_hashes["$algorithm"]="$hash"
+		fi
+	else
+		expected_hashes["$algorithm"]=''
+	fi
+}
+
+while [[ $# -gt 0 ]]; do
+	case "$1" in
+		--md5sum | --md5)
+			add_hash_to_check 'md5sum' "$2"
+			shift 2
+			;;
+
+		--sha1sum | --sha1)
+			add_hash_to_check 'sha1sum' "$2"
+			shift 2
+			;;
+
+		--sha224sum | --sha224)
+			add_hash_to_check 'sha224sum' "$2"
+			shift 2
+			;;
+
+		--sha256sum | --sha256)
+			add_hash_to_check 'sha256sum' "$2"
+			shift 2
+			;;
+
+		--sha384sum | --sha384)
+			add_hash_to_check 'sha384sum' "$2"
+			shift 2
+			;;
+
+		--sha512sum | --sha512)
+			add_hash_to_check 'sha512sum' "$2"
+			shift 2
+			;;
+
+
+		--sha512224sum | --sha512224)
+			add_hash_to_check 'sha512224sum' "$2"
+			shift 2
+			;;
+
+
+		--sha512256sum | --sha512256)
+			add_hash_to_check 'sha512256sum' "$2"
+			shift 2
+			;;
+
+		--crc | --crc32)
+			add_hash_to_check 'crc32' "$2"
+			shift 2
+			;;
+
+		--all)
+			algorithms_to_add=('md5sum' 'sha1sum' 'sha224sum' 'sha256sum' 'sha384sum' 'sha512sum' 'sha512224sum' 'sha512256sum' 'crc32')
+			for algorithm in "${algorithms_to_add[@]}"; do
+				add_hash_to_check "$algorithm" ''
+			done
+			shift
+			;;
+
+		*)
+			break
+			;;
+	esac
+done
+file1="$1"
+file2="${2:-}"
+
+if [[ $# -eq 0 ]]; then
+	echo 'You must provide at least one file to check its hash' >&2
+	exit 1
+fi
+
+if [[ $# -gt 2 ]]; then
+	echo 'You must provide at most two files to check their hash and compare' >&2
+	exit 1
+fi
+
+declare -A hashes=(
+	[md5sum]="md5sum"
+	[sha1sum]="shasum -a 1"
+	[sha224sum]="shasum -a 224"
+	[sha256sum]="shasum -a 256"
+	[sha384sum]="shasum -a 384"
+	[sha512sum]="shasum -a 512"
+	[sha512224sum]="shasum -a 512224"
+	[sha512256sum]="shasum -a 512256"
+	[crc32]="cksum"
+)
+
+# Compute the hash of the files (file1 and file2) and compare then with the expected hashes.
+#
+# $1: The algorithm to use.
+# $2: The expected hash of the files.
+compute_and_compare_hash() {
+	local algorithm="$1"
+	local expected_hash="$2"
+	local hash_command=(${hashes[$algorithm]})
+
+	if ! command -v "${hash_command[0]}" >/dev/null; then
+		echo "The executable '${hash_command[0]}' does not exist" >&2
+		return
+	fi
+
+	# Get the hash of the files
+	file1hash=$(command "${hash_command[@]}" "$file1" | awk '{print $1}')
+	file2hash=''
+	if [[ -n "$file2" ]]; then
+		file2hash=$(command "${hash_command[@]}" "$file2" | awk '{print $1}')
+	fi
+
+	echo -e "\n# $algorithm:\n" | markdown_format
+	echo -e "$file1hash\t$file1"
+	if [[ -n "$file2" ]]; then
+		echo -e "$file2hash\t$file2"
+	fi
+	if [[ -n "$expected_hash" ]]; then
+		echo -e "$expected_hash\t(Expected)"
+	fi
+
+	# Check unmatched hashes
+	error_matching=n
+	if [[ -n "$file2" && "$file1hash" != "$file2hash" ]]; then
+		echo
+		echo -e '## Files are not equal!' | markdown_format >&2
+		echo
+		error_matching=y
+	fi
+
+	if [[ -n "$expected_hash" && "$file1hash" != "$expected_hash" ]]; then
+		echo
+		echo -e '## Provided hashes do not match!' | markdown_format >&2
+		echo
+		error_matching=y
+	fi
+
+	# No need to compare other algorithms if the first one failed
+	if [[ "$error_matching" == 'y' ]]; then
+		exit 1
+	fi
+}
+
+# No hash to check, just print some default hashes
+if (( ${#algorithms_to_check[@]} == 0 )); then
+	add_hash_to_check 'md5sum' ''
+	add_hash_to_check 'sha512sum' ''
+fi
+
+# Compute the hashes and compare them
+for algorithm in "${algorithms_to_check[@]}"; do
+	compute_and_compare_hash "$algorithm" "${expected_hashes[$algorithm]}"
+done
+
+# Show a success message
+if [[ -n "$file2" ]]; then
+	echo -e "\nFiles are equal"
+else
+	for hash in "${expected_hashes[@]}"; do
+		if [[ -n "$hash" ]]; then
+			echo -e "\nHashes are equal"
+			break
+		fi
+	done
+fi
