@@ -16,6 +16,7 @@ local Config = {
 		cpp = { 'clang-format' },
 		rust = { 'rustfmt' },
 		cmake = { 'cmake_format' },
+		python = { 'ruff_format' },
 	},
 
 	---@type string[] List of code formatters that should not notify the user if they can not be installed automatically with 'mason.nvim'
