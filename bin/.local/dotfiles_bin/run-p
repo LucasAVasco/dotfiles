@@ -1,0 +1,46 @@
+#!/bin/bash
+#
+# Runs commands in parallel and aborts if any job fails.
+
+source ~/.local/lib/dotfiles/bash/strict.sh
+
+source ~/.local/lib/dotfiles/bash/help.sh
+
+help_handle y "$@" <<EOF
+	Run commands in parallel. Aborts if any job fails and returns the exit of the first failed job.
+
+	Usage: run-p <command> [command...]
+EOF
+
+if [[ "$#" -lt 1 ]]; then
+	echo "Must provide at least one command to run in parallel."
+fi
+
+# Aborts all jobs on exit
+abort_all_jobs() {
+	kill $(jobs -p) 2>/dev/null || true
+}
+trap abort_all_jobs EXIT
+
+# Runs the commands
+pids=()
+for cmd in "$@"; do
+	bash -c "$cmd" &
+	pids+=($!)
+done
+
+# Waits for all jobs to complete. If any job fails, returns the exit code of the first failed job
+for _ in "${pids[@]}"; do
+	wait -n
+	exit_code=$?
+
+	if [[ $exit_code -ne 0 ]]; then
+		break
+	fi
+done
+
+if [ $exit_code -ne 0 ]; then
+	echo "Error: A background job failed with exit code $exit_code. Exiting now!"
+
+	exit $exit_code
+fi
