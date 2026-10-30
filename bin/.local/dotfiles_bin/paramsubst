@@ -51,7 +51,7 @@ local current_position = 0
 
 --- Gets the index of the parameter.
 ---@return integer
-function get_parameter_index()
+local function get_parameter_index()
 	local current_char = string.sub(text, current_position, current_position)
 
 	-- If the index is inside braces. Example: %{1}
