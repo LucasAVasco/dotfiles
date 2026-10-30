@@ -1,0 +1,50 @@
+#!/bin/bash
+#
+# Repeat a command in series.
+
+source ~/.local/lib/dotfiles/bash/strict.sh
+
+source ~/.local/lib/dotfiles/bash/help.sh
+
+help_handle y "$@" <<EOF
+	Repeat a command in series. Any '/_' will be replaced with the current iteration. This placeholder can be configured with the
+	'--placeholder' flag.
+
+	Usage: repeat-s [-p|--placeholder <placeholder>] <num-repeat> <command> [args...]
+
+	Options:
+		-p, --placeholder <placeholder>  The placeholder to replace with the current iteration. To disable, set to ''.
+EOF
+
+placeholder='/_'
+if [[ "$1" == '-p' || "$1" == '--placeholder' ]]; then
+	placeholder="$2"
+	shift 2
+fi
+
+if [[ "$#" -lt 1 ]]; then
+	echo "Must provide at least one command to repeat in series."
+fi
+
+repeat="$1"
+shift
+
+# Repeats the command
+for i in $(seq 1 $repeat); do
+	# Replaces the placeholder in the command
+	cmd=()
+	if [[ -n "$placeholder" ]]; then
+		for arg in "$@"; do
+			cmd+=("$(printf '%s' "$arg" | strsubst "$placeholder" "$i")")
+		done
+	else
+		cmd+=("$@")
+	fi
+
+	# Runs the command
+	command "${cmd[@]}" || {
+		exit_code=$?
+		echo "Error: Command '$cmd' failed with exit code $exit_code. Aborting now!"
+		exit $exit_code
+	}
+done
