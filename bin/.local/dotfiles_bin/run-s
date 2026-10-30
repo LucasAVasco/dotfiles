@@ -1,0 +1,26 @@
+#!/bin/bash
+#
+# Runs commands in series and aborts if any job fails.
+
+source ~/.local/lib/dotfiles/bash/strict.sh
+
+source ~/.local/lib/dotfiles/bash/help.sh
+
+help_handle y "$@" <<EOF
+	Run commands in series. Aborts if any job fails and returns the exit of the first failed job.
+
+	Usage: run-s <command> [command...]
+EOF
+
+if [[ "$#" -lt 1 ]]; then
+	echo "Must provide at least one command to run in series."
+fi
+
+# Runs the commands
+for cmd in "$@"; do
+	bash -c "$cmd" || {
+		exit_code=$?
+		echo "Error: Command '$cmd' failed with exit code $exit_code. Aborting now!"
+		exit $exit_code
+	}
+done
