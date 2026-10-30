@@ -1,0 +1,59 @@
+#!/usr/bin/env lua
+
+--[[
+
+Replaces all instances of multiple search terms with their respective replacement terms in a stream of text from stdin.
+
+Usage:
+    strsubst search1 replacement1 [search2 replacement2 ...]
+
+--]]
+
+-- Parse search and replacement pairs from command-line arguments
+---@type {search: string, replace: string}[]
+local pairs_list = {}
+for i = 1, #arg, 2 do
+	local search = arg[i]
+	local replacement = arg[i + 1] or ""
+	if search and search ~= "" then
+		table.insert(pairs_list, { search = search, replace = replacement })
+	end
+end
+
+-- Exit if no search terms were provided
+if #pairs_list == 0 then
+	io.stderr:write("Usage: strsubst search1 replacement1 [search2 replacement2 ...]\n")
+	os.exit(1)
+end
+
+-- Process the stream line-by-line
+for line in io.lines() do
+	local last_idx = 1
+
+	while true do
+		local earliest_i, earliest_j, chosen_pair
+
+		-- Find the leftmost matching search term among all pairs starting from last_idx
+		for _, p in ipairs(pairs_list) do
+			local i, j = string.find(line, p.search, last_idx, true)
+			if i and (not earliest_i or i < earliest_i) then
+				earliest_i, earliest_j = i, j
+				chosen_pair = p
+			end
+		end
+
+		-- If no search terms match further down the line, break
+		if not earliest_i then
+			break
+		end
+
+		-- Stream the text piece before the match and the replacement directly to stdout
+		io.write(string.sub(line, last_idx, earliest_i - 1))
+		io.write(chosen_pair.replace)
+
+		last_idx = earliest_j + 1
+	end
+
+	-- Print the remainder of the line followed by the newline character
+	io.write(string.sub(line, last_idx), "\n")
+end
