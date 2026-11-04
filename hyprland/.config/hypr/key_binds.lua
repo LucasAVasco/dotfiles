@@ -123,7 +123,13 @@ local function get_current_monitor_id()
 		return 0
 	end
 
-	return monitor.id
+	for index, m in pairs(hl.get_monitors()) do
+		if m.name == m.name then
+			return index - 1
+		end
+	end
+
+	return 0
 end
 
 ---Calculates the workspace id for the provided index based on the current monitor.

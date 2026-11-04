@@ -128,26 +128,31 @@ end)
 -- Workspaces configuration {{{
 
 ---Configure workspaces for a monitor
----@param monitor HL.Monitor
-local function configure_workspaces_for_monitor(monitor)
-	local current_monitor_index = monitor.id * 10
-	for index = 0, 9 do
+---@param monitor_name string Name of the monitor
+---@param index number Index of the monitor
+local function configure_workspaces_for_monitor(monitor_name, index)
+	local current_monitor_index = index * 10
+	for i = 0, 9 do
 		current_monitor_index = current_monitor_index + 1
 		hl.workspace_rule({
 			workspace = tostring(current_monitor_index),
-			monitor = monitor.name,
-			default = (index == 0),
+			monitor = monitor_name,
+			default = (i == 0),
 		})
 	end
 end
 
-for _, monitor in pairs(hl.get_monitors()) do
-	configure_workspaces_for_monitor(monitor)
+local function update_monitor_rules()
+	for index, monitor in pairs(hl.get_monitors()) do
+		configure_workspaces_for_monitor(monitor.name, index - 1)
+	end
 end
 
+update_monitor_rules()
+
 -- Re-run if a new monitor is plugged in
-hl.on("monitor.added", function(monitor)
-	configure_workspaces_for_monitor(monitor)
+hl.on("monitor.added", function(_)
+	update_monitor_rules()
 end)
 
 -- }}}
