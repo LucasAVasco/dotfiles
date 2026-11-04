@@ -10,13 +10,25 @@
 \definecolor{MintedBg}{gray}{0.95}
 \usemintedstyle{catppuccin-latte}
 
+\newcommand{\inputcodeinline}[2]{
+    \mintinline[bgcolor=MintedBg,breaklines]{#1}{#2}
+}
+
+% Input code.
+%
+% #1: language name. Same as used in minted.
+% #2: file path.
+\newcommand{\inputcodeheadless}[2]{
+    \inputminted[bgcolor=MintedBg,breaklines]{#1}{#2}
+}
+
 % Input code.
 %
 % #1: language name. Same as used in minted.
 % #2: file path.
 \newcommand{\inputcode}[2]{
     \textbf{'#2':}
-    \inputminted[bgcolor=MintedBg,breaklines]{#1}{#2}
+    \inputcodeheadless{#1}{#2}
 }
 
 % Box with the output of scripts, commands, etc.
