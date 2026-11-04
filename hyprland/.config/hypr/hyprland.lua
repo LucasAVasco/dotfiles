@@ -23,7 +23,7 @@ end)
 -- Environment variables {{{
 
 hl.env("CUSTOM_DESKTOP_SET_WALLPAPER_COMMAND", "~/.config/hypr/update-wallpaper.sh")
-hl.env("CUSTOM_DESKTOP_LOGOUT_COMMAND", "hyprctl dispatch hl.dsp.exit {}")
+hl.env("CUSTOM_DESKTOP_LOGOUT_COMMAND", "hyprctl dispatch 'hl.dsp.exit()'")
 hl.env("XCURSOR_SIZE", "24")
 hl.env("HYPRCURSOR_SIZE", "24")
 
