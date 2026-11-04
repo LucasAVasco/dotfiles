@@ -1,0 +1,25 @@
+[project]
+name = "<var:project-name>"
+version = "0.0.1"
+authors = [
+  { name = "<var:author-name>", email = "<var:author-email>" },
+]
+
+description = "<var:description>"
+readme = "README.md"
+requires-python = ">=<var:python-version>"
+classifiers = [
+  "Operating System :: OS Independent",
+  "Programming Language :: Python :: <var:python-version-major>",
+]
+
+[project.urls]
+Homepage = "https://github.com/<var:git-user-name>/<var:repository-name>"
+Issues = "https://github.com/<var:git-user-name>/<var:repository-name>/issues"
+
+[tool.pylsp-mypy]
+enabled = true
+strict = true
+
+[tool.ruff.lint]
+select = ["ALL"]

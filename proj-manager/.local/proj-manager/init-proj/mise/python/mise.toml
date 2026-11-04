@@ -1,0 +1,18 @@
+[env]
+PROJECT_NAME = "{{ config_root | basename }}"
+_.python.venv = { path = ".venv", create = true }
+
+[tools]
+uv = "latest"
+
+[tasks.install]
+description = "Install all dependencies"
+run = "uv pip install -r requirements.txt"
+
+[tasks.update]
+description = "Update all dependencies"
+run = "uv pip install --upgrade -r requirements.txt && mise run freeze"
+
+[tasks.freeze]
+description = "Save all dependencies versions"
+run = "uv pip freeze > requirements.txt"
