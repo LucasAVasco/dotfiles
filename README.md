@@ -16,7 +16,7 @@ git clone https://github.com/LucasAVasco/dotfiles ~/.local/dotfiles
 To run int in a container (docker or podman), you can use one of the following commands:
 
 ```sh
-bash <(wget -O - https://raw.githubusercontent.com/LucasAVasco/dotfiles/refs/heads/main/run-in-container.sh 2> /dev/null)
+bash <(wget -o /dev/null -O - https://raw.githubusercontent.com/LucasAVasco/dotfiles/refs/heads/main/run-in-container.sh)
 ```
 
 Or
