@@ -1,0 +1,14 @@
+% Postgres, PostgreSQL, pg_dump
+
+
+# Dump the database schema
+pg_dump -U <username> -d <database> --schema-only
+
+# Dump the database schema and data
+pg_dump -U <username> -d <database>
+
+# Dump the database schema and data in compressed form
+pg_dump -U <username> -d <database> -Fc > <output-file.dump>
+
+# Dump the database schema and data in parallel in a directory. This is useful for large databases
+pg_dump -U <username> -d <database> -Fd -j 4 -f <directory>
