@@ -1,0 +1,40 @@
+#!/bin/bash
+#
+# Convert a code file to PDF
+
+source ~/.local/lib/dotfiles/bash/strict.sh
+
+source ~/.local/lib/dotfiles/bash/file_type.sh
+source ~/.local/lib/dotfiles/bash/help.sh
+source ~/.local/lib/dotfiles/bash/log.sh
+
+help_handle y "$@" <<EOF
+	Convert a code file to PDF
+
+	Usage: code2pdf <files..>
+
+	Convert each file to PDF and save using the same name as base
+
+	Example:
+
+	code2pdf file-name.cpp
+
+	This example converts the file 'file-name.cpp' to a pdf with the name 'file-name.pdf'
+EOF
+
+for file_path in "$@"; do
+	output_dir="$(dirname "$file_path")"
+	output_file_name="$(basename "$file_path")"
+	output_file_name="${output_file_name%\.*}.pdf" # Replace extension
+	output="${output_dir}/${output_file_name}"
+	file_type="$(file_type_get_or_extension "$file_path")"
+
+	log_info "Converting '$file_path' (file type: $file_type) to '$output'..."
+
+	pandoc_args=(-V geometry:margin=1cm -V pagestyle=empty)
+	if [[ "$file_type" == "markdown" ]]; then
+		cat "$file_path" | pandoc -o "$output" "${pandoc_args[@]}"
+	else
+		printf "\`\`\`${file_type}\n%s\n\`\`\`" "$(cat "$file_path")" | pandoc -o "$output" "${pandoc_args[@]}"
+	fi
+done
