@@ -3,3 +3,6 @@
 
 # Set keyboard layout
 setxkbmap -layout <layout>
+
+# Set keyboard layout to the default one
+setxkbmap -layout $XKB_DEFAULT_LAYOUT
