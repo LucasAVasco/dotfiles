@@ -34,8 +34,13 @@ vim.filetype.add({
 	},
 
 	pattern = {
-		['helmfile.*.ya?ml(.gotmpl)'] = 'helm',
+		-- Helm
 		['.*/templates/.*.ya?ml'] = is_helm_template_file,
-		['.*/templates/.*.tpl'] = is_helm_template_file,
+		['.*/templates/.*.tm?pl'] = is_helm_template_file,
+		['.*/templates/.*.gotmpl'] = is_helm_template_file,
+
+		-- Helmfile
+		['helmfile.*.ya?ml(.gotmpl)'] = 'helm',
+		['.*/helmfile.d/.*.ya?ml(.gotmpl)'] = 'helm',
 	},
 })

@@ -24,7 +24,11 @@ schemas.kubernetes = {
 -- Support to 'helmfile.yml.gotmpl' and 'helmfile.yaml.gotmpl'
 
 local helmfile_schema = schemas['https://www.schemastore.org/helmfile.json']
-table.insert(helmfile_schema, 'helmfile.yml.gotmpl')
-table.insert(helmfile_schema, 'helmfile.yaml.gotmpl')
+MYFUNC.array_concat(helmfile_schema, {
+	'helmfile.y[a]ml',
+	'helmfile.y[a]ml.gotmpl',
+	'**/helmfile.d/**/*.y[a]ml',
+	'**/helmfile.d/**/*.y[a]ml.gotmpl',
+})
 
 return schemas
