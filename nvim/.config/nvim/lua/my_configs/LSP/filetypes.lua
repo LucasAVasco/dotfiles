@@ -27,4 +27,6 @@ return {
 		-- Plugins and extension
 		'vue', -- Support Vue plugin
 	},
+
+	gopls = { 'go', 'gomod', 'gowork' },
 }

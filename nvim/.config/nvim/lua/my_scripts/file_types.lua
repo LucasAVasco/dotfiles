@@ -11,6 +11,8 @@ vim.filetype.add({
 		['cheat'] = 'cfg',
 		['vifm'] = 'vim',
 		['alloy'] = 'hcl',
+		['gotmpl'] = 'gotmpl',
+		['gohtml'] = 'gotmpl',
 	},
 })
 
