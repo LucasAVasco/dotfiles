@@ -9,22 +9,14 @@ local normal_visual_mode = { 'n', 'v' }
 
 return {
 	{
-		'Exafunction/windsurf.nvim',
-		dependencies = {
-			'nvim-lua/plenary.nvim',
-		},
-
-		cond = MYVAR.not_in_vscode,
-
+		'zbirenbaum/copilot.lua',
 		event = 'InsertEnter',
-		cmd = 'Codeium',
+		cmd = 'Copilot',
 
 		opts = {
-			enable_cmp_source = false, -- I use the virtual text to show the suggestions
-
-			virtual_text = {
-				enabled = true,
-				key_bindings = {
+			suggestion = {
+				auto_trigger = true,
+				keymap = {
 					accept = '<A-Tab>',
 					next = '<A-]>',
 					prev = '<A-[>',
@@ -33,8 +25,21 @@ return {
 		},
 
 		config = function(_, opts)
-			require('codeium').setup(opts)
-			vim.api.nvim_set_hl(0, 'CodeiumSuggestion', { link = 'Comment' })
+			require('copilot').setup(opts)
+
+			vim.api.nvim_create_autocmd('User', {
+				pattern = 'BlinkCmpMenuOpen',
+				callback = function()
+					vim.b.copilot_suggestion_hidden = true
+				end,
+			})
+
+			vim.api.nvim_create_autocmd('User', {
+				pattern = 'BlinkCmpMenuClose',
+				callback = function()
+					vim.b.copilot_suggestion_hidden = false
+				end,
+			})
 		end,
 	},
 	{
