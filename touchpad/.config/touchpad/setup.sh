@@ -2,12 +2,22 @@
 #
 # Configure the touchpad to support tapping with one, two and triple fingers
 
+source ~/.local/lib/dotfiles/bash/linux/session.sh
 
 # Only works in Xorg
-if [[ -n "$WAYLAND_DISPLAY" ]]; then
-	return
-fi
+case "$(linux_session_get_type)" in
+	x11)
+		;;
 
+	wayland)
+		exit 0
+		;;
+
+	*)
+		echo "Unknown session type: $(linux_session_get_type)" >&2
+		exit 1
+		;;
+esac
 
 # Get a input device id by the name
 #
