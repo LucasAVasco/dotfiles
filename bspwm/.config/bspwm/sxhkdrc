@@ -1,166 +1,237 @@
 # Configuration to work with Bspwm window manager
 #
-# To query the X events used to define the keybindings, use: 'xev'
-# To reload Sxhkd and apply the changes, use: 'pkill -USR1 -x sxhkd'
+# To query the X events used to define the keybindings, use: xev
+# To reload Sxhkd and apply the changes, use: pkill -USR1 -x sxhkd
 
-# Reserved mappings (conventions)        | Usage
-# ---------------------------------------|----------------------------------------------------------------------
-# h,j,k,l                                | Node movement, resize, flip, etc
-# 1-5 F1-F5                              | Desktops and movement through desktops
-# F6-F12                                 | System management
-# z,x,c...m                              | System management
-# 6-9,0                                  | Node state (full screen, tiling, floating, etc)
-# Other alphabetic letters (not numbers) | Launch applications
+# Exit and reload
 
-# Other keys (exceptions)
-# ------------------------------------------------
-# ctrl + alt + l    | Lock the screen
-# super + Return    | Open the terminal
-# super + delete    | Kill a window with xkill
-# super + minus     | Toggle sticky mode
+super + ctrl + shift + q
+	~/.config/bspwm/quit.sh &
+
+super + shift + x
+	~/.config/bspwm/init.sh &
 
 
-# #region Applications
+# Applications
 
-# Open the terminal
 super + Return
-	cd ~; exo-open --launch TerminalEmulator &
+	cd ~; default_term &
 
-# File manager
 super + f
-	cd ~; exo-open --launch FileManager &
+	cd ~; default_file_manager &
 
-# Screenshot
-super + s
-	gnome-screenshot -i &
-
-# #endregion
-
-
-# #region Rofi interfaces
-
-# Bspwm node options
-super + t
-	~/.config/bspwm/rofi/node_flag.sh &
-
-# Select a window
 super + w
-	~/.config/rofi/tools/windows.sh &
+	~/.local/dotfiles_bin/default_web_browser &
 
-# Launch application
+super + t
+	~/.config/custom-desktop/chdesk-ui.sh &
+
 super + a
-	~/.config/rofi/tools/applications.sh &
+	~/.config/custom-desktop/launcher.sh &
 
-# Select current desktop with 'chdesk'
-super + d
-	~/.config/rofi/tools/chdesk.sh &
+super + o
+	~/.config/custom-desktop/org-menu.sh &
 
-# #endregion
+super + r
+	~/.local/dotfiles_bin/custom-script-popup &
+
+super + shift + p
+	~/.config/custom-desktop/password-manager.sh &
+
+super + s
+	~/.config/screenshot/take.sh -o /dev/null -c &
+
+super + shift + s
+	~/.config/screenshot/take.sh -o /dev/null -i -c &
+
+super + shift + Escape
+	~/.config/custom-desktop/session-manager.sh &
 
 
-# #region Window and nodes management
+# Close window
 
-# Close the node
 super + c
 	bspc node -c
 
-# Set the node's state
-super + {6-9}
-	bspc node -t {tiled,pseudo_tiled,floating,fullscreen}
+super + Delete
+	xkill &
 
-# Toggle sticky mode
-super + minus
-	bspc node -g sticky
 
-# Change the focused node
+# Directions
+
 super + {h,j,k,l}
 	bspc node -f {west,south,north,east}
 
-# Move node (switch with other node)
 super + alt + {h,j,k,l}
 	bspc node -s {west,south,north,east} --follow
 
-# Resize the window
-super + shift + {h,j}
-	bspc node -z {left,bottom} -20 20
+super + shift + h
+	bspc node -z left -20 0
 
-super + shift + {k,l}
-	bspc node -z {top,right} 20 -20
+super + shift + j
+	bspc node -z bottom 0 20
 
-# Manual layout
+super + shift + k
+	bspc node -z top 0 -20
+
+super + shift + l
+	bspc node -z right 20 0
+
+
+# Node creation
+
 super + ctrl + {h,j,k,l,g}
 	bspc node -p {west,south,north,east,cancel}
 
-# Flip desktop
-super + shift + alt + {h,j}
-	bspc node $(bspc query -N -d | sed -n '1p') -F {horizontal,vertical}
 
-# #endregion
+# Workspaces / desktops
 
-
-# #region Movement through Desktops
-
-# Change to another desktop
 super + {1-5}
-	bspc desktop -f {I,II,III,IV,V}
+	bspc desktop -f {I,II,III,IV,V} & ~/.config/monitor/update-workspace-screen-temp.sh 1
 
 super + F{1-5}
-	bspc desktop -f {VI,VII,VIII,IX,X}
+	~/.config/monitor/update-workspace-screen-temp.sh 6 & bspc desktop -f {VI,VII,VIII,IX,X}
 
-# Move the window to another desktop
+super + alt + {1-5}
+	bspc node -d {I,II,III,IV,V} --follow & ~/.config/monitor/update-workspace-screen-temp.sh 1
+
+super + alt + F{1-5}
+	~/.config/monitor/update-workspace-screen-temp.sh 6 & bspc node -d {VI,VII,VIII,IX,X} --follow
+
 super + shift + {1-5}
 	bspc node -d {I,II,III,IV,V}
 
 super + shift + F{1-5}
 	bspc node -d {VI,VII,VIII,IX,X}
 
-# Move the window to another desktop (and follow it)
-super + alt + {1-5}
-	bspc node -d {I,II,III,IV,V} --follow
+super + BackSpace
+	bspc desktop -f last
 
-super + alt + F{1-5}
-	bspc node -d {VI,VII,VIII,IX,X} --follow
+super + bracketright
+	bspc desktop -f next.local
 
-# #endregion
+super + bracketleft
+	bspc desktop -f prev.local
 
 
-# #region Sound and volume
+# Monitors
 
-# Mute
+super + ctrl + {1-5}
+	bspc monitor -f ^{1-5}
+
+super + ctrl + alt + {1-5}
+	bspc node -m ^{1-5} --follow
+
+super + ctrl + shift + {1-5}
+	bspc node -m ^{1-5}
+
+
+# Node management
+
+super + 0
+	bspc node -t '~floating'
+
+super + 9
+	bspc node -t floating; bspc node -g sticky=on
+
+super + 8
+	bspc node -t fullscreen
+
+super + 7
+	bspc node -t pseudo_tiled
+
+super + 6
+	bspc node -R 90
+
+super + minus
+	bspc node -g sticky
+
+
+# Layout management
+
+super + m
+	bspc desktop -l next
+
+super + shift + m
+	bspc desktop -l prev
+
+
+# Notifications
+
+super + shift + n
+	~/.config/custom-desktop/dismiss-notifications.sh &
+
+
+# Clipboard management
+
+super + y
+	~/.local/dotfiles_bin/receive-clip-from-sync-folder &
+
+super + p
+	~/.local/dotfiles_bin/send-clip-to-sync-folder &
+
+super + shift + y
+	~/.config/clipboard/clear.sh &
+
+
+# Screen locker
+
+super + z
+	~/.config/screenlocker/manager.sh toggle &
+
+ctrl + alt + l
+	~/.config/screenlocker/manager.sh run &
+
+
+# Backlight
+
+super + F6
+	backlight set -5%
+
+super + F7
+	backlight set 20%
+
+super + F8
+	backlight set +5%
+
+
+# Sound and volume
+
 super + F9
 	pactl set-sink-mute @DEFAULT_SINK@ toggle
 
-# Add and subtract volume
-super + {F10,F11}
-	pactl set-sink-volume @DEFAULT_SINK@ {-5%,+5%}
+super + F10
+	pactl set-sink-volume @DEFAULT_SINK@ -5%
 
-# Bucklespring (keyboard sound emulator)
+super + F11
+	pactl set-sink-volume @DEFAULT_SINK@ +5%
+
 super + b
 	~/.config/keyboard/sound_emulator.sh toggle
 
-# #endregion
 
+# Mouse and simulated input
 
-# #region System management
+super + e
+	simulate-input mouse scroll 5 20 0 -15
 
-# Toggle padding
-super + F7
-	~/.config/bspwm/toggle_padding.sh
+super + u
+	simulate-input mouse scroll 5 20 0 -15
 
-# Reload the configurations
-super + shift + x
-	~/.config/bspwm/init.sh &
+super + d
+	simulate-input mouse scroll 5 20 0 15
 
-# Clear the clipboard
-super + z
-	~/.config/clipboard/clear.sh &
+super + shift + d
+	simulate-input mouse click middle
 
-# Kill a window
-super + Delete
-	xkill &
+super + button4
+	bspc desktop -f prev.local
 
-# Lock the screen
-ctrl + alt + l
-	~/.config/screenlocker/run.sh &
+super + button5
+	bspc desktop -f next.local
 
-# #endregion
+super + button1
+	bspc pointer -g move
+
+super + button3
+	bspc pointer -g resize_corner
