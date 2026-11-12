@@ -7,6 +7,8 @@ cd "$current_dir"
 
 ./start-status-bar.sh
 
+./compositor.sh
+
 ~/.config/screenlocker/manager.sh enable --no-notify &
 
 ./secrets-service.sh &
