@@ -7,6 +7,11 @@ set -e
 current_dir=$(dirname `realpath "${BASH_SOURCE[0]}"`)
 cd "$current_dir"
 
+# Stops the last keepassxc process if it is running
+if [[ "$(pgrep -f keepassxc)" != "" ]]; then
+	pkill -u "$UID" -x keepassxc
+fi
+
 # KeePassXC configuration with the defaults to run as a freedesktop.org secrets service
 if [[ ! -f ~/.config/keepassxc/keepassxc.ini ]]; then
 	cp -i ./keepassxc-conf.ini ~/.config/keepassxc/keepassxc.ini
