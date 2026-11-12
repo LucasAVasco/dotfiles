@@ -14,7 +14,7 @@ end
 -- Initialization scripts {{{
 
 hl.on("hyprland.start", function()
-	hl.exec_cmd("~/.config/hypr/init.sh")
+	hl.exec_cmd("~/.config/custom-desktop/init.sh")
 	hl.exec_cmd("hyprpaper")
 end)
 
