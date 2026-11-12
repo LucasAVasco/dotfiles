@@ -5,11 +5,15 @@ source ~/.local/lib/dotfiles/bash/strict.sh
 current_dir=$(dirname `realpath "${BASH_SOURCE[0]}"`)
 cd "$current_dir"
 
-./start-status-bar.sh
+./keyboard.sh &
 
-./compositor.sh
+~/.config/touchpad/setup.sh &
 
-~/.config/screenlocker/manager.sh enable --no-notify &
+./start-status-bar.sh &
+
+./compositor.sh &
+
+./screen-locker.sh &
 
 ./secrets-service.sh &
 
