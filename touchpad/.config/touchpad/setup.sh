@@ -46,7 +46,6 @@ get_device_option_id()
 	fi
 }
 
-
 # Set a device option by the name
 #
 # $1: Device name
@@ -54,24 +53,22 @@ get_device_option_id()
 # $3: Option value
 set_device_option()
 {
-
-	local device_id=$(get_device_id "$1") && \
-	local option_id=$(get_device_option_id "$1" "$2") && \
-
-	# Doesn't set if there aren't this device
+	local device_id=$(get_device_id "$1")
 	if [ "$device_id" == '' ]; then
-		echo "There aren't this device!"
-
-	# Doesn't set if this device there aren't this option
-	elif [ "$option_id" == '' ]; then
-		echo "There aren't this option!"
-
-	# Sets the option
-	else
-		xinput set-prop "$device_id" "$option_id" "$3"
+		echo "There aren't this device!" >&2
+		return
 	fi
+
+	local option_id=$(get_device_option_id "$1" "$2")
+	if [ "$option_id" == '' ]; then
+		echo "There aren't this option!" >&2
+		return
+	fi
+
+	xinput set-prop "$device_id" "$option_id" "$3"
 }
 
-
 # Enable Touchpad Tapping
-set_device_option 'Touchpad' 'libinput Tapping Enabled' '1'
+if [[ "$(get_device_id 'Touchpad')" != '' ]]; then
+	set_device_option 'Touchpad' 'libinput Tapping Enabled' '1'
+fi
