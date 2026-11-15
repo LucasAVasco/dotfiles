@@ -1,0 +1,296 @@
+#!/usr/bin/env bash
+
+source ~/.local/lib/dotfiles/bash/strict.sh
+
+source ~/.local/lib/dotfiles/bash/dialog/dialog.sh
+source ~/.local/lib/dotfiles/bash/help.sh
+
+help_handle y "$@" <<EOF
+	Create and delete semantic versions.
+
+	Usage:
+
+	git semver <create>         Create a new semantic version in the current commit.
+
+	git semver <delete|del>     Delete the latest reachable semantic version tag.
+EOF
+
+# ---------------------------------------------------------------------------
+# Git helpers
+# ---------------------------------------------------------------------------
+
+# Throws an error if there is not inside a Git repository.
+require_git_repository() {
+	if ! git rev-parse --is-inside-work-tree &>/dev/null; then
+		echo "Error: Not inside a Git repository." >&2
+		return 1
+	fi
+}
+
+# Get the latest reachable semantic version tag.
+# Returns the version from the standard output.
+get_latest_version() {
+	local version
+
+	version=$(git describe --tags --abbrev=0 \
+		--match 'v[0-9]*' \
+		--match '[0-9]*' 2>/dev/null) || {
+		echo "Error: No reachable semantic version tag found." >&2
+		return 1
+	}
+
+	printf '%s' "$version"
+}
+
+# Checks if a tag already exists.
+#
+# $1: tag to check.
+# Returns 'y' or 'n' from the standard output.
+tag_exists() {
+	local tag="$1"
+
+	if git show-ref --verify --quiet "refs/tags/${tag}"; then
+		printf 'y'
+	else
+		printf 'n'
+	fi
+}
+
+# ---------------------------------------------------------------------------
+# Commit inspection
+# ---------------------------------------------------------------------------
+
+# Checks if there is any breaking changes between two commits.
+#
+# $1: start commit (exclusive).
+# $2: end commit (inclusive).
+# Returns 'y' or 'n' from the standard output.
+has_breaking_changes_between_commits() {
+	local start_commit="$1"
+	local end_commit="$2"
+	local commits
+
+	commits=$(git log "${start_commit}..${end_commit}" --format='%s%n%b') || return 1
+
+	# Conventional Commits:
+	#   feat!: ...
+	#   feat(api)!: ...
+	#   fix!: ...
+	if grep -Eq '^[[:alnum:]][[:alnum:]-]*(\([^)]*\))?!:' <<< "$commits"; then
+		printf 'y'
+		return 0
+	fi
+
+	# Commit body:
+	#   BREAKING CHANGE: ...
+	#   BREAKING-CHANGE: ...
+	if grep -Eq '^BREAKING[ -]CHANGE:' <<< "$commits"; then
+		printf 'y'
+		return 0
+	fi
+
+	printf 'n'
+}
+
+# Checks if the commits between a range add some features.
+#
+# $1: start commit (exclusive).
+# $2: end commit (inclusive).
+# Returns 'y' or 'n' from the standard output.
+commits_add_features() {
+	local start_commit="$1"
+	local end_commit="$2"
+	local subjects
+
+	subjects=$(git log "${start_commit}..${end_commit}" --format='%s') || return 1
+
+	# Conventional Commits:
+	#   feat: ...
+	#   feat(api): ...
+	#   feat!: ...
+	#   feat(api)!: ...
+	if grep -Eq '^feat(\([^)]*\))?!?:' <<< "$subjects"; then
+		printf 'y'
+		return 0
+	fi
+
+	printf 'n'
+}
+
+# ---------------------------------------------------------------------------
+# Semantic versioning
+# ---------------------------------------------------------------------------
+
+# Increment a numeric version component without integer overflow.
+#
+# $1: numeric component to increment.
+# Returns the incremented component from the standard output.
+increment_version_component() {
+	local value="$1"
+	local result=""
+	local carry=1
+	local digit
+	local i
+
+	for ((i = ${#value} - 1; i >= 0; i--)); do
+		digit="${value:i:1}"
+
+		if (( carry )); then
+			if (( digit == 9 )); then
+				result="0${result}"
+			else
+				result="$((digit + 1))${result}"
+				carry=0
+			fi
+		else
+			result="${digit}${result}"
+		fi
+	done
+
+	if (( carry )); then
+		result="1${result}"
+	fi
+
+	printf '%s' "$result"
+}
+
+# Increment the version.
+#
+# $1: version to increment.
+# $2: if at least one commit has a breaking change.
+# $3: if commits add new features.
+# Returns the new version from the standard output.
+increment_semantic_version() {
+	local version="$1"
+	local has_breaking_changes="$2"
+	local adds_features="$3"
+
+	local prefix=""
+	local major minor patch
+
+	# Preserve the optional 'v' prefix.
+	if [[ "$version" == v* ]]; then
+		prefix="v"
+		version="${version#v}"
+	fi
+
+	# Remove prerelease and build metadata.
+	version="${version%%[-+]*}"
+
+	# Validate semantic version.
+	if [[ ! "$version" =~ ^(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)$ ]]; then
+		echo "Error: Invalid semantic version." >&2
+		return 1
+	fi
+
+	major="${BASH_REMATCH[1]}"
+	minor="${BASH_REMATCH[2]}"
+	patch="${BASH_REMATCH[3]}"
+
+	if [[ "$has_breaking_changes" == y ]]; then
+		if [[ "$major" == 0 ]]; then
+			minor=$(increment_version_component "$minor")
+		else
+			major=$(increment_version_component "$major")
+			minor=0
+		fi
+
+		patch=0
+
+	elif [[ "$adds_features" == y ]]; then
+		minor=$(increment_version_component "$minor")
+		patch=0
+
+	else
+		patch=$(increment_version_component "$patch")
+	fi
+
+	printf '%s%s.%s.%s' "$prefix" "$major" "$minor" "$patch"
+}
+
+# ---------------------------------------------------------------------------
+# Commands
+# ---------------------------------------------------------------------------
+
+# Create a new version using semantic versioning in the current commit.
+create_new_version() {
+	local latest_version
+	local has_breaking_changes
+	local adds_features
+	local new_version
+	local exists
+
+	latest_version=$(get_latest_version) || return 1
+
+	has_breaking_changes=$(has_breaking_changes_between_commits \
+		"$latest_version" HEAD) || return 1
+
+	adds_features=$(commits_add_features \
+		"$latest_version" HEAD) || return 1
+
+	new_version=$(increment_semantic_version \
+		"$latest_version" \
+		"$has_breaking_changes" \
+		"$adds_features") || return 1
+
+	exists=$(tag_exists "$new_version") || return 1
+
+	if [[ "$exists" == y ]]; then
+		echo "Error: Tag '${new_version}' already exists." >&2
+		return 1
+	fi
+
+	if [[ "$(dialog_ask_boolean \
+		"Want to create the new tag '${new_version}'?" y)" == y ]]; then
+
+		git tag -a -m "Release ${new_version}" "$new_version"
+	fi
+}
+
+# Delete the latest reachable semantic version tag.
+delete_latest_version() {
+	local latest_version
+
+	latest_version=$(get_latest_version) || return 1
+
+	if [[ "$(dialog_ask_boolean \
+		"Want to delete the tag '${latest_version}'?" n)" == y ]]; then
+
+		git tag -d "$latest_version"
+	fi
+}
+
+# ---------------------------------------------------------------------------
+# Entry point
+# ---------------------------------------------------------------------------
+
+main() {
+	require_git_repository || return 1
+
+	case "${1:-}" in
+		create|new)
+			if (( $# != 1 )); then
+				echo "Error: Unexpected arguments." >&2
+				return 1
+			fi
+
+			create_new_version
+			;;
+
+		delete|del)
+			if (( $# != 1 )); then
+				echo "Error: Unexpected arguments." >&2
+				return 1
+			fi
+
+			delete_latest_version
+			;;
+
+		*)
+			echo "Usage: ${0##*/} {create|delete}" >&2
+			return 1
+			;;
+	esac
+}
+
+main "$@"
