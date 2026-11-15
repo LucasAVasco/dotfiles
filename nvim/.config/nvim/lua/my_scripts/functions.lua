@@ -65,14 +65,15 @@ end
 ---Splits a string into a list (table) using a Lua pattern.
 ---@param text string String to be split.
 ---@param separator string Pattern used to split the string. It is not included in the result list.
+---@param plain boolean? Treat the separator as plain text instead of Lua pattern.
 ---@return string[] split_list List of strings that are the result of the split.
-function MYFUNC.str_split(text, separator)
+function MYFUNC.str_split(text, separator, plain)
 	local result = {}
 
 	local current_position = 1
 
 	while current_position <= #text + 1 do
-		local match_start, match_end = text:find(separator, current_position)
+		local match_start, match_end = text:find(separator, current_position, plain)
 
 		if not match_start then
 			match_start = #text + 1
