@@ -1,0 +1,8 @@
+#!/bin/bash
+#
+# Run a personal instance of Claude with a custom configuration directory.
+
+export CLAUDE_CONFIG_DIR="$HOME/.claude-personal"
+mkdir -p "$CLAUDE_CONFIG_DIR"
+
+claude "$@"
