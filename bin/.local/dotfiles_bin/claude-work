@@ -1,0 +1,15 @@
+#!/bin/bash
+#
+# Run a work instance of Claude with a custom configuration directory.
+
+source ~/.local/lib/dotfiles/bash/dialog/dialog.sh
+
+if [[ "$(dialog_ask_boolean 'Want to run claude code with the work creadentials and configurations' n)" == n ]]; then
+	echo 'User canceled the operation, aborting...' >&2
+	exit 1
+fi
+
+export CLAUDE_CONFIG_DIR="$HOME/.claude-work"
+mkdir -p "$CLAUDE_CONFIG_DIR"
+
+claude "$@"
