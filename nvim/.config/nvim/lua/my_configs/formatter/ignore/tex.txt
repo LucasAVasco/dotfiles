@@ -1,0 +1,3 @@
+% tex-fmt: off
+$0
+% tex-fmt: on
