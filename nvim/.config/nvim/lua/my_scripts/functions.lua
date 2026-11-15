@@ -69,18 +69,20 @@ end
 function MYFUNC.str_split(text, separator)
 	local result = {}
 
-	local current_position = 0
-	while current_position <= #text do
+	local current_position = 1
+
+	while current_position <= #text + 1 do
 		local match_start, match_end = text:find(separator, current_position)
 
-		if not match_start or not match_end then
+		if not match_start then
 			match_start = #text + 1
-			match_end = #text + 1
 		end
 
-		---Element of the response
-		local element = text:sub(current_position, match_start - 1)
-		table.insert(result, element)
+		table.insert(result, text:sub(current_position, match_start - 1))
+
+		if not match_end then
+			break
+		end
 
 		-- Next position
 		current_position = match_end + 1
