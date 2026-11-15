@@ -1,8 +1,4 @@
 # To see the default '~/.profile' content, check the '/etc/skel/.profile' file.
-#
-# The bash does not read this file if the '~/.bash_profile' file exists. '~/.profile' needs to be sourced
-# from the '~/.bash_profile' if you want to use it
-
 
 # Indicate that the profile was already sourced
 export PROFILE_ALREADY_SOURCED=y
