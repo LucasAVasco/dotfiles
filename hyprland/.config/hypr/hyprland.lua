@@ -71,6 +71,7 @@ hl.config({
 	},
 
 	cursor = {
+		no_hardware_cursors = true,
 		inactive_timeout = 2, -- Hide inactive cursor after timeout (seconds)
 	},
 })
