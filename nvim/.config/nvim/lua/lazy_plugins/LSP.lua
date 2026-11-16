@@ -147,6 +147,34 @@ return {
 			-- Re-implements some 'nvim-lspconfig' commands
 			vim.api.nvim_create_user_command('LspInfo', 'checkhealth vim.lsp', {})
 			vim.api.nvim_create_user_command('LspLog', 'edit ~/.local/state/nvim/lsp.log', {})
+			vim.api.nvim_create_user_command('LspStart', function(args)
+				for _, lsp_server_name in ipairs(args.fargs) do
+					start_lsp_server(lsp_server_name, nil)
+				end
+			end, {
+				nargs = '+',
+			})
+
+			vim.api.nvim_create_user_command('LspAttach', function(args)
+				local server_name = args.fargs[1]
+				local id = args.fargs[2] and tonumber(args.fargs[2]) or 0
+
+				start_lsp_server(server_name)
+
+				-- Wait for the LSP server to be attached to the buffer
+				vim.wait(1000, function()
+					for _, client in pairs(vim.lsp.get_clients()) do
+						if client.name == server_name then
+							vim.lsp.buf_attach_client(id, client.id)
+							return true
+						end
+					end
+
+					return false
+				end, 100)
+			end, {
+				nargs = '+',
+			})
 
 			-- Command to show configured LSP servers and its supported  file types
 			vim.api.nvim_create_user_command('LspFileTypes', function()
