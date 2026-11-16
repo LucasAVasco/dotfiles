@@ -75,7 +75,7 @@ SEARCH_DEPTH ?= 1
 CD_SHELL ?= /bin/bash
 
 # FOlder with custom bash libraries that my script may require
-MY_BASH_LIBS ?= ./lib/.local/lib/dotfiles/bash/
+MY_BASH_LIBS ?= ${PWD}/lib/.local/lib/dotfiles/bash/
 
 # #endregion
 
@@ -107,7 +107,15 @@ SCRIPTS_SUB_FOLDER = scripts.stow
 # $(2): The type of the scripts to run
 define run_package_no_once_scripts =
 	$(eval scripts = $(wildcard $(strip $(1))/${SCRIPTS_SUB_FOLDER}/$(strip $(2))/*))
-	$(foreach script,$(scripts), MY_BASH_LIBS='$(MY_BASH_LIBS)' ./$(script); )
+	$(foreach script,$(scripts), \
+		( \
+			echo -e "\n\033[0;44m INFO \033[0m Running script: $(script)\n"; \
+			cd "$$(dirname "$(script)")" && \
+			MY_BASH_LIBS='$(MY_BASH_LIBS)' \
+			DOTFILES_DIR="$(PWD)" \
+			"./$$(basename "$(script)")" \
+		); \
+	)
 endef
 
 # Run some script of the package if the package is installed (it has the '.installed.ignore.stow' file)
