@@ -1,3 +1,5 @@
+#!/bin/bash
+#
 # Bash configuration file
 #
 # This file holds configurations to all users including root and users with sudo access. The configuration specific to non-root
