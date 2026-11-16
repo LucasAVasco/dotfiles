@@ -1,0 +1,92 @@
+#!/bin/bash
+#
+# Interactively select an application to open one or more files based on MIME type.
+
+source ~/.local/lib/dotfiles/bash/strict.sh
+source ~/.local/lib/dotfiles/bash/help.sh
+
+help_handle y "$@" <<EOF
+	Interactively select an application to open one or more files based on MIME type.
+
+	Usage: open-with <file-path>...
+EOF
+
+if [[ $# -eq 0 ]]; then
+	echo "Error: No files specified." >&2
+	exit 1
+fi
+
+files=("$@")
+
+# Collect unique MIME types across all passed files
+mapfile -t mimes < <(file --mime-type -b -- "${files[@]}" | sort -u)
+
+# Build desktop_dirs from XDG_DATA_HOME and XDG_DATA_DIRS
+desktop_dirs=("${XDG_DATA_HOME:-$HOME/.local/share}/applications")
+
+IFS=':' read -ra xdg_dirs <<< "${XDG_DATA_DIRS:-/usr/local/share:/usr/share}"
+for dir in "${xdg_dirs[@]}"; do
+	[[ -n "$dir" && -d "${dir%/}/applications" ]] && desktop_dirs+=("${dir%/}/applications")
+done
+
+# 1. Find files matching the first MIME type using fast C-level grep
+matching_files=()
+for dir in "${desktop_dirs[@]}"; do
+	[[ -d "$dir" ]] || continue
+	while IFS= read -r -d '' f; do
+		matching_files+=("$f")
+	done < <(grep -rnIlZ "MimeType=.*${mimes[0]}" "$dir" --include="*.desktop" 2>/dev/null || true)
+done
+
+# 2. If multiple MIME types exist, filter down that tiny list with grep
+for ((i = 1; i < ${#mimes[@]}; i++)); do
+	[[ ${#matching_files[@]} -eq 0 ]] && break
+	mapfile -t -d '' matching_files < <(grep -IlZ "MimeType=.*${mimes[$i]}" "${matching_files[@]}" 2>/dev/null || true)
+done
+
+# 3. Only parse the few matching .desktop files
+apps=$(
+	for desktop_file in "${matching_files[@]}"; do
+		name=$(grep -m1 '^Name=' "$desktop_file" | cut -d= -f2- || true)
+		exec_cmd=$(grep -m1 '^Exec=' "$desktop_file" | cut -d= -f2- | sed -E 's/ %[fFuUdDnNickvm]//g' || true)
+		if [[ -n "$name" && -n "$exec_cmd" ]]; then
+			printf "%-30s | %s\n" "$name" "$exec_cmd"
+		fi
+	done | sort -u
+)
+
+# Always include xdg-open as a fallback option
+apps="${apps}"$'\n'"$(printf "%-30s | %s\n" "System Default (xdg-open)" "xdg-open")"
+
+# Build a clean fzf prompt depending on whether 1 or multiple files were passed
+if [[ ${#files[@]} -eq 1 ]]; then
+	prompt="Open '${files}' (${mimes}) with: "
+else
+	mime_list=$(IFS=,; echo "${mimes[*]}")
+	prompt="Open ${#files[@]} files ($mime_list) with: "
+fi
+
+# Let the user select via fzf (or enter a custom command with --print-query)
+selection=$(echo "$apps" | sed '/^$/d' | fzf --height=40% --reverse --prompt="$prompt" --print-query || true)
+
+# Parse fzf output: line 1 is typed query, line 2 is selected list item
+query=$(echo "$selection" | sed -n '1p')
+chosen=$(echo "$selection" | sed -n '2p')
+
+if [[ -n "$chosen" ]]; then
+	cmd=$(echo "$chosen" | awk -F ' \\| ' '{print $2}')
+elif [[ -n "$query" ]]; then
+	# Allows typing a custom binary name like 'mpv' or 'gimp' even if not in the list
+	cmd="$query"
+else
+	exit 0
+fi
+
+# Note: xdg-open only accepts one file at a time, whereas most GUI apps accept multiple
+if [[ "$cmd" == "xdg-open" ]]; then
+	for f in "${files[@]}"; do
+		run-detached xdg-open "$f"
+	done
+else
+	run-detached $cmd "${files[@]}"
+fi
