@@ -1,8 +1,0 @@
-source ~/.config/zsh/main.zsh
-
-# pnpm
-
-export PNPM_HOME="$HOME/.local/share/pnpm"
-export PATH="$PNPM_HOME:$PATH"
-
-# pnpm end
