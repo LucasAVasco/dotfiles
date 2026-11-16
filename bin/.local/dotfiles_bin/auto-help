@@ -23,6 +23,11 @@ case "$1" in
 	go)
 		go help "${@:2}" | "${cmd_show_help[@]}"
 	;;
+
+	git)
+		git "${@:2}" -h | "${cmd_show_help[@]}"
+	;;
+
 	*)
 		"$@" --help 2>&1 | "${cmd_show_help[@]}"
 	;;
