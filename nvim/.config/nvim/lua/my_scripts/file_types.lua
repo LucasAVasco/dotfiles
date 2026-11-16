@@ -31,8 +31,7 @@ end
 
 vim.filetype.add({
 	filename = {
-		['Chart.yaml'] = 'helm',
-		['Chart.lock'] = 'helm',
+		['Chart.lock'] = 'yaml',
 	},
 
 	pattern = {
