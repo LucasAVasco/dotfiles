@@ -63,6 +63,8 @@ nnoremap <A-f> :!run-without-env default_file_manager<CR>
 nnoremap <CR> :defaultopen<CR>
 nnoremap <A-e> :!run-without-env default_text_editor %f<CR>
 vnoremap <A-e> :!run-without-env default_text_editor %f<CR>
+nnoremap E :!open-with %f<CR>
+vnoremap E :!open-with %f<CR>
 
 " Permissions
 noremap <A-x> :!chmod u+x %f<CR>
