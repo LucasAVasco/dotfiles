@@ -70,6 +70,7 @@ return {
 			{ icon = ' ', key = 'G', desc = 'Lazy Git', action = ':Lazygit' },
 			{ icon = '󰆼 ', key = 'd', desc = 'Database UI', action = ':ene | DBUI' },
 			{ icon = '󱃆 ', key = 'p', desc = 'List NOPUSH comments', action = ':TodoTelescope keywords=NOPUSH' },
+			{ icon = '󱃆 ', key = 'P', desc = 'List temp prints', action = ':TempPrint telescope directory' },
 			{ icon = ' ', key = 's', desc = 'Restore Session', section = 'session' },
 			{ icon = ' ', key = 'k', desc = 'Check key maps', action = ':Lazy load all | checkhealth which-key' },
 			{ icon = '󰸟 ', key = 'h', desc = 'Healthchecks', action = ':Lazy load all | checkhealth' },
