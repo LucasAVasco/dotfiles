@@ -1,45 +1,61 @@
 --- Models
 
 local gemini_model = 'gemma-4-31b-it'
+local gemini_fast_model = 'gemini-3.1-flash-lite'
 
 -- You can set it with the command `secret-tool store --label="Google AI Studio API Key" google-ai-studio api-key`
 local gemini_api_auth = 'cmd:secret-tool lookup google-ai-studio api-key'
+
+local cached_gemini_key = nil
+
+---Get the API key from the system secret store.
+---@return string?
+local function get_gemini_key()
+	if cached_gemini_key then
+		return cached_gemini_key
+	end
+
+	local result = vim.system({ 'secret-tool', 'lookup', 'google-ai-studio', 'api-key' }, { text = true }):wait()
+
+	if result.code == 0 and result.stdout then
+		cached_gemini_key = vim.trim(result.stdout)
+	end
+
+	return cached_gemini_key
+end
 
 local normal_visual_mode = { 'n', 'v' }
 
 return {
 	{
-		'zbirenbaum/copilot.lua',
-		event = 'InsertEnter',
-		cmd = 'Copilot',
+		'milanglacier/minuet-ai.nvim',
+
+		cmd = 'Minuet',
 
 		opts = {
-			suggestion = {
-				auto_trigger = true,
+			provider = 'gemini',
+
+			virtualtext = {
+				auto_trigger_ft = { '*' },
 				keymap = {
 					accept = '<A-Tab>',
-					next = '<A-]>',
 					prev = '<A-[>',
+					next = '<A-]>',
+					dismiss = '<A-e>',
+				},
+			},
+
+			n_completions = 1,
+			provider_options = {
+				gemini = {
+					api_key = get_gemini_key,
+					model = gemini_fast_model,
+					stream = true,
 				},
 			},
 		},
-
 		config = function(_, opts)
-			require('copilot').setup(opts)
-
-			vim.api.nvim_create_autocmd('User', {
-				pattern = 'BlinkCmpMenuOpen',
-				callback = function()
-					vim.b.copilot_suggestion_hidden = true
-				end,
-			})
-
-			vim.api.nvim_create_autocmd('User', {
-				pattern = 'BlinkCmpMenuClose',
-				callback = function()
-					vim.b.copilot_suggestion_hidden = false
-				end,
-			})
+			require('minuet').setup(opts)
 		end,
 	},
 	{
