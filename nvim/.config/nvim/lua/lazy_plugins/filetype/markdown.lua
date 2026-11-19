@@ -20,24 +20,15 @@ return {
 		},
 	},
 	{
-		'iamcco/markdown-preview.nvim',
-		lazy = true,
-
+		'wallpants/github-preview.nvim',
 		cmd = {
-			'MarkdownPreview',
-			'MarkdownPreviewStop',
-			'MarkdownPreviewToggle',
+			'GithubPreviewStart',
+			'GithubPreviewStop',
+			'GithubPreviewToggle',
 		},
 
-		build = 'cd app && npm install && git restore .',
-
-		init = function()
-			vim.g.mkdp_browser = 'default_open'
-		end,
-
-		config = function()
-			MYFUNC.reset_filetype('markdown')
-		end,
+		---@type github_preview_config
+		opts = {},
 	},
 	{
 		'renerocksai/telekasten.nvim',
