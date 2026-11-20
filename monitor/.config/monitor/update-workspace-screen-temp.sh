@@ -30,10 +30,10 @@ warm="${WARM_TEMPERATURE:-3000}"
 
 # Reset GammaStep and the screen temperature.
 reset_gammastep() {
-	pkill-wait -u "$USER" -f '^gammastep ' || true # Must not start a new instance if already running
-	gammastep -x 9>&- & # Reset
+	pkill-wait -u "$USER" -x 'gammastep' || true # Must not start a new instance if already running
+	gammastep -x & # Reset
 	sleep 0.1
-	pkill-wait -u "$USER" -f '^gammastep ' || true
+	pkill-wait -u "$USER" -x 'gammastep' || true
 }
 
 # Disable GammaStep if enabled.
@@ -46,7 +46,7 @@ disable_gammastep() {
 
 		wayland)
 			# GammaStep runs in background on Wayland compositors (blocking operation). To disable it, we need to kill it
-			pkill-wait -u "$USER" -f '^gammastep ' > /dev/null 2>&1 || true
+			pkill-wait -u "$USER" -x 'gammastep' > /dev/null 2>&1 || true
 			;;
 
 		*)
@@ -68,7 +68,7 @@ enable_gammastep() {
 			# GammaStep runs in background on Wayland compositors (blocking operation)
 			# INFO(LucasAVasco): must not start a new instance if already running. Otherwise, GammaStep will not release the resources and
 			# you will not be able to change the color temperature until stop the compositor and restart it
-			pgrep -u "$USER" -f '^gammastep ' > /dev/null 2>&1 || \
+			pgrep -u "$USER" -x 'gammastep' > /dev/null 2>&1 || \
 				run-detached gammastep -P -O "$warm" 9>&-
 			;;
 
