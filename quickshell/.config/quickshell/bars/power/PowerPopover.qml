@@ -68,11 +68,8 @@ PanelWindow {
     }
 
     onIsOpenChanged: {
-        if (isOpen && profileRepeater.count > 0) {
-            let first = profileRepeater.itemAt(0);
-            if (first)
-                first.forceActiveFocus();
-        }
+        if (isOpen)
+            powerSurface.forceActiveFocus();
     }
 
     screen: ShellState.resolveScreen(ShellState.activeScreen)
@@ -95,6 +92,7 @@ PanelWindow {
     }
 
     Surface {
+        id: powerSurface
         elevation: "popover"
         radius: Theme.radiusXl
         border.color: Theme.borderDefault
@@ -131,7 +129,9 @@ PanelWindow {
         }
 
         Keys.onPressed: function (event) {
-            if (event.key === Qt.Key_Escape) {
+            if (event.key === Qt.Key_Tab || event.key === Qt.Key_Backtab) {
+                ShellState.markKeyboardNav();
+            } else if (event.key === Qt.Key_Escape) {
                 event.accepted = true;
                 ShellState.closePopovers();
             }
@@ -278,6 +278,7 @@ PanelWindow {
                         id: profRow
                         required property var modelData
                         readonly property bool selected: PowerProfiles.profile === modelData.id
+                        readonly property bool showFocusRing: activeFocus && ShellState.keyboardFocusVisible
 
                         activeFocusOnTab: true
                         Layout.fillWidth: true
@@ -289,12 +290,12 @@ PanelWindow {
                                 return Theme.pressedBg;
                             if (selected)
                                 return Theme.accentSubtle;
-                            if (profMouse.containsMouse || activeFocus)
+                            if (profMouse.containsMouse || showFocusRing)
                                 return Theme.hoverBg;
                             return "transparent";
                         }
-                        border.width: activeFocus ? 2 : (selected ? 1 : 0)
-                        border.color: activeFocus ? Theme.accentHover : Theme.accentBorder
+                        border.width: showFocusRing ? 2 : (selected ? 1 : 0)
+                        border.color: showFocusRing ? Theme.accentHover : Theme.accentBorder
 
                         Behavior on color {
                             ColorAnimation {
@@ -303,7 +304,9 @@ PanelWindow {
                         }
 
                         Keys.onPressed: function (event) {
-                            if (event.key === Qt.Key_Return || event.key === Qt.Key_Enter || event.key === Qt.Key_Space) {
+                            if (event.key === Qt.Key_Tab || event.key === Qt.Key_Backtab) {
+                                ShellState.markKeyboardNav();
+                            } else if (event.key === Qt.Key_Return || event.key === Qt.Key_Enter || event.key === Qt.Key_Space) {
                                 event.accepted = true;
                                 PowerProfiles.profile = modelData.id;
                             }
@@ -356,7 +359,10 @@ PanelWindow {
                             anchors.fill: parent
                             hoverEnabled: true
                             cursorShape: Qt.PointingHandCursor
-                            onClicked: PowerProfiles.profile = modelData.id
+                            onClicked: {
+                                ShellState.markPointerNav();
+                                PowerProfiles.profile = modelData.id;
+                            }
                         }
                     }
                 }
