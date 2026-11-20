@@ -1,0 +1,10 @@
+#!/bin/bash
+#
+# Override 'agy' executable to clear the screen before opening it.
+
+source ~/.local/lib/dotfiles/bash/bin_overrides.sh
+
+clear -x
+
+# Forwards to k9s
+bin_overrides_call_without_override agy "$@"
