@@ -297,31 +297,25 @@ return {
 									return vim.g.cmp_pth_cwd
 								end
 
-								---Splits the `base_dir` at the provided index an use the first division as the new `base_dir`.
-								---@param index number? Split the `base_dir` at this index. If `nil` aborts the operation.
-								---@return boolean split If the `base_dir` has been split.
-								local function split_base_dir_at_index(index)
-									if index ~= nil then
-										base_dir = string.sub(base_dir, 0, index)
-										return true
-									end
-
-									return false
-								end
-
 								if vim.env.EDITING_COMMAND_LINE then
 									return vim.env.PWD
 								elseif buffer_file_type == 'gitcommit' then
 									-- Use the git repository root directory when editing the '.git/COMMIT_EDITMSG' file
+
 									base_dir = vim.fn.fnamemodify(base_dir, ':h')
 								elseif buffer_file_type == 'yaml' then
 									-- Use the root directory of the GitHub workflow
-									if split_base_dir_at_index(string.find(base_dir, '/.github/workflows', 0, true)) then
-										return base_dir
+
+									local index = string.find(base_dir, '/.github/workflows', 0, true)
+									if index then
+										return string.sub(base_dir, 0, index)
 									end
 								elseif buffer_file_type == 'markdown' then
-									-- Use the current working directory when editing a Claude prompt
-									if split_base_dir_at_index(string.find(base_dir, '/tmp/claude-', 0, true)) then
+									-- Use the current working directory when editing a Claude or Antigravity prompt
+
+									if
+										string.find(buffer_path, '/tmp/claude-', 0, true) or string.find(buffer_path, '/tmp/agy-', 0, true)
+									then
 										return vim.env.PWD
 									end
 								end
