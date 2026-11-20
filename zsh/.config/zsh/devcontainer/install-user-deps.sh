@@ -28,6 +28,3 @@ mkdir -p ~/.local/bin
 export bin_path=~/.local/bin
 curl -sfL https://direnv.net/install.sh | bash
 unset bin_path
-
-# Force prompt rebuild
-source ~/.config/zsh/prompt/build.sh

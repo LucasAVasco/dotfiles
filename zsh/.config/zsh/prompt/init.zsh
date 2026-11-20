@@ -1,23 +1,19 @@
-current_dir=$(dirname `realpath "${(%):-%x}"`)
+current_dir=$(dirname "$(realpath "${(%):-%x}")")
 
 setopt prompt_subst
 
 # Ensures the prompt is built
-if [[ ! -f "$current_dir/build/left" ]]; then
+if [[ ! -x "$current_dir/build/zsh-prompt" ]]; then
 	"$current_dir/build.sh"
 fi
 
-# Used terminal capabilities
+# Used terminal capabilities (queried once at shell startup and exported to the prompt binary)
 zmodload zsh/terminfo
 
-__terminfo_down_code="$terminfo[cud1]"  # Code to move terminal down
-__terminfo_up_code="$terminfo[cuu1]"    # Code to move terminal up
-__terminfo_clear_line="$terminfo[el]"   # Code to clear the line (remove contents but not remove the line)
-__terminfo_delete_line="$terminfo[dl1]" # Code to delete the line
-
-# Prompt building. Only if the binary does not exists
-build_dir="$current_dir/build"
-[[ -d "$build_dir" ]] || ~/.config/zsh/prompt/build.sh
+export PROMPT_TERMINFO_MV_CURSOR_DOWN="$terminfo[cud1]" # Code to move terminal down
+export PROMPT_TERMINFO_MV_CURSOR_UP="$terminfo[cuu1]"   # Code to move terminal up
+export PROMPT_TERMINFO_CLEAR_LINE="$terminfo[el]"       # Code to clear the line (remove contents but not remove the line)
+export PROMPT_TERMINFO_DELETE_LINE="$terminfo[dl1]"     # Code to delete the line
 
 # VARIABLES {{{
 
@@ -40,11 +36,9 @@ __my_zsh_theme_preexec() {
 
 	__my_zsh_theme_cmd_num+=1
 	__my_zsh_theme_show_cmd_separator=2 # Show the last command error in the next prompt
-	__my_zsh_theme_move_prompt_down=-1 # Should not move the prompt down before a new command
+	__my_zsh_theme_move_prompt_down=-1  # Should not move the prompt down before a new command
 
-	"$current_dir/build/override_last_prompt" --cmd-lines-num "$__my_zsh_theme_cmd_lines_number" \
-		--terminfo-mv-cursor-up "$__terminfo_up_code" --terminfo-mv-cursor-down "$__terminfo_down_code" \
-		--terminfo-clear-line "$__terminfo_clear_line" --terminfo-delete-line "$__terminfo_delete_line"
+	"$current_dir/build/zsh-prompt" override-last-prompt --cmd-lines-num "$__my_zsh_theme_cmd_lines_number"
 }
 
 add-zsh-hook precmd __my_zsh_theme_precmd
@@ -52,7 +46,7 @@ __my_zsh_theme_precmd() {
 	__my_zsh_theme_last_cmd_error=$?
 
 	if [[ "$__my_zsh_theme_move_prompt_down" -le 0 ]]; then
-		# Makes if equal to 1 if not after a new command (user presses enter without a command)
+		# Makes it equal to 1 if not after a new command (user presses enter without a command)
 		__my_zsh_theme_move_prompt_down+=1
 	fi
 
@@ -65,12 +59,12 @@ __my_zsh_theme_precmd() {
 
 	# Add a padding in the bottom, so the prompt will not touch the bottom margin. This is made by moving the cursor down (move 1/4 of the
 	# screen height), and move up to the original position
-	local spacer=''  # Text that moves the cursor
+	local spacer='' # Text that moves the cursor
 	for ((i = 0; i < $LINES/4; i++)); do
-		spacer="$__terminfo_down_code$spacer$__terminfo_up_code"
+		spacer="$PROMPT_TERMINFO_MV_CURSOR_DOWN$spacer$PROMPT_TERMINFO_MV_CURSOR_UP"
 	done
 
-	echo -n "%{$spacer%}"  # Apply the centralization. Need to be inside a escape otherwise the tab-completion will move the cursor up
+	echo -n "%{$spacer%}" # Apply the centralization. Need to be inside an escape otherwise the tab-completion will move the cursor up
 }
 
 add-zle-hook-widget zle-line-finish __my_zsh_theme_count_lines
@@ -81,10 +75,8 @@ __my_zsh_theme_count_lines() {
 
 # }}}
 
-PROMPT='$('"$current_dir/build/left"' --columns $COLUMNS --cmd-num $__my_zsh_theme_cmd_num --last-error $__my_zsh_theme_last_cmd_error \
+PROMPT='$('"$current_dir/build/zsh-prompt"' left --columns $COLUMNS --cmd-num $__my_zsh_theme_cmd_num --last-error $__my_zsh_theme_last_cmd_error \
 	--cmd-start-time "$__my_zsh_theme_cmd_time" --time-now "$EPOCHREALTIME" --show-cmd-separator $__my_zsh_theme_show_cmd_separator \
-	--mv-prompt-down $__my_zsh_theme_move_prompt_down \
-	--terminfo-mv-cursor-up "$__terminfo_up_code" --terminfo-mv-cursor-down "$__terminfo_down_code" \
-	--terminfo-clear-line "$__terminfo_clear_line")'
+	--mv-prompt-down $__my_zsh_theme_move_prompt_down)'
 
 # TODO: Show the prompt before ZSH loads

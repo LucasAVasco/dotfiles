@@ -1,28 +1,28 @@
 #!/bin/bash
 #
-# Build the prompts.
+# Build the Rust Zsh prompt as a statically linked binary.
 #
 # Dependencies:
 # * Bash
-# * Cmake
-# * Make
-# * G++
+# * Rust toolchain (cargo, rustup)
 
 set -e
 
-current_dir=$(dirname `realpath "${BASH_SOURCE[0]}"`)
+current_dir=$(dirname "$(realpath "${BASH_SOURCE[0]}")")
+target="x86_64-unknown-linux-musl"
+target_dir="${CARGO_TARGET_DIR:-${XDG_CACHE_HOME:-$HOME/.cache}/zsh-prompt-target}"
 
-# Notfication
-echo "Building the prompts..."
+echo "Building the prompt..."
 
-# Configuration
-build_dir="$current_dir/build"
-[[ -d "$build_dir" ]] && rm -r "$build_dir"
 cd "$current_dir"
-cmake --preset default
 
-# Building
-cmake --build build/
+if command -v rustup >/dev/null 2>&1; then
+    if ! rustup target list --installed | grep -qx "$target"; then
+        rustup target add "$target"
+    fi
+fi
 
-# returning to last directory
-cd -
+CARGO_TARGET_DIR="$target_dir" RUSTFLAGS="-C target-feature=+crt-static" cargo build --release --target "$target"
+
+mkdir -p "$current_dir/build"
+cp "$target_dir/$target/release/zsh-prompt" "$current_dir/build/zsh-prompt"

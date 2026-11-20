@@ -41,6 +41,11 @@ docker_execute_command_in_container "$devcontainer_id" 'root' /tmp/install-bash.
 # Devcontainer user
 devcontainer_user=$(docker_get_container_user $devcontainer_id)
 
+# Ensures the static prompt binary is built on the host before syncing
+if [[ ! -x ~/.config/zsh/prompt/build/zsh-prompt ]]; then
+	~/.config/zsh/prompt/build.sh
+fi
+
 # Sends the other dotfiles
 devcontainer_sync_files "$devcontainer_id" '~/.local/dotfiles/bin/' '~/.local/dotfiles_bin/' \
 	'~/.local/dotfiles/profile/' '~/.profile' \

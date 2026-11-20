@@ -32,8 +32,7 @@ case "$current_dist" in
 			man-pages mandoc \
 			sudo zsh \
 			fzf eza bat zoxide curl grep \
-			git \
-			cmake make g++ # Required to build the ZSH prompt
+			git
 
 		addgroup sudo 2> /dev/null && {
 			echo 'Created `sudo` group'
