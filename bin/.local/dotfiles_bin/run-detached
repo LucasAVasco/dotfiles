@@ -8,5 +8,20 @@
 # The command is run in a detached session, so it's not interactive
 export INTERACTIVE_SHELL=''
 
-# Runs the command
-setsid --fork "$@" > /dev/null 2>&1 & disown
+# Check if systemd-run exists and the user D-Bus/systemd session is active
+if command -v systemd-run >/dev/null 2>&1 && systemctl --user is-system-running >/dev/null 2>&1; then
+	env_args=()
+	while IFS='=' read -r -d '' name value; do
+		# Skip systemd-specific or read-only variables that shouldn't be overridden
+		case "$name" in
+			_|SHLVL|PWD|OLDPWD|SYSTEMD_*|INVOCATION_ID|JOURNAL_STREAM) continue ;;
+		esac
+		env_args+=("--setenv=${name}=${value}")
+	done < <(env -0)
+
+	exec systemd-run --user --working-directory="$PWD" "${env_args[@]}" "$@" >/dev/null 2>&1
+else
+	# Fallback to 'setsid'
+	setsid --fork "$@" >/dev/null 2>&1 </dev/null &
+	disown
+fi
