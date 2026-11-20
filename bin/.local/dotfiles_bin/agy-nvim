@@ -1,0 +1,17 @@
+#!/bin/bash
+#
+# Edit Antigravity prompt with neovim. Usage: configure 'agy' editor to be 'agy-nvim'. This file will open an markdown file to edit as
+# prompt instead of a plain text file.
+
+original_prompt_file="$1"
+
+# New temporary prompt file as markdown
+temp_file="$(mktemp "/tmp/agy-$USER-XXXXXX.md")"
+trap "rm $temp_file" EXIT
+
+# Edit the temporary prompt file
+cat "$original_prompt_file" > "$temp_file"
+nvim "$temp_file"
+
+# Copy the temporary prompt file to the real one
+cat "$temp_file" > "$original_prompt_file"
