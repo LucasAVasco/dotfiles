@@ -20,7 +20,7 @@ ShellRoot {
 
     // Notification daemon
     Loader {
-        enabled: Quickshell.env("DISABLE_QUICKSHELL_NOTIFICATION_DAEMON") != "1"
+        active: Quickshell.env("DISABLE_QUICKSHELL_NOTIFICATION_DAEMON") != "1"
         source: "./notification/Main.qml"
     }
 
@@ -37,5 +37,14 @@ ShellRoot {
     // Session manager
     Loader {
         source: "./sessions/Main.qml"
+    }
+
+    // Disable reload popup
+    Connections {
+        target: Quickshell
+
+        function onReloadCompleted() {
+            Quickshell.inhibitReloadPopup();
+        }
     }
 }

@@ -1,18 +1,17 @@
 pragma ComponentBehavior: Bound
 
 import QtQuick
-import QtQuick.Controls
+import QtQuick.Layouts
+import Quickshell
 import Quickshell.Services.Pam
 
+import "../theme"
 import "./keyboard"
 
 Rectangle {
     id: root
     anchors.fill: parent
-
-    color: "black"
-
-    // Unlock operation {{{
+    color: Theme.surfaceBase
 
     signal unlocked
 
@@ -22,53 +21,113 @@ Rectangle {
         unlockTimer.running = true;
     }
 
+    SystemClock {
+        id: lockClock
+        precision: SystemClock.Minutes
+    }
+
     Timer {
         id: unlockTimer
-        interval: 200
+        interval: Math.max(10, Theme.animNormal)
         running: false
-
-        onTriggered: {
-            root.unlocked();
-        }
+        onTriggered: root.unlocked()
     }
-
-    // }}}
-
-    // Opacity {{{
 
     Behavior on opacity {
-        PropertyAnimation {
-            duration: 200
+        NumberAnimation {
+            duration: Theme.animNormal
+            easing.type: Easing.OutCubic
         }
     }
 
-    // Animation executed when opening the locker
     PropertyAnimation on opacity {
         from: 0
         to: 1
-        duration: 200
+        duration: Theme.animNormal
     }
-
-    // }}}
 
     Wallpaper {
         id: wallpaper
     }
 
-    CapsLockStatusPreview {
-        anchors.top: parent.top
-        anchors.right: parent.right
-        anchors.margins: 10
+    // Center GNOME-style lock screen stack: Clock + Date + User + Password Prompt
+    ColumnLayout {
+        anchors.centerIn: parent
+        width: Math.min(380, parent.width - Theme.spaceXl * 2)
+        spacing: Theme.spaceLg
 
-        height: parent.height * 0.1
-        width: parent.width * 0.2
-    }
+        // Clock & Date
+        ColumnLayout {
+            Layout.alignment: Qt.AlignHCenter
+            spacing: Theme.spaceXs
 
-    PasswordPrompt {
-        id: passwordPrompt
+            Text {
+                Layout.alignment: Qt.AlignHCenter
+                text: Qt.formatDateTime(lockClock.date, "HH:mm")
+                font.family: Theme.fontSans
+                font.pixelSize: Theme.fontDisplay
+                font.weight: Font.Light
+                color: Theme.textPrimary
+            }
 
-        onPasswordGiven: function (password) {
-            auth_manager.tryUnlock(password);
+            Text {
+                Layout.alignment: Qt.AlignHCenter
+                text: Qt.formatDateTime(lockClock.date, "dddd, MMMM d")
+                font.family: Theme.fontSans
+                font.pixelSize: Theme.fontXl
+                font.weight: Font.Normal
+                color: Theme.textSecondary
+            }
+        }
+
+        // User avatar & name
+        ColumnLayout {
+            Layout.alignment: Qt.AlignHCenter
+            Layout.topMargin: Theme.spaceMd
+            spacing: Theme.spaceSm
+
+            Rectangle {
+                Layout.alignment: Qt.AlignHCenter
+                implicitWidth: 68
+                implicitHeight: 68
+                radius: Theme.radiusPill
+                color: Theme.popoverBg
+                border.width: 1
+                border.color: Theme.borderDefault
+
+                Text {
+                    anchors.centerIn: parent
+                    text: "󰀄"
+                    font.family: Theme.fontIcon
+                    font.pixelSize: 30
+                    color: Theme.textPrimary
+                }
+            }
+
+            Text {
+                Layout.alignment: Qt.AlignHCenter
+                text: Quickshell.env("USER") || "User"
+                font.family: Theme.fontSans
+                font.pixelSize: Theme.fontLg
+                font.weight: Font.DemiBold
+                color: Theme.textPrimary
+            }
+        }
+
+        // Password prompt
+        PasswordPrompt {
+            id: passwordPrompt
+            Layout.fillWidth: true
+
+            onPasswordGiven: function (password) {
+                passwordPrompt.authenticating = true;
+                auth_manager.tryUnlock(password);
+            }
+        }
+
+        // Caps Lock warning pill
+        CapsLockStatusPreview {
+            Layout.alignment: Qt.AlignHCenter
         }
     }
 
@@ -76,42 +135,24 @@ Rectangle {
         id: auth_manager
 
         onAuthProcess: function (status) {
+            passwordPrompt.authenticating = false;
             switch (status) {
             case PamResult.Success:
                 root.unlock();
                 break;
             case PamResult.Error:
-                passwordPrompt.showErrorMessage("Error authenticating");
+                passwordPrompt.showErrorMessage("Authentication error");
                 break;
             case PamResult.MaxTries:
-                passwordPrompt.showErrorMessage("Maximum tries reached");
+                passwordPrompt.showErrorMessage("Maximum attempts reached");
                 break;
             case PamResult.Failed:
                 passwordPrompt.showErrorMessage("Incorrect password");
                 break;
             default:
-                passwordPrompt.showErrorMessage("Unknown error: " + status.toString());
+                passwordPrompt.showErrorMessage("Authentication failed (" + status.toString() + ")");
                 break;
             }
         }
     }
-
-    // // Uncomment this in development mode to bypass the screen locker.
-    // // WARNING(LucasAVasco): This button is a security risk. Do not use in production
-    // Button {
-    //     text: "Bypass lock"
-    //     anchors.bottom: parent.bottom
-    //     anchors.right: parent.right
-
-    //     width: parent.width * 0.2
-    //     height: width
-
-    //     background: Rectangle {
-    //         color: "red"
-    //     }
-
-    //     onClicked: function () {
-    //         root.unlock();
-    //     }
-    // }
 }

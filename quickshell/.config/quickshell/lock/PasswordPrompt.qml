@@ -1,115 +1,147 @@
 pragma ComponentBehavior: Bound
 
 import QtQuick
-import QtQuick.Controls
+import QtQuick.Layouts
 
-Rectangle {
+import "../theme"
+import "../ui"
+
+ColumnLayout {
     id: root
     focus: true
 
-    property string password
+    property string password: ""
+    property bool authenticating: false
+    property string errorText: ""
 
     signal passwordGiven(string password)
 
+    spacing: Theme.spaceSm
+
     function givePassword() {
+        if (authenticating || password.length === 0)
+            return;
         root.focus = true;
-        root.passwordGiven(root.password);
+        let pwd = root.password;
         root.password = "";
+        root.errorText = "";
+        root.passwordGiven(pwd);
     }
 
     function showErrorMessage(message) {
-        errorMessage.text = message;
-        inputIndicator.color = Qt.rgba(255, 0, 0, 0.5);
+        errorText = message;
+        shakeAnim.restart();
     }
 
     function clearPassword() {
         root.password = "";
-        errorMessage.text = "";
-        inputIndicator.color = Qt.rgba(255, 255, 255, 0);
+        root.errorText = "";
     }
 
-    // Layout
-    anchors.centerIn: parent
-    width: 80
-    height: width * 3 / 5
-    radius: width / 2
-
-    // Area of the error message
+    // Pill password input container
     Rectangle {
-        // Position
-        anchors.horizontalCenter: parent.horizontalCenter
-        anchors.top: parent.bottom
-        anchors.topMargin: 10
+        id: inputBox
+        Layout.fillWidth: true
+        implicitHeight: 46
+        radius: Theme.radiusPill
+        color: Theme.popoverBg
+        border.width: 1
+        border.color: root.errorText.length > 0 ? Theme.danger : (root.activeFocus ? Theme.accent : Theme.borderDefault)
+        antialiasing: true
 
-        // Size
-        width: errorMessage.width + 10
-        height: errorMessage.height + 10
-        radius: height / 2
+        transform: Translate {
+            id: shakeTransform
+            x: 0
+        }
 
-        // Appearance
-        color: errorMessage.text.length == 0 ? Qt.rgba(0, 0, 0, 0) : Qt.rgba(0, 0, 0, 0.8)
+        SequentialAnimation {
+            id: shakeAnim
+            NumberAnimation { target: shakeTransform; property: "x"; to: -8; duration: 50 }
+            NumberAnimation { target: shakeTransform; property: "x"; to: 8; duration: 50 }
+            NumberAnimation { target: shakeTransform; property: "x"; to: -5; duration: 50 }
+            NumberAnimation { target: shakeTransform; property: "x"; to: 5; duration: 50 }
+            NumberAnimation { target: shakeTransform; property: "x"; to: 0; duration: 40 }
+        }
 
-        // Text that displays the error message
+        Behavior on border.color {
+            ColorAnimation {
+                duration: Theme.animFast
+            }
+        }
+
+        MouseArea {
+            anchors.fill: parent
+            onClicked: root.focus = true
+        }
+
+        RowLayout {
+            anchors.fill: parent
+            anchors.leftMargin: Theme.spaceLg
+            anchors.rightMargin: Theme.spaceXs
+            spacing: Theme.spaceSm
+
+            Text {
+                text: "󰌾"
+                font.family: Theme.fontIcon
+                font.pixelSize: 15
+                color: Theme.textMuted
+            }
+
+            // Masked password dots or placeholder
+            Text {
+                Layout.fillWidth: true
+                text: {
+                    if (root.authenticating)
+                        return "Unlocking…";
+                    if (root.password.length === 0)
+                        return "Enter password";
+                    return "•".repeat(Math.min(root.password.length, 32));
+                }
+                font.family: Theme.fontSans
+                font.pixelSize: root.password.length > 0 ? 18 : Theme.fontMd
+                font.letterSpacing: root.password.length > 0 ? 3 : 0
+                color: (root.password.length > 0 && !root.authenticating) ? Theme.textPrimary : Theme.textMuted
+                elide: Text.ElideLeft
+                verticalAlignment: Text.AlignVCenter
+            }
+
+            IconButton {
+                icon: root.authenticating ? "󰔟" : "󰁔"
+                iconSize: 16
+                buttonSize: 36
+                disabled: root.authenticating || root.password.length === 0
+                active: root.password.length > 0
+                onClicked: root.givePassword()
+            }
+        }
+    }
+
+    // Error message pill
+    Rectangle {
+        visible: root.errorText.length > 0
+        Layout.alignment: Qt.AlignHCenter
+        implicitWidth: errLabel.implicitWidth + Theme.spaceLg * 2
+        implicitHeight: 28
+        radius: Theme.radiusPill
+        color: Theme.dangerSubtle
+        border.width: 1
+        border.color: Theme.dangerBorder
+
         Text {
-            id: errorMessage
-            text: ""
-
-            // Position
+            id: errLabel
             anchors.centerIn: parent
-
-            // Appearance
-            font.pointSize: Math.max(root.height / 5, 10)
-            color: Qt.rgba(255, 255, 255, 0.5)
+            text: root.errorText
+            font.family: Theme.fontSans
+            font.pixelSize: Theme.fontXs
+            font.weight: Font.Medium
+            color: Theme.dangerHover
         }
     }
 
-    // Circle that changes the color when the user presses a key
-    Rectangle {
-        id: inputIndicator
-
-        color: Qt.rgba(255, 255, 255, 0)
-
-        // Position
-        anchors.verticalCenter: root.verticalCenter
-        anchors.left: root.left
-        anchors.leftMargin: root.width / 10
-
-        // Size
-        height: parent.height / 2
-        width: height
-        radius: height / 2
-    }
-
-    // Click in the rectangle to focus. Must be placed at the top of the stack, so it will not overlap the button
-    MouseArea {
-        anchors.fill: root
-        onClicked: function () {
-            root.focus = true;
-        }
-    }
-
-    // Button to give the password
-    RoundButton {
-        id: givePasswordButton
-
-        // Position
-        anchors.right: root.right
-        anchors.verticalCenter: root.verticalCenter
-        anchors.rightMargin: root.width / 10
-
-        // Size
-        height: parent.height * 3 / 4
-        width: height
-        radius: height / 2
-
-        // Signals handling
-        onClicked: function () {
-            root.givePassword();
-        }
-    }
-
-    // The keys pressed by the user will be handled here
     Keys.onPressed: function (event) {
+        if (root.authenticating)
+            return;
+
         switch (event.key) {
         case Qt.Key_Enter:
         case Qt.Key_Return:
@@ -119,16 +151,19 @@ Rectangle {
             root.clearPassword();
             break;
         case Qt.Key_Backspace:
-            root.password = root.password.slice(0, -1);
+            if (event.modifiers & Qt.ControlModifier) {
+                root.password = "";
+            } else {
+                root.password = root.password.slice(0, -1);
+            }
+            root.errorText = "";
             break;
         default:
-            if (event.text) {
+            if (event.text && event.text.length > 0 && !(event.modifiers & Qt.ControlModifier)) {
                 root.password += event.text;
+                root.errorText = "";
             }
             break;
         }
-
-        errorMessage.text = "";
-        inputIndicator.color = root.password.length > 0 ? Qt.rgba(0, 1.0, 0, 0.5) : Qt.rgba(1.0, 1.0, 1.0, 0);
     }
 }

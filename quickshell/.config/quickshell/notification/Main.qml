@@ -1,93 +1,46 @@
 pragma ComponentBehavior: Bound
 
 import QtQuick
+import Quickshell
 import Quickshell.Io
-import Quickshell.Services.Notifications
 
-import "../components"
-import "./focused_notification"
-import "./inline_reply"
-import "./notification_viewer"
+import "../services"
+import "../weather"
 
 Item {
-    // Notification preview
-    TempItem {
-        id: notificationViewerLoader
+    id: root
 
-        NotificationViewer {
-            onNotificationSelected: function (data) {
-                focusedNotificationLoader.notificationData = data;
-                focusedNotificationLoader.load();
-                inlineReplyLoader.active = false;
-            }
-        }
-    }
+    // Floating notification popups (toasts)
+    NotificationToastStack {}
 
-    // Focused notification PopUp
-    TempItem {
-        id: focusedNotificationLoader
+    // GNOME-inspired Notification Center + Calendar + Weather Summary
+    NotificationCenter {}
 
-        property var notificationData
+    // Notification Details modal window
+    NotificationDetailsWindow {}
 
-        FocusedNotificationPopup {
-            notificationData: focusedNotificationLoader.notificationData
+    // Separate Detailed Weather window
+    WeatherWindow {}
 
-            // Signals
-            onInlineReply: function (notification) {
-                inlineReplyLoader.notification = notification;
-                inlineReplyLoader.load();
-            }
-
-            onDone: function () {
-                // Enable automatic expiration of old notifications
-                let item = notificationViewerLoader.item as NotificationViewer;
-                item.disableAutoExpire = false;
-
-                // Closes the inline reply
-                inlineReplyLoader.active = false;
-            }
-        }
-    }
-
-    // Inline reply PopUp
-    TempItem {
-        id: inlineReplyLoader
-
-        property Notification notification
-
-        InlineReplyPopup {
-            notification: inlineReplyLoader.notification
-        }
-    }
-
-    // Server that receives the notifications
-    NotificationServer {
-        actionIconsSupported: true
-        actionsSupported: true
-        bodyHyperlinksSupported: true
-        bodyImagesSupported: true
-        bodyMarkupSupported: true
-        bodySupported: true
-        imageSupported: true
-        inlineReplySupported: true
-
-        // Signals
-        onNotification: function (notification) {
-            notificationViewerLoader.load();
-            let item = notificationViewerLoader.item as NotificationViewer;
-            item.addNotification(notification);
-        }
-    }
-
-    // Receives the commands from the user
+    // IPC endpoints
     IpcHandler {
         target: "notification"
 
         function dismissAll() {
-            if (notificationViewerLoader.item !== null) {
-                let item = notificationViewerLoader.item as NotificationViewer;
-                item.dismissAll();
-            }
+            NotificationStore.clearAll();
+        }
+
+        function toggleCenter() {
+            ShellState.togglePopover("notificationCenter", null);
+        }
+
+        function openCenter() {
+            ShellState.openPopover("notificationCenter", null);
+        }
+
+        function closeCenter() {
+            if (ShellState.activePopover === "notificationCenter")
+                ShellState.closePopovers();
         }
     }
 }

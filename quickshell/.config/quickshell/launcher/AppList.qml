@@ -3,6 +3,8 @@ pragma ComponentBehavior: Bound
 import QtQuick
 import Quickshell
 
+import "../theme"
+
 ListView {
     id: root
 
@@ -11,98 +13,87 @@ ListView {
     signal appLaunched(DesktopEntry entry)
 
     readonly property DesktopEntry currentApp: {
-        return root.model.values[root.currentIndex] || null;
+        let vals = filteredModel.values;
+        if (!vals || vals.length === 0)
+            return null;
+        let idx = Math.max(0, Math.min(root.currentIndex, vals.length - 1));
+        return vals[idx] || null;
     }
 
-    // Navigation functions
     function setCurrentApp(index) {
-        root.canScroll = true;
-        root.currentIndex = index;
+        if (index >= 0 && index < count)
+            root.currentIndex = index;
     }
 
     function nextApp() {
-        root.canScroll = true;
-        root.incrementCurrentIndex();
+        if (count === 0)
+            return;
+        root.currentIndex = (root.currentIndex + 1) % count;
+        root.positionViewAtIndex(root.currentIndex, ListView.Contain);
     }
 
     function previousApp() {
-        root.canScroll = true;
-        root.decrementCurrentIndex();
+        if (count === 0)
+            return;
+        root.currentIndex = (root.currentIndex - 1 + count) % count;
+        root.positionViewAtIndex(root.currentIndex, ListView.Contain);
     }
 
-    // Forces the root to not scroll until the `canScroll` property is set to `true`
-    property bool canScroll: false
-    onCurrentIndexChanged: function () {
-        if (!root.canScroll) {
-            root.currentIndex = 0;
-        }
+    onAppFilterChanged: {
+        root.currentIndex = 0;
+        root.positionViewAtBeginning();
     }
 
-    // Only shows the apps after the following delay
-    property bool cleared: true
-    Timer {
-        running: true
-        interval: 200 // Delay
-        onTriggered: {
-            root.cleared = false;
-        }
-    }
+    spacing: 4
+    clip: true
+    boundsBehavior: Flickable.StopAtBounds
+    keyNavigationWraps: true
 
-    // Apps
     model: ScriptModel {
+        id: filteredModel
         values: {
-            if (root.cleared) {
-                return [];
+            let filter = root.appFilter.trim().toLowerCase();
+            let allApps = [...DesktopEntries.applications.values];
+
+            if (filter.length === 0) {
+                return allApps.sort((a, b) => a.name.localeCompare(b.name));
             }
-            let filter = root.appFilter.toLowerCase();
-            let apps = [...DesktopEntries.applications.values].filter(app => app.name.toLowerCase().includes(filter));
-            return apps.sort((a, b) => a.name.localeCompare(b.name));
+
+            let matched = allApps.filter(app => {
+                let name = (app.name || "").toLowerCase();
+                let generic = (app.genericName || "").toLowerCase();
+                let comment = (app.comment || "").toLowerCase();
+                let keywords = app.keywords ? app.keywords.join(" ").toLowerCase() : "";
+                return name.includes(filter) || generic.includes(filter) || comment.includes(filter) || keywords.includes(filter);
+            });
+
+            return matched.sort((a, b) => {
+                let aName = (a.name || "").toLowerCase();
+                let bName = (b.name || "").toLowerCase();
+                let aStarts = aName.startsWith(filter) ? 0 : (aName.includes(filter) ? 1 : 2);
+                let bStarts = bName.startsWith(filter) ? 0 : (bName.includes(filter) ? 1 : 2);
+                if (aStarts !== bStarts)
+                    return aStarts - bStarts;
+                return aName.localeCompare(bName);
+            });
         }
     }
 
     delegate: AppItem {
+        required property int index
         required property var modelData
 
         entry: modelData
         visible: modelData != null
-        active: root.currentApp === modelData
+        active: root.currentIndex === index
 
-        // Layout
-        implicitWidth: parent ? parent.width : 0 // `ScriptModel` may set the `parent` null
-        implicitHeight: root.height / 6
+        width: root.width
+        implicitHeight: 54
 
         onClicked: function (entry) {
             root.appLaunched(entry);
         }
-    }
 
-    // Transitions
-    add: Transition {
-        id: addTransition
-
-        NumberAnimation {
-            properties: "opacity"
-            from: 0
-            to: 1
-            duration: 200
-        }
-    }
-
-    remove: Transition {
-        id: removeTransition
-
-        NumberAnimation {
-            properties: "opacity"
-            from: 1
-            to: 0
-            duration: 200
-        }
-    }
-
-    displaced: Transition {
-        NumberAnimation {
-            properties: "y"
-            duration: 200
-        }
+        onHovered: root.setCurrentApp(index)
     }
 }

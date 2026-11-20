@@ -1,65 +1,65 @@
 pragma ComponentBehavior: Bound
-import Quickshell.Services.SystemTray
 
 import QtQuick
+import QtQuick.Layouts
+import Quickshell.Services.SystemTray
+import Quickshell.Widgets
 
-Rectangle {
+import "../theme"
+
+RowLayout {
     id: root
 
     required property QtObject menuParentWindow
 
-    // Appearance
-    color: "transparent"
+    readonly property bool hasItems: SystemTray.items.values.length > 0
 
-    ListView {
-        id: tray
+    visible: hasItems
+    spacing: 2
 
-        // Layout
-        anchors.fill: parent
-        orientation: Qt.Horizontal
-        spacing: root.width / 30
-
-        // Model
+    Repeater {
         model: SystemTray.items.values
 
         delegate: Rectangle {
+            id: trayItem
             required property SystemTrayItem modelData
 
-            // Layout
-            width: root.width / 10
-            height: root.height
+            implicitWidth: 26
+            implicitHeight: 26
+            radius: Theme.radiusPill
+            color: trayMouse.pressed ? Theme.pressedBg : (trayMouse.containsMouse ? Theme.hoverBg : "transparent")
+            antialiasing: true
 
-            // Appearance
-            color: "transparent"
+            Behavior on color {
+                ColorAnimation {
+                    duration: Theme.animFast
+                }
+            }
 
-            Image {
-                source: parent.modelData.icon
-
-                // Layout
-                anchors.fill: parent
+            IconImage {
+                anchors.centerIn: parent
+                implicitSize: 16
+                source: trayItem.modelData.icon
             }
 
             MouseArea {
-                focus: true
+                id: trayMouse
+                anchors.fill: parent
+                hoverEnabled: true
+                cursorShape: Qt.PointingHandCursor
                 acceptedButtons: Qt.LeftButton | Qt.RightButton | Qt.MiddleButton
 
-                // Layout
-                anchors.fill: parent
-
-                // Events
                 onClicked: function (event) {
                     switch (event.button) {
                     case Qt.LeftButton:
-                        parent.modelData.activate();
+                        trayItem.modelData.activate();
                         break;
                     case Qt.RightButton:
-                        let position = parent.mapToGlobal(0, parent.height * 1.5);
-
-                        // Requires '//@ pragma UseQApplication' at the beginning of the root shell file to works
-                        parent.modelData.display(root.menuParentWindow, position.x, position.y);
+                        let position = trayItem.mapToGlobal(0, trayItem.height + 6);
+                        trayItem.modelData.display(root.menuParentWindow, position.x, position.y);
                         break;
                     case Qt.MiddleButton:
-                        parent.modelData.secondaryActivate();
+                        trayItem.modelData.secondaryActivate();
                         break;
                     default:
                         break;
@@ -68,20 +68,12 @@ Rectangle {
 
                 onWheel: function (event) {
                     let delta = event.angleDelta;
-                    let horizontal = false;
+                    let horizontal = (event.modifiers & Qt.ShiftModifier) !== 0;
 
-                    if (event.modifiers & Qt.ShiftModifier) {
-                        // In order to receive the modifier, the window must be focusable
-                        horizontal = true; // The shift modifier inverts the direction
-                    }
-
-                    if (delta.x != 0) {
-                        parent.modelData.scroll(delta.x / 8, !horizontal);
-                    }
-
-                    if (delta.y != 0) {
-                        parent.modelData.scroll(delta.y / 8, horizontal);
-                    }
+                    if (delta.x !== 0)
+                        trayItem.modelData.scroll(delta.x / 8, !horizontal);
+                    if (delta.y !== 0)
+                        trayItem.modelData.scroll(delta.y / 8, horizontal);
                 }
             }
         }

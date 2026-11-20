@@ -54,7 +54,7 @@ start_quickshell() {
 		return
 	fi
 
-	nohup quickshell > /dev/null 2>&1 &
+	run-detached quickshell
 }
 
 # Wait for the QuickShell process to start

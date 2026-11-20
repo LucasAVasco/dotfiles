@@ -50,7 +50,7 @@ RowLayout {
     }
 
     Space {
-        size: 20
+        size: 8
     }
 
     Repeater {

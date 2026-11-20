@@ -1,22 +1,31 @@
 pragma ComponentBehavior: Bound
 
+import QtQuick
 import Quickshell
 import Quickshell.Io
 
-import "../components"
+import "../services"
+import "../system_menu"
 
-ShellRoot {
-    TempItem {
-        id: lazyLoader
-        source: Qt.resolvedUrl("./Popup.qml")
-    }
+Item {
+    id: root
 
-    // Receives the requests to show the session manager
+    // GNOME-inspired top-left System Menu popover
+    SystemMenuPopover {}
+
+    // Power confirmation & scheduled shutdown/reboot modal dialog
+    PowerActionDialog {}
+
+    // Preserves existing IPC endpoint ("sessions.showMenu") + adds toggle
     IpcHandler {
         target: "sessions"
 
         function showMenu() {
-            lazyLoader.load();
+            ShellState.openPopover("systemMenu", null);
+        }
+
+        function toggleMenu() {
+            ShellState.togglePopover("systemMenu", null);
         }
     }
 }

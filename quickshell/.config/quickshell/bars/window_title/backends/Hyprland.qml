@@ -1,17 +1,20 @@
 import QtQuick
 import Quickshell.Hyprland
 
-import "../../../components"
-import "../../config"
+import "../../../theme"
 
-LimitedText {
-    color: Colors.foreground
+Text {
+    font.family: Theme.fontSans
+    font.pixelSize: Theme.fontSm
+    font.weight: Font.Medium
+    color: Theme.textSecondary
+    elide: Text.ElideRight
+    maximumLineCount: 1
 
     text: {
         let topLevel = Hyprland.activeToplevel;
-        if (topLevel == null) {
+        if (topLevel == null)
             return "";
-        }
         return topLevel.title;
     }
 }

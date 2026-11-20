@@ -1,26 +1,44 @@
 pragma ComponentBehavior: Bound
 
 import QtQuick
+import QtQuick.Layouts
 import Quickshell.Io
 
 import "../../components"
+import "../../theme"
 
 Rectangle {
     id: root
     visible: capslock.active
 
-    radius: 10
-    color: Qt.rgba(0.0, 0.0, 0.0, 0.5)
+    implicitWidth: capsRow.implicitWidth + Theme.spaceLg * 2
+    implicitHeight: 30
+    radius: Theme.radiusPill
+    color: Theme.warningSubtle
+    border.width: 1
+    border.color: Theme.warningBorder
 
-    Text {
+    RowLayout {
+        id: capsRow
         anchors.centerIn: parent
-        text: "CAPS LOCK"
-        color: "white"
+        spacing: Theme.spaceXs
 
-        font.pixelSize: Math.max(16, parent.height / 2)
+        Text {
+            text: "󰪛"
+            font.family: Theme.fontIcon
+            font.pixelSize: 13
+            color: Theme.warning
+        }
+
+        Text {
+            text: "Caps Lock is on"
+            font.family: Theme.fontSans
+            font.pixelSize: Theme.fontXs
+            font.weight: Font.Medium
+            color: Theme.warning
+        }
     }
 
-    // Gets the first caps lock device with a bash script and uses this file to check if caps lock is active
     Process {
         running: true
         command: ["bash", "-c", "~/.config/quickshell/lock/scripts/get-first-caps-lock-device.sh"]
@@ -31,7 +49,6 @@ Rectangle {
 
     CapsLock {
         id: capslock
-
         updateInterval: 500
     }
 }

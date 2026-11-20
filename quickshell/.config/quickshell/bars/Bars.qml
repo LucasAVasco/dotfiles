@@ -1,6 +1,13 @@
 import QtQuick
 import Quickshell
 
+import "./audio"
+import "./bluetooth"
+import "./media"
+import "./network"
+import "./power"
+import "./sysmon"
+
 Item {
     id: root
 
@@ -15,7 +22,7 @@ Item {
         }
     }
 
-    // Top bar
+    // Top bar per monitor
     Variants {
         model: Quickshell.screens
 
@@ -24,4 +31,12 @@ Item {
             screen: modelData
         }
     }
+
+    // System status popovers
+    AudioPopover {}
+    NetworkPopover {}
+    BluetoothPopover {}
+    PowerPopover {}
+    MediaPopover {}
+    SysMonPopover {}
 }

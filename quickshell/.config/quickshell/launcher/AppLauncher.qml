@@ -2,32 +2,34 @@ import QtQuick
 import QtQuick.Layouts
 import Quickshell
 
+import "../theme"
+import "../ui"
+
 PanelWindow {
     id: root
     signal done
 
     function launchApp(entry) {
-        // Command to launch
+        if (!entry)
+            return;
         let cmd = [...entry.command];
         if (entry.runInTerminal) {
-            cmd.unshift("default_term"); // Adds the default the terminal emulator to the command
+            cmd.unshift("default_term");
         }
 
-        // Launches
         Quickshell.execDetached({
             command: cmd,
-
-            // Uses the user home directory as fallback
             workingDirectory: entry.workingDirectory || Quickshell.env("HOME")
         });
 
-        // Signal
-        done();
+        root.done();
     }
 
-    focusable: true // Required to grab the user input
+    focusable: true
+    aboveWindows: true
+    exclusionMode: ExclusionMode.Ignore
+    color: "transparent"
 
-    // Layout
     anchors {
         top: true
         right: true
@@ -35,90 +37,115 @@ PanelWindow {
         left: true
     }
 
-    // Closes the launcher if the user clicks outside of it
-    MouseArea {
+    // Dimmed backdrop
+    Rectangle {
         anchors.fill: parent
+        color: Theme.scrimBg
 
-        onClicked: {
-            root.done();
+        MouseArea {
+            anchors.fill: parent
+            onClicked: root.done()
         }
     }
 
-    // Appearance
-    color: "transparent"
+    // Main GNOME-inspired launcher surface
+    Surface {
+        id: container
+        elevation: "popover"
+        radius: Theme.radiusXl
+        border.color: Theme.borderDefault
 
-    Rectangle {
-        // Layout
         anchors.centerIn: parent
-        implicitWidth: root.width * 0.5
-        implicitHeight: root.height * 0.8
+        width: Math.min(620, root.width - Theme.spaceXl * 2)
+        height: Math.min(540, root.height - Theme.spaceXl * 2)
 
-        // Appearance
-        color: "#111111"
-        radius: 20
-        border.color: "#222222"
+        property real enterProgress: 0
+        opacity: enterProgress
+        scale: 0.96 + 0.04 * enterProgress
+
+        Component.onCompleted: {
+            enterAnim.start();
+            search.focusInput();
+        }
+
+        NumberAnimation {
+            id: enterAnim
+            target: container
+            property: "enterProgress"
+            from: 0
+            to: 1
+            duration: Theme.animNormal
+            easing.type: Easing.OutCubic
+        }
+
+        // Prevent clicks inside modal from closing it
+        MouseArea {
+            anchors.fill: parent
+        }
 
         ColumnLayout {
-            // Layout
             anchors.fill: parent
-            anchors.margins: width / 60
-            spacing: anchors.margins
+            anchors.margins: Theme.spaceLg
+            spacing: Theme.spaceMd
 
             SearchInput {
                 id: search
-
-                // Layout
-                implicitHeight: 15
                 Layout.fillWidth: true
-                Layout.leftMargin: parent.width / 6
-                Layout.rightMargin: Layout.leftMargin
+
+                onNextApp: appList.nextApp()
+                onPreviousApp: appList.previousApp()
+                onEnter: root.launchApp(appList.currentApp)
+                onAbort: root.done()
+            }
+
+            // App list or empty state
+            Item {
+                Layout.fillWidth: true
                 Layout.fillHeight: true
+                clip: true
 
-                // Signals
-                onNextApp: function () {
-                    appList.nextApp();
+                AppList {
+                    id: appList
+                    anchors.fill: parent
+                    appFilter: search.text
+
+                    onAppLaunched: function (entry) {
+                        root.launchApp(entry);
+                    }
                 }
 
-                onPreviousApp: function () {
-                    appList.previousApp();
-                }
+                ColumnLayout {
+                    visible: appList.count === 0
+                    anchors.centerIn: parent
+                    spacing: Theme.spaceSm
 
-                onEnter: function () {
-                    root.launchApp(appList.currentApp);
-                    root.done();
-                }
+                    Text {
+                        Layout.alignment: Qt.AlignHCenter
+                        text: "󰍉"
+                        font.family: Theme.fontIcon
+                        font.pixelSize: 36
+                        color: Theme.textMuted
+                        opacity: 0.6
+                    }
 
-                onAbort: function () {
-                    root.done();
+                    Text {
+                        Layout.alignment: Qt.AlignHCenter
+                        text: "No matching applications"
+                        font.family: Theme.fontSans
+                        font.pixelSize: Theme.fontMd
+                        font.weight: Font.Medium
+                        color: Theme.textSecondary
+                    }
                 }
+            }
+
+            Separator {
+                Layout.fillWidth: true
             }
 
             AppPreview {
+                Layout.fillWidth: true
                 entry: appList.currentApp
-
-                // Layout
-                implicitHeight: 30
-                Layout.fillWidth: true
-                Layout.fillHeight: true
-            }
-
-            AppList {
-                id: appList
-
-                appFilter: search.text
-
-                // Layout
-                implicitHeight: 55
-                Layout.fillWidth: true
-                Layout.fillHeight: true
-                Layout.topMargin: parent.height / 8
-                Layout.bottomMargin: Layout.topMargin
-
-                // Signals
-                onAppLaunched: function (entry) {
-                    root.launchApp(entry);
-                    root.done();
-                }
             }
         }
     }

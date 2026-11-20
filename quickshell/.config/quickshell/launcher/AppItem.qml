@@ -4,6 +4,7 @@ import Quickshell
 import Quickshell.Widgets
 
 import "../libs"
+import "../theme"
 
 Rectangle {
     id: root
@@ -12,82 +13,91 @@ Rectangle {
     required property bool active
 
     signal clicked(DesktopEntry entry)
+    signal hovered
 
-    // Appearance
-    color: active ? Qt.rgba(0.5, 0.5, 0.5, 0.2) : "transparent"
-    radius: height / 4
+    radius: Theme.radiusMd
+    antialiasing: true
+    color: {
+        if (itemMouse.pressed)
+            return Theme.pressedBg;
+        if (active)
+            return Theme.accentSubtle;
+        if (itemMouse.containsMouse)
+            return Theme.hoverBg;
+        return "transparent";
+    }
+    border.width: active ? 1 : 0
+    border.color: Theme.accentBorder
+
+    Behavior on color {
+        ColorAnimation {
+            duration: Theme.animFast
+        }
+    }
 
     RowLayout {
-        // Layout
         anchors.fill: parent
+        anchors.leftMargin: Theme.spaceMd
+        anchors.rightMargin: Theme.spaceMd
+        spacing: Theme.spaceMd
 
-        // Icon
+        // App icon tile
         Rectangle {
-            // Layout
-            implicitWidth: parent.height
-            Layout.fillWidth: true
-            Layout.fillHeight: true
-            Layout.margins: height / 8
-
-            // Appearance
-            radius: height / 4
-            color: Qt.rgba(0.5, 0.5, 0.5, 0.2)
+            implicitWidth: 38
+            implicitHeight: 38
+            radius: Theme.radiusSm
+            color: Theme.subtleBg
 
             IconImage {
-                source: LibIcon.getIconPath(root.entry?.icon)
-
-                // Layout
                 anchors.centerIn: parent
-                implicitSize: parent.height * 0.8
+                implicitSize: 30
+                source: LibIcon.getIconPath(root.entry ? root.entry.icon : undefined)
             }
         }
 
-        // Name and short description
-        Rectangle {
-            // Layout
-            implicitWidth: parent.width - parent.height
+        // Name & subtitle
+        ColumnLayout {
             Layout.fillWidth: true
-            Layout.fillHeight: true
-            Layout.margins: height / 8
+            spacing: 2
 
-            // Appearance
-            color: "transparent"
-
-            ColumnLayout {
-                // Layout
-                anchors.fill: parent
-
-                Text {
-                    text: root.entry?.name || ""
-
-                    // Layout
-                    Layout.fillWidth: true
-                    Layout.fillHeight: true
-
-                    // Appearance
-                    color: "#ffffff"
-                    font.pixelSize: root.height / 4
-                }
-
-                Text {
-                    text: root.entry?.genericName || ""
-
-                    // Layout
-                    Layout.fillWidth: true
-                    Layout.fillHeight: true
-
-                    // Appearance
-                    color: "#aaaaaa"
-                    font.pixelSize: root.height / 4
-                }
+            Text {
+                text: root.entry ? (root.entry.name || "") : ""
+                font.family: Theme.fontSans
+                font.pixelSize: Theme.fontMd
+                font.weight: root.active ? Font.DemiBold : Font.Medium
+                color: Theme.textPrimary
+                elide: Text.ElideRight
+                Layout.fillWidth: true
             }
+
+            Text {
+                readonly property string sub: root.entry ? (root.entry.genericName || root.entry.comment || "") : ""
+                visible: sub.length > 0
+                text: sub
+                font.family: Theme.fontSans
+                font.pixelSize: Theme.fontXs
+                color: Theme.textSecondary
+                elide: Text.ElideRight
+                Layout.fillWidth: true
+            }
+        }
+
+        // Return hint on active item
+        Text {
+            visible: root.active
+            text: "󰌑"
+            font.family: Theme.fontIcon
+            font.pixelSize: 13
+            color: Theme.accentHover
         }
     }
 
     MouseArea {
+        id: itemMouse
         anchors.fill: parent
-        onClicked: {
-            root.clicked(root.entry);
-        }
+        hoverEnabled: true
+        cursorShape: Qt.PointingHandCursor
+        onEntered: root.hovered()
+        onClicked: root.clicked(root.entry)
     }
 }
