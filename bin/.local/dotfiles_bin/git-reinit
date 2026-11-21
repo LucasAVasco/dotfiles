@@ -1,0 +1,47 @@
+#!/bin/bash
+
+source ~/.local/lib/dotfiles/bash/help.sh
+
+source ~/.local/lib/dotfiles/bash/log.sh
+
+help_handle n "$@" <<EOF
+	Re-initialize the git repository.
+
+	All hooks are re-created. The old hooks are deleted (with trash-cli).
+
+	Usage: git full-init
+EOF
+
+# Run all commands inside the repository root directory
+repository_dir="$(git rev-parse --show-toplevel)"
+cd "$repository_dir"
+
+if [[ -d .git/hooks/ ]]; then
+	log_info 'Removing old hooks'
+	trash .git/hooks/
+fi
+
+log_info 'Add `git lfs` hooks'
+git lfs install
+
+# Checks if there is a lefthook configuration file
+has_lefthook_non_local_config_file=n
+if [[ -f lefthook.yml ]]; then
+	has_lefthook_non_local_config_file=y
+fi
+
+# Lefthook
+if [[ ! -f ./lefthook-local.yml ]]; then
+	# My local hooks (ignored by Git)
+	log_info 'Coping default local lefthook configuration'
+	cp -i ~/.config/git/hooks/lefthook.yml ./lefthook-local.yml
+fi
+
+log_info 'Setup "lefthook" and its hooks'
+lefthook install
+
+if [[ "$has_lefthook_non_local_config_file" == n ]]; then
+	# lefthook automatically creates a non-local configuration file, even if the project does not have one. Remove it so the repository is
+	# not changed
+	trash lefthook.yml
+fi
