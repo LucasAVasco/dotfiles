@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# See the documentation of this scripts at: https://git-scm.com/docs/githooks#_pre_push
+# See the documentation of 'pre-push' hook at: https://git-scm.com/docs/githooks#_pre_push
 #
 # Te documentation about temporary commits is in the 'lib/tmp_branch.sh' module
 #
@@ -9,20 +9,14 @@
 # $1: Remote name
 # $2: Remote URL
 
-
 set -e
-
 
 # Includes modules
 current_dir=$(realpath -m -- "$0/../")
 source "${current_dir}/lib/tmp_branch.sh"
 
-
-# #region Temporary commit validation before pushing
-
-# Temporary commits must only be pushed to temporary branches in the temporary remote. Normal commits must not be pushed to temporary
-# branches or the temporary remote
-
+# Temporary commit validation before pushing. They must only be pushed to temporary branches in the temporary remote. Normal commits must
+# not be pushed to temporary branches or the temporary remote
 
 # Show commit error log.
 #
@@ -45,7 +39,6 @@ show_commit_error_log() {
 	git cat-file -p "$2"
 	echo -e '\x1b[0;39m'  # Reset color
 }
-
 
 # Check each commit. Does not allow pushing a temporary commit to a remote other than "$tmp_remote_name". Does not allow pushing normal
 # (non-temporary) commits to the "$tmp_remote_name" remote.
@@ -111,5 +104,3 @@ while read -r line; do
 		fi
 	fi
 done
-
-# #endregion

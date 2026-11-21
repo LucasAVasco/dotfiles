@@ -1,0 +1,14 @@
+prepare-commit-msg:
+  commands:
+    set-temp-commit-title:
+      run: ~/.config/git/hooks/prepare-commit-msg {0}
+
+pre-push:
+  commands:
+    temp-commit-validation:
+      run: ~/.config/git/hooks/pre-push {0}
+
+commit-msg:
+  commands:
+    validate-temp-commit-message:
+      run: ~/.config/git/hooks/commit-msg {0}
