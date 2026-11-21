@@ -1,0 +1,39 @@
+#!/usr/bin/env bash
+#
+# Restart Kubernetes objects interactively.
+
+source ~/.local/lib/dotfiles/bash/strict.sh
+
+source ~/.local/lib/dotfiles/bash/help.sh
+
+help_handle y "$@" <<EOF
+	Restart Kubernetes objects interactively. Opens a FZF interface to select what objects to restart.
+
+	Usage:
+
+	kubectl restart deploy     Restart active deployments (replicas > 0).
+EOF
+
+object="$1"
+
+case "$object" in
+	deploy | deployment | deployments)
+		# Fetch active deployments (replicas > 0), select via fzf, and restart
+		kubectl get deployments --all-namespaces --no-headers \
+			-o custom-columns="NAMESPACE:.metadata.namespace,NAME:.metadata.name,REPLICAS:.spec.replicas" \
+			| awk '$3 > 0 {print $1, $2}' \
+			| column -t \
+			| fzf --multi \
+				--header="TAB: select multiple | ENTER: restart selected" \
+				--prompt="Select active deployments > " \
+			| while read -r ns name; do
+				echo "Restarting deployment/$name in namespace $ns..."
+				kubectl rollout restart deployment/"$name" -n "$ns"
+			done
+		;;
+
+	*)
+		echo "Unknow object type: $1" >&2
+		exit 1
+		;;
+esac
