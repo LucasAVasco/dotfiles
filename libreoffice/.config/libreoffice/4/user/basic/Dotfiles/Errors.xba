@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Errors" script:language="StarBasic" script:moduleType="normal">REM  *****  BASIC  *****
+
+Public Function PercentError(actual As Double, experimental As Double)
+	If actual = 0 Then
+		PercentError = &quot;inf&quot;
+	Else
+		PercentError = Abs((actual - experimental) / actual) * 100
+	End If
+End Function
+</script:module>

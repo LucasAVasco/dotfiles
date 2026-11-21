@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Module1" script:language="StarBasic" script:moduleType="normal">REM  *****  BASIC  *****
+
+Function LoadDotfilesLib()
+	If Not BasicLibraries.isLibraryLoaded(&quot;Dotfiles&quot;) Then
+		BasicLibraries.loadLibrary(&quot;Dotfiles&quot;)
+	End If
+End Function
+
+Public Function PercentError(actual As Double, experimental As Double)
+	LoadDotfilesLib()
+	PercentError = Dotfiles.Errors.PercentError(actual, experimental)
+End Function
+</script:module>
