@@ -26,6 +26,16 @@
 mise.local.toml
 falcula.local.yaml
 falcula.local.yml
+.lefthook-local.json
+.lefthook-local.jsonc
+.lefthook-local.toml
+.lefthook-local.yaml
+.lefthook-local.yml
+lefthook-local.json
+lefthook-local.jsonc
+lefthook-local.toml
+lefthook-local.yaml
+lefthook-local.yml
 
 
 # Sometimes I user a backup script that saves the files as a '.zip' file. Ignore this files
