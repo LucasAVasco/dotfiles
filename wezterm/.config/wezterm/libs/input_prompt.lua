@@ -1,8 +1,8 @@
 local M = {}
 
----String used to identify the left prompt. The left prompt MUST be the unique prompt containing this string. All the other prompts MUST not
----contain this string
-local unique_left_prompt_content = ''
+---Strings used to identify the left prompt. The left prompt MUST be the unique prompt containing any of these string. All the other prompts
+---MUST not contain them
+local unique_left_prompts_content = { '', ' ' }
 
 ---@class (exact) SemanticZone
 ---@field semantic_type 'Input' | 'Output' | 'Prompt'
@@ -26,7 +26,13 @@ local function zone_is_left_prompt(pane, zone)
 	end
 
 	local text = get_text_from_zone(pane, zone)
-	return text:find(unique_left_prompt_content, 0, true)
+	for _, prompt_content in ipairs(unique_left_prompts_content) do
+		if text:find(prompt_content, 0, true) then
+			return true
+		end
+	end
+
+	return false
 end
 
 ---Get the content of the current and last inputs
