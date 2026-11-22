@@ -13,12 +13,44 @@ Rectangle {
     anchors.fill: parent
     color: Theme.surfaceBase
 
+    property bool unlocking: false
+
     signal unlocked
 
+    function ensurePromptFocus() {
+        if (root.unlocking)
+            return;
+        passwordPrompt.focusInput();
+        Qt.callLater(function () {
+            if (!root.unlocking)
+                passwordPrompt.focusInput();
+        });
+    }
+
     function unlock() {
+        root.unlocking = true;
         passwordPrompt.focus = false;
         root.opacity = 0;
         unlockTimer.running = true;
+    }
+
+    Keys.forwardTo: [passwordPrompt]
+
+    Component.onCompleted: ensurePromptFocus()
+
+    onVisibleChanged: {
+        if (root.visible)
+            root.ensurePromptFocus();
+    }
+
+    Connections {
+        target: root.Window.window
+        ignoreUnknownSignals: true
+
+        function onActiveChanged() {
+            if (root.Window.active)
+                root.ensurePromptFocus();
+        }
     }
 
     SystemClock {
@@ -48,6 +80,16 @@ Rectangle {
 
     Wallpaper {
         id: wallpaper
+    }
+
+    // Reclaim focus when clicking anywhere on the lock screen
+    MouseArea {
+        anchors.fill: parent
+        onPressed: {
+            if (root.Window.window)
+                root.Window.window.requestActivate();
+            root.ensurePromptFocus();
+        }
     }
 
     // Center GNOME-style lock screen stack: Clock + Date + User + Password Prompt
@@ -118,6 +160,11 @@ Rectangle {
         PasswordPrompt {
             id: passwordPrompt
             Layout.fillWidth: true
+
+            onActiveFocusChanged: {
+                if (!passwordPrompt.activeFocus && !root.unlocking && root.Window.active)
+                    Qt.callLater(root.ensurePromptFocus);
+            }
 
             onPasswordGiven: function (password) {
                 passwordPrompt.authenticating = true;

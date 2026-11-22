@@ -18,10 +18,14 @@ ColumnLayout {
 
     spacing: Theme.spaceSm
 
+    function focusInput() {
+        root.forceActiveFocus();
+    }
+
     function givePassword() {
         if (authenticating || password.length === 0)
             return;
-        root.focus = true;
+        root.focusInput();
         let pwd = root.password;
         root.password = "";
         root.errorText = "";
@@ -31,12 +35,15 @@ ColumnLayout {
     function showErrorMessage(message) {
         errorText = message;
         shakeAnim.restart();
+        root.focusInput();
     }
 
     function clearPassword() {
         root.password = "";
         root.errorText = "";
     }
+
+    Component.onCompleted: focusInput()
 
     // Pill password input container
     Rectangle {
@@ -71,7 +78,7 @@ ColumnLayout {
 
         MouseArea {
             anchors.fill: parent
-            onClicked: root.focus = true
+            onPressed: root.focusInput()
         }
 
         RowLayout {
@@ -109,6 +116,7 @@ ColumnLayout {
                 icon: root.authenticating ? "󰔟" : "󰁔"
                 iconSize: 16
                 buttonSize: 36
+                activeFocusOnTab: false
                 disabled: root.authenticating || root.password.length === 0
                 active: root.password.length > 0
                 onClicked: root.givePassword()
@@ -143,14 +151,21 @@ ColumnLayout {
             return;
 
         switch (event.key) {
+        case Qt.Key_Tab:
+        case Qt.Key_Backtab:
+            event.accepted = true;
+            break;
         case Qt.Key_Enter:
         case Qt.Key_Return:
+            event.accepted = true;
             root.givePassword();
             break;
         case Qt.Key_Escape:
+            event.accepted = true;
             root.clearPassword();
             break;
         case Qt.Key_Backspace:
+            event.accepted = true;
             if (event.modifiers & Qt.ControlModifier) {
                 root.password = "";
             } else {
@@ -160,6 +175,7 @@ ColumnLayout {
             break;
         default:
             if (event.text && event.text.length > 0 && !(event.modifiers & Qt.ControlModifier)) {
+                event.accepted = true;
                 root.password += event.text;
                 root.errorText = "";
             }
