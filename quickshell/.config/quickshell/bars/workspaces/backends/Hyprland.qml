@@ -11,7 +11,7 @@ RowLayout {
     id: root
 
     function getWorkspaceState(id: int): int {
-        let workspace = Hyprland.workspaces.values.find(w => w.id % 10 == id);
+        let workspace = Hyprland.workspaces.values.find(w => w.id == id);
 
         if (workspace == null) {
             return WorkSpaceIndicator.State.Normal;
@@ -54,7 +54,7 @@ RowLayout {
     }
 
     Repeater {
-        model: [6, 7, 8, 9, 0]
+        model: [6, 7, 8, 9, 10]
 
         WorkSpaceIndicator {
             required property var modelData
