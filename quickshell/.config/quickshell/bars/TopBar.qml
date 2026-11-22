@@ -166,12 +166,12 @@ PanelWindow {
 
                 ShellCmdButton {
                     label: ""
-                    command: "~/.config/rofi/tools/chdesk.sh"
+                    command: "~/.config/custom-desktop/chdesk-ui.sh"
                 }
 
                 ShellCmdButton {
                     label: "󰖲"
-                    command: "~/.config/rofi/tools/windows.sh"
+                    command: "~/.config/custom-desktop/windows-ui.sh"
                 }
 
                 ShellCmdButton {
