@@ -1,5 +1,5 @@
 # Load profile if not already loaded
-if [[ "$PROFILE_ALREADY_SOURCED" != 'y' ]]; then
+if [[ "$PROFILE_ALREADY_SOURCED" != 'y' && -f ~/.profile ]]; then
 	source ~/.profile
 fi
 
