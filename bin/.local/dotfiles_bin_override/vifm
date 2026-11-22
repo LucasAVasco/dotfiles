@@ -57,6 +57,6 @@ if [[ "$VIFM_OVERRIDE_LEVEL" == 1 ]]; then
 elif [[ "$VIFM_OVERRIDE_LEVEL" == 2 ]]; then
 	ensure_ueberzug_running &
 	bin_overrides_call_without_override vifm "$@"
-	kill $(jobs -p) # Kill ueberzug job
+	kill $(jobs -p) 2>/dev/null || true # Kill ueberzug job
 	exit 0
 fi
