@@ -26,7 +26,10 @@ fi
 workspace="$1"
 
 # Constants
-warm="${WARM_TEMPERATURE:-3000}"
+warm="$(dconf read /apps/custom-desktop/screen-temperature/warm-temperature)"
+if [[ -z "$warm" ]]; then
+	warm=3000
+fi
 
 # Reset GammaStep and the screen temperature.
 reset_gammastep() {
