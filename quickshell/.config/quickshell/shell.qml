@@ -5,6 +5,7 @@ import QtQuick
 import Quickshell
 
 import "./bars"
+import "./chdesk"
 import "./launcher"
 import "./lock"
 import "./notification"
@@ -32,6 +33,11 @@ ShellRoot {
     // Launcher
     Loader {
         source: "./launcher/Main.qml"
+    }
+
+    // Desktop switcher (chdesk)
+    Loader {
+        source: "./chdesk/Main.qml"
     }
 
     // Session manager
