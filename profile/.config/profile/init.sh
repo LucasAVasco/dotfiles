@@ -76,6 +76,7 @@ fi
 
 # Apps configuration
 export FZF_DEFAULT_OPTS_FILE=~/.fzfrc
+export CUSTOM_DESKTOP_USE_QUICKSHELL=y
 
 if [ "$ALLOW_EXTERNAL_SOFTWARE" = y ]; then
 	# Mason binaries
