@@ -1,6 +1,7 @@
 import QtQuick
 import QtQuick.Layouts
 import Quickshell
+import Quickshell.Io
 
 import "../services"
 import "../theme"
@@ -109,12 +110,20 @@ PanelWindow {
                     }
                 }
 
+                Process {
+                    id: sessionManagerProc
+                    command: ["sh", "-c", "~/.config/custom-desktop/session-manager.sh"]
+                }
+
                 MouseArea {
                     id: sysMouse
                     anchors.fill: parent
                     hoverEnabled: true
                     cursorShape: Qt.PointingHandCursor
-                    onClicked: ShellState.togglePopover("systemMenu", root.screen)
+                    onClicked: {
+                        ShellState.activeScreen = root.screen;
+                        sessionManagerProc.startDetached();
+                    }
                 }
             }
 
