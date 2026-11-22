@@ -82,6 +82,13 @@ enable_gammastep() {
 	esac
 }
 
+# Disable
+enabled="$(dconf read /apps/custom-desktop/screen-temperature/enabled)"
+if [[ "$enabled" == 'false' ]]; then
+	disable_gammastep
+	exit 0
+fi
+
 # Resets GammaStep
 if [[ "$reset_screen_temp" == 'y' ]]; then
 	reset_gammastep
