@@ -1,3 +1,5 @@
-# Other configuration files
-test -f ~/.profile && source ~/.profile
+if [[ "$PROFILE_ALREADY_SOURCED" != y && -f ~/.profile ]]; then
+	source ~/.profile
+fi
+
 test -f ~/.bashrc && source ~/.bashrc
