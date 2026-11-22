@@ -1,11 +1,44 @@
+/*
+ * Desktop Directory Picker (chdesk) — 2-column card grid
+ */
+
 configuration {
-	show-icons: false;
+    show-icons: false;
 }
 
 @theme "my-theme"
 
-#listview {
-	columns: 2;
+window {
+    width: 560px;
+}
+
+entry {
+    placeholder: "Filter desktops…";
+}
+
+listview {
+    columns:      2;
+    lines:        6;
+    spacing:      8px;
+    dynamic:      true;
+    fixed-height: false;
+}
+
+element {
+    padding:          12px 14px;
+    border-radius:    12px;
+    background-color: @bg-subtle;
+    border-color:     @border-subtle;
+}
+
+element normal.normal,
+element alternate.normal {
+    background-color: @bg-subtle;
+    border-color:     @border-subtle;
+}
+
+element-text {
+    horizontal-align: 0.5;
 }
 
 /* vim: set ft=css: */

@@ -1,16 +1,69 @@
+/*
+ * Modal Confirmation Dialog (Yes / No) — mirrors Quickshell ModalDialog
+ */
+
 configuration {
-	show-icons: false;
+    show-icons: false;
 }
 
-@theme "my-theme"
+@theme "my-theme-small"
 
-#inputbar {
-	margin: 0%;
+window {
+    width:   440px;
+    padding: 22px;
 }
 
-#listview {
-	lines: 1;
-	columns: 2;
+mainbox {
+    spacing:  18px;
+    children: [ "inputbar", "listview" ];
+}
+
+inputbar {
+    padding:          0px 4px;
+    border:           0px;
+    border-radius:    0px;
+    background-color: transparent;
+    children:         [ "prompt" ];
+}
+
+prompt {
+    text-color:       @fg-primary;
+    font:             "Adwaita Sans SemiBold 12";
+    horizontal-align: 0.5;
+}
+
+listview {
+    columns:       2;
+    lines:         1;
+    fixed-columns: true;
+    fixed-height:  true;
+    dynamic:       false;
+    spacing:       12px;
+}
+
+element {
+    padding:          11px 16px;
+    border-radius:    999px;
+    background-color: @bg-elevated;
+    border-color:     @border-default;
+}
+
+element normal.normal,
+element alternate.normal {
+    background-color: @bg-elevated;
+    border-color:     @border-default;
+    text-color:       @fg-primary;
+}
+
+element selected.normal {
+    background-color: @accent;
+    border-color:     @accent-hover;
+    text-color:       @fg-on-accent;
+}
+
+element-text {
+    horizontal-align: 0.5;
+    font:             "Adwaita Sans SemiBold 11";
 }
 
 /* vim: set ft=css: */

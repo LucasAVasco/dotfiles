@@ -1,92 +1,176 @@
+/*
+ * Base Rofi Theme — Floating Command Palette / GNOME Adwaita Dark
+ */
+
+@import "palette.rasi"
+
 configuration {
-	font: "NotoSans Nerd Font 15";
+    font:       "Adwaita Sans 11";
+    icon-theme: "Adwaita";
 }
 
-* {
-	background-color: rgba(0, 0, 0, 0%);
-	text-color: rgb(200, 200, 200);
+window {
+    width:            580px;
+    padding:          16px;
+    border:           1px;
+    border-radius:    18px;
+    border-color:     @border-default;
+    background-color: @bg-window;
+    location:         center;
+    anchor:           center;
 }
 
-#window {
-	/* Dimensions */
-	width: 60%;
-	padding: 5%;
-
-	/* Appearance */
-	background-color: rgba(0, 0, 0, 100%);
-	border: 1px;
-	border-radius: 3em;
-	border-color: rgba(100, 100, 100, 100%);
+mainbox {
+    spacing:          12px;
+    background-color: transparent;
+    children:         [ "inputbar", "message", "listview" ];
 }
 
-#inputbar {
-	/* Centralizes the input bar (margin at left and right) */
-	margin: 0% 10%;
+/* Integrated recessed search pill (mirrors Quickshell TextFieldBox) */
+inputbar {
+    padding:          10px 16px;
+    spacing:          10px;
+    border:           1px;
+    border-radius:    999px;
+    border-color:     @border-default;
+    background-color: @bg-input;
+    children:         [ "prompt", "entry" ];
 }
 
-#prompt {
-	/* Dimensions */
-	padding: 0.3em 0.5em 0.3em 0.5em;
-	margin: 0 0.5em 0 0;
-
-	/* Appearance */
-	background-color: rgb(255, 200, 111);
-	text-color: rgb(0, 0, 0);
-	border-radius: 100%;
+prompt {
+    background-color: transparent;
+    text-color:       @accent-hover;
+    vertical-align:   0.5;
+    font:             "Adwaita Sans SemiBold 11";
 }
 
-#entry {
-	/* Dimensions */
-	padding: 0.3em 1.5em 0.3em 1.5em;
-
-	/* Appearance */
-	background-color: rgb(50, 50, 50);
-	border-radius: 100%;
-	placeholder: "...";
-	placeholder-color: rgb(100, 100, 100);
+entry {
+    background-color:  transparent;
+    text-color:        @fg-primary;
+    placeholder:       "Search…";
+    placeholder-color: @fg-muted;
+    vertical-align:    0.5;
+    cursor:            text;
 }
 
-#case-indicator {
-	enabled: false;
+case-indicator {
+    enabled: false;
 }
 
-#listview {
-	/* Dimensions */
-	margin: 5% 0 0 0;
-	spacing: 0.5em;
-	lines: 10;
+message {
+    padding:          10px 14px;
+    border:           1px;
+    border-radius:    10px;
+    border-color:     @border-subtle;
+    background-color: @bg-subtle;
 }
 
-#element {
-	/* Dimensions */
-	padding: 0.5em;
-
-	/* Appearance */
-	border-color: rgba(0, 0, 0, 0%);
-	background-color: rgb(30, 30, 30);
-	border-radius: 100%;
+textbox {
+    background-color: transparent;
+    text-color:       @fg-secondary;
+    vertical-align:   0.5;
 }
 
-#element-text {
-	horizontal-align: 0.5;
+listview {
+    columns:          1;
+    lines:            8;
+    cycle:            true;
+    dynamic:          true;
+    scrollbar:        false;
+    fixed-height:     false;
+    spacing:          4px;
+    background-color: transparent;
+    border:           0px;
 }
 
-#element.selected.normal {
-	background-color: rgb(255, 200, 111);
+element {
+    orientation:      horizontal;
+    padding:          10px 14px;
+    spacing:          12px;
+    border:           1px;
+    border-radius:    10px;
+    border-color:     transparent;
+    background-color: transparent;
+    text-color:       @fg-primary;
+    cursor:           pointer;
 }
 
-#element-text.selected.normal {
-	text-color: rgb(0, 0, 0);
+element normal.normal,
+element alternate.normal {
+    background-color: transparent;
+    text-color:       @fg-primary;
 }
 
-#element.normal.urgent {
-	background-color: rgba(255, 100, 100, 50%);
+element normal.active,
+element alternate.active {
+    background-color: @bg-subtle;
+    border-color:     @border-subtle;
+    text-color:       @accent-hover;
 }
 
-#element.selected.urgent {
-	background-color: rgba(255, 100, 100, 100%);
-	border-color: rgb(255, 0, 0);
-	border: 1;
+element normal.urgent,
+element alternate.urgent {
+    background-color: @danger-subtle;
+    border-color:     @danger-border;
+    text-color:       @fg-primary;
+}
+
+element selected.normal {
+    background-color: @accent-subtle;
+    border-color:     @accent-border;
+    text-color:       @fg-primary;
+}
+
+element selected.active {
+    background-color: @accent;
+    border-color:     @accent-hover;
+    text-color:       @fg-on-accent;
+}
+
+element selected.urgent {
+    background-color: @danger;
+    border-color:     @danger-border;
+    text-color:       @fg-on-accent;
+}
+
+element-icon {
+    size:             22px;
+    background-color: transparent;
+    vertical-align:   0.5;
+    cursor:           inherit;
+}
+
+element-text {
+    background-color: transparent;
+    text-color:       inherit;
+    vertical-align:   0.5;
+    horizontal-align: 0.0;
+    cursor:           inherit;
+}
+
+/* Segmented Adwaita pill mode switcher (enabled by themes that want it) */
+mode-switcher {
+    spacing:          6px;
+    padding:          4px;
+    border:           1px;
+    border-radius:    999px;
+    border-color:     @border-subtle;
+    background-color: @bg-input;
+}
+
+button {
+    padding:          6px 14px;
+    border-radius:    999px;
+    background-color: transparent;
+    text-color:       @fg-secondary;
+    horizontal-align: 0.5;
+    vertical-align:   0.5;
+    cursor:           pointer;
+}
+
+button selected {
+    background-color: @bg-elevated;
+    text-color:       @fg-primary;
 }
 
 /* vim: set ft=css: */

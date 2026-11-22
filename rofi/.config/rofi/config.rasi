@@ -1,4 +1,12 @@
 configuration {
+    font:                "Adwaita Sans 11";
+    icon-theme:          "Adwaita";
+    drun-display-format: "{name}";
+    hover-select:        true;
+    me-select-entry:     "";
+    me-accept-entry:     "MousePrimary";
 }
 
 @theme "my-theme"
+
+/* vim: set ft=css: */

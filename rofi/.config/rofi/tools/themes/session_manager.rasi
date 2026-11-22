@@ -1,11 +1,70 @@
+/*
+ * Session Manager — 3x2 Power & Session Action Tile Grid
+ */
+
 configuration {
-	show-icons: true;
+    show-icons: false;
 }
 
 @theme "my-theme-small"
 
-#listview {
-	lines: 6;
+window {
+    width:   480px;
+    padding: 20px;
+}
+
+mainbox {
+    spacing:  16px;
+    children: [ "inputbar", "listview" ];
+}
+
+inputbar {
+    padding:          0px 4px;
+    border:           0px;
+    border-radius:    0px;
+    background-color: transparent;
+    children:         [ "prompt" ];
+}
+
+prompt {
+    text-color:       @fg-primary;
+    font:             "Adwaita Sans Bold 13";
+    horizontal-align: 0.5;
+}
+
+listview {
+    columns:       3;
+    lines:         2;
+    fixed-columns: true;
+    fixed-height:  true;
+    dynamic:       false;
+    spacing:       10px;
+}
+
+element {
+    orientation:      vertical;
+    padding:          16px 10px;
+    border-radius:    14px;
+    background-color: @bg-subtle;
+    border-color:     @border-subtle;
+}
+
+element normal.normal,
+element alternate.normal {
+    background-color: @bg-subtle;
+    border-color:     @border-subtle;
+}
+
+element selected.normal {
+    background-color: @accent-subtle;
+    border-color:     @accent-border;
+    text-color:       @fg-primary;
+}
+
+element-text {
+    horizontal-align: 0.5;
+    vertical-align:   0.5;
+    font:             "Adwaita Sans 16";
 }
 
 /* vim: set ft=css: */

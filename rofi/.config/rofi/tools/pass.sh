@@ -8,6 +8,7 @@ source ~/.local/lib/dotfiles/bash/pass.sh
 source ~/.local/lib/dotfiles/bash/linux/clipboard.sh
 source ~/.local/lib/dotfiles/bash/linux/keyboard/auto-type.sh
 
+current_dir=$(realpath -m -- "$0/../")
 main_password_entry_name='Main Password'
 
 # Select some line with Rofi.
@@ -17,7 +18,9 @@ main_password_entry_name='Main Password'
 #
 # Return the selected line.
 select_with_rofi() {
-	rofi -p "$1" -dmenu "$@"
+	local prompt="$1"
+	shift
+	rofi -theme "$current_dir/themes/pass.rasi" -p "$prompt" -dmenu -i "$@"
 }
 
 # Select a password name with Rofi.

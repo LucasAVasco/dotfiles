@@ -1,23 +1,23 @@
+/*
+ * Compact Popover Theme — mirrors Quickshell ModalDialog width
+ */
+
 @theme "my-theme"
 
-#window {
-	/* Dimensions */
-	width: 30%;
-	padding: 2%;
-
-	/* Appearance */
-	border-radius: 2em;
+window {
+    width:         440px;
+    padding:       16px;
+    border-radius: 18px;
 }
 
-#inputbar {
-	/* Dimensions */
-	margin: 0% 2% 0 2%;
+mainbox {
+    spacing: 12px;
 }
 
-#listview {
-	/* Dimensions */
-	margin: 2% 0 0 0;
-	lines: 4;
+listview {
+    lines:        5;
+    dynamic:      true;
+    fixed-height: false;
 }
 
 /* vim: set ft=css: */

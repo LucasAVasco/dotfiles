@@ -1,17 +1,30 @@
+/*
+ * Modal Text Input Dialog — mirrors Quickshell ModalDialog
+ */
+
 configuration {
-	show-icons: false;
+    show-icons: false;
 }
 
-@theme "my-theme"
+@theme "my-theme-small"
 
-#inputbar {
-	margin: 0%;
+window {
+    width:   460px;
+    padding: 20px;
 }
 
-#listview {
-	margin: 0%;
-	lines: 0;
-	columns: 0;
+mainbox {
+    spacing:  0px;
+    children: [ "inputbar" ];
+}
+
+inputbar {
+    padding:       12px 16px;
+    border-radius: 12px;
+}
+
+entry {
+    placeholder: "Type here…";
 }
 
 /* vim: set ft=css: */

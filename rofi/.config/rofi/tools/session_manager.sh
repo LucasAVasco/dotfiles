@@ -7,50 +7,50 @@
 current_dir=$(realpath -m -- "$0/../")
 
 
-# Content to be displayed in Rofi
+# Content to be displayed in Rofi (Nerd Font glyphs + labels, consistent with Quickshell)
 buttons=(
-	'Shutdown;kshutdown' 'Reboot;system-restart' 'Suspend;system-suspend' 'Hibernate;system-hibernate'
-	'Lock screen;lock-screen' 'Logout;system-switch-user'
-	)
+	"<span font_desc='JetBrainsMono Nerd Font Propo 20'>󰐥</span>&#10;<span font_desc='Adwaita Sans 10'>Shutdown</span>"
+	"<span font_desc='JetBrainsMono Nerd Font Propo 20'>󰜉</span>&#10;<span font_desc='Adwaita Sans 10'>Reboot</span>"
+	"<span font_desc='JetBrainsMono Nerd Font Propo 20'>󰤄</span>&#10;<span font_desc='Adwaita Sans 10'>Suspend</span>"
+	"<span font_desc='JetBrainsMono Nerd Font Propo 20'>󰋊</span>&#10;<span font_desc='Adwaita Sans 10'>Hibernate</span>"
+	"<span font_desc='JetBrainsMono Nerd Font Propo 20'>󰌾</span>&#10;<span font_desc='Adwaita Sans 10'>Lock screen</span>"
+	"<span font_desc='JetBrainsMono Nerd Font Propo 20'>󰍃</span>&#10;<span font_desc='Adwaita Sans 10'>Logout</span>"
+)
 
-content=''
-for loop in "${buttons[@]}"; do
-	content+=$(echo -n "$loop" | sed 's/;/\\0icon\\x1f/')
-	content+='\n'
-done
+content=$(printf '%s\n' "${buttons[@]}")
 
 # Displays Rofi interface
-selected_command=$(echo -en "$content" | rofi -dmenu -theme "$current_dir/themes/session_manager.rasi" -p 'Session manager: ')
+selected_command=$(printf '%s' "$content" | rofi -dmenu -markup-rows -eh 2 -theme "$current_dir/themes/session_manager.rasi" -p 'Session')
 
 # Executes the command
-case $selected_command in
+case "$selected_command" in
 	# Shutdown
-	Shutdown )
+	*Shutdown* )
 		shutdown now
 	;;
 
 	# Reboot
-	Reboot )
+	*Reboot* )
 		reboot
 	;;
 
 	# Suspend
-	Suspend )
+	*Suspend* )
 		systemctl suspend
 	;;
 
 	# Hibernate
-	Hibernate )
+	*Hibernate* )
 		systemctl hibernate
 	;;
 
 	# Lock-screen
-	'Lock screen' )
-		~/.config/screenlocker/run.sh
+	*'Lock screen'* )
+		~/.config/screenlocker/manager.sh run
 	;;
 
 	# Switch-user
-	'Logout' )
+	*Logout* )
 		if [[ -n "$CUSTOM_DESKTOP_LOGOUT_COMMAND" ]]; then
 			bash -c "$CUSTOM_DESKTOP_LOGOUT_COMMAND"
 		fi

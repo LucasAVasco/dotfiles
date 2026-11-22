@@ -1,11 +1,33 @@
-configuration {
-	show-icons: true;
-	display-drun: "   Application";
+/*
+ * Application Launcher — 5x3 GNOME-style icon grid + segmented mode switcher
+ */
 
-	levenshtein-sort: true;
-	matching: "fuzzy";
+configuration {
+    show-icons:       true;
+    display-drun:     "󰀻  Apps";
+    display-run:      "  Run";
+    display-ssh:      "󰣀  SSH";
+    levenshtein-sort: true;
+    matching:         "fuzzy";
 }
 
 @theme "my-theme-dense"
+
+mainbox {
+    children: [ "inputbar", "listview", "mode-switcher" ];
+}
+
+entry {
+    placeholder: "Search applications…";
+}
+
+mode-switcher {
+    margin: 0px 190px;
+}
+
+button selected {
+    background-color: @accent;
+    text-color:       @fg-on-accent;
+}
 
 /* vim: set ft=css: */

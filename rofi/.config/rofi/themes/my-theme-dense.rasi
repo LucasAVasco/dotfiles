@@ -1,33 +1,48 @@
+/*
+ * Spacious Icon Grid Theme — GNOME App Overview inspired
+ */
+
 @theme "my-theme"
 
-#window {
-	height: 80%;
-	width: 80%;
+window {
+    width:   780px;
+    padding: 20px;
 }
 
-#listview {
-	/* Dimensions */
-	lines: 4;
-	columns: 8;
-	fixed-columns: true;
-
-	/* Appearance */
-	scrollbar: false;
+mainbox {
+    spacing: 18px;
 }
 
-#element {
-	orientation: vertical;
-	border-radius: 1em;
+inputbar {
+    margin: 0px 110px;
 }
 
-#element-icon {
-	size: 2em;
+listview {
+    columns:       5;
+    lines:         3;
+    fixed-columns: true;
+    fixed-height:  true;
+    dynamic:       false;
+    spacing:       10px;
+    scrollbar:     false;
 }
 
-#element-text {
-	horizontal-align: 0.5;
-	vertical-align: 0.5;
-	font: "NotoSans Nerd Font 12";
+element {
+    orientation:   vertical;
+    padding:       14px 8px;
+    spacing:       10px;
+    border-radius: 14px;
+}
+
+element-icon {
+    size:             48px;
+    horizontal-align: 0.5;
+}
+
+element-text {
+    horizontal-align: 0.5;
+    vertical-align:   0.5;
+    font:             "Adwaita Sans 10";
 }
 
 /* vim: set ft=css: */

@@ -1,11 +1,45 @@
+/*
+ * Org Mode Quick Picker — 3-tile horizontal card strip
+ */
+
 configuration {
-	show-icons: false;
+    show-icons: false;
 }
 
 @theme "my-theme-small"
 
-#listview {
-	lines: 3;
+window {
+    width: 460px;
+}
+
+entry {
+    placeholder: "Open org…";
+}
+
+listview {
+    columns:      3;
+    lines:        1;
+    spacing:      10px;
+    dynamic:      false;
+    fixed-height: true;
+}
+
+element {
+    padding:          16px 10px;
+    border-radius:    12px;
+    background-color: @bg-subtle;
+    border-color:     @border-subtle;
+}
+
+element normal.normal,
+element alternate.normal {
+    background-color: @bg-subtle;
+    border-color:     @border-subtle;
+}
+
+element-text {
+    horizontal-align: 0.5;
+    font:             "Adwaita Sans SemiBold 11";
 }
 
 /* vim: set ft=css: */

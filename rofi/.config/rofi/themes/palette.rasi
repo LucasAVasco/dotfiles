@@ -1,0 +1,50 @@
+/*
+ * Shared color palette — synced with Quickshell Theme.qml
+ * GNOME Adwaita Dark–inspired design tokens
+ */
+
+* {
+    /* Surface elevation levels */
+    bg-window:       #1f1f26f5;  /* popoverBg */
+    bg-surface:      #24242bff;  /* surfaceRaised */
+    bg-elevated:     #2d2d36ff;  /* surfaceElevated */
+    bg-overlay:      #363640ff;  /* surfaceOverlay */
+    bg-input:        #18181dff;  /* surfaceInput */
+
+    /* Interactive state tints */
+    bg-hover:        #ffffff14;  /* hoverBg (8%) */
+    bg-pressed:      #ffffff24;  /* pressedBg (14%) */
+    bg-subtle:       #ffffff0d;  /* subtleBg (5%) */
+
+    /* Borders & dividers */
+    border-subtle:   #ffffff14;  /* 8% */
+    border-default:  #ffffff21;  /* 13% */
+    border-strong:   #ffffff38;  /* 22% */
+    separator:       #ffffff17;  /* 9% */
+
+    /* Accent — Adwaita Blue */
+    accent:          #3584e4ff;
+    accent-hover:    #4a93eaff;
+    accent-active:   #2b6fc2ff;
+    accent-subtle:   #3584e42e;  /* 18% */
+    accent-border:   #3584e473;  /* 45% */
+
+    /* Semantic colors */
+    success:         #33d17aff;
+    warning:         #f5c211ff;
+    danger:          #e01b24ff;
+    danger-subtle:   #e01b2429;  /* 16% */
+    danger-border:   #e01b247a;  /* 48% */
+
+    /* Typography colors */
+    fg-primary:      #f2f2f5ff;
+    fg-secondary:    #b0b0bcff;
+    fg-muted:        #7d7d8aff;
+    fg-on-accent:    #ffffffff;
+
+    /* Base defaults */
+    background-color: transparent;
+    text-color:       @fg-primary;
+}
+
+/* vim: set ft=css: */

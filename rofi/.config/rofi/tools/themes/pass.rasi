@@ -1,0 +1,25 @@
+/*
+ * Password Manager Picker (pass.sh)
+ */
+
+configuration {
+    show-icons: false;
+}
+
+@theme "my-theme-small"
+
+window {
+    width: 500px;
+}
+
+entry {
+    placeholder: "Filter…";
+}
+
+listview {
+    lines:        8;
+    dynamic:      true;
+    fixed-height: false;
+}
+
+/* vim: set ft=css: */
