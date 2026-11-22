@@ -20,7 +20,7 @@ ensure_ueberzug_running() {
 			# If ueberzug is not running, there will be only one process accessing the fifo (vifm). So `lsof` will return only 2 lines
 			# (header + process row)
 			if [[ "$(lsof "$FIFO_UEBERZUG" 2>/dev/null | wc -l)" -le 2 ]]; then
-				ueberzug layer -s -p json <"$FIFO_UEBERZUG"
+				env -u HYPRLAND_INSTANCE_SIGNATURE ueberzug layer -s -p json <"$FIFO_UEBERZUG" || true
 			fi
 		fi
 
