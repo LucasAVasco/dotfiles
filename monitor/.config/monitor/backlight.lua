@@ -1,26 +1,28 @@
 local M = {}
 
----Run a command and returns the output.
+--- Run a command and return its output.
 ---@param cmd string The command to run in a shell.
 ---@return string
 local function exec(cmd)
-	local f = assert(io.popen(cmd, "r"))
-	local s = assert(f:read("*a"))
-	f:close()
-	return s
+	local f = assert(io.popen(cmd, "r"), "Failed to execute: " .. cmd)
+	local output = f:read("*a")
+	local ok, _, code = f:close()
+
+	assert(output ~= nil, "Failed to read command output: " .. cmd)
+	assert(ok, ("Command failed (exit code %s): %s"):format(code or "unknown", cmd))
+
+	return output
 end
 
----Check if the monitor is external.
+--- Check if the monitor is external.
 ---@return boolean `true` if the monitor is external.
 local function monitor_is_external()
-	-- TODO(LucasAVasco): support to multiple monitors
+	-- TODO(LucasAVasco): support multiple monitors
 
-	-- Fallback option. Check if /sys/class/backlight/<name> exists
-	if exec("ls /sys/class/backlight/") == "" then
-		return true
-	end
+	-- Check whether a backlight interface exists.
+	local output = exec("ls -A /sys/class/backlight/")
 
-	return false
+	return output == ""
 end
 
 ---@class BackLightStatus
@@ -28,7 +30,7 @@ end
 ---@field maximum integer
 ---@field current integer
 
----Get the current back light status.
+--- Get the current backlight status.
 ---@return BackLightStatus
 function M.get_current_backlight_status()
 	---@type BackLightStatus
@@ -39,89 +41,128 @@ function M.get_current_backlight_status()
 	}
 
 	if status.is_external then
-		local out = exec("ddcutil getvcp 10")
-		local matches = { out:match("current value =%s*(%d+), max value =%s*(%d+)") }
+		local output = exec("ddcutil getvcp 10")
 
-		if #matches > 1 then
-			status.current = tonumber(matches[1]) or 1
-			status.maximum = tonumber(matches[2]) or 1
+		local current, maximum = output:match("current value%s*=%s*(%d+),%s*max value%s*=%s*(%d+)")
+
+		if current and maximum then
+			status.current = tonumber(current) or 1
+			status.maximum = tonumber(maximum) or 1
 		end
 	else
 		status.current = tonumber(exec("brightnessctl get")) or 1
 		status.maximum = tonumber(exec("brightnessctl max")) or 1
 	end
 
+	-- Ensure valid values.
+	if status.maximum <= 0 then
+		status.maximum = 1
+	end
+
+	status.current = math.max(1, math.min(status.current, status.maximum))
+
 	return status
 end
 
----Get the current back light level in percentage with gamma correction.
+--- Get the current backlight level in percentage with gamma correction.
 ---@param status BackLightStatus
 ---@return number
 function M.get_backlight_percent(status)
+	if status.maximum <= 0 then
+		return 0
+	end
+
 	local percent = status.current / status.maximum
 
-	-- Gamma correction
+	-- Gamma correction.
 	percent = percent ^ (1 / 2.2)
+
 	return percent * 100
 end
 
----Set the back light level.
+--- Set the backlight level.
 ---
----Absolute value. Just configure the value directly in the device (without gamma correction).
+--- Absolute value. Configures the hardware directly (without gamma correction).
 ---@param status BackLightStatus
----@param value integer Value between 1 and maximum.
+---@param value number Value between 1 and maximum.
 function M.set_backlight_abs(status, value)
-	-- Rounding
-	value = math.floor(value)
-
-	-- Bounds
-	if value < 1 then
+	-- Handle invalid values.
+	if value ~= value or value == math.huge or value == -math.huge then
 		value = 1
-	elseif value > status.maximum then
-		value = status.maximum
-	elseif tostring(value) == "-nan" or tostring(value) == "nan" then
-		value = 1
+	else
+		value = math.floor(value)
 	end
 
-	-- Sets the value
-	if monitor_is_external() then
+	-- Bounds.
+	value = math.max(1, math.min(value, status.maximum))
+
+	-- Set the hardware value.
+	if status.is_external then
 		exec("ddcutil setvcp 10 " .. value)
 	else
 		exec("brightnessctl set " .. value)
 	end
 
-	-- Updates the status
+	-- Update the status.
 	status.current = value
 end
 
----Set the back light level. Apply gamma correction.
+--- Set the backlight level with gamma correction.
 ---@param status BackLightStatus
 ---@param percent number Value between 0 and 100.
 function M.set_backlight_percent(status, percent)
+	-- Handle invalid values.
+	if percent ~= percent or percent == math.huge or percent == -math.huge then
+		percent = 0
+	end
+
+	-- Bounds.
+	percent = math.max(0, math.min(percent, 100))
+
 	local current = percent / 100
-	current = current ^ 2.2 -- Gamma correction
+	current = current ^ 2.2
 
 	current = current * status.maximum
+
 	M.set_backlight_abs(status, current)
 end
 
----Add a value to the current back light level. Does not apply gamma correction.
+--- Add a value to the current backlight level.
+--- Does not apply gamma correction.
 ---@param status BackLightStatus
----@param value integer Value between 1 and maximum.
+---@param value number Value to add.
 function M.add_backlight_abs(status, value)
 	M.set_backlight_abs(status, status.current + value)
 end
 
----Add a value to the current back light level. Apply gamma correction.
+--- Add a value to the current backlight level with gamma correction.
 ---@param status BackLightStatus
----@param percent number Value between 0 and 100.
+---@param percent number Percentage to add.
 function M.add_backlight_percent(status, percent)
-	local current = status.current / status.maximum
-	current = current ^ (1 / 2.2) -- Gamma correction
+	if percent ~= percent or percent == math.huge or percent == -math.huge then
+		percent = 0
+	end
 
+	if status.maximum <= 0 then
+		return
+	end
+
+	local current = status.current / status.maximum
+
+	-- Convert to perceived brightness.
+	current = current ^ (1 / 2.2)
+
+	-- Apply the increment.
 	current = current + percent / 100
-	current = current ^ 2.2 -- Gamma correction
-	M.set_backlight_abs(status, current * status.maximum)
+
+	-- Clamp perceived brightness.
+	current = math.max(0, math.min(current, 1))
+
+	-- Convert back to hardware brightness.
+	current = current ^ 2.2
+	current = current * status.maximum
+
+	M.set_backlight_abs(status, current)
 end
 
 return M
