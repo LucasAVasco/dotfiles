@@ -16,6 +16,7 @@ help_handle y "$@" <<EOF
 		set-layout [keyboard] [layout]   Assign a layout to a keyboard. Prompts via fzf if either argument is omitted.
 		rm-layout  [keyboard]            Remove the saved layout for a keyboard. Prompts via fzf if omitted.
 		get-layout [keyboard]            Print the saved layout for a keyboard. Prompts via fzf if omitted.
+		list                             Print all saved keyboard-to-layout mappings.
 
 	Environment Variables:
 		CUSTOM_DESKTOP_GET_KEYBOARDS_NAMES_COMMAND
@@ -35,6 +36,7 @@ help_handle y "$@" <<EOF
 		$(basename "$0") set-layout
 		$(basename "$0") get-layout "AT Translated Set 2 keyboard"
 		$(basename "$0") rm-layout
+		$(basename "$0") list
 EOF
 
 # Validation
@@ -140,6 +142,10 @@ case "$main_command" in
 			echo "No layout configured for keyboard: $keyboard" >&2
 			exit 1
 		fi
+		;;
+
+	list)
+		cat "$KEYBOARD_LAYOUT_FILE"
 		;;
 
 	*)
