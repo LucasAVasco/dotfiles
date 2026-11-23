@@ -6,16 +6,21 @@ MYVAR.not_in_vscode = not MYVAR.in_vscode
 
 MYVAR.utilities_ft = {
 	'terminal',
+	'prompt',
 	'NvimTree',
 	'neo-tree',
 	'calendar',
 	'guihua',
 	'lazy', -- 'lazy.nvim'
 	'noice',
+	'blink-cmp-menu',
+	'snacks_dashboard',
 	'snacks_picker_input', -- 'snacks.nvim'
 	'undotree',
 	'qf',
 	'trouble',
+	'dropbar_menu',
+	'dropbar_menu_fzf',
 
 	-- AI
 	'codecompanion',
