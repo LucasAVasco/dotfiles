@@ -14,6 +14,9 @@ endif
 
 colorscheme mytheme
 
+" OSC 7 support (informs the terminal emulator of the VIFM current working directory)
+autocmd DirEnter *,/ :!~/.config/vifm/internal/scripts/osc-7.py %d > /dev/tty %i
+
 " Shell
 let &shell = $HOME . "/.config/vifm/internal/scripts/shell.sh"
 
