@@ -1,6 +1,8 @@
 require("defaults")
 require("permissions")
 
+local keyboard = require("keyboard")
+
 ---Create a color in RGBA format
 ---@param r number Value between 0 and 255
 ---@param g number Value between 0 and 255
@@ -23,6 +25,8 @@ end)
 -- Environment variables {{{
 
 hl.env("CUSTOM_DESKTOP_SET_WALLPAPER_COMMAND", "~/.config/hypr/update-wallpaper.sh")
+hl.env("CUSTOM_DESKTOP_GET_KEYBOARDS_NAMES_COMMAND", "~/.config/hypr/get-available-keyboards.py")
+hl.env("CUSTOM_DESKTOP_ON_KEYBOARDS_UDPATED_COMMAND", "~/.config/hypr/on-keyboard-layout-changed.sh")
 hl.env("CUSTOM_DESKTOP_LOGOUT_COMMAND", "hyprctl dispatch 'hl.dsp.exit()'")
 hl.env("XCURSOR_SIZE", "24")
 hl.env("HYPRCURSOR_SIZE", "24")
@@ -52,6 +56,21 @@ hl.config({
 		disable_hyprland_logo = true,
 	},
 })
+
+--- Layout specific configuration
+
+local devices = hl.get_devices()
+local name_to_layouts = keyboard.get_keyboard_layout_map()
+for _, device in ipairs(devices) do
+	local stripped_name = device.name:gsub(":.*", "")
+	local layout = name_to_layouts[stripped_name]
+	if layout then
+		hl.device({
+			name = device.name,
+			kb_layout = layout,
+		})
+	end
+end
 
 -- }}}
 
