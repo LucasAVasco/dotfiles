@@ -119,9 +119,11 @@ copy_repository_or_clone /host/.local/dotfiles/ https://github.com/LucasAVasco/d
 
 # Copy neovim repositories
 mkdir -p "/home/$dev_user/Repositories/neovim_repos/"
-for repo in $(ls /host/Repositories/neovim_repos/); do
-	copy_repository "/host/Repositories/neovim_repos/$repo" "/home/$dev_user/Repositories/neovim_repos/$repo"
-done
+if [[ -d /host/Repositories/neovim_repos/ ]]; then
+	for repo in $(ls /host/Repositories/neovim_repos/); do
+		copy_repository "/host/Repositories/neovim_repos/$repo" "/home/$dev_user/Repositories/neovim_repos/$repo"
+	done
+fi
 
 # Change ownership
 chown -R "$dev_user:$dev_user" "/home/$dev_user"
