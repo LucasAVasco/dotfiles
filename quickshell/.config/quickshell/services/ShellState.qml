@@ -6,7 +6,7 @@ import Quickshell
 Singleton {
     id: root
 
-    // Active top-bar popover: "" | "systemMenu" | "notificationCenter" | "audio" | "network" | "bluetooth" | "power" | "media" | "sysmon"
+    // Active top-bar popover: "" | "systemMenu" | "notificationCenter" | "audio" | "display" | "network" | "bluetooth" | "power" | "media" | "sysmon"
     property string activePopover: ""
     property var activeScreen: null
 

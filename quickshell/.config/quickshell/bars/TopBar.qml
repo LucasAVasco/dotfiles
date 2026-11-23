@@ -9,6 +9,7 @@ import "../ui"
 import "./audio"
 import "./bluetooth"
 import "./clock"
+import "./display"
 import "./media"
 import "./network"
 import "./power"
@@ -226,6 +227,10 @@ PanelWindow {
             }
 
             Volume {
+                barScreen: root.screen
+            }
+
+            DisplayButton {
                 barScreen: root.screen
             }
 

@@ -3,6 +3,7 @@ import Quickshell
 
 import "./audio"
 import "./bluetooth"
+import "./display"
 import "./media"
 import "./network"
 import "./power"
@@ -34,6 +35,7 @@ Item {
 
     // System status popovers
     AudioPopover {}
+    DisplayPopover {}
     NetworkPopover {}
     BluetoothPopover {}
     PowerPopover {}
