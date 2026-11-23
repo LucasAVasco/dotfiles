@@ -131,7 +131,7 @@ chown -R "$dev_user:$dev_user" "/home/$dev_user"
 # Enable the dotfiles
 cd "/home/$dev_user/.local/dotfiles"
 rm "/home/$dev_user/.bashrc" "/home/$dev_user/.bash_profile"
-sudo -u "$dev_user" bash -c "source ~/.local/dotfiles/profile/.profile && make enable"
+sudo -u "$dev_user" bash -c "source ~/.local/dotfiles/profile/.config/profile/init.sh && make enable"
 
 # Setup D-Bus
 mkdir -p /var/lib/dbus /run/dbus
@@ -175,7 +175,7 @@ export CONTAINER_NOTIFICATION_BRIDGE_SOCKET="/container-notification-bridge/sock
 # Change to development user
 unset root_password
 startup_command=$(cat <<EOF
-	source ~/.profile
+	source ~/.config/profile/init.sh
 	export \$(dbus-launch)
 	"$notification_bridge_path" container &
 	fallback-installer-man add mise
