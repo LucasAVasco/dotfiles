@@ -30,6 +30,7 @@ Singleton {
     property int _pendingBacklightDelta: 0
     property int _inFlightBacklight: -1
     property int _lastAppliedBacklight: -1
+    property bool _backlightNeedsSync: false
 
     // =========================================================================
     // Screen temperature state (never polled when popup is closed)
@@ -97,6 +98,9 @@ Singleton {
         if (backlightReading)
             return;
         backlightCommitTimer.stop();
+        backlightSyncTimer.stop();
+        if (!forceCommit)
+            _pendingBacklightGet = false;
         let hadError = backlightError.length > 0;
         backlightError = "";
         let clamped = clampBacklight(targetPercent);
@@ -109,29 +113,51 @@ Singleton {
             } else {
                 _pendingBacklightSet = clamped;
             }
+            _backlightNeedsSync = true;
             return;
         }
 
         if (clamped !== _lastAppliedBacklight || (forceCommit && hadError)) {
             _pendingBacklightSet = clamped;
+            _backlightNeedsSync = true;
             _pumpBacklightQueue();
         }
+    }
+
+    function releaseBacklight(targetPercent) {
+        setBacklightLive(targetPercent, true);
+        if (ShellState.activePopover === "display" && (_backlightNeedsSync || _pendingBacklightSet >= 0 || backlightProc.running)) {
+            _pendingBacklightGet = true;
+            _pumpBacklightQueue();
+        }
+    }
+
+    function scrollBacklightInPopover(targetPercent) {
+        setBacklightLive(targetPercent, false);
+        if (ShellState.activePopover === "display")
+            backlightSyncTimer.restart();
     }
 
     function setBacklightImmediate(targetPercent) {
         if (backlightReading)
             return;
         backlightCommitTimer.stop();
+        backlightSyncTimer.stop();
         backlightError = "";
         let clamped = clampBacklight(targetPercent);
         backlightPercent = clamped;
         _pendingBacklightSet = clamped;
         _pendingBacklightDelta = 0;
+        _backlightNeedsSync = true;
         _pumpBacklightQueue();
     }
 
     function restoreDefaultBacklight() {
         setBacklightImmediate(defaultBacklightPercent);
+        if (ShellState.activePopover === "display") {
+            _pendingBacklightGet = true;
+            _pumpBacklightQueue();
+        }
     }
 
     function _pumpBacklightQueue() {
@@ -144,6 +170,7 @@ Singleton {
             _pendingBacklightDelta = 0;
             _activeBacklightOp = "set";
             _inFlightBacklight = target;
+            _backlightNeedsSync = true;
             backlightBusy = true;
             backlightProc.command = ["bash", backlightScript, "set", target + "%"];
             backlightProc.running = true;
@@ -153,11 +180,19 @@ Singleton {
             let arg = (delta > 0 ? "+" : "") + delta + "%";
             _activeBacklightOp = "delta";
             _inFlightBacklight = -1;
+            _backlightNeedsSync = true;
             backlightBusy = true;
             backlightProc.command = ["bash", backlightScript, "set", arg];
             backlightProc.running = true;
         } else if (_pendingBacklightGet) {
             _pendingBacklightGet = false;
+            if (ShellState.activePopover !== "display") {
+                _activeBacklightOp = "";
+                _inFlightBacklight = -1;
+                backlightReading = false;
+                backlightBusy = false;
+                return;
+            }
             _activeBacklightOp = "get";
             _inFlightBacklight = -1;
             backlightReading = true;
@@ -176,6 +211,18 @@ Singleton {
         interval: 250
         repeat: false
         onTriggered: root._pumpBacklightQueue()
+    }
+
+    Timer {
+        id: backlightSyncTimer
+        interval: 300
+        repeat: false
+        onTriggered: {
+            if (ShellState.activePopover === "display" && (root._backlightNeedsSync || root._pendingBacklightSet >= 0 || backlightProc.running)) {
+                root._pendingBacklightGet = true;
+                root._pumpBacklightQueue();
+            }
+        }
     }
 
     Process {
@@ -206,6 +253,7 @@ Singleton {
                             // Do not clobber a newer user edit queued while reading
                             if (root._pendingBacklightSet < 0 && !backlightCommitTimer.running) {
                                 root.backlightPercent = val;
+                                root._backlightNeedsSync = false;
                             }
                             root.backlightLoaded = true;
                             root.backlightError = "";

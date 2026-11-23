@@ -158,10 +158,10 @@ PanelWindow {
                             DisplayService.setBacklightLive(newVal, false);
                         }
                         onScrolled: function (newVal) {
-                            DisplayService.setBacklightLive(newVal, false);
+                            DisplayService.scrollBacklightInPopover(newVal);
                         }
                         onReleased: function (newVal) {
-                            DisplayService.setBacklightLive(newVal, true);
+                            DisplayService.releaseBacklight(newVal);
                         }
                     }
 
