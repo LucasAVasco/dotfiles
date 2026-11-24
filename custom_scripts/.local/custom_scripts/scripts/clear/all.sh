@@ -37,6 +37,26 @@ try_trash_with_debug() {
 	trash "${existing_files[@]}"
 }
 
+# Remove files if they exist. Show the files that were removed on stdout. Ignore errors
+try_rm_with_debug() {
+	log_info "Removing $*"
+
+	# List all files that exist
+	existing_files=()
+	for file_path in "$@"; do
+		if [[ -e "$file_path" ]]; then
+			existing_files+=("$file_path")
+		fi
+	done
+
+	if [[ ${#existing_files[@]} -eq 0 ]]; then
+		log_info 'No files to remove'
+		return
+	fi
+
+	rm -r "${existing_files[@]}"
+}
+
 shopt -s nullglob # Without this, the globbing will raise an error when there are no files to trash
 
 # Log files
@@ -48,8 +68,8 @@ log_info 'Clearing neovim files'
 try_trash_with_debug ~/.local/state/nvim/lsp.log ~/.nvim/.undo_files ~/.nvim/.backup_files ~/.nvim/.swap_files ~/.local/share/vifm/Trash
 
 log_info 'Clearing vifm cache'
-rm ~/.cache/vifm/thumbnail.*.jpg
-rm rm ~/.cache/vifm/ueberzug-*
+try_rm_with_debug ~/.cache/vifm/thumbnail.*.jpg
+try_rm_with_debug ~/.cache/vifm/ueberzug-*
 
 # Containers
 log_info 'Clearing podman cache'
