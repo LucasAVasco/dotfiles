@@ -1,32 +1,16 @@
----Table with the server to override and the new file types values
----@type table<string, string[]|string> Relates the LSP server identifier (used by lspconfig) to its override file types
 return {
-	bashls = { 'sh', 'bash', 'zsh' },
-	clangd = { 'c', 'cpp', 'objc', 'objcpp', 'cuda' },
-	ts_ls = {
-		-- Default supported files
-		'javascript',
-		'javascript.jsx',
-		'javascriptreact',
-		'typescript',
-		'typescript.tsx',
-		'typescriptreact',
-
-		-- Plugins and extension
-		'vue', -- Support Vue plugin
-	},
-	vtsls = {
-		-- Default supported files
-		'javascript',
-		'javascript.jsx',
-		'javascriptreact',
-		'typescript',
-		'typescript.tsx',
-		'typescriptreact',
-
-		-- Plugins and extension
-		'vue', -- Support Vue plugin
+	---These file types will overridden the list of associated file types of the LSP servers.
+	---@type table<string, string[]|'*'> Relates the LSP server identifier (used by lspconfig) to its overridden file types
+	override = {
+		gopls = { 'go', 'gomod', 'gowork' }, -- Remove 'gotmpl' file type. I use other LSP for Go templates
 	},
 
-	gopls = { 'go', 'gomod', 'gowork' },
+	---These file types will be added to the list of associated file types of the LSP servers.
+	---@type table<string, string[]|'*'> Relates the LSP server identifier (used by lspconfig) to its extended file types
+	extend = {
+		bashls = { 'zsh' },
+		vtsls = {
+			'vue', -- Load when opening Vue files, required by 'vue_ls' plugin
+		},
+	},
 }

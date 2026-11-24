@@ -1,6 +1,10 @@
 ---@type table<string, string[]|"*"> Relates the LSP server name with its filetypes
 MYPLUGVAR.lsp_filetypes = {}
 
+---List of LSP servers already configured
+---@type table<string, boolean>
+local configured_lspconfig_servers = {}
+
 return {
 	{
 		'neovim/nvim-lspconfig',
@@ -43,6 +47,14 @@ return {
 				automatic_installation = true,
 			})
 
+			local filetypes_config = require('my_configs.LSP.filetypes')
+
+			local client_capabilities = require('blink.cmp').get_lsp_capabilities({})
+
+			vim.lsp.config('*', {
+				capabilities = client_capabilities,
+			})
+
 			---Return if the LSP server configuration should be aborted (E.g. The user disabled the server)
 			---@param server_name string Name of the LSP server to check
 			---@return boolean should_abort_configuration
@@ -51,73 +63,92 @@ return {
 				return vim.tbl_contains(MYVAR.lsp_servers_to_disable, server_name)
 			end
 
-			local client_capabilities = require('blink.cmp').get_lsp_capabilities({})
-
-			vim.lsp.config('*', {
-				capabilities = client_capabilities,
-			})
-
-			---List of LSP servers already configured
-			---@type table<string, boolean>
-			local configured_lspconfig_servers = {}
-
-			local function setup_lsp_server(lsp_server_name)
+			---Configure a LSP server. Do not enable it.
+			---@param name string Name of the LSP server
+			local function configure_lsp_server(name)
 				-- Only configures once
-				if configured_lspconfig_servers[lsp_server_name] then
+				if configured_lspconfig_servers[name] then
 					return
-				else
-					configured_lspconfig_servers[lsp_server_name] = true
 				end
+				configured_lspconfig_servers[name] = true
 
 				-- Applies my LSP server configuration
 
 				---@type boolean, my_configs.LSP.LspServerConfig
-				local ok, server_opts = pcall(require, 'my_configs.LSP.configs.' .. lsp_server_name)
+				local ok, server_opts = pcall(require, 'my_configs.LSP.configs.' .. name)
 
 				if not ok then
 					server_opts = {}
 				end
 
 				-- Overrides file-types
-				local filetypes = MYPLUGVAR.lsp_filetypes[lsp_server_name]
+				local filetypes = MYPLUGVAR.lsp_filetypes[name]
 				if type(filetypes) == 'table' then
 					server_opts.filetypes = filetypes
 				end
 
-				vim.lsp.config(lsp_server_name, server_opts)
-				vim.lsp.enable(lsp_server_name)
+				vim.lsp.config(name, server_opts)
 			end
 
-			local lsp_filetypes_overrides = require('my_configs.LSP.filetypes')
+			---Enable a LSP server (automatically starts it when a match file type is found)
+			---@param name string Name of the LSP server
+			local function enable_lsp_server(name)
+				configure_lsp_server(name)
+				vim.lsp.enable(name)
+			end
 
-			local function start_lsp_server(server_name)
+			---Start a LSP server
+			---@param name string Name of the LSP server
+			---@param config vim.lsp.Config? Optional configuration. Automatically retrieved if nil
+			local function start_lsp_server(name, config)
+				enable_lsp_server(name)
+
+				config = config or vim.lsp.config[name]
+				if config == nil then
+					error('LSP server "' .. name .. '" not found')
+				end
+
+				local filetype = config.filetypes[1]
+				if filetype == nil then
+					error('LSP server "' .. name .. '" has no associated filetypes')
+				end
+
+				-- Start the LSP server by opening a new buffer with the associated file type
+				local buf_id = vim.api.nvim_create_buf(false, false)
+				vim.bo[buf_id].filetype = config.filetypes[1]
 				vim.schedule(function()
-					-- Does not start the LSP server if it is already started
-					for _, client in pairs(vim.lsp.get_clients()) do
-						if client.name == server_name then
-							return
-						end
-					end
-
-					if MYVAR.not_in_vscode then
-						vim.cmd.lsp({ args = { 'enable', server_name } })
-					end
+					vim.api.nvim_buf_delete(buf_id, {})
 				end)
 			end
 
-			---Setup a LSP server by its name
+			---Lazy load the LSP server configuration (only sets up the LSP server when a match file type is found)
 			---@param lsp_server_name string Name of the server. Same values used in `require('lspconfig')[lsp_server_name]`.
 			local function lazy_load_lsp_server(lsp_server_name)
 				if should_abort_lsp_config(lsp_server_name) then
 					return
 				end
 
-				---Attach the LSP server to these file types
-				---@type string|string[]
-				local filetypes = vim.lsp.config[lsp_server_name].filetypes or '*'
+				local config = vim.lsp.config[lsp_server_name]
+				if config == nil then
+					return
+				end
 
-				if lsp_filetypes_overrides[lsp_server_name] then
-					filetypes = lsp_filetypes_overrides[lsp_server_name]
+				---Attach the LSP server to these file types
+				---@type string[]|'*'
+				local filetypes = config.filetypes or '*'
+
+				local override_filetypes = filetypes_config.override[lsp_server_name]
+				if override_filetypes then
+					filetypes = override_filetypes
+				end
+
+				local append_filetypes = filetypes_config.extend[lsp_server_name]
+				if append_filetypes then
+					if type(filetypes) == 'table' and type(append_filetypes) == 'table' then
+						MYFUNC.array_concat(filetypes, append_filetypes)
+					else
+						filetypes = '*'
+					end
 				end
 
 				-- Maps the LSP server to the file types
@@ -127,9 +158,7 @@ return {
 				vim.api.nvim_create_autocmd('FileType', {
 					pattern = filetypes,
 					callback = function()
-						setup_lsp_server(lsp_server_name)
-						start_lsp_server(lsp_server_name)
-
+						enable_lsp_server(lsp_server_name)
 						return true -- Must setup the server only once
 					end,
 				})
