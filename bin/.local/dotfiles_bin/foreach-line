@@ -9,16 +9,19 @@ source ~/.local/lib/dotfiles/bash/help.sh
 help_handle y "$@" <<EOF
 	Run a command for each line of the received standard input. Replaces all '/_' arguments in the command by the current line
 
-	Usage: foreach-line [-d] [-s] -- <command>
+	Usage: foreach-line [-d] [-s] [-m] -- <command>
 
 	Flags:
 		-d, --debug     Enable debug mode
 		-s, --shell     Run the command in a subshell
+		-m, --match     Match '/_' within arguments instead of requiring an exact match
 EOF
 
 # Command line options
 debug=n
 run_in_shell=n
+match_substrings=n
+
 while [[ $# -gt 0 ]]; do
 	case "$1" in
 		-d | --debug)
@@ -27,6 +30,10 @@ while [[ $# -gt 0 ]]; do
 
 		-s | --shell)
 			run_in_shell=y
+			;;
+
+		-m | --match)
+			match_substrings=y
 			;;
 
 		--)
@@ -47,10 +54,12 @@ done
 while IFS= read -r line || [[ -n "$line" ]]; do
 	cmd=("$@")
 
-	# Replaces all '/_' in the command by the current line
+	# Replace '/_' in command arguments
 	for ((i = 0; i < ${#cmd[@]}; i++)); do
-		if [[ "${cmd[$i]}" == '/_' ]]; then
-			cmd[$i]="${line}"
+		if [[ "$match_substrings" == 'y' ]]; then
+			cmd[$i]="${cmd[$i]//\/_/$line}"
+		elif [[ "${cmd[$i]}" == '/_' ]]; then
+			cmd[$i]="$line"
 		fi
 	done
 
