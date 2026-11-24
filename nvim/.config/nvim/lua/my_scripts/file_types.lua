@@ -5,6 +5,7 @@ vim.filetype.add({
 
 	pattern = {
 		['.env.*'] = 'sh',
+		['.*/.github/workflows/.*.ya?ml'] = 'yaml.github',
 	},
 
 	extension = {
