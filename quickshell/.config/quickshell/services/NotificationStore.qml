@@ -48,6 +48,7 @@ Singleton {
     property var _notifMap: ({})
     property var _dismissingIds: ({})
     property var _pendingRefreshIds: ({})
+    property var _unreadIds: ({})
     property int _nextEntryId: 1
 
     property alias historyModel: historyListModel
@@ -72,7 +73,22 @@ Singleton {
         return historyListModel.get(idx);
     }
 
+    function _syncUnreadCount() {
+        if (historyListModel.count === 0) {
+            _unreadIds = ({});
+            unreadCount = 0;
+            return;
+        }
+        let count = 0;
+        for (let i = 0; i < historyListModel.count; i++) {
+            if (_unreadIds[historyListModel.get(i).entryId])
+                count++;
+        }
+        unreadCount = count;
+    }
+
     function markAllRead() {
+        _unreadIds = ({});
         unreadCount = 0;
     }
 
@@ -319,8 +335,11 @@ Singleton {
             prevNotif = _notifMap[entryId] || null;
         } else {
             entryId = _nextEntryId++;
-            if (ShellState.activePopover !== "notificationCenter")
-                unreadCount += 1;
+            if (ShellState.activePopover !== "notificationCenter") {
+                let uCopy = _unreadIds;
+                uCopy[entryId] = true;
+                _unreadIds = uCopy;
+            }
         }
 
         let mapCopy = _notifMap;
@@ -343,12 +362,18 @@ Singleton {
                 let oldestId = historyListModel.get(historyListModel.count - 1).entryId;
                 let oldestNotif = _notifMap[oldestId];
                 historyListModel.remove(historyListModel.count - 1);
+                if (_unreadIds[oldestId]) {
+                    let uEvict = _unreadIds;
+                    delete uEvict[oldestId];
+                    _unreadIds = uEvict;
+                }
                 if (oldestNotif) {
                     delete _notifMap[oldestId];
                     oldestNotif.tracked = false;
                 }
             }
         }
+        _syncUnreadCount();
         _recountUrgencies();
 
         // Update or insert into toast stack (respects Do Not Disturb for non-critical,
@@ -381,6 +406,12 @@ Singleton {
         if (hIdx >= 0)
             historyListModel.remove(hIdx);
 
+        if (_unreadIds[entryId]) {
+            let uCopy = _unreadIds;
+            delete uCopy[entryId];
+            _unreadIds = uCopy;
+        }
+        _syncUnreadCount();
         _recountUrgencies();
 
         if (_notifMap[entryId] !== undefined) {
@@ -475,6 +506,7 @@ Singleton {
         }
         toastListModel.clear();
         historyListModel.clear();
+        _unreadIds = ({});
         unreadCount = 0;
         _recountUrgencies();
 
