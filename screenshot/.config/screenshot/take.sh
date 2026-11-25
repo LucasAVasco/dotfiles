@@ -20,6 +20,8 @@
 
 source ~/.local/lib/dotfiles/bash/linux/session.sh
 
+source ~/.local/lib/dotfiles/bash/linux/clipboard.sh
+
 set -e
 
 output_file=''
@@ -103,8 +105,27 @@ else
 fi
 
 # Notifies
+action_args=(--action=view=View --action=edit=Edit)
 if [[ "$output_file" == /dev/null ]]; then
-	notify-send "Screenshot take!" "Only copied to clipboard"
+	action=$(notify-send "Screenshot take!" "Only copied to clipboard" ${action_args[@]})
+	if [[ -n "$action" ]]; then
+		image_file="$(mktemp --suffix=.png)"
+		clip-paste -o "$image_file"
+		trap "rm $image_file" EXIT
+	fi
 else
-	notify-send "Screenshot take!" "Output file: '$output_file'"
+	action=$(notify-send "Screenshot take!" "Output file: '$output_file'" ${action_args[@]})
+	image_file="$output_file"
 fi
+
+case "$action" in
+	view)
+		gthumb "$image_file"
+		linux_clipboard_copy -t image/png < "$image_file"
+		;;
+
+	edit)
+		gimp "$image_file"
+		linux_clipboard_copy -t image/png < "$image_file"
+		;;
+esac
