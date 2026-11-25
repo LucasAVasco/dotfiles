@@ -17,9 +17,9 @@ help_handle n "$@" << EOF
 		copy.sh [options] -- <content to copy>
 
 	Flags:
-		--stdin                             Copy the standard input to the clipboard.
-		-t, --xorg_target, --xorg-target    Sets the Xorg target of the copied content.
-		-c, --clear                         Clear the clipboard after the provided time (from the command line arguments).
+		--stdin          Copy the standard input to the clipboard.
+		-t, --target     Sets the Xorg target if running in X11, or mime type if running in Wayland, of the copied content.
+		-c, --clear      Clear the clipboard after the provided time (from the command line arguments).
 
 	Examples:
 
@@ -39,14 +39,14 @@ help_handle n "$@" << EOF
 
 	Copy the standard input to the clipboard.
 
-	copy.sh --stdin --xorg_target image/png
+	copy.sh --stdin --target image/png
 
 	Copy an image provided from the standard input to the clipboard (Xorg requires a \`target\`).
 EOF
 
 # Parses the arguments
 copy_stdin='n'
-xorg_target=()
+target_args=()
 clear_after=''
 
 while [[ $# -gt 0 ]]; do
@@ -55,8 +55,8 @@ while [[ $# -gt 0 ]]; do
 			copy_stdin='y'
 			;;
 
-		-t | --xorg_target | --xorg-target )
-			xorg_target=(-t "$2")
+		-t | --target )
+			target_args=(-t "$2")
 			shift
 			;;
 
@@ -97,20 +97,20 @@ async_clear_clipboard
 # Xorg session
 if [[ -z "$WAYLAND_DISPLAY" ]]; then
 	if [[ "$copy_stdin" == 'y' ]]; then
-		xclip -selection clipboard ${xorg_target[@]}
+		xclip -selection clipboard ${target_args[@]}
 	else
 		args="${@}"  # Convert to string separated by spaces
 
 		# Must print with `printf` because `echo` may interpret '-e', '-n', and '-E'
-		printf "%s" "$args" | xclip -selection clipboard ${xorg_target[@]}
+		printf "%s" "$args" | xclip -selection clipboard ${target_args[@]}
 	fi
 
 # Wayland session
 else
 	if [[ "$copy_stdin" == 'y' ]]; then
-		wl-copy
+		wl-copy ${target_args[@]}
 	else
-		wl-copy -- "$@"
+		wl-copy ${target_args[@]} -- "$@"
 	fi
 fi
 
