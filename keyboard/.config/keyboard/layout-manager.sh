@@ -88,6 +88,21 @@ select_keyboard() {
 	printf "%s" "$keyboard"
 }
 
+# Prompt user to select a keyboard with layout already registered if not provided
+#
+# $1: optional keyboard name
+# $2: fzf header prompt
+select_already_registered_keyboard() {
+	local keyboard="${1:-}"
+	local header="${2:-Select keyboard}"
+
+	if [[ -z "$keyboard" ]]; then
+		keyboard=$(cat "$KEYBOARD_LAYOUT_FILE" | sed 's/\t.*//g' | fzf --header="$header")
+	fi
+
+	printf "%s" "$keyboard"
+}
+
 # Remove a keyboard entry from the configuration file.
 #
 # $1: name of the keyboard to remove.
@@ -142,7 +157,7 @@ case "$main_command" in
 		;;
 
 	rm-layout)
-		keyboard=$(select_keyboard "${1:-}" "Select keyboard to remove layout")
+		keyboard=$(select_already_registered_keyboard "${1:-}" "Select keyboard to remove layout")
 		remove_keyboard_from_file "$keyboard"
 		call_on_keyboard_change_callback "$keyboard" ""
 		;;
