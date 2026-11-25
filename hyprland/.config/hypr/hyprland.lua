@@ -57,20 +57,35 @@ hl.config({
 	},
 })
 
---- Layout specific configuration
+--- Keyboards with specific layouts
 
-local devices = hl.get_devices()
-local name_to_layouts = keyboard.get_keyboard_layout_map()
-for _, device in ipairs(devices) do
-	local stripped_name = device.name:gsub(":.*", "")
-	local layout = name_to_layouts[stripped_name]
-	if layout then
-		hl.device({
-			name = device.name,
-			kb_layout = layout,
-		})
+local function update_keyboards_layouts()
+	local devices = hl.get_devices()
+	local name_to_layouts = keyboard.get_keyboard_layout_map()
+	for _, device in ipairs(devices) do
+		if device.type == "keyboard" then
+			local stripped_name = device.name:gsub(":.*", "")
+			local layout = name_to_layouts[stripped_name]
+			if layout then
+				hl.device({
+					name = device.name,
+					kb_layout = layout,
+				})
+			end
+		end
 	end
 end
+
+-- Update keyboards on each reload of Hyprland
+update_keyboards_layouts()
+
+-- Update the keyboards after all devices become available
+hl.timer(function()
+	update_keyboards_layouts()
+end, {
+	timeout = 2000,
+	type = "oneshot",
+})
 
 -- }}}
 
