@@ -1,0 +1,12 @@
+{
+	"Only one instance of the workflow at the same time": {
+		"prefix": "concurrency-only-one-instance",
+		"description": "Ensures only one instance of this workflow runs at the same time.",
+		"body": [
+			"concurrency:",
+			"\tgroup: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}",
+			"\tcancel-in-progress: true",
+			"$0"
+		]
+	}
+}
