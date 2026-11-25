@@ -38,6 +38,11 @@ return {
 			ft_func = function()
 				local file_types = vim.split(vim.bo.filetype, '.', { plain = true })
 
+				-- The full file type is a valid file type
+				if #file_types > 1 then
+					table.insert(file_types, vim.bo.filetype)
+				end
+
 				for _, file_type in ipairs(file_types) do
 					if file_type == 'helm' then
 						table.insert(file_types, 'yaml')
@@ -54,6 +59,12 @@ return {
 				local full_file_type = vim.api.nvim_get_option_value('filetype', { buf = buffer_num })
 				local file_types = vim.split(full_file_type, '.', { plain = true })
 
+				-- The full file type is a valid file type
+				if #file_types > 1 then
+					table.insert(file_types, full_file_type)
+				end
+
+				-- Use 'yaml' snippets in 'helm' templates
 				for _, file_type in ipairs(file_types) do
 					if file_type == 'helm' then
 						table.insert(file_types, 'yaml')
