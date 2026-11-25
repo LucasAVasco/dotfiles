@@ -12,5 +12,9 @@ return {
 		vtsls = {
 			'vue', -- Load when opening Vue files, required by 'vue_ls' plugin
 		},
+
+		yamlls = {
+			'yaml.github', -- Edit with custom GitHub action file type
+		},
 	},
 }
