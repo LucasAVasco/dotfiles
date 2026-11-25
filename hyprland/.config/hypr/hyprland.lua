@@ -64,8 +64,7 @@ local function update_keyboards_layouts()
 	local name_to_layouts = keyboard.get_keyboard_layout_map()
 	for _, device in ipairs(devices) do
 		if device.type == "keyboard" then
-			local stripped_name = device.name:gsub(":.*", "")
-			local layout = name_to_layouts[stripped_name]
+			local layout = name_to_layouts[device.name]
 			if layout then
 				hl.device({
 					name = device.name,

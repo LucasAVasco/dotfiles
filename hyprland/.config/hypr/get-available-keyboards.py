@@ -13,7 +13,5 @@ result = subprocess.run(
 # Reads the output
 data = json.loads(result.stdout)
 for keyboad in data["keyboards"]:
-    # Extracts the name
-    name = keyboad["name"]
-    name = name.split(":")[0]  # Removes the PID (everything after the ':')
-    print(name)
+    # Shows the name
+    print(keyboad["name"])
