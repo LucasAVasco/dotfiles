@@ -5,6 +5,7 @@
 source ~/.local/lib/dotfiles/bash/strict.sh
 
 source ~/.local/lib/dotfiles/bash/help.sh
+source ~/.local/lib/dotfiles/bash/linux/session.sh
 
 help_handle y "$@" <<EOF
 	Manage per-keyboard X11 keymap layouts.
@@ -43,6 +44,16 @@ EOF
 if (( "$#" < 1 )); then
 	echo "Main command not provided" >&2
 	exit 1
+fi
+
+# Default environment variables for X11
+if [[ $(linux_session_get_type) == x11 ]]; then
+	if [[ -z "${CUSTOM_DESKTOP_GET_KEYBOARDS_NAMES_COMMAND:-}" ]]; then
+		CUSTOM_DESKTOP_GET_KEYBOARDS_NAMES_COMMAND=~/.config/keyboard/get-x11-keyboards.sh
+	fi
+	if [[ -z "${CUSTOM_DESKTOP_ON_KEYBOARDS_UDPATED_COMMAND:-}" ]]; then
+		CUSTOM_DESKTOP_ON_KEYBOARDS_UDPATED_COMMAND=~/.config/keyboard/update-x11-keyboards.sh
+	fi
 fi
 
 # Run all commands relative to the current directory
