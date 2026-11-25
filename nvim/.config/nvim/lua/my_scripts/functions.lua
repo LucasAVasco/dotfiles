@@ -114,9 +114,10 @@ function MYFUNC.array_has(array, value, comparison_func)
 end
 
 ---Concat all elements of `src` into `dest`
----@param dest any[] This array is modified,
----@param src any[] This array is not modified.
----@return any[]
+---@generic T
+---@param dest T[] This array is modified,
+---@param src T[] This array is not modified.
+---@return T[]
 function MYFUNC.array_concat(dest, src)
 	for _, value in ipairs(src) do
 		table.insert(dest, value)
